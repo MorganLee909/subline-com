@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/merchantSetupPage/merchantSetup.css">
+        <link rel="stylesheet" href="/shared/shared.css">
+    </head>
+    <body>
+        <% include ../shared/header %>
+
+        <div class="container">
+            <h1>Add your first set of ingredients to your pantry</h1>
+
+            <table id="ingredient-display">
+                <tr>
+                    <th>Add</th>
+                    <th>Ingredient</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                </tr>
+            </table>
+        </div>
+
+        <script>let ingredients = <%- JSON.stringify(ingredients) %>;</script>
+        <script src="/merchantSetupPage/merchantSetup.js"></script>
+    </body>
+</html>
+

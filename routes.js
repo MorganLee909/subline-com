@@ -1,6 +1,6 @@
-const controller = require("./Controllers/Controller");
+const home = require("./controllers/home");
 
 module.exports = function(app){
-    app.get("/ingredients", controller.getIngredients);
-    app.post("/ingredients", controller.createIngredient);
+    app.get("/", home.displayInventory);
+    app.get("/merchant/new", home.merchantSetup);
 }
