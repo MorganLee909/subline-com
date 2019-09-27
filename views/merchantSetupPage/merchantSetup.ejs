@@ -7,8 +7,7 @@
     <body>
         <% include ../shared/header %>
 
-        <div class="container">
-            
+        <div id="addIngredients" class="container">
             <h1>Add your first set of ingredients to your pantry</h1>
 
             <h3>Choose from our list of ingredients</h3>
@@ -23,16 +22,19 @@
                 </tr>
             </table>
 
-            <div id="new-ingredient"></div>
-
-            <!-- <button onclick="addField()">+</button> -->
-
-            <button onclick="subData()">Finish</button>
+            <button onclick="updateState(1)">Next</button>
         </div>
+
+        <div id="newIngredients">
+            <button onclick="newIngredientField()">+</button>
+        </div>
+
+            
+
+            
 
         <script>
             let ingredients = <%- JSON.stringify(ingredients) %>;
-            let state = 0;
         </script>
         <script src="/merchantSetupPage/merchantSetup.js"></script>
     </body>
