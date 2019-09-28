@@ -11,27 +11,42 @@
             <h1>Add your first set of ingredients to your pantry</h1>
 
             <h3>Choose from our list of ingredients</h3>
+
+            <h5>(Can't find something?  You can create it in the next step)</h5>
             
             <table id="ingredient-display">
-                <tr>
-                    <th>Add</th>
-                    <th>Ingredient</th>
-                    <th>Category</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Add</th>
+                        <th>Ingredient</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
             </table>
 
             <button onclick="updateState(1)">Next</button>
         </div>
 
-        <div id="newIngredients">
+        <div id="newIngredients" class="container">
+            <h1>Add your first set of ingredients to your pantry</h1>
+
+            <h3>Create your own ingredients</h3>
+
+            <table id="inputField">
+                <tr>
+                    <th>Ingredient Name</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Measurement Unit</th>
+                </tr>
+            </table>
             <button onclick="newIngredientField()">+</button>
+            <button onclick="updateState(1)">Next</button>
+            <button onclick="updateState(-1)">Back</button>
         </div>
-
-            
-
-            
 
         <script>
             let ingredients = <%- JSON.stringify(ingredients) %>;

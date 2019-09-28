@@ -11,17 +11,16 @@ let updateState = (num)=>{
     if(state === 0){
         addIngredients.style.display = "flex";
         newIngredients.style.display = "none";
-        populateIngredients();
     }else if(state === 1){
-        collectIngredients();
         addIngredients.style.display = "none";
         newIngredients.style.display = "flex";
+    }else if(state === 2){
+        collectNewIngredients();
     }
 }
 
 let populateIngredients = ()=>{
-    let table = document.querySelector("#ingredient-display");
-    console.log(ingredients);
+    let tBody = document.createElement("tbody");
 
     for(let ingredient of ingredients){
         let row = document.createElement("tr");
@@ -47,6 +46,7 @@ let populateIngredients = ()=>{
         quantityInput.type = "number";
         quantityInput.step = "0.01";
         quantityInput.min = "0";
+
         quantity.appendChild(quantityInput);
         row.appendChild(quantity);
     
@@ -58,45 +58,46 @@ let populateIngredients = ()=>{
         idField.type = "hidden";
         idField.value = ingredient._id;
     
-        table.appendChild(row);
+        tBody.appendChild(row);
+        let oldTBody = document.querySelector("#ingredient-display tbody");
+        oldTBody.parentNode.replaceChild(tBody, oldTBody);
         existingIngredientElements.push(row);
     }
 }
 
-let collectIngredients = ()=>{
-    let selectedIngredients = []
-    for(let ingredient of existingIngredientElements){
-        if(ingredient.childNodes[0].firstChild.checked){
-            selectedIngredients.push(ingredient.id);
-        }
-    }
-
-    data.existing = selectedIngredients;
-}
-
 let newIngredientField = ()=>{
-    let ingredient = document.createElement("div");
-    ingredient.classList += "input-new";
+    let inputField = document.querySelector("#inputField");
+    let row = document.createElement("tr");
 
-    let name = document.createElement("input");
-    name.type = "text";
-    ingredient.appendChild(name);
+    let name = document.createElement("td");
+    let nameInput = document.createElement("input");
+    nameInput.type = "text";
+    name.appendChild(nameInput);
+    row.appendChild(name);
 
-    let category = document.createElement("input");
-    category.type = "text";
-    ingredient.appendChild(category);
+    let category = document.createElement("td");
+    let categoryInput = document.createElement("input");
+    categoryInput.type = "text"
+    category.appendChild(categoryInput);
+    row.appendChild(category);
 
-    let quantity = document.createElement("input");
-    quantity.type = "number";
-    quantity.step = "0.01";
-    ingredient.appendChild(quantity);
+    let quantity = document.createElement("td");
+    let quantityInput = document.createElement("input");
+    quantityInput.type = "number";
+    quantityInput.step = "0.01";
+    quantity.appendChild(quantityInput);
+    row.appendChild(quantity);
 
-    let unit = document.createElement("input");
-    unit.type = "text";
-    ingredient.appendChild(unit);
+    let unit = document.createElement("td");
+    let unitInput = document.createElement("input");
+    unitInput.type = "text";
+    unit.appendChild(unitInput);
+    row.appendChild(unit);
 
-    div.appendChild(ingredient);
-    newIngredientElements.push(ingredient);
+    inputField.appendChild(row);
+    newIngredientElements.push(row);
 }
 
+
+populateIngredients();
 updateState(0);
