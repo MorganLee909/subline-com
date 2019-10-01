@@ -177,7 +177,7 @@ let showRecipe = ()=>{
         let ingQuant = document.createElement("input");
         ingQuant.type = "number";
         ingQuant.step = "0.01";
-        ingQuant.value = ing.name;
+        ingQuant.value = ing.quantity;
         quantTd.appendChild(ingQuant);
     }
 
@@ -188,6 +188,13 @@ let showRecipe = ()=>{
     }else{
         nextButton.innerText = "Next Recipe";
         nextButton.onclick = ()=>{changeRecipe(1)};
+    }
+
+    let previousButton = document.querySelector("#previous");
+    if(recipeDataIndex === 0){
+        previousButton.style.display = "none";
+    }else{
+        previousButton.style.display = "inline-block";
     }
 }
 
@@ -233,6 +240,7 @@ let changeRecipe = (num)=>{
             id: row.childNodes[0].childNodes[0].value,
             quantity: row.childNodes[1].childNodes[0].value
         });
+        recipeData[recipeDataIndex].ingredients = recipeIngredients;
 
         body.removeChild(row);
     }
@@ -241,7 +249,22 @@ let changeRecipe = (num)=>{
 }
 
 let submitAll = ()=>{
-    console.log("something");
+    data.recipes = [];
+
+    for(let recipe of recipeData){
+        let newRecipe = {
+            id: recipe.id,
+            ingredients: []
+        };
+        for(let ingredient of recipe.ingredients){
+            newRecipe.ingredients.push({
+                id: ingredient.id,
+                quantity: ingredient.quantity
+            });
+        }
+        data.recipes.push(newRecipe);
+    }
+    console.log(data);
 }
 
 populateIngredients();

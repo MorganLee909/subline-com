@@ -18,7 +18,10 @@ const MerchantSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Ingredient"
         },
-        quantity: String
+        quantity: {
+            type: Number,
+            min: [0, "Quantity cannot be less than 0"]
+        }
     }]
 });
 
