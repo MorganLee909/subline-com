@@ -36,20 +36,44 @@
             <h3>Create your own ingredients</h3>
 
             <table id="inputField">
-                <tr>
-                    <th>Ingredient Name</th>
-                    <th>Category</th>
-                    <th>Quantity</th>
-                    <th>Measurement Unit</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Ingredient Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Measurement Unit</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
             </table>
             <button onclick="newIngredientField()">+</button>
-            <button onclick="updateState(1)">Next</button>
+            <button onclick="updateState(1)">Create Ingredients</button>
             <button onclick="updateState(-1)">Back</button>
+        </div>
+
+        <div id="createRecipes" class="container">
+            <h1>Create your recipes</h1>
+
+            <h2 id="recipeName"></h2>
+
+            <table id="recipes">
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <button onclick="addRecipeIngredientField()">+</button>
+            <button id="next"></button>
+            <button onclick="changeRecipe(-1)">Previous Recipe</button>
         </div>
 
         <script>
             let ingredients = <%- JSON.stringify(ingredients) %>;
+            let recipes = <%- JSON.stringify(recipes) %>;
         </script>
         <script src="/merchantSetupPage/merchantSetup.js"></script>
     </body>

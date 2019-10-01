@@ -12,7 +12,7 @@ const IngredientSchema = new mongoose.Schema({
     },
     unitType: {
         type: String,
-        require: [true, "You must provide the measurment unit for this item"]
+        required: [true, "You must provide the measurment unit for this item"]
     },
     recipes: [{
         type: mongoose.Schema.Types.ObjectId,

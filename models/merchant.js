@@ -14,8 +14,11 @@ const MerchantSchema = new mongoose.Schema({
         ref: "Recipe"
     }],
     ingredients: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Ingredient"
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Ingredient"
+        },
+        quantity: String
     }]
 });
 

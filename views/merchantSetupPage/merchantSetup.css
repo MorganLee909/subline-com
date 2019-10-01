@@ -4,6 +4,10 @@ table{
     margin: 20px;
 }
 
+#recipeName{
+    color: #ff626b;
+}
+
 .container{
     display: flex;
     flex-direction: column;

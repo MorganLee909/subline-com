@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 
@@ -24,11 +26,29 @@ module.exports = {
     merchantSetup: (req, res)=>{
         Ingredient.find()
             .then((ingredients)=>{
-                return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients});
+                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
+                    .then((recipes)=>{
+                        return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data});
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
             })
             .catch((err)=>{
                 console.log(err);
                 return res.render("error");
             })
+    },
+
+    getRecipes: (req, res)=>{
+        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
+            .then((recipes)=>{
+                
+                return res.json(recipes);
+            })
+            .catch((err)=>{
+                return res.json(err);
+            });
     }
 }

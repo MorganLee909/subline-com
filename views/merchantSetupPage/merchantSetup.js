@@ -1,24 +1,47 @@
+console.log(ingredients);
+console.log(recipes);
+
 let state = 0;
 let data = {};
 
 let addIngredients = document.querySelector("#addIngredients");
 let newIngredients = document.querySelector("#newIngredients");
+let createRecipes = document.querySelector("#createRecipes");
 let existingIngredientElements = [];
 let newIngredientElements = [];
+let recipeData = [];
+let recipeDataIndex = 0;
+
+for(let recipe of recipes.elements){
+    recipeData.push(
+        {
+            id: recipe.id,
+            name: recipe.name,
+            ingredients: []
+        }
+    )
+}
 
 let updateState = (num)=>{
     state += num;
     if(state === 0){
         addIngredients.style.display = "flex";
         newIngredients.style.display = "none";
+        createRecipes.style.display = "none";
     }else if(state === 1){
         addIngredients.style.display = "none";
         newIngredients.style.display = "flex";
+        createRecipes.style.display = "none";
     }else if(state === 2){
-        collectNewIngredients();
+        addIngredients.style.display = "none";
+        newIngredients.style.display = "none";
+        createRecipes.style.display = "flex";
+        createIngredientsList();
+        showRecipe();
     }
 }
 
+//Ingredient functions
 let populateIngredients = ()=>{
     let tBody = document.createElement("tbody");
 
@@ -33,7 +56,6 @@ let populateIngredients = ()=>{
         row.appendChild(add);
     
         let name = document.createElement("td");
-        
         name.innerText = ingredient.name;
         row.appendChild(name);
     
@@ -49,7 +71,6 @@ let populateIngredients = ()=>{
 
         quantity.appendChild(quantityInput);
         row.appendChild(quantity);
-    
         let unit = document.createElement("td");
         unit.innerText = ingredient.unitType;
         row.appendChild(unit);
@@ -80,7 +101,6 @@ let newIngredientField = ()=>{
     categoryInput.type = "text"
     category.appendChild(categoryInput);
     row.appendChild(category);
-
     let quantity = document.createElement("td");
     let quantityInput = document.createElement("input");
     quantityInput.type = "number";
@@ -98,6 +118,131 @@ let newIngredientField = ()=>{
     newIngredientElements.push(row);
 }
 
+let createIngredientsList = ()=>{
+    data.existing = [];
+    for(let ingredient of existingIngredientElements){
+        if(ingredient.childNodes[0].childNodes[0].checked){
+            data.existing.push({
+                id: ingredient.id,
+                name: ingredient.childNodes[1].childNodes[0].nodeValue,
+                category: ingredient.childNodes[2].childNodes[0].nodeValue,
+                quantity: ingredient.childNodes[3].childNodes[0].value
+            });
+        }
+    }
+
+    data.new = [];
+    let id = 0;
+    for(let ingredient of newIngredientElements){
+        data.new.push({
+            id: id,
+            name: ingredient.childNodes[0].childNodes[0].value,
+            category: ingredient.childNodes[1].childNodes[0].value,
+            quantity: ingredient.childNodes[2].childNodes[0].value,
+            unitType: ingredient.childNodes[3].childNodes[0].value
+        });
+        id++;
+    }
+}
+
+//Recipe functions
+let showRecipe = ()=>{
+    let title = document.querySelector("#recipeName");
+    title.innerText = recipeData[recipeDataIndex].name;
+
+    let body = document.querySelector("#recipes tbody");
+    for(let ing of recipeData[recipeDataIndex].ingredients){
+        let row = document.createElement("tr");
+        body.appendChild(row);
+
+        let ingTd = document.createElement("td");
+        row.appendChild(ingTd);
+        let ingName = document.createElement("select");
+        for(let ingredient of data.existing){
+            let newOption = document.createElement("option");
+            newOption.innerText = ingredient.name;
+            newOption.value = ingredient.id;
+            ingName.appendChild(newOption);
+        }
+        for(let ingredient of data.new){
+            let newOption = document.createElement("option");
+            newOption.innerText = ingredient.name;
+            newOption.value = ingredient.name;
+            ingName.appendChild(newOption);
+        }
+        ingTd.appendChild(ingName);
+
+        let quantTd = document.createElement("td");
+        row.appendChild(quantTd);
+        let ingQuant = document.createElement("input");
+        ingQuant.type = "number";
+        ingQuant.step = "0.01";
+        ingQuant.value = ing.name;
+        quantTd.appendChild(ingQuant);
+    }
+
+    let nextButton = document.querySelector("#next");
+    if(recipeDataIndex === recipeData.length - 1){
+        nextButton.innerText = "Finish";
+        nextButton.onclick = submitAll;
+    }else{
+        nextButton.innerText = "Next Recipe";
+        nextButton.onclick = ()=>{changeRecipe(1)};
+    }
+}
+
+let addRecipeIngredientField = ()=>{
+    let body = document.querySelector("#recipes tbody");
+
+    let row = document.createElement("tr");
+    body.appendChild(row);
+
+    let ingTd = document.createElement("td");
+    row.appendChild(ingTd);
+    let ingName = document.createElement("select");
+    for(let ingredient of data.existing){
+        let newOption = document.createElement("option");
+        newOption.innerText = ingredient.name;
+        newOption.value = ingredient.id;
+        ingName.appendChild(newOption);
+    }
+    for(let ingredient of data.new){
+        let newOption = document.createElement("option");
+        newOption.innerText = ingredient.name;
+        newOption.value = ingredient.id;
+        ingName.appendChild(newOption);
+    }
+    ingTd.appendChild(ingName);
+
+    let quantTd = document.createElement("td");
+    row.appendChild(quantTd);
+    let ingQuant = document.createElement("input");
+    ingQuant.type = "number";
+    ingQuant.step = "0.01";
+    ingQuant.min = "0";
+    quantTd.appendChild(ingQuant);
+}
+
+let changeRecipe = (num)=>{
+    let body = document.querySelector("#recipes tbody");
+
+    let recipeIngredients = [];
+    while(body.hasChildNodes()){
+        let row = body.firstChild;
+        recipeIngredients.push({
+            id: row.childNodes[0].childNodes[0].value,
+            quantity: row.childNodes[1].childNodes[0].value
+        });
+
+        body.removeChild(row);
+    }
+    recipeDataIndex += num;
+    showRecipe();
+}
+
+let submitAll = ()=>{
+    console.log("something");
+}
 
 populateIngredients();
 updateState(0);
