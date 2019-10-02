@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const IngredientSchema = new mongoose.Schema({
     name: {
         type: String,
-        minlength: [2, "Name of ingredient is two short.  Please have at least two characters"],
+        minlength: [2, "Name of ingredient is too short.  Please have at least two characters"],
         required: [true, "Must provide a name for the ingredient"]
     },
     category: {
@@ -12,12 +12,12 @@ const IngredientSchema = new mongoose.Schema({
     },
     unitType: {
         type: String,
-        required: [true, "You must provide the measurment unit for this item"]
-    },
-    recipes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Recipe"
-    }]
+        required: [true, "You must provide the measurement unit for this item"]
+    }
+    // recipes: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Recipe"
+    // }]
 })
 
 module.exports = mongoose.model("Ingredient", IngredientSchema);

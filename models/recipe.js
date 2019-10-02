@@ -10,10 +10,10 @@ const RecipeSchema = new mongoose.Schema({
         required: true,
         minlength: [3, "Name of recipe must contain at least three characters"]
     },
-    merchant: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Merchant"
-    },
+    // merchant: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Merchant"
+    // },
     ingredients: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Ingredient"

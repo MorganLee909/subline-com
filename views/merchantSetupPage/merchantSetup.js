@@ -1,8 +1,7 @@
-console.log(ingredients);
-console.log(recipes);
-
 let state = 0;
 let data = {};
+console.log(ingredients);
+console.log(recipes);
 
 let addIngredients = document.querySelector("#addIngredients");
 let newIngredients = document.querySelector("#newIngredients");
@@ -264,7 +263,21 @@ let submitAll = ()=>{
         }
         data.recipes.push(newRecipe);
     }
+    
+
+    let form = document.createElement("form");
+    form.method = "post";
+    form.action = "/merchant/create"
+    
+    let dataInput = document.createElement("input");
+    dataInput.type = "hidden";
+    dataInput.name = "data";
+    dataInput.value = JSON.stringify(data);
+
+    form.appendChild(dataInput);
+    document.body.appendChild(form);
     console.log(data);
+    // form.submit();
 }
 
 populateIngredients();
