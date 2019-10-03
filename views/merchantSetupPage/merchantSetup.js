@@ -36,7 +36,6 @@ let updateState = (num)=>{
         newIngredients.style.display = "none";
         createRecipes.style.display = "flex";
         createIngredientsList();
-        showRecipe();
     }
 }
 
@@ -118,30 +117,54 @@ let newIngredientField = ()=>{
 }
 
 let createIngredientsList = ()=>{
-    data.existing = [];
+    data.ingredients = [];  //changed
     for(let ingredient of existingIngredientElements){
         if(ingredient.childNodes[0].childNodes[0].checked){
-            data.existing.push({
+            data.ingredients.push({
                 id: ingredient.id,
                 name: ingredient.childNodes[1].childNodes[0].nodeValue,
-                category: ingredient.childNodes[2].childNodes[0].nodeValue,
-                quantity: ingredient.childNodes[3].childNodes[0].value
+                quantity: ingredient.childNodes[3].childNodes[0].value,
+                unitType: ingredient.childNodes[4].childNodes[0].nodeValue
             });
         }
     }
 
-    data.new = [];
-    let id = 0;
+    let newIngredient = [];
+    let newIngredientQuantity = [];
     for(let ingredient of newIngredientElements){
-        data.new.push({
-            id: id,
+        newIngredient.push({
             name: ingredient.childNodes[0].childNodes[0].value,
             category: ingredient.childNodes[1].childNodes[0].value,
-            quantity: ingredient.childNodes[2].childNodes[0].value,
             unitType: ingredient.childNodes[3].childNodes[0].value
         });
-        id++;
+        newIngredientQuantity.push({
+            name: ingredient.childNodes[0].childNodes[0].value,
+            quantity: ingredient.childNodes[2].childNodes[0].value
+        })
     }
+
+    axios.post("/ingredients/create", newIngredient)
+        .then((result)=>{
+            for(let ingredient of result.data){
+                let newIngredient = {
+                    id: ingredient._id,
+                    name: ingredient.name,
+                    unitType: ingredient.unitType
+                }
+
+                for(let item of newIngredientQuantity){
+                    if(ingredient.name === item.name){
+                        newIngredient.quantity = item.quantity;
+                    }
+                }
+
+                data.ingredients.push(newIngredient);
+            }
+            showRecipe();
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
 }
 
 //Recipe functions
@@ -157,16 +180,11 @@ let showRecipe = ()=>{
         let ingTd = document.createElement("td");
         row.appendChild(ingTd);
         let ingName = document.createElement("select");
-        for(let ingredient of data.existing){
+        console.log(data.ingredients);
+        for(let ingredient of data.ingredients){
             let newOption = document.createElement("option");
             newOption.innerText = ingredient.name;
             newOption.value = ingredient.id;
-            ingName.appendChild(newOption);
-        }
-        for(let ingredient of data.new){
-            let newOption = document.createElement("option");
-            newOption.innerText = ingredient.name;
-            newOption.value = ingredient.name;
             ingName.appendChild(newOption);
         }
         ingTd.appendChild(ingName);
@@ -206,13 +224,7 @@ let addRecipeIngredientField = ()=>{
     let ingTd = document.createElement("td");
     row.appendChild(ingTd);
     let ingName = document.createElement("select");
-    for(let ingredient of data.existing){
-        let newOption = document.createElement("option");
-        newOption.innerText = ingredient.name;
-        newOption.value = ingredient.id;
-        ingName.appendChild(newOption);
-    }
-    for(let ingredient of data.new){
+    for(let ingredient of data.ingredients){
         let newOption = document.createElement("option");
         newOption.innerText = ingredient.name;
         newOption.value = ingredient.id;
@@ -252,7 +264,8 @@ let submitAll = ()=>{
 
     for(let recipe of recipeData){
         let newRecipe = {
-            id: recipe.id,
+            cloverId: recipe.id,
+            name: recipe.name,
             ingredients: []
         };
         for(let ingredient of recipe.ingredients){
@@ -276,8 +289,7 @@ let submitAll = ()=>{
 
     form.appendChild(dataInput);
     document.body.appendChild(form);
-    console.log(data);
-    // form.submit();
+    form.submit();
 }
 
 populateIngredients();

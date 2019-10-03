@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const MerchantSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
     cloverId: {
         type: String,
         required: true
@@ -9,10 +13,6 @@ const MerchantSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    recipes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Recipe"
-    }],
     ingredients: [{
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -22,6 +22,10 @@ const MerchantSchema = new mongoose.Schema({
             type: Number,
             min: [0, "Quantity cannot be less than 0"]
         }
+    }],
+    recipes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Recipe"
     }]
 });
 
