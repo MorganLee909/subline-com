@@ -7,21 +7,25 @@
     <body>
         <% include ../shared/header %>
 
-        <input id="filter" onkeyup="filter()" type="text">
+        <div class="container">
+            <h1><%= merchant.name %> inventory</h1>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Category</th>
-                    <th>Quantity</th>
-                </tr>
-                <tbody></tbody>
-            </thead>
-        </table>
+            <input id="filter" onkeyup="filter()" type="text" placeholder="Start typing to filter">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortIngredients('name')">Item</th>
+                        <th onclick="sortIngredients('category')">Category</th>
+                        <th onclick="sortIngredients('quantity')">Quantity</th>
+                        <th onclick="sortIngredients('unit')">Unit</th>
+                    </tr>
+                    <tbody></tbody>
+                </thead>
+            </table>
+        </div>
 
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/inventory/inventory.js"></script>
     </body>
 </html>
