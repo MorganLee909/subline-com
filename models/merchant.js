@@ -13,8 +13,8 @@ const MerchantSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    ingredients: [{
-        id: {
+    inventory: [{
+        ingredient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Ingredient"
         },

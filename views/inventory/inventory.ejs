@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/inventory/inventory.css">
+        <link rel="stylesheet" href="/shared/shared.css">
+    </head>
+    <body>
+        <% include ../shared/header %>
+
+        <input id="filter" onkeyup="filter()" type="text">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                </tr>
+                <tbody></tbody>
+            </thead>
+        </table>
+
+        <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="/inventory/inventory.js"></script>
+    </body>
+</html>

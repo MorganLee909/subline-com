@@ -10,10 +10,10 @@ const token = "f1c88a69-e3e4-059a-da06-8858d0636e82";
 module.exports = {
     displayInventory: (req, res)=>{
         Merchant.findOne({cloverId: merchantId})
-            .populate("ingredients")
+            .populate("inventory.ingredient")
             .then((merchant)=>{
                 if(merchant){
-                    return res.render("inventory");
+                    return res.render("inventory/inventory", {merchant: merchant});
                 }else{
                     return res.redirect("/merchant/new");
                 }
@@ -64,16 +64,16 @@ module.exports = {
                             name: merchant.data.name,
                             cloverId: merchant.data.id,
                             lastUpdateTime: Date.now,
-                            ingredients: [],
+                            inventory: [],
                             recipes: []
                         });
 
                         for(let ingredient of data.ingredients){
                             let newIngredient = {
-                                id: ingredient.id,
+                                ingredient: ingredient.id,
                                 quantity: parseInt(ingredient.quantity)
                             }
-                            newMerchant.ingredients.push(newIngredient);
+                            newMerchant.inventory.push(newIngredient);
                         }
 
                         for(let recipe of recipes){
