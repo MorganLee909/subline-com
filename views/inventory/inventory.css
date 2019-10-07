@@ -18,6 +18,13 @@
         min-width: 150px;
         cursor: pointer;
     }
+    th:nth-of-type(5){
+        border: none;
+        background: none;
+        color: white;
+        min-width: 0;
+        cursor: auto;
+    }
 
     td{
         border: 1px solid black;
@@ -25,7 +32,16 @@
         padding: 1px 10px;
     }
 
+    td:nth-of-type(5n){
+        border: none;
+    }
+
     .input-new{
         display: flex;
         flex-wrap: nowrap;
+    }
+
+    .edit-button{
+        padding: 0;
+        margin: 0;
     }

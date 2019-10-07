@@ -25,6 +25,14 @@ let renderIngredients = ()=>{
         let unit = document.createElement("td");
         unit.innerText = item.unit;
         row.appendChild(unit);
+
+        let action = document.createElement("td");
+        row.appendChild(action);
+        let editBtn = document.createElement("button");
+        editBtn.onclick = ()=>{editThis(item.id, row)};
+        editBtn.innerText = "Edit";
+        editBtn.className = "edit-button"
+        action.appendChild(editBtn);
     }
 }
 
@@ -39,6 +47,7 @@ let filter = ()=>{
     for(let item of merchant.inventory){
         if(item.ingredient.name.toLowerCase().includes(searchString)){
             items.push({
+                id: item.ingredient._id,
                 name: item.ingredient.name,
                 category: item.ingredient.category,
                 quantity: item.quantity,
@@ -49,6 +58,32 @@ let filter = ()=>{
 
     sortIngredients("name");
     renderIngredients(items);
+}
+
+let editThis = (id, row)=>{
+    let quantity = row.childNodes[2];
+    let button = row.childNodes[4].childNodes[0];
+
+    let quantityInput = document.createElement("input");
+    quantityInput.type = "number";
+    quantityInput.step = "0.01";
+    quantityInput.value = quantity.innerText;
+
+    quantity.innerText = "";
+    quantity.appendChild(quantityInput);
+
+    button.innerText = "Save";
+    button.onclick = ()=>{updateOne(id, row)};
+}
+
+let updateOne = (id, row)=>{
+    let quantityField = row.childNodes[2];
+    let quantity = quantityField.childNodes[0].value;
+
+    quantityField.removeChild(quantityField.firstChild);
+    quantityField.innerText = quantity;
+
+    row.childNodes[4].childNodes[0].innerText = "Edit";
 }
 
 filter();
