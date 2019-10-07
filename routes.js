@@ -7,4 +7,5 @@ module.exports = function(app){
     app.post("/merchant/create", home.createMerchant);
     app.post("/ingredients/create", home.createNewIngredients);
     app.post("/ingredients/update", home.updateIngredient);
+    app.post("/ingredients/remove", home.removeIngredient);
 }

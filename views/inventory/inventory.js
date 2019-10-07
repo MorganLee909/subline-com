@@ -28,11 +28,18 @@ let renderIngredients = ()=>{
 
         let action = document.createElement("td");
         row.appendChild(action);
+
         let editBtn = document.createElement("button");
-        editBtn.onclick = ()=>{editThis(item.id, row)};
+        editBtn.onclick = ()=>{editIngredient(item.id, row)};
         editBtn.innerText = "Edit";
         editBtn.className = "edit-button"
         action.appendChild(editBtn);
+
+        let removeBtn = document.createElement("button");
+        removeBtn.onclick = ()=>{removeIngredient(item.id, row)};
+        removeBtn.innerText = "Remove";
+        removeBtn.className = "edit-button";
+        action.appendChild(removeBtn);
     }
 }
 
@@ -60,7 +67,7 @@ let filter = ()=>{
     renderIngredients(items);
 }
 
-let editThis = (id, row)=>{
+let editIngredient = (id, row)=>{
     let quantity = row.childNodes[2];
     let button = row.childNodes[4].childNodes[0];
 
@@ -93,6 +100,23 @@ let updateOne = (id, row)=>{
     })
         .then((ingredient)=>{
             // console.log(ingredient);
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
+}
+
+let removeIngredient = (id, row)=>{
+    axios.post("/ingredients/remove", {id: id})
+        .then((result)=>{
+            console.log(result);
+            for(let i = 0; i < items.length; i++){
+                if(id === items[i].id){
+                    items.splice(i, 1);
+                }
+            }
+        
+            renderIngredients();
         })
         .catch((err)=>{
             console.log(err);
