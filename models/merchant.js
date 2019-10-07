@@ -10,8 +10,8 @@ const MerchantSchema = new mongoose.Schema({
         required: true
     },
     lastUpdatedTime: {
-        type: Date,
-        default: Date.now
+        type: String,
+        default: Date.now()
     },
     inventory: [{
         ingredient: {

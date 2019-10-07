@@ -35,7 +35,7 @@ let sortIngredients = (property)=>{
 
 let filter = ()=>{
     items = [];
-    let searchString = document.querySelector("#filter").value;
+    let searchString = document.querySelector("#filter").value.toLowerCase();
     for(let item of merchant.inventory){
         if(item.ingredient.name.toLowerCase().includes(searchString)){
             items.push({

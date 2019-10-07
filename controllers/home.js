@@ -4,16 +4,51 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Recipe = require("../models/recipe");
 
-const merchantId = "HCVKASXH94531";
-const token = "f1c88a69-e3e4-059a-da06-8858d0636e82";
+// const merchantId = "HCVKASXH94531";
+// const token = "f1c88a69-e3e4-059a-da06-8858d0636e82";
+
+const merchantId = "YHVPCQMVB1P81";
+const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
     displayInventory: (req, res)=>{
         Merchant.findOne({cloverId: merchantId})
             .populate("inventory.ingredient")
+            .populate("recipes")
             .then((merchant)=>{
                 if(merchant){
-                    return res.render("inventory/inventory", {merchant: merchant});
+                    axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.cloverId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
+                        .then((result)=>{
+                            for(let order of result.data.elements){
+                                for(let item of order.lineItems.elements){
+                                    let recipe = merchant.recipes.find(r => r.cloverId === item.item.id);
+                                    if(recipe){
+                                        for(let ingredient of recipe.ingredients){
+                                            let inventoryIngredient = {};
+                                            for(let invItem of merchant.inventory){
+                                                if(invItem.ingredient._id.toString() === ingredient.id.toString()){
+                                                    inventoryIngredient = invItem;
+                                                }
+                                            }
+                                            inventoryIngredient.quantity -= ingredient.quantity;
+                                        }
+                                    }
+                                }
+                            }
+                            merchant.lastUpdatedTime = Date.now();
+
+                            merchant.save()
+                                .then((updatedMerchant)=>{
+                                    return res.render("inventory/inventory", {merchant: updatedMerchant});
+                                })
+                                .catch((err)=>{
+                                    console.log(err);
+                                    return res.render("error");
+                                });
+                        })
+                        .catch((err)=>{
+                            console.log(err);
+                        });
                 }else{
                     return res.redirect("/merchant/new");
                 }
@@ -59,11 +94,10 @@ module.exports = {
             .then((recipes)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}?access_token=${token}`)
                     .then((merchant)=>{
-                        console.log(merchant.data);
                         let newMerchant = new Merchant({
                             name: merchant.data.name,
                             cloverId: merchant.data.id,
-                            lastUpdateTime: Date.now,
+                            lastUpdatedTime: Date.now(),
                             inventory: [],
                             recipes: []
                         });
