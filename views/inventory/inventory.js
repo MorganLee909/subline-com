@@ -79,11 +79,24 @@ let editThis = (id, row)=>{
 let updateOne = (id, row)=>{
     let quantityField = row.childNodes[2];
     let quantity = quantityField.childNodes[0].value;
+    let button = row.childNodes[4].childNodes[0];
 
     quantityField.removeChild(quantityField.firstChild);
     quantityField.innerText = quantity;
 
-    row.childNodes[4].childNodes[0].innerText = "Edit";
+    button.innerText = "Edit";
+    button.onclick = ()=>{editThis(item.id, row)};
+
+    axios.post("/ingredients/update", {
+        id: id,
+        quantity: quantity
+    })
+        .then((ingredient)=>{
+            // console.log(ingredient);
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
 }
 
 filter();

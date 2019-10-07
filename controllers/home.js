@@ -142,5 +142,31 @@ module.exports = {
                 console.log(err);
                 return res.render("error");
             });
+    },
+
+    updateIngredient: (req, res)=>{
+        console.log(req.body);
+        Merchant.findOne({cloverId: merchantId})
+            .then((merchant)=>{
+                for(let item of merchant.inventory){
+                    
+                    if(req.body.id === item.ingredient.toString()){
+                        item.quantity = req.body.quantity;
+                        break;
+                    }
+                }
+                merchant.save()
+                    .then((updatedMerchant)=>{
+                        return res.json(updatedMerchant);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.json(err);
+                    })
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     }
 }
