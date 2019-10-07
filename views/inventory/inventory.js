@@ -1,5 +1,6 @@
 let items = [];
 let tbody = document.querySelector("tbody");
+console.log(merchant);
 
 let renderIngredients = ()=>{
     while(tbody.hasChildNodes()){
@@ -121,6 +122,53 @@ let removeIngredient = (id, row)=>{
         .catch((err)=>{
             console.log(err);
         });
+}
+
+let displayAdd = ()=>{
+    let modal = document.querySelector(".add-ingredient");
+    let content = document.querySelector(".modal-content");
+
+    let removeModal = (modal)=>{modal.style.visibility = "hidden";}
+
+    modal.onclick = ()=>{removeModal(modal);}
+
+    modal.style.visibility = "visible";
+}
+
+let addIngredient = ()=>{
+    let content = document.querySelector(".modal-content");
+
+    let newIngredient = {
+        ingredient: {
+            name: content.children[0].children[0].value,
+            category: content.children[1].children[0].value,
+            unitType: content.children[3].children[0].value
+        },
+        quantity: content.children[2].children[0].value
+    }
+
+    console.log(newIngredient);
+
+    axios.post("/ingredients/createone", newIngredient)
+        .then((ingredient)=>{
+            console.log(ingredient);
+            items.push({
+                id: ingredient._id,
+                name: newIngredient.ingredient.name,
+                category: newIngredient.ingredient.category,
+                quantity: newIngredient.quantity,
+                unit: newIngredient.ingredient.unitType
+            })
+            
+            sortIngredients("name");
+            renderIngredients();
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
+
+    let modal = document.querySelector(".add-ingredient");
+    modal.style.visibility = "hidden";
 }
 
 filter();

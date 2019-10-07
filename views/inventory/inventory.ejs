@@ -10,6 +10,8 @@
         <div class="container">
             <h1><%= merchant.name %> inventory</h1>
 
+            <button onclick="displayAdd()">Add Ingredient</button>
+
             <input id="filter" onkeyup="filter()" type="text" placeholder="Start typing to filter">
 
             <table>
@@ -24,6 +26,28 @@
                     <tbody></tbody>
                 </thead>
             </table>
+        </div>
+
+        <div class="add-ingredient">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <label>Ingredient name:
+                    <input type="text">
+                </label>
+
+                <label>Category:
+                    <input type="text">
+                </label>
+
+                <label>Quantity:
+                    <input type="number" step="0.01">
+                </label>
+
+                <label>Unit:
+                    <input type="text">
+                </label>
+
+                <button onclick="addIngredient()">Create Ingredient</button>
+            </div>
         </div>
 
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>

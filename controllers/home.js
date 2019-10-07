@@ -169,11 +169,9 @@ module.exports = {
     },
 
     removeIngredient: (req, res)=>{
-        console.log(req.body);
         Merchant.findOne({cloverId: merchantId})
             .then((merchant)=>{
                 for(let i = 0; i < merchant.inventory.length; i++){
-                    console.log(`${req.body.id} ${merchant.inventory[i].ingredient.toString()}`);
                     if(req.body.id === merchant.inventory[i].ingredient.toString()){
                         merchant.inventory.splice(i, 1);
                     }
@@ -191,6 +189,29 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
                 return res.json(err);
+            });
+    },
+
+    createIngredient: (req, res)=>{
+        Ingredient.create(req.body.ingredient)
+            .then((ingredient)=>{
+                Merchant.updateOne(
+                    {cloverId: merchantId},
+                    {$push: {inventory: {
+                        ingredient: ingredient._id.toString(), 
+                        quantity: req.body.quantity
+                    }}}
+                    )
+                    .then((merchant)=>{
+                        return res.json(merchant);
+                    })
+                    .catch((err)=>{
+                        return res.json(err);
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.json("error");
             });
     }
 }

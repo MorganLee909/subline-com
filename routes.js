@@ -8,4 +8,5 @@ module.exports = function(app){
     app.post("/ingredients/create", home.createNewIngredients);
     app.post("/ingredients/update", home.updateIngredient);
     app.post("/ingredients/remove", home.removeIngredient);
+    app.post("/ingredients/createone", home.createIngredient);
 }
