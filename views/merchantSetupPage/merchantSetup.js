@@ -117,13 +117,12 @@ let newIngredientField = ()=>{
 let createIngredientsList = ()=>{
     data.ingredients = [];
     for(let ingredient of existingIngredientElements){
-        console.log(ingredient);
-        if(ingredient.childNodes[0].childNodes[0].checked){
+        if(ingredient.children[0].children[0].checked){
             data.ingredients.push({
                 id: ingredient.id,
-                name: ingredient.childNodes[1].childNodes[0].nodeValue,
-                quantity: ingredient.childNodes[3].childNodes[0].value,
-                unitType: ingredient.childNodes[4].childNodes[0].nodeValue
+                name: ingredient.children[1].children[0].nodeValue,
+                quantity: ingredient.children[3].children[0].value,
+                unitType: ingredient.children[4].children[0].nodeValue
             });
         }
     }
@@ -132,13 +131,13 @@ let createIngredientsList = ()=>{
     let newIngredientQuantity = [];
     for(let ingredient of newIngredientElements){
         newIngredient.push({
-            name: ingredient.childNodes[0].childNodes[0].value,
-            category: ingredient.childNodes[1].childNodes[0].value,
-            unitType: ingredient.childNodes[3].childNodes[0].value
+            name: ingredient.children[0].children[0].value,
+            category: ingredient.children[1].children[0].value,
+            unitType: ingredient.children[3].children[0].value
         });
         newIngredientQuantity.push({
-            name: ingredient.childNodes[0].childNodes[0].value,
-            quantity: ingredient.childNodes[2].childNodes[0].value
+            name: ingredient.children[0].children[0].value,
+            quantity: ingredient.children[2].children[0].value
         })
     }
 
@@ -246,11 +245,11 @@ let changeRecipe = (num)=>{
     let body = document.querySelector("#recipes tbody");
 
     let recipeIngredients = [];
-    while(body.hasChildNodes()){
+    while(body.haschildren()){
         let row = body.firstChild;
         recipeIngredients.push({
-            id: row.childNodes[0].childNodes[0].value,
-            quantity: row.childNodes[1].childNodes[0].value
+            id: row.children[0].children[0].value,
+            quantity: row.children[1].children[0].value
         });
         recipeData[recipeDataIndex].ingredients = recipeIngredients;
 
@@ -265,11 +264,11 @@ let submitAll = ()=>{
     data.recipes = [];
 
     let recipeIngredients = [];
-    while(body.hasChildNodes()){
+    while(body.haschildren()){
         let row = body.firstChild;
         recipeIngredients.push({
-            id: row.childNodes[0].childNodes[0].value,
-            quantity: row.childNodes[1].childNodes[0].value
+            id: row.children[0].children[0].value,
+            quantity: row.children[1].children[0].value
         });
         recipeData[recipeDataIndex].ingredients = recipeIngredients;
 
