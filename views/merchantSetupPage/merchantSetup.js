@@ -132,7 +132,7 @@ let removeRow = (row)=>{
 
 let createIngredientsList = ()=>{
     data.ingredients = [];
-    for(let ingredient of newIngredientElements){
+    for(let ingredient of existingIngredientElements){
         if(ingredient.children[0].children[0].checked){
             data.ingredients.push({
                 id: ingredient.id,
@@ -145,7 +145,6 @@ let createIngredientsList = ()=>{
 
     let newIngredient = [];
     let newIngredientQuantity = [];
-    console.log(newIngredientElements)
     for(let ingredient of newIngredientElements){
         newIngredient.push({
             name: ingredient.children[0].children[0].value,
@@ -195,7 +194,6 @@ let showRecipe = ()=>{
         let ingTd = document.createElement("td");
         row.appendChild(ingTd);
         let ingName = document.createElement("select");
-        // console.log(data.ingredients);
         for(let ingredient of data.ingredients){
             let newOption = document.createElement("option");
             newOption.innerText = ingredient.name;
@@ -257,11 +255,17 @@ let addRecipeIngredientField = ()=>{
     ingQuant.step = "0.01";
     ingQuant.min = "0";
     quantTd.appendChild(ingQuant);
+
+    let removeTd = document.createElement("td");
+    row.appendChild(removeTd);
+    let removeButton = document.createElement("button");
+    removeButton.innerText = "-";
+    removeButton.onclick = ()=>{row.parentNode.removeChild(row)};
+    removeTd.appendChild(removeButton);
 }
 
 let changeRecipe = (num)=>{
     let body = document.querySelector("#recipes tbody");
-    console.log(body);
 
     let recipeIngredients = [];
     while(body.children.length > 0){
@@ -283,7 +287,7 @@ let submitAll = ()=>{
     data.recipes = [];
 
     let recipeIngredients = [];
-    while(body.haschildren()){
+    while(body.children.length > 0){
         let row = body.firstChild;
         recipeIngredients.push({
             id: row.children[0].children[0].value,
