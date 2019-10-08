@@ -117,6 +117,7 @@ let newIngredientField = ()=>{
 let createIngredientsList = ()=>{
     data.ingredients = [];
     for(let ingredient of existingIngredientElements){
+        console.log(ingredient);
         if(ingredient.childNodes[0].childNodes[0].checked){
             data.ingredients.push({
                 id: ingredient.id,

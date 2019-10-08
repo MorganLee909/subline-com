@@ -68,8 +68,8 @@ let filter = ()=>{
 }
 
 let editIngredient = (id, row)=>{
-    let quantity = row.childNodes[2];
-    let button = row.childNodes[4].childNodes[0];
+    let quantity = row.children[2];
+    let button = row.children[4].children[0];
 
     let quantityInput = document.createElement("input");
     quantityInput.type = "number";
@@ -84,9 +84,9 @@ let editIngredient = (id, row)=>{
 }
 
 let updateOne = (id, row)=>{
-    let quantityField = row.childNodes[2];
-    let quantity = quantityField.childNodes[0].value;
-    let button = row.childNodes[4].childNodes[0];
+    let quantityField = row.children[2];
+    let quantity = quantityField.children[0].value;
+    let button = row.children[4].children[0];
 
     quantityField.removeChild(quantityField.firstChild);
     quantityField.innerText = quantity;
