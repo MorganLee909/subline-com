@@ -83,7 +83,7 @@ let populateIngredients = ()=>{
 }
 
 let newIngredientField = ()=>{
-    let inputField = document.querySelector("#inputField");
+    let body = document.querySelector("#inputField tbody");
     let row = document.createElement("tr");
 
     let name = document.createElement("td");
@@ -110,25 +110,42 @@ let newIngredientField = ()=>{
     unit.appendChild(unitInput);
     row.appendChild(unit);
 
-    inputField.appendChild(row);
+    let removeTd = document.createElement("td");
+    let removeButton = document.createElement("button");
+    removeButton.innerText = "-";
+    removeButton.onclick = ()=>{removeRow(row)};
+    removeTd.appendChild(removeButton);
+    row.appendChild(removeTd);
+
+    body.appendChild(row);
     newIngredientElements.push(row);
+}
+
+let removeRow = (row)=>{
+    for(let i = 0; i < newIngredientElements.length; i++){
+        if(newIngredientElements[i] === row){
+            newIngredientElements.splice(i, 1);
+        }
+    }
+    row.parentNode.removeChild(row);
 }
 
 let createIngredientsList = ()=>{
     data.ingredients = [];
-    for(let ingredient of existingIngredientElements){
+    for(let ingredient of newIngredientElements){
         if(ingredient.children[0].children[0].checked){
             data.ingredients.push({
                 id: ingredient.id,
-                name: ingredient.children[1].children[0].nodeValue,
+                name: ingredient.children[1].textContent,
                 quantity: ingredient.children[3].children[0].value,
-                unitType: ingredient.children[4].children[0].nodeValue
+                unitType: ingredient.children[4].textContent
             });
         }
     }
 
     let newIngredient = [];
     let newIngredientQuantity = [];
+    console.log(newIngredientElements)
     for(let ingredient of newIngredientElements){
         newIngredient.push({
             name: ingredient.children[0].children[0].value,
@@ -178,6 +195,7 @@ let showRecipe = ()=>{
         let ingTd = document.createElement("td");
         row.appendChild(ingTd);
         let ingName = document.createElement("select");
+        // console.log(data.ingredients);
         for(let ingredient of data.ingredients){
             let newOption = document.createElement("option");
             newOption.innerText = ingredient.name;
@@ -243,9 +261,10 @@ let addRecipeIngredientField = ()=>{
 
 let changeRecipe = (num)=>{
     let body = document.querySelector("#recipes tbody");
+    console.log(body);
 
     let recipeIngredients = [];
-    while(body.haschildren()){
+    while(body.children.length > 0){
         let row = body.firstChild;
         recipeIngredients.push({
             id: row.children[0].children[0].value,
