@@ -1,6 +1,5 @@
 let items = [];
 let tbody = document.querySelector("tbody");
-console.log(merchant);
 
 let renderIngredients = ()=>{
     while(tbody.hasChildNodes()){
@@ -99,9 +98,7 @@ let updateOne = (id, row)=>{
         id: id,
         quantity: quantity
     })
-        .then((ingredient)=>{
-            // console.log(ingredient);
-        })
+        .then((ingredient)=>{})
         .catch((err)=>{
             console.log(err);
         });
@@ -110,7 +107,6 @@ let updateOne = (id, row)=>{
 let removeIngredient = (id, row)=>{
     axios.post("/ingredients/remove", {id: id})
         .then((result)=>{
-            console.log(result);
             for(let i = 0; i < items.length; i++){
                 if(id === items[i].id){
                     items.splice(i, 1);
@@ -147,11 +143,8 @@ let addIngredient = ()=>{
         quantity: content.children[2].children[0].value
     }
 
-    console.log(newIngredient);
-
     axios.post("/ingredients/createone", newIngredient)
         .then((ingredient)=>{
-            console.log(ingredient);
             items.push({
                 id: ingredient._id,
                 name: newIngredient.ingredient.name,
