@@ -98,31 +98,34 @@ let updateOne = (id, row)=>{
         id: id,
         quantity: quantity
     })
-        .then((ingredient)=>{})
+        .then((ingredient)=>{
+            banner.createNotification("The ingredient has been successfully updated");
+        })
         .catch((err)=>{
+            banner.createError("There was an error and the ingredient was not updated");
             console.log(err);
         });
 }
 
 let removeIngredient = (id, row)=>{
     axios.post("/ingredients/remove", {id: id})
-        .then((result)=>{
+        .then((merchant)=>{
             for(let i = 0; i < items.length; i++){
                 if(id === items[i].id){
                     items.splice(i, 1);
                 }
             }
-        
+            banner.createNotification("The ingredient has been removed from your inventory");
             renderIngredients();
         })
         .catch((err)=>{
+            banner.createError("There was an error and the ingredient has not been removed from your inventory");
             console.log(err);
         });
 }
 
 let displayAdd = ()=>{
     let modal = document.querySelector(".add-ingredient");
-    let content = document.querySelector(".modal-content");
 
     let removeModal = (modal)=>{modal.style.visibility = "hidden";}
 
@@ -155,8 +158,10 @@ let addIngredient = ()=>{
             
             sortIngredients("name");
             renderIngredients();
+            banner.createNotification("The new ingredient has been successfully added to your inventory");
         })
         .catch((err)=>{
+            banner.createError("There was an error and the ingredient could not be added to your inventory");
             console.log(err);
         });
 

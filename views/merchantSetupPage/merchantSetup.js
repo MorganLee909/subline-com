@@ -174,9 +174,11 @@ let createIngredientsList = ()=>{
 
                 data.ingredients.push(newIngredient);
             }
+            banner.createNotification("All ingredients have been created and added to your inventory");
             showRecipe();
         })
         .catch((err)=>{
+            banner.createError("There has been an error and your ingredients have not been saved");
             console.log(err);
         });
 }

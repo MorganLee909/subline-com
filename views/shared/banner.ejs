@@ -1,0 +1,31 @@
+<div class="banner">
+    <p></p>
+</div>
+
+<script>
+    let banner = {
+        createNotification: (val)=>{
+            let currentBanner = document.querySelector(".banner");
+            let bannerText = document.querySelector(".banner p");
+            currentBanner.style.display = "inline-block";
+            bannerText.innerText = val;
+            bannerText.classList = "notification";
+
+            setTimeout(()=>{
+                currentBanner.style.display = "none";
+            }, 10000);
+        },
+
+        createError: (val)=>{
+            let currentBanner = document.querySelector(".banner");
+            let bannerText = document.querySelector(".banner p");
+            currentBanner.style.display = "inline-block";
+            bannerText.innerText = val;
+            bannerText.classList = "error";
+
+            setTimeout(()=>{
+                currentBanner.style.display = "none";
+            }, 10000);
+        }
+    }
+</script>

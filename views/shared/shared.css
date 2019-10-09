@@ -23,3 +23,25 @@
         display: inline-block;
         color: #ff626b;
     }
+
+.banner{
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+
+    .banner .notification{
+        background: green;
+        color: white;
+        padding: 10px;
+        margin: 5px;
+        font-weight: bold;
+    }
+
+    .banner .error{
+        background: red;
+        color: white;
+        padding: 10px;
+        margin: 5px;
+        font-weight: bold;
+    }
