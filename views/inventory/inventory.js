@@ -70,6 +70,7 @@ let filter = ()=>{
 let editIngredient = (id, row)=>{
     let quantity = row.children[2];
     let button = row.children[4].children[0];
+    let originalQuantity = quantity.innerText;
 
     let quantityInput = document.createElement("input");
     quantityInput.type = "number";
@@ -80,31 +81,36 @@ let editIngredient = (id, row)=>{
     quantity.appendChild(quantityInput);
 
     button.innerText = "Save";
-    button.onclick = ()=>{updateOne(id, row)};
+    button.onclick = ()=>{updateOne(id, row, originalQuantity)};
 }
 
-let updateOne = (id, row)=>{
+let updateOne = (id, row, originalQuantity)=>{
     let quantityField = row.children[2];
     let quantity = quantityField.children[0].value;
     let button = row.children[4].children[0];
 
     quantityField.removeChild(quantityField.firstChild);
-    quantityField.innerText = quantity;
+
+    if(validator.ingredient.quantity(quantity)){
+        axios.post("/ingredients/update", {
+            id: id,
+            quantity: quantity
+        })
+            .then((ingredient)=>{
+                banner.createNotification("The ingredient has been successfully updated");
+            })
+            .catch((err)=>{
+                banner.createError("There was an error and the ingredient was not updated");
+                console.log(err);
+            });
+
+        quantityField.innerText = quantity;
+    }else{
+        quantityField.innerText = originalQuantity;
+    }
 
     button.innerText = "Edit";
     button.onclick = ()=>{editThis(item.id, row)};
-
-    axios.post("/ingredients/update", {
-        id: id,
-        quantity: quantity
-    })
-        .then((ingredient)=>{
-            banner.createNotification("The ingredient has been successfully updated");
-        })
-        .catch((err)=>{
-            banner.createError("There was an error and the ingredient was not updated");
-            console.log(err);
-        });
 }
 
 let removeIngredient = (id, row)=>{
@@ -146,24 +152,26 @@ let addIngredient = ()=>{
         quantity: content.children[2].children[0].value
     }
 
-    axios.post("/ingredients/createone", newIngredient)
-        .then((ingredient)=>{
-            items.push({
-                id: ingredient._id,
-                name: newIngredient.ingredient.name,
-                category: newIngredient.ingredient.category,
-                quantity: newIngredient.quantity,
-                unit: newIngredient.ingredient.unitType
+    if(validator.ingredient.all(newIngredient)){
+        axios.post("/ingredients/createone", newIngredient)
+            .then((ingredient)=>{
+                items.push({
+                    id: ingredient._id,
+                    name: newIngredient.ingredient.name,
+                    category: newIngredient.ingredient.category,
+                    quantity: newIngredient.quantity,
+                    unit: newIngredient.ingredient.unitType
+                })
+                
+                sortIngredients("name");
+                renderIngredients();
+                banner.createNotification("The new ingredient has been successfully added to your inventory");
             })
-            
-            sortIngredients("name");
-            renderIngredients();
-            banner.createNotification("The new ingredient has been successfully added to your inventory");
-        })
-        .catch((err)=>{
-            banner.createError("There was an error and the ingredient could not be added to your inventory");
-            console.log(err);
-        });
+            .catch((err)=>{
+                banner.createError("There was an error and the ingredient could not be added to your inventory");
+                console.log(err);
+            });
+    }
 
     let modal = document.querySelector(".add-ingredient");
     modal.style.visibility = "hidden";
