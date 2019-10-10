@@ -92,7 +92,7 @@ let updateOne = (id, row)=>{
     quantityField.innerText = quantity;
 
     button.innerText = "Edit";
-    button.onclick = ()=>{editThis(item.id, row)};
+    button.onclick = ()=>{editIngredient(id, row)};
 
     axios.post("/ingredients/update", {
         id: id,
