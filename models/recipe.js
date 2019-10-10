@@ -13,11 +13,13 @@ const RecipeSchema = new mongoose.Schema({
     ingredients: [{
         id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Ingredient"
+            ref: "Ingredient",
+            required: [true, "Must provide ingredient"]
         },
         quantity: {
             type: Number,
-            required: true
+            min: [0, "Cannot have a negative quantity"],
+            required: [true, "Must provide a quantity"]
         }
     }]
 });

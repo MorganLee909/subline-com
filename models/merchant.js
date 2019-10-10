@@ -16,10 +16,12 @@ const MerchantSchema = new mongoose.Schema({
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Ingredient"
+            ref: "Ingredient",
+            required: true
         },
         quantity: {
             type: Number,
+            required: true,
             min: [0, "Quantity cannot be less than 0"]
         }
     }],
