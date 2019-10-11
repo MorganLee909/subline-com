@@ -29,7 +29,7 @@
                 <tbody></tbody>
             </table>
 
-            <button onclick="updateState(1)">Next</button>
+            <button onclick="ingredientSetup.displayNewIngredients()">Next</button>
         </div>
 
         <div id="newIngredients" class="container hide">
@@ -49,9 +49,9 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <button onclick="newIngredientField()">+</button>
-            <button onclick="createIngredientsList()">Create Ingredients</button>
-            <button onclick="updateState(-1)">Back</button>
+            <button onclick="ingredientSetup.newIngredientField()">+</button>
+            <button onclick="ingredientSetup.createIngredientsList()">Create Ingredients</button>
+            <button onclick="ingredientSetup.displayExistingIngredients()">Back</button>
         </div>
 
         <div id="createRecipes" class="container hide">
@@ -70,9 +70,9 @@
                 <tbody></tbody>
             </table>
 
-            <button onclick="addRecipeIngredientField()">+</button>
+            <button onclick="recipeSetup.addRecipeIngredientField()">+</button>
             <button id="next"></button>
-            <button id="previous" onclick="changeRecipe(-1)">Previous Recipe</button>
+            <button id="previous" onclick="recipeSetup.changeRecipe(-1)">Previous Recipe</button>
         </div>
 
         <script>
@@ -81,7 +81,9 @@
         </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
-        <script src="/merchantSetupPage/merchantSetup.js"></script>
+        <script src="/merchantSetupPage/recipeSetup.js"></script>
+        <script src="/merchantSetupPage/ingredientSetup.js"></script>
+        <script src="/merchantSetupPage/controller.js"></script>
     </body>
 </html>
 
