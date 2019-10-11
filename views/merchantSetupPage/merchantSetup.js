@@ -30,9 +30,9 @@ let updateState = (num)=>{
         newIngredients.style.display = "flex";
         createRecipes.style.display = "none";
     }else if(state === 2){
-        addIngredients.style.display = "none";
-        newIngredients.style.display = "none";
-        createRecipes.style.display = "flex";
+        // addIngredients.style.display = "none";
+        // newIngredients.style.display = "none";
+        // createRecipes.style.display = "flex";
         createIngredientsList();
     }
 }
@@ -89,24 +89,29 @@ let newIngredientField = ()=>{
     let name = document.createElement("td");
     let nameInput = document.createElement("input");
     nameInput.type = "text";
+    nameInput.onblur = ()=>{checkValid("name", nameInput)};
     name.appendChild(nameInput);
     row.appendChild(name);
 
     let category = document.createElement("td");
     let categoryInput = document.createElement("input");
     categoryInput.type = "text"
+    categoryInput.onblur = ()=>{checkValid("category", categoryInput)};
     category.appendChild(categoryInput);
     row.appendChild(category);
+
     let quantity = document.createElement("td");
     let quantityInput = document.createElement("input");
     quantityInput.type = "number";
     quantityInput.step = "0.01";
+    quantityInput.onblur = ()=>{checkValid("quantity", quantityInput)};
     quantity.appendChild(quantityInput);
     row.appendChild(quantity);
 
     let unit = document.createElement("td");
     let unitInput = document.createElement("input");
     unitInput.type = "text";
+    unitInput.onblur = ()=>{checkValid("unit", unitInput)};
     unit.appendChild(unitInput);
     row.appendChild(unit);
 
@@ -154,33 +159,44 @@ let createIngredientsList = ()=>{
         newIngredientQuantity.push({
             name: ingredient.children[0].children[0].value,
             quantity: ingredient.children[2].children[0].value
-        })
+        });
     }
 
-    axios.post("/ingredients/create", newIngredient)
-        .then((result)=>{
-            for(let ingredient of result.data){
-                let newIngredient = {
-                    id: ingredient._id,
-                    name: ingredient.name,
-                    unitType: ingredient.unitType
-                }
+    let isValid = true;
+    for(let i = 0; i < newIngredient.length; i++){
+        if(!validator.ingredient.all(newIngredient[i], newIngredientQuantity[i].quantity)){
+            isValid = false;
+            data.ingredients = [];
+            break;
+        }
+    }
 
-                for(let item of newIngredientQuantity){
-                    if(ingredient.name === item.name){
-                        newIngredient.quantity = item.quantity;
+    if(isValid){
+        axios.post("/ingredients/create", newIngredient)
+            .then((result)=>{
+                for(let ingredient of result.data){
+                    let newIngredient = {
+                        id: ingredient._id,
+                        name: ingredient.name,
+                        unitType: ingredient.unitType
                     }
-                }
 
-                data.ingredients.push(newIngredient);
-            }
-            banner.createNotification("All ingredients have been created and added to your inventory");
-            showRecipe();
-        })
-        .catch((err)=>{
-            banner.createError("There has been an error and your ingredients have not been saved");
-            console.log(err);
-        });
+                    for(let item of newIngredientQuantity){
+                        if(ingredient.name === item.name){
+                            newIngredient.quantity = item.quantity;
+                        }
+                    }
+
+                    data.ingredients.push(newIngredient);
+                }
+                banner.createNotification("All ingredients have been created and added to your inventory");
+                showRecipe();
+            })
+            .catch((err)=>{
+                banner.createError("There has been an error and your ingredients have not been saved");
+                console.log(err);
+            });
+    }
 }
 
 //Recipe functions
@@ -328,6 +344,15 @@ let submitAll = ()=>{
     form.appendChild(dataInput);
     document.body.appendChild(form);
     form.submit();
+}
+
+let checkValid = (valueToCheck, inputField)=>{
+    console.log(inputField.value);
+    if(!validator.ingredient[valueToCheck](inputField.value, createBanner = false)){
+        inputField.classList += " input-error"
+    }else{
+        inputField.classList.remove("input-error");
+    }
 }
 
 populateIngredients();

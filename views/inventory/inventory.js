@@ -152,7 +152,7 @@ let addIngredient = ()=>{
         quantity: content.children[2].children[0].value
     }
 
-    if(validator.ingredient.all(newIngredient)){
+    if(validator.ingredient.all(newIngredient.ingredient, newIngredient.quantity)){
         axios.post("/ingredients/createone", newIngredient)
             .then((ingredient)=>{
                 items.push({

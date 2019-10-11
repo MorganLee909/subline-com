@@ -1,26 +1,32 @@
 let validator = {
     ingredient: {
-        name: function(ingName){
+        name: function(ingName, createBanner = true){
             if(ingName.length < 2){
-                banner.createError("Ingredient name must contain at least 2 characters");
+                if(createBanner){
+                    banner.createError("Ingredient name must contain at least 2 characters");
+                }
                 return false;
             }
 
             return true;
         },
 
-        category: function(ingCategory){
+        category: function(ingCategory, createBanner = true){
             if(ingCategory.length < 3){
-                banner.createError("Category name must contain at least 3 characters");
+                if(createBanner){
+                    banner.createError("Category name must contain at least 3 characters");
+                }
                 return false;
             }
 
             return true;
         },
 
-        quantity: function(num){
+        quantity: function(num, createBanner){
             if(num < 0){
-                banner.createError("Quantity cannot be a negative number");
+                if(createBanner){
+                    banner.createError("Quantity cannot be a negative number");
+                }
                 return false;
             }
 
@@ -31,11 +37,13 @@ let validator = {
             return true;
         },
 
-        all: function(ingObject){
-            let nameCheck = this.name(ingObject.ingredient.name);
-            let categoryCheck = this.category(ingObject.ingredient.category);
-            let quantityCheck = this.quantity(ingObject.quantity);
-            let unitCheck = this.unit(ingObject.ingredient.unitType);
+        //Check all parts of ingredient, return true if all pass
+        //Quantity passed seperately and optional
+        all: function(ingObject, quantity = 0, createBanner = true){
+            let nameCheck = this.name(ingObject.name, createBanner);
+            let categoryCheck = this.category(ingObject.category, createBanner);
+            let unitCheck = this.unit(ingObject.unitType, createBanner);
+            let quantityCheck = this.quantity(Number(quantity), createBanner);
 
             if(!nameCheck || !categoryCheck || !quantityCheck || !unitCheck){
                 return false;
