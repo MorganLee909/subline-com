@@ -19,6 +19,8 @@ for(let recipe of recipes.elements){
     )
 }
 
+//refactor
+//buttons should run a function which should call the state update, not the other way around
 let updateState = (num)=>{
     state += num;
     if(state === 0){
@@ -30,10 +32,9 @@ let updateState = (num)=>{
         newIngredients.style.display = "flex";
         createRecipes.style.display = "none";
     }else if(state === 2){
-        // addIngredients.style.display = "none";
-        // newIngredients.style.display = "none";
-        // createRecipes.style.display = "flex";
-        createIngredientsList();
+        addIngredients.style.display = "none";
+        newIngredients.style.display = "none";
+        createRecipes.style.display = "flex";
     }
 }
 
@@ -135,6 +136,8 @@ let removeRow = (row)=>{
     row.parentNode.removeChild(row);
 }
 
+//refactor
+//nothin should run unless everything is valid
 let createIngredientsList = ()=>{
     data.ingredients = [];
     for(let ingredient of existingIngredientElements){
@@ -190,6 +193,7 @@ let createIngredientsList = ()=>{
                     data.ingredients.push(newIngredient);
                 }
                 banner.createNotification("All ingredients have been created and added to your inventory");
+                updateState(1);
                 showRecipe();
             })
             .catch((err)=>{
