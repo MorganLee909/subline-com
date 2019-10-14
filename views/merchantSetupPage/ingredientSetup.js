@@ -1,7 +1,9 @@
 let ingredientSetup = {
-    existingIngredientElements: [],
-    newIngredientElements: [],
+    existingIngredientElements: [], // each object in list is a full tr for one ingredient
+    newIngredientElements: [],  // each object in list is a full tr for one ingredient
 
+    //Loops through all ingredients passed from database
+    //Creates a row for each ingredient and adds it to table
     populateIngredients: function(){
         let tBody = document.createElement("tbody");
     
@@ -48,18 +50,23 @@ let ingredientSetup = {
         }
     },
 
+    //Display existing ingredients table
+    //Hide other tables
     displayExistingIngredients: function(){
         addIngredients.style.display = "flex";
         newIngredients.style.display = "none";
         createRecipes.style.display = "none";
     },
 
+    //Display new ingredients table
+    //Hide other tables
     displayNewIngredients: function(){
         addIngredients.style.display = "none";
         newIngredients.style.display = "flex";
         createRecipes.style.display = "none";
     },
 
+    //Creates a new, empty row in table to input data
     newIngredientField: function(){
         let body = document.querySelector("#inputField tbody");
         let row = document.createElement("tr");
@@ -104,6 +111,7 @@ let ingredientSetup = {
         this.newIngredientElements.push(row);
     },
 
+    //Remove row from new ingredients table
     removeRow: function(row){
         for(let i = 0; i < this.newIngredientElements.length; i++){
             if(this.newIngredientElements[i] === row){
@@ -177,38 +185,5 @@ let ingredientSetup = {
                     console.log(err);
                 });
         }
-    },
-
-    addRecipeIngredientField: function(){
-        let body = document.querySelector("#recipes tbody");
-    
-        let row = document.createElement("tr");
-        body.appendChild(row);
-    
-        let ingTd = document.createElement("td");
-        row.appendChild(ingTd);
-        let ingName = document.createElement("select");
-        for(let ingredient of data.ingredients){
-            let newOption = document.createElement("option");
-            newOption.innerText = ingredient.name;
-            newOption.value = ingredient.id;
-            ingName.appendChild(newOption);
-        }
-        ingTd.appendChild(ingName);
-    
-        let quantTd = document.createElement("td");
-        row.appendChild(quantTd);
-        let ingQuant = document.createElement("input");
-        ingQuant.type = "number";
-        ingQuant.step = "0.01";
-        ingQuant.min = "0";
-        quantTd.appendChild(ingQuant);
-    
-        let removeTd = document.createElement("td");
-        row.appendChild(removeTd);
-        let removeButton = document.createElement("button");
-        removeButton.innerText = "-";
-        removeButton.onclick = ()=>{row.parentNode.removeChild(row)};
-        removeTd.appendChild(removeButton);
     }
 };

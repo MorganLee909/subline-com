@@ -1,7 +1,9 @@
 let recipeSetup = {
-    recipeData: [],
-    recipeDataIndex: 0,
+    recipeData: [],  //stores data from recipes, including ingredients
+    recipeDataIndex: 0,  //index for recipeData, which one is currently displaying
 
+    //Display recipe page and hide others
+    //Populate recipeData with data from Clover
     createRecipePage: function(){
         addIngredients.style.display = "none";
         newIngredients.style.display = "none";
@@ -20,6 +22,9 @@ let recipeSetup = {
         this.showRecipe();
     },
 
+    //Loops through recipeData to create td's
+    //Displays each ingredient for current recipe
+    //Create and display correct buttons for navigation
     showRecipe: function(){
         let title = document.querySelector("#recipeName");
         title.innerText = this.recipeData[this.recipeDataIndex].name;
@@ -69,6 +74,9 @@ let recipeSetup = {
         }
     },
 
+    //Empties all data in the table
+    //Changes recipeDataIndex
+    //Hands off to showRecipe function
     changeRecipe: function(num){
         let body = document.querySelector("#recipes tbody");
     
@@ -87,6 +95,8 @@ let recipeSetup = {
         this.showRecipe();
     },
 
+    //Add all recipes to data variable
+    //Creates a form and submits data
     submitAll: function(){
         let body = document.querySelector("#recipes tbody");
         data.recipes = [];
@@ -102,7 +112,7 @@ let recipeSetup = {
     
             body.removeChild(row);
         }
-    
+
         for(let recipe of this.recipeData){
             let newRecipe = {
                 cloverId: recipe.id,
@@ -132,6 +142,7 @@ let recipeSetup = {
         form.submit();
     },
 
+    //Creates a new, empty row in table to input data
     addRecipeIngredientField: function(){
         let body = document.querySelector("#recipes tbody");
     
