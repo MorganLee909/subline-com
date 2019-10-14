@@ -54,7 +54,7 @@ let recipeSetup = {
             ingQuant.type = "number";
             ingQuant.step = "0.01";
             ingQuant.value = ing.quantity;
-            ingQuant.onblur = ()=>{checkValid("quantity", ingQuant.value)};
+            ingQuant.onblur = ()=>{checkValid("quantity", ingQuant)};
             quantTd.appendChild(ingQuant);
         }
     
@@ -75,72 +75,90 @@ let recipeSetup = {
         }
     },
 
+    //Adds ingredient data to recipeData
     //Empties all data in the table
     //Changes recipeDataIndex
     //Hands off to showRecipe function
     changeRecipe: function(num){
         let body = document.querySelector("#recipes tbody");
+        this.recipeData[this.recipeDataIndex].ingredients = [];
+        let isValid = true;
     
-        let recipeIngredients = [];
-        while(body.children.length > 0){
-            let row = body.firstChild;
-            recipeIngredients.push({
+        for(let row of body.children){
+            newIngredient ={
                 id: row.children[0].children[0].value,
                 quantity: row.children[1].children[0].value
-            });
-            this.recipeData[this.recipeDataIndex].ingredients = recipeIngredients;
-    
-            body.removeChild(row);
+            };
+
+            this.recipeData[this.recipeDataIndex].ingredients.push(newIngredient);
+            if(!validator.ingredient.quantity(newIngredient.quantity)){
+                isValid = false;
+                break;
+            }
         }
-        this.recipeDataIndex += num;
-        this.showRecipe();
+
+        if(isValid){
+            while(body.children.length > 0){
+                body.removeChild(body.firstChild);
+            }
+
+            this.recipeDataIndex += num;
+            this.showRecipe();
+        }
     },
 
     //Add all recipes to data variable
     //Creates a form and submits data
     submitAll: function(){
+        this.recipeData[this.recipeDataIndex].ingredients = [];
         let body = document.querySelector("#recipes tbody");
         data.recipes = [];
-    
-        let recipeIngredients = [];
-        while(body.children.length > 0){
-            let row = body.firstChild;
-            recipeIngredients.push({
+        let isValid = true;
+
+        for(let row of body.children){
+            newIngredient ={
                 id: row.children[0].children[0].value,
                 quantity: row.children[1].children[0].value
-            });
-            this.recipeData[this.recipeDataIndex].ingredients = recipeIngredients;
-    
-            body.removeChild(row);
+            };
+            
+            this.recipeData[this.recipeDataIndex].ingredients.push(newIngredient);
+            if(!validator.ingredient.quantity(newIngredient.quantity)){
+                
+                isValid = false;
+                break;
+            }
         }
 
-        for(let recipe of this.recipeData){
-            let newRecipe = {
-                cloverId: recipe.id,
-                name: recipe.name,
-                ingredients: []
-            };
-            for(let ingredient of recipe.ingredients){
-                newRecipe.ingredients.push({
-                    id: ingredient.id,
-                    quantity: ingredient.quantity
-                });
+        if(isValid){
+            for(let recipe of this.recipeData){
+                let newRecipe = {
+                    cloverId: recipe.id,
+                    name: recipe.name,
+                    ingredients: []
+                };
+
+                for(let ingredient of recipe.ingredients){
+                    newRecipe.ingredients.push({
+                        id: ingredient.id,
+                        quantity: ingredient.quantity
+                    });
+                }
+                data.recipes.push(newRecipe);
             }
-            data.recipes.push(newRecipe);
+            
+            let form = document.createElement("form");
+            form.method = "post";
+            form.action = "/merchant/create"
+            
+            let dataInput = document.createElement("input");
+            dataInput.type = "hidden";
+            dataInput.name = "data";
+            dataInput.value = JSON.stringify(data);
+        
+            form.appendChild(dataInput);
+            document.body.appendChild(form);
+            form.submit();
         }
-        
-        let form = document.createElement("form");
-        form.method = "post";
-        form.action = "/merchant/create"
-        
-        let dataInput = document.createElement("input");
-        dataInput.type = "hidden";
-        dataInput.name = "data";
-        dataInput.value = JSON.stringify(data);
-    
-        form.appendChild(dataInput);
-        document.body.appendChild(form);
-        form.submit();
     },
 
     //Creates a new, empty row in table to input data
@@ -167,7 +185,7 @@ let recipeSetup = {
         ingQuant.type = "number";
         ingQuant.step = "0.01";
         ingQuant.min = "0";
-        ingQuant.onblur = ()=>{checkValid("quantity", ingQuant.value)};
+        ingQuant.onblur = ()=>{checkValid("quantity", ingQuant)};
         quantTd.appendChild(ingQuant);
     
         let removeTd = document.createElement("td");

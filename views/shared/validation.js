@@ -22,7 +22,7 @@ let validator = {
             return true;
         },
 
-        quantity: function(num, createBanner){
+        quantity: function(num, createBanner = true){
             if(num < 0){
                 if(createBanner){
                     banner.createError("Quantity cannot be a negative number");

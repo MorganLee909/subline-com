@@ -20,7 +20,8 @@ const MerchantSchema = new mongoose.Schema({
         },
         quantity: {
             type: Number,
-            min: [0, "Quantity cannot be less than 0"]
+            min: [0, "Quantity cannot be less than 0"],
+            required: true
         }
     }],
     recipes: [{

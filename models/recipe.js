@@ -17,6 +17,7 @@ const RecipeSchema = new mongoose.Schema({
         },
         quantity: {
             type: Number,
+            min: [0, "Quantity cannot be a negative number"],
             required: true
         }
     }]
