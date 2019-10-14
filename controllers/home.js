@@ -213,5 +213,23 @@ module.exports = {
                 console.log(err);
                 return res.json("error");
             });
+    },
+
+    displayRecipes: function(req, res){
+        Merchant.findOne({cloverId: merchantId})
+            .populate({
+                path: "recipes",
+                populate: {
+                    path: "ingredients.id",
+                    model: "Ingredient"
+                }
+            })
+            .then((merchant)=>{
+                return res.render("recipesPage/recipes", {recipes: merchant.recipes});
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     }
 }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/recipesPage/recipes.css">
+        <link rel="stylesheet" href="/shared/shared.css">
+    </head>
+    <body>
+        <% include ../shared/header %>
+
+        <% include ../shared/banner %>
+
+        <h1>Recipes</h1>
+
+        <div id="recipes" class="container"></div>
+
+        <div id="ingredient" class="container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <script>let recipes = <%- JSON.stringify(recipes) %>;</script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="../shared/validation.js"></script>
+        <script src="/recipesPage/recipes.js"></script>
+    </body>
+</html>
