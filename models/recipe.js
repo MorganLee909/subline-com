@@ -18,13 +18,8 @@ const RecipeSchema = new mongoose.Schema({
         },
         quantity: {
             type: Number,
-<<<<<<< HEAD
             min: [0, "Cannot have a negative quantity"],
             required: [true, "Must provide a quantity"]
-=======
-            min: [0, "Quantity cannot be a negative number"],
-            required: true
->>>>>>> validation
         }
     }]
 });
