@@ -54,6 +54,7 @@ let recipeSetup = {
             ingQuant.type = "number";
             ingQuant.step = "0.01";
             ingQuant.value = ing.quantity;
+            ingQuant.onblur = ()=>{checkValid("quantity", ingQuant.value)};
             quantTd.appendChild(ingQuant);
         }
     
@@ -166,6 +167,7 @@ let recipeSetup = {
         ingQuant.type = "number";
         ingQuant.step = "0.01";
         ingQuant.min = "0";
+        ingQuant.onblur = ()=>{checkValid("quantity", ingQuant.value)};
         quantTd.appendChild(ingQuant);
     
         let removeTd = document.createElement("td");
