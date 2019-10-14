@@ -27,21 +27,19 @@
 .banner{
     width: 100%;
     text-align: center;
-    display: none;
+    min-height: 50px;
 }
 
     .banner .notification{
         background: green;
         color: white;
-        padding: 10px;
-        margin: 5px;
         font-weight: bold;
+        list-style-type: none;
     }
 
     .banner .error{
         background: red;
         color: white;
-        padding: 10px;
-        margin: 5px;
         font-weight: bold;
+        list-style-type: none;
     }
