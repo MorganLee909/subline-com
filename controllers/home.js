@@ -231,5 +231,31 @@ module.exports = {
                 console.log(err);
                 return res.render("error");
             });
+    },
+
+    deleteRecipeIngredient: function(req, res){
+        Recipe.findOne({_id: req.body.recipeId})
+            .populate("ingredients.id")
+            .then((recipe)=>{
+                for(let i = 0; i < recipe.ingredients.length; i++){
+                    if(recipe.ingredients[i]._id.toString() === req.body.ingredientId){
+                        recipe.ingredients.splice(i, 1);
+                        break;
+                    }
+                }
+
+                recipe.save()
+                    .then((recipe)=>{
+                        return res.json(recipe);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    })
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     }
 }

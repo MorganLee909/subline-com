@@ -26,10 +26,13 @@ let recipesPage = {
         }
     },
 
+    //Display a single recipe with all of its ingredients
     displayOneRecipe: function(recipe){
         let recipesDiv = document.querySelector("#recipes");
         let ingredientDiv = document.querySelector("#ingredient");
         let tbody = document.querySelector("tbody");
+        let title = document.querySelector("#title");
+        title.innerText = recipe.name;
 
         recipesDiv.style.display = "none";
         ingredientDiv.style.display = "flex";
@@ -51,14 +54,22 @@ let recipesPage = {
 
             let removeButton = document.createElement("button");
             removeButton.innerText = "Remove";
-            removeButton.onclick = ()=>{deleteIngredient(ingredient);};
+            removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient._id, row);};
             actions.appendChild(removeButton);
-
         }
     },
 
-    deleteIngredient: function(ingredient){
+    deleteIngredient: function(recipeId, ingredientId, row){
+        row.parentNode.removeChild(row);
         
+        axios.post("/recipes/ingredients/remove", {recipeId: recipeId, ingredientId:ingredientId})
+            .then((result)=>{
+                banner.createNotification("Ingredient has been removed from recipe");
+            })
+            .catch((err)=>{
+                banner.createError("There was an error and the ingredient could not be removed from the recipe");
+                console.log(err);
+            });
     }
 }
 
