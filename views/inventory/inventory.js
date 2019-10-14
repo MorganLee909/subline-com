@@ -1,6 +1,8 @@
-let items = [];
+let items = []; //the ingredients to be displayed
 let tbody = document.querySelector("tbody");
 
+//Remove any existing ingredients in table
+//loop through items and create rows for the table
 let renderIngredients = ()=>{
     while(tbody.hasChildNodes()){
         tbody.removeChild(tbody.firstChild);
@@ -43,11 +45,14 @@ let renderIngredients = ()=>{
     }
 }
 
+//sorts items by specified property
 let sortIngredients = (property)=>{
     items.sort((a, b) => (a[property] > b[property]) ? 1 : -1);
     renderIngredients();
 }
 
+//Empty items list
+//Add ingredients back to items list based on filter input
 let filter = ()=>{
     items = [];
     let searchString = document.querySelector("#filter").value.toLowerCase();
@@ -67,6 +72,7 @@ let filter = ()=>{
     renderIngredients(items);
 }
 
+//Create input allowing for user edit of ingredient
 let editIngredient = (id, row)=>{
     let quantity = row.children[2];
     let button = row.children[4].children[0];
@@ -84,6 +90,8 @@ let editIngredient = (id, row)=>{
     button.onclick = ()=>{updateOne(id, row, originalQuantity)};
 }
 
+//Save user input of ingredient
+//Update both page and database
 let updateOne = (id, row, originalQuantity)=>{
     let quantityField = row.children[2];
     let quantity = quantityField.children[0].value;
@@ -113,6 +121,7 @@ let updateOne = (id, row, originalQuantity)=>{
     button.onclick = ()=>{editThis(item.id, row)};
 }
 
+//Delete an ingredient from both the page and the database
 let removeIngredient = (id, row)=>{
     axios.post("/ingredients/remove", {id: id})
         .then((merchant)=>{
@@ -130,6 +139,7 @@ let removeIngredient = (id, row)=>{
         });
 }
 
+//Display the modal to allow for adding a new ingredient
 let displayAdd = ()=>{
     let modal = document.querySelector(".add-ingredient");
 
@@ -140,6 +150,8 @@ let displayAdd = ()=>{
     modal.style.visibility = "visible";
 }
 
+//Update new ingredient on both the page and the database
+//Close the modal
 let addIngredient = ()=>{
     let content = document.querySelector(".modal-content");
 
@@ -177,4 +189,5 @@ let addIngredient = ()=>{
     modal.style.visibility = "hidden";
 }
 
+//Initial run 
 filter();
