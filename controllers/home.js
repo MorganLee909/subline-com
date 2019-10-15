@@ -257,5 +257,43 @@ module.exports = {
                 console.log(err);
                 return res.render("error");
             });
+    },
+
+    updateRecipeIngredient: function(req, res){
+        Recipe.findOne({_id: req.body.recipeId})
+            .populate("ingredients.id")
+            .then((recipe)=>{
+                for(let i = 0; i < recipe.ingredients.length; i++){
+                    if(recipe.ingredients[i]._id.toString() === req.body.ingredient._id){
+                        recipe.ingredients.splice(i, 1);
+                        recipe.ingredients.push(req.body.ingredient);
+                        break;
+                    }
+                }
+
+                recipe.save()
+                    .then((recipe)=>{
+                        return res.json(recipe);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    })
+            })
+            .catch((err)=>{
+                console.log(err);
+                res.render("error");
+            })
+    },
+
+    deleteRecipe: function(req, res){
+        Recipe.findOneAndDelete(req.body.id)
+            .then((recipe)=>{
+                return res.json(recipe);
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     }
 }
