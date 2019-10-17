@@ -24,7 +24,7 @@ module.exports = {
                                         for(let ingredient of recipe.ingredients){
                                             let inventoryIngredient = {};
                                             for(let invItem of merchant.inventory){
-                                                if(invItem.ingredient._id.toString() === ingredient.id.toString()){
+                                                if(invItem.ingredient._id.toString() === ingredient.ingredient.toString()){
                                                     inventoryIngredient = invItem;
                                                 }
                                             }
