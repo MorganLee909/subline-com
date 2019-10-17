@@ -59,7 +59,7 @@ let filter = ()=>{
     for(let item of merchant.inventory){
         if(item.ingredient.name.toLowerCase().includes(searchString)){
             items.push({
-                id: item.ingredient._id,
+                id: item._id,
                 name: item.ingredient.name,
                 category: item.ingredient.category,
                 quantity: item.quantity,
@@ -100,6 +100,8 @@ let updateOne = (id, row, originalQuantity)=>{
     quantityField.removeChild(quantityField.firstChild);
 
     if(validator.ingredient.quantity(quantity)){
+        let updateIngredient = merchant.inventory.find(i => i._id === id);
+        updateIngredient.quantity = quantity;
         axios.post("/ingredients/update", {
             id: id,
             quantity: quantity
@@ -123,7 +125,14 @@ let updateOne = (id, row, originalQuantity)=>{
 
 //Delete an ingredient from both the page and the database
 let removeIngredient = (id, row)=>{
-    axios.post("/ingredients/remove", {id: id})
+    for(let i = 0; i < merchant.inventory.length; i++){
+        if(merchant.inventory[i]._id === id){
+            merchant.inventory.splice(i, 1);
+            break;
+        }
+    }
+
+    axios.post("/merchant/update", merchant)
         .then((merchant)=>{
             for(let i = 0; i < items.length; i++){
                 if(id === items[i].id){
