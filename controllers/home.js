@@ -284,16 +284,5 @@ module.exports = {
                 console.log(err);
                 res.render("error");
             })
-    },
-
-    deleteRecipe: function(req, res){
-        Recipe.findOneAndDelete(req.body.id)
-            .then((recipe)=>{
-                return res.json(recipe);
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });
     }
 }

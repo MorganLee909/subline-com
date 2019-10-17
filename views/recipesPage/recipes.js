@@ -39,10 +39,6 @@ let recipesPage = {
         recipesDiv.style.display = "none";
         ingredientDiv.style.display = "flex";
 
-        let delRecipe = document.querySelector("#delRecipe");
-        delRecipe.style.display = "inline-block";
-        delRecipe.onclick = ()=>{this.deleteRecipe(recipe);};
-
         for(let ingredient of recipe.ingredients){
             let row = document.createElement("tr");
             row.recipeId = recipe._id;
