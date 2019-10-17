@@ -2,7 +2,6 @@ const axios = require("axios");
 
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
-const Recipe = require("../models/recipe");
 
 // const merchantId = "HCVKASXH94531";
 // const token = "f1c88a69-e3e4-059a-da06-8858d0636e82";
@@ -12,16 +11,15 @@ const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
     displayInventory: (req, res)=>{
-        Merchant.findOne({cloverId: merchantId})
+        Merchant.findOne({posId: merchantId})
             .populate("inventory.ingredient")
-            .populate("recipes")
             .then((merchant)=>{
                 if(merchant){
-                    axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.cloverId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
+                    axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
                         .then((result)=>{
                             for(let order of result.data.elements){
                                 for(let item of order.lineItems.elements){
-                                    let recipe = merchant.recipes.find(r => r.cloverId === item.item.id);
+                                    let recipe = merchant.recipes.find(r => r.posId === item.item.id);
                                     if(recipe){
                                         for(let ingredient of recipe.ingredients){
                                             let inventoryIngredient = {};
@@ -90,46 +88,39 @@ module.exports = {
     createMerchant: (req, res)=>{
         let data = JSON.parse(req.body.data);
 
-        Recipe.create(data.recipes)
-            .then((recipes)=>{
-                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}?access_token=${token}`)
-                    .then((merchant)=>{
-                        let newMerchant = new Merchant({
-                            name: merchant.data.name,
-                            cloverId: merchant.data.id,
-                            lastUpdatedTime: Date.now(),
-                            inventory: [],
-                            recipes: []
-                        });
+        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}?access_token=${token}`)
+            .then((merchant)=>{
+                let newMerchant = new Merchant({
+                    name: merchant.data.name,
+                    posId: merchant.data.id,
+                    lastUpdatedTime: Date.now(),
+                    inventory: [],
+                    recipes: []
+                });
 
-                        for(let ingredient of data.ingredients){
-                            let newIngredient = {
-                                ingredient: ingredient.id,
-                                quantity: parseInt(ingredient.quantity)
-                            }
-                            newMerchant.inventory.push(newIngredient);
-                        }
+                for(let ingredient of data.ingredients){
+                    let newIngredient = {
+                        ingredient: ingredient.id,
+                        quantity: parseInt(ingredient.quantity)
+                    }
+                    newMerchant.inventory.push(newIngredient);
+                }
 
-                        for(let recipe of recipes){
-                            newMerchant.recipes.push(recipe._id);
-                        }
+                for(let recipe of data.recipes){
+                    newMerchant.recipes.push(recipe);
+                }
 
-                        newMerchant.save()
-                            .then((newMerchant)=>{
-                                return res.redirect("/");
-                            })
-                            .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
-                            })
+                newMerchant.save()
+                    .then((newMerchant)=>{
+                        return res.redirect("/");
                     })
                     .catch((err)=>{
                         console.log(err);
-                    });
+                        return res.render("error");
+                    })
             })
             .catch((err)=>{
                 console.log(err);
-                return res.render("error");
             });
     },
 
@@ -216,16 +207,11 @@ module.exports = {
     },
 
     displayRecipes: function(req, res){
-        Merchant.findOne({cloverId: merchantId})
-            .populate({
-                path: "recipes",
-                populate: {
-                    path: "ingredients.id",
-                    model: "Ingredient"
-                }
-            })
+        Merchant.findOne({posId: merchantId})
+            .populate("recipes.ingredients.ingredient")
             .then((merchant)=>{
-                return res.render("recipesPage/recipes", {recipes: merchant.recipes});
+                console.log(merchant.recipes[0].ingredients);
+                return res.render("recipesPage/recipes", {merchant: merchant});
             })
             .catch((err)=>{
                 console.log(err);
@@ -283,6 +269,17 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
                 res.render("error");
+            });
+    },
+
+    updateMerchant: function(req, res){
+        Merchant.updateOne({_id: req.body._id}, req.body)
+            .then((merchant)=>{
+                return res.json(merchant);
             })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     }
 }

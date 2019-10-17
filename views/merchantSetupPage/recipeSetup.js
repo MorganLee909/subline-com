@@ -132,14 +132,14 @@ let recipeSetup = {
         if(isValid){
             for(let recipe of this.recipeData){
                 let newRecipe = {
-                    cloverId: recipe.id,
+                    posId: recipe.id,
                     name: recipe.name,
                     ingredients: []
                 };
 
                 for(let ingredient of recipe.ingredients){
                     newRecipe.ingredients.push({
-                        id: ingredient.id,
+                        ingredient: ingredient.id,
                         quantity: ingredient.quantity
                     });
                 }

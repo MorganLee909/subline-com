@@ -5,7 +5,7 @@ const MerchantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    cloverId: {
+    posId: {
         type: String,
         required: true
     },
@@ -26,8 +26,26 @@ const MerchantSchema = new mongoose.Schema({
         }
     }],
     recipes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Recipe"
+        posId: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        ingredients: [{
+            ingredient: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Ingredient",
+                required: [true, "Must provide ingredient"]
+            },
+            quantity: {
+                type: Number,
+                min: [0, "Cannot have a negative quantity"],
+                required: [true, "Must provide a quantity"]
+            }
+        }]
     }]
 });
 

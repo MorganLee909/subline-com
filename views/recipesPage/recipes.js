@@ -7,7 +7,7 @@ let recipesPage = {
             body.removeChild(body.firstChild);
         }
         
-        for(let recipe of recipes){
+        for(let recipe of merchant.recipes){
             let recipeDiv = document.createElement("div");
             recipeDiv.classList = "recipe-card";
             recipeDiv.onclick = ()=>{this.displayOneRecipe(recipe)};
@@ -22,7 +22,7 @@ let recipesPage = {
 
             for(let ingredient of recipe.ingredients){
                 let ul = document.createElement("li");
-                ul.innerText = ingredient.id.name;
+                ul.innerText = ingredient.ingredient.name;
                 ingredientList.appendChild(ul);
             }
         }
@@ -45,11 +45,11 @@ let recipesPage = {
             tbody.appendChild(row);
 
             let name = document.createElement("td");
-            name.innerText = ingredient.id.name;
+            name.innerText = ingredient.ingredient.name;
             row.appendChild(name);
 
             let quantity = document.createElement("td");
-            quantity.innerText = `${ingredient.quantity} ${ingredient.id.unitType}`;
+            quantity.innerText = `${ingredient.quantity} ${ingredient.ingredient.unitType}`;
             row.appendChild(quantity);
 
             let actions = document.createElement("td");
@@ -71,8 +71,16 @@ let recipesPage = {
     //Delete ingredient from database
     deleteIngredient: function(recipeId, ingredientId, row){
         row.parentNode.removeChild(row);
+
+        let updateRecipe = merchant.recipes.find(r => r._id === recipeId);
+        for(let i = 0; i < updateRecipe.ingredients.length; i++){
+            if(updateRecipe.ingredients[i]._id === ingredientId){
+                updateRecipe.ingredients.splice(i, 1);
+                break;
+            }
+        }
         
-        axios.post("/recipes/ingredients/remove", {recipeId: recipeId, ingredientId:ingredientId})
+        axios.post("/merchant/update", merchant)
             .then((result)=>{
                 banner.createNotification("Ingredient has been removed from recipe");
             })
@@ -96,7 +104,7 @@ let recipesPage = {
         td.appendChild(input);
 
         let para = document.createElement("p");
-        para.innerText = ingredient.id.unitType;
+        para.innerText = ingredient.ingredient.unitType;
         td.appendChild(para);
 
         let button = row.children[2].children[0];
@@ -110,43 +118,19 @@ let recipesPage = {
         while(td.children.length > 0){
             td.removeChild(td.firstChild);
         }
-        td.innerText = `${ingredient.quantity} ${ingredient.id.unitType}`;
+        td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unitType}`;
 
         let button = row.children[2].children[0];
         button.innerText = "Edit";
         button.onclick = ()=>{this.editIngredient(row, ingredient);};
 
-        axios.post("/recipes/ingredients/update", {recipeId: row.recipeId, ingredient: ingredient})
+        axios.post("/merchant/update", merchant)
             .then((recipe)=>{
                 banner.createNotification("Ingredient successfully updated");
             })
             .catch((err)=>{
                 console.log(err);
                 banner.createError("There was an error and the ingredient could not be updated");
-            });
-    },
-
-    deleteRecipe: function(recipe){
-        for(let i = 0; i < recipes.length; i++){
-            if(recipes[i]._id === recipe._id){
-                recipes.splice(i, 1);
-                break;
-            }
-        }
-
-        let ingredientDiv = document.querySelector("#ingredient");
-        let recipesDiv = document.querySelector("#recipes");
-        ingredientDiv.style.display = "none";
-        recipesDiv.style.display = "flex";
-        this.displayRecipes();
-
-        axios.post("recipes/remove", {id: recipe._id})
-            .then((recipe)=>{
-                banner.createNotification("Recipe removed");
-            })
-            .catch((err)=>{
-                console.log(err);
-                banner.createError("There was an error and the recipe could not be removed");
             });
     }
 }
