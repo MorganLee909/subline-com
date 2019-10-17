@@ -135,54 +135,6 @@ module.exports = {
             });
     },
 
-    updateIngredient: (req, res)=>{
-        Merchant.findOne({cloverId: merchantId})
-            .then((merchant)=>{
-                for(let item of merchant.inventory){
-                    if(req.body.id === item.ingredient.toString()){
-                        item.quantity = req.body.quantity;
-                        break;
-                    }
-                }
-                merchant.save()
-                    .then((updatedMerchant)=>{
-                        return res.json(updatedMerchant);
-                    })
-                    .catch((err)=>{
-                        console.log(err);
-                        return res.json(err);
-                    })
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });
-    },
-
-    removeIngredient: (req, res)=>{
-        Merchant.findOne({cloverId: merchantId})
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(req.body.id === merchant.inventory[i].ingredient.toString()){
-                        merchant.inventory.splice(i, 1);
-                    }
-                }
-
-                merchant.save()
-                    .then((merchant)=>{
-                        return res.json(merchant);
-                    })
-                    .catch((err)=>{
-                        console.log(err);
-                        return res.json(err);
-                    });
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.json(err);
-            });
-    },
-
     createIngredient: (req, res)=>{
         Ingredient.create(req.body.ingredient)
             .then((ingredient)=>{
@@ -242,33 +194,6 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
                 return res.render("error");
-            });
-    },
-
-    updateRecipeIngredient: function(req, res){
-        Recipe.findOne({_id: req.body.recipeId})
-            .populate("ingredients.id")
-            .then((recipe)=>{
-                for(let i = 0; i < recipe.ingredients.length; i++){
-                    if(recipe.ingredients[i]._id.toString() === req.body.ingredient._id){
-                        recipe.ingredients.splice(i, 1);
-                        recipe.ingredients.push(req.body.ingredient);
-                        break;
-                    }
-                }
-
-                recipe.save()
-                    .then((recipe)=>{
-                        return res.json(recipe);
-                    })
-                    .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
-                    })
-            })
-            .catch((err)=>{
-                console.log(err);
-                res.render("error");
             });
     },
 
