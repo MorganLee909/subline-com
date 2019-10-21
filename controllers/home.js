@@ -75,7 +75,18 @@ module.exports = {
             })
     },
 
-    getRecipes: function(req, res){
+    updateMerchant: function(req, res){
+        Merchant.updateOne({_id: req.body._id}, req.body)
+            .then((merchant)=>{
+                return res.json(merchant);
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
+    },
+
+    getCloverRecipes: function(req, res){
         axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
             .then((recipes)=>{
                 return res.json(recipes);
@@ -190,17 +201,6 @@ module.exports = {
                         console.log(err);
                         return res.render("error");
                     });
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });
-    },
-
-    updateMerchant: function(req, res){
-        Merchant.updateOne({_id: req.body._id}, req.body)
-            .then((merchant)=>{
-                return res.json(merchant);
             })
             .catch((err)=>{
                 console.log(err);
