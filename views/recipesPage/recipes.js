@@ -2,6 +2,9 @@ let recipesPage = {
     //Display all recipes on a card
     displayRecipes: function(){
         let body = document.querySelector(".container");
+        let recipeUpdate = document.querySelector("#recipeUpdate");
+
+        recipeUpdate.style.display = "inline-block";
 
         while(body.children.length > 0){
             body.removeChild(body.firstChild);
@@ -34,10 +37,12 @@ let recipesPage = {
         let ingredientDiv = document.querySelector("#ingredient");
         let tbody = document.querySelector("tbody");
         let title = document.querySelector("#title");
+        let recipeUpdate = document.querySelector("#recipeUpdate");
         title.innerText = recipe.name;
 
         recipesDiv.style.display = "none";
         ingredientDiv.style.display = "flex";
+        recipeUpdate.style.display = "none";
 
         for(let ingredient of recipe.ingredients){
             let row = document.createElement("tr");
