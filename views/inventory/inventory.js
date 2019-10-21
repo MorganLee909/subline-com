@@ -1,6 +1,6 @@
 let items = []; //the ingredients to be displayed
 let tbody = document.querySelector("tbody");
-console.log(merchant);
+let currentSort = "";
 
 //Remove any existing ingredients in table
 //loop through items and create rows for the table
@@ -48,7 +48,13 @@ let renderIngredients = ()=>{
 
 //sorts items by specified property
 let sortIngredients = (property)=>{
-    items.sort((a, b) => (a[property] > b[property]) ? 1 : -1);
+    if(currentSort === property){
+        items.sort((a, b) => (a[property] > b[property]) ? -1 : 1);
+        currentSort = "";
+    }else{
+        items.sort((a, b) => (a[property] > b[property]) ? 1 : -1);
+        currentSort = property;
+    }
     renderIngredients();
 }
 
