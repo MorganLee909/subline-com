@@ -1,5 +1,6 @@
 let items = []; //the ingredients to be displayed
 let tbody = document.querySelector("tbody");
+console.log(merchant);
 
 //Remove any existing ingredients in table
 //loop through items and create rows for the table
@@ -102,11 +103,8 @@ let updateOne = (id, row, originalQuantity)=>{
     if(validator.ingredient.quantity(quantity)){
         let updateIngredient = merchant.inventory.find(i => i._id === id);
         updateIngredient.quantity = quantity;
-        axios.post("/ingredients/update", {
-            id: id,
-            quantity: quantity
-        })
-            .then((ingredient)=>{
+        axios.post("merchant/update", merchant)
+            .then((merchant)=>{
                 banner.createNotification("The ingredient has been successfully updated");
             })
             .catch((err)=>{
