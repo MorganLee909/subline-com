@@ -10,7 +10,7 @@ const merchantId = "YHVPCQMVB1P81";
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
-    displayInventory: (req, res)=>{
+    displayInventory: function(req, res){
         Merchant.findOne({posId: merchantId})
             .populate("inventory.ingredient")
             .then((merchant)=>{
@@ -57,7 +57,7 @@ module.exports = {
             });
     },
 
-    merchantSetup: (req, res)=>{
+    merchantSetup: function(req, res){
         Ingredient.find()
             .then((ingredients)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
@@ -75,7 +75,7 @@ module.exports = {
             })
     },
 
-    getRecipes: (req, res)=>{
+    getRecipes: function(req, res){
         axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
             .then((recipes)=>{
                 return res.json(recipes);
@@ -85,7 +85,7 @@ module.exports = {
             });
     },
 
-    createMerchant: (req, res)=>{
+    createMerchant: function(req, res){
         let data = JSON.parse(req.body.data);
 
         axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}?access_token=${token}`)
@@ -124,7 +124,7 @@ module.exports = {
             });
     },
 
-    createNewIngredients: (req, res)=>{
+    createNewIngredients: function(req, res){
         Ingredient.create(req.body)
             .then((ingredients)=>{
                 return res.json(ingredients);
@@ -135,7 +135,7 @@ module.exports = {
             });
     },
 
-    createIngredient: (req, res)=>{
+    createIngredient: function(req, res){
         Ingredient.create(req.body.ingredient)
             .then((ingredient)=>{
                 Merchant.updateOne(
