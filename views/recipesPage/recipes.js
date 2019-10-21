@@ -82,6 +82,7 @@ let recipesPage = {
         
         axios.post("/merchant/update", merchant)
             .then((result)=>{
+                merchant = result;
                 banner.createNotification("Ingredient has been removed from recipe");
             })
             .catch((err)=>{
@@ -89,7 +90,6 @@ let recipesPage = {
                 console.log(err);
             });
     },
-
 
     //Change quantity field to input
     //Change edit button
@@ -131,6 +131,22 @@ let recipesPage = {
             .catch((err)=>{
                 console.log(err);
                 banner.createError("There was an error and the ingredient could not be updated");
+            });
+    },
+
+    updateRecipes: function(){
+        axios.get("/recipes/update")
+            .then((result)=>{
+                merchant = result.data.merchant;
+                this.displayRecipes();
+                banner.createNotification("Your recipes have been updated successfully");
+                if(result.data.count > 0){
+                    banner.createError(`You have ${result.data.count} recipes with no ingredients.  Please update them.`);
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("There was an error and your recipes could not be updated");
             });
     }
 }

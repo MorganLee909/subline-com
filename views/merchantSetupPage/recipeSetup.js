@@ -123,7 +123,6 @@ let recipeSetup = {
             
             this.recipeData[this.recipeDataIndex].ingredients.push(newIngredient);
             if(!validator.ingredient.quantity(newIngredient.quantity)){
-                
                 isValid = false;
                 break;
             }

@@ -179,7 +179,7 @@ module.exports = {
                     if(recipe.ingredients[i]._id.toString() === req.body.ingredientId){
                         recipe.ingredients.splice(i, 1);
                         break;
-                    }
+                    }   
                 }
 
                 recipe.save()
@@ -189,7 +189,7 @@ module.exports = {
                     .catch((err)=>{
                         console.log(err);
                         return res.render("error");
-                    })
+                    });
             })
             .catch((err)=>{
                 console.log(err);
@@ -201,6 +201,67 @@ module.exports = {
         Merchant.updateOne({_id: req.body._id}, req.body)
             .then((merchant)=>{
                 return res.json(merchant);
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
+    },
+
+    updateRecipes: function(req, res){
+        Merchant.findOne({posId: merchantId})
+            .then((merchant)=>{
+                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
+                    .then((result)=>{
+                        let deletedRecipes = merchant.recipes.slice();
+                        for(let i = 0; i < result.data.elements.length; i++){
+                            for(let j = 0; j < deletedRecipes.length; j++){
+                                if(result.data.elements[i].id === deletedRecipes[j].posId){
+                                    result.data.elements.splice(i, 1);
+                                    deletedRecipes.splice(j, 1);
+                                    i--;
+                                    break;
+                                }
+                            }
+                        }
+
+                        for(let recipe of deletedRecipes){
+                            for(let i = 0; i < merchant.recipes.length; i++){
+                                if(recipe._id === merchant.recipes[i]._id){
+                                    merchant.recipes.splice(i, 1);
+                                    break;
+                                }
+                            }
+                        }
+
+                        for(let recipe of result.data.elements){
+                            merchant.recipes.push({
+                                posId: recipe.id,
+                                name: recipe.name,
+                                ingredients: []
+                            });
+                        }
+                        
+                        merchant.save()
+                            .then((newMerchant)=>{
+                                newMerchant.populate("recipes.ingredients.ingredient").execPopulate()
+                                    .then((newestMerchant)=>{
+                                        return res.json({merchant: newestMerchant, count: result.data.elements.length});
+                                    })
+                                    .catch((err)=>{
+                                        console.log(err);
+                                        return res.render("error");
+                                    });
+                            })
+                            .catch((err)=>{
+                                console.log(err);
+                                return res.render("error");
+                            });
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
             })
             .catch((err)=>{
                 console.log(err);

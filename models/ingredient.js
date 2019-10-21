@@ -14,6 +14,6 @@ const IngredientSchema = new mongoose.Schema({
         type: String,
         required: [true, "You must provide the measurement unit for this item"]
     }
-})
+});
 
 module.exports = mongoose.model("Ingredient", IngredientSchema);

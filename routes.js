@@ -10,4 +10,5 @@ module.exports = function(app){
     app.post("/ingredients/createone", home.createIngredient);
     app.get("/recipes", home.displayRecipes);
     app.post("/recipes/ingredients/remove", home.deleteRecipeIngredient);
+    app.get("/recipes/update", home.updateRecipes);
 }
