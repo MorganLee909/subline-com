@@ -1,4 +1,5 @@
 const axios = require("axios");
+// const session = require("express-session");
 
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
@@ -173,7 +174,6 @@ module.exports = {
         Merchant.findOne({posId: merchantId})
             .populate("recipes.ingredients.ingredient")
             .then((merchant)=>{
-                console.log(merchant.recipes[0].ingredients);
                 return res.render("recipesPage/recipes", {merchant: merchant});
             })
             .catch((err)=>{
@@ -267,5 +267,9 @@ module.exports = {
                 console.log(err);
                 return res.render("error");
             });
+    },
+
+    demoLogin: function(req, res){
+        return res.render("loginPage/login");
     }
 }
