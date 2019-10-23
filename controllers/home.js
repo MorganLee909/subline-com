@@ -174,13 +174,13 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
                 return res.render("error");
-            });
-            
+            });  
     },
 
     displayRecipes: function(req, res){
         Merchant.findOne({posId: merchantId})
             .populate("recipes.ingredients.ingredient")
+            .populate("inventory.ingredient")
             .then((merchant)=>{
                 return res.render("recipesPage/recipes", {merchant: merchant});
             })
@@ -292,6 +292,28 @@ module.exports = {
         Merchant.findOne({_id: req.body.merchantId})
             .then((merchant)=>{
                 merchant.inventory.push(req.body.ingredient);
+                merchant.save()
+                    .then((newMerchant)=>{
+                        return res.json(newMerchant);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
+    },
+
+    addRecipeIngredient: function(req, res){
+        console.log(req.body.recipeId);
+        Merchant.findOne({_id: req.body.merchantId})
+            .then((merchant)=>{
+                let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
+                recipe.ingredients.push(req.body.item)
+                console.log(recipe);
                 merchant.save()
                     .then((newMerchant)=>{
                         return res.json(newMerchant);

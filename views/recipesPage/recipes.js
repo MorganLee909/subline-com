@@ -38,6 +38,8 @@ let recipesPage = {
         let tbody = document.querySelector("tbody");
         let title = document.querySelector("#title");
         let recipeUpdate = document.querySelector("#recipeUpdate");
+
+        document.querySelector("#addButton").onclick = ()=>{this.displayAdd(recipe)};
         title.innerText = recipe.name;
 
         recipesDiv.style.display = "none";
@@ -70,6 +72,59 @@ let recipesPage = {
             removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient._id, row);};
             actions.appendChild(removeButton);
         }
+    },
+
+    displayAdd: function(recipe){
+        let tbody = document.querySelector("tbody");
+
+        let row = document.createElement("tr");
+        tbody.appendChild(row);
+
+        let nameTd = document.createElement("td");
+        row.appendChild(nameTd);
+        let name = document.createElement("select");
+        nameTd.appendChild(name);
+
+        for(let item of merchant.inventory){
+            let nameOption = document.createElement("option");
+            nameOption.innerText = item.ingredient.name;
+            nameOption.value = item.ingredient._id;
+            name.appendChild(nameOption);
+        }
+
+        let quantityTd = document.createElement("td");
+        row.appendChild(quantityTd);
+        let quantity = document.createElement("input");
+        quantity.type = "text";
+        quantity.step = "0.01";
+        quantityTd.appendChild(quantity);
+
+        let actionTd = document.createElement("td");
+        row.appendChild(actionTd);
+
+        let saveButton = document.createElement("button");
+        saveButton.innerText = "Save";
+        saveButton.onclick = ()=>{console.log(name);};
+        actionTd.appendChild(saveButton);
+        saveButton.onclick = ()=>{this.addIngredient(recipe, name.value, quantity.value);};
+    },
+
+    addIngredient: function(recipe, ingredientId, quantity){
+        let item = {
+            ingredient: ingredientId,
+            quantity: quantity
+        };
+        
+        axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item, merchantId: merchant._id})
+            .then((newMerchant)=>{
+                merchant = newMerchant;
+                this.displayOneRecipe(recipe);
+                banner.createNotification("Ingredient successfully added to recipe");
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("There was an error and the recipe could not be updated");
+            })
     },
 
     //Delete ingredient from table
