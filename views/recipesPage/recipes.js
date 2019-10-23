@@ -13,7 +13,7 @@ let recipesPage = {
         for(let recipe of merchant.recipes){
             let recipeDiv = document.createElement("div");
             recipeDiv.classList = "recipe-card";
-            recipeDiv.onclick = ()=>{this.displayOneRecipe(recipe)};
+            recipeDiv.onclick = ()=>{this.displayOneRecipe(recipe._id)};
             body.appendChild(recipeDiv);
 
             let title = document.createElement("h2");
@@ -32,12 +32,18 @@ let recipesPage = {
     },
 
     //Display a single recipe with all of its ingredients
-    displayOneRecipe: function(recipe){
+    displayOneRecipe: function(recipeId){
         let recipesDiv = document.querySelector("#recipes");
         let ingredientDiv = document.querySelector("#ingredient");
         let tbody = document.querySelector("tbody");
         let title = document.querySelector("#title");
         let recipeUpdate = document.querySelector("#recipeUpdate");
+
+        while(tbody.children.length > 0){
+            tbody.removeChild(tbody.firstChild);
+        }
+
+        let recipe = merchant.recipes.find(r => r._id === recipeId);
 
         document.querySelector("#addButton").onclick = ()=>{this.displayAdd(recipe)};
         title.innerText = recipe.name;
@@ -104,7 +110,6 @@ let recipesPage = {
 
         let saveButton = document.createElement("button");
         saveButton.innerText = "Save";
-        saveButton.onclick = ()=>{console.log(name);};
         actionTd.appendChild(saveButton);
         saveButton.onclick = ()=>{this.addIngredient(recipe, name.value, quantity.value);};
     },
@@ -113,18 +118,24 @@ let recipesPage = {
         let item = {
             ingredient: ingredientId,
             quantity: quantity
-        };
+        }
         
         axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item, merchantId: merchant._id})
             .then((newMerchant)=>{
-                merchant = newMerchant;
-                this.displayOneRecipe(recipe);
-                banner.createNotification("Ingredient successfully added to recipe");
+                let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
+                recipe.ingredients.push({
+                    ingredient: addIngredient.ingredient,
+                    quantity: quantity
+                });
+                banner.createNotification("Ingredient successfully added to database");
             })
             .catch((err)=>{
                 console.log(err);
                 banner.createError("There was an error and the recipe could not be updated");
             })
+            .finally(()=>{
+                this.displayOneRecipe(recipe._id);
+            });
     },
 
     //Delete ingredient from table

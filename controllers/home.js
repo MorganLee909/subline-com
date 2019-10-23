@@ -308,12 +308,10 @@ module.exports = {
     },
 
     addRecipeIngredient: function(req, res){
-        console.log(req.body.recipeId);
         Merchant.findOne({_id: req.body.merchantId})
             .then((merchant)=>{
                 let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
                 recipe.ingredients.push(req.body.item)
-                console.log(recipe);
                 merchant.save()
                     .then((newMerchant)=>{
                         return res.json(newMerchant);
