@@ -54,7 +54,7 @@ let recipesPage = {
             row.appendChild(name);
 
             let quantity = document.createElement("td");
-            quantity.innerText = `${ingredient.quantity} ${ingredient.ingredient.unitType}`;
+            quantity.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
             row.appendChild(quantity);
 
             let actions = document.createElement("td");
@@ -109,7 +109,7 @@ let recipesPage = {
         td.appendChild(input);
 
         let para = document.createElement("p");
-        para.innerText = ingredient.ingredient.unitType;
+        para.innerText = ingredient.ingredient.unit;
         td.appendChild(para);
 
         let button = row.children[2].children[0];
@@ -123,7 +123,7 @@ let recipesPage = {
         while(td.children.length > 0){
             td.removeChild(td.firstChild);
         }
-        td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unitType}`;
+        td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
 
         let button = row.children[2].children[0];
         button.innerText = "Edit";

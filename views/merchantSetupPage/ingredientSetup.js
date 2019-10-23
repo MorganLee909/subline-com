@@ -34,7 +34,7 @@ let ingredientSetup = {
             quantity.appendChild(quantityInput);
             row.appendChild(quantity);
             let unit = document.createElement("td");
-            unit.innerText = ingredient.unitType;
+            unit.innerText = ingredient.unit;
             row.appendChild(unit);
         
             let idField = document.createElement("input");
@@ -131,7 +131,7 @@ let ingredientSetup = {
                     id: ingredient.id,
                     name: ingredient.children[1].textContent,
                     quantity: ingredient.children[3].children[0].value,
-                    unitType: ingredient.children[4].textContent
+                    unit: ingredient.children[4].textContent
                 });
             }
         }
@@ -142,7 +142,7 @@ let ingredientSetup = {
             newIngredient.push({
                 name: ingredient.children[0].children[0].value,
                 category: ingredient.children[1].children[0].value,
-                unitType: ingredient.children[3].children[0].value
+                unit: ingredient.children[3].children[0].value
             });
             newIngredientQuantity.push({
                 name: ingredient.children[0].children[0].value,
@@ -166,7 +166,7 @@ let ingredientSetup = {
                         let newIngredient = {
                             id: ingredient._id,
                             name: ingredient.name,
-                            unitType: ingredient.unitType
+                            unit: ingredient.unit
                         }
     
                         for(let item of newIngredientQuantity){

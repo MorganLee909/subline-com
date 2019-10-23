@@ -6,9 +6,11 @@ module.exports = function(app){
     app.get("/getrecipes", home.getCloverRecipes);
     app.post("/merchant/create", home.createMerchant);
     app.post("/merchant/update", home.updateMerchant);
-    app.post("/ingredients/create", home.createNewIngredients);  //update?
-    app.post("/ingredients/createone", home.createIngredient);  //update?
+    app.post("/ingredients/create", home.createNewIngredients);
+    app.post("/ingredients/createone", home.createIngredient);
     app.get("/recipes", home.displayRecipes);
-    app.post("/recipes/ingredients/remove", home.deleteRecipeIngredient);  //update?
+    app.post("/recipes/ingredients/remove", home.deleteRecipeIngredient);
     app.get("/recipes/update", home.updateRecipes);
+    app.get("/ingredients", home.getIngredients);
+    app.post("/merchant/ingredients/create", home.addMerchantIngredient);
 }

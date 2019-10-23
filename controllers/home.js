@@ -1,5 +1,4 @@
 const axios = require("axios");
-// const session = require("express-session");
 
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
@@ -148,26 +147,35 @@ module.exports = {
     },
 
     createIngredient: function(req, res){
-        Ingredient.create(req.body.ingredient)
+        Ingredient.create(req.body.ingredient.ingredient)
             .then((ingredient)=>{
-                Merchant.updateOne(
-                    {cloverId: merchantId},
-                    {$push: {inventory: {
-                        ingredient: ingredient._id.toString(), 
-                        quantity: req.body.quantity
-                    }}}
-                    )
+                Merchant.findOne({_id: req.body.merchantId})
                     .then((merchant)=>{
-                        return res.json(merchant);
+                        let item = {
+                            ingredient: ingredient,
+                            quantity: req.body.ingredient.quantity
+                        }
+                        merchant.inventory.push(item);
+                        merchant.save()
+                            .then((merchant)=>{
+                                console.log("something");
+                                return res.json(merchant);
+                            })
+                            .catch((err)=>{
+                                console.log(err);
+                                return res.render("error");
+                            });
                     })
                     .catch((err)=>{
-                        return res.json(err);
+                        console.log(err);
+                        return res.render("error");
                     });
             })
             .catch((err)=>{
                 console.log(err);
-                return res.json("error");
+                return res.render("error");
             });
+            
     },
 
     displayRecipes: function(req, res){
@@ -269,7 +277,33 @@ module.exports = {
             });
     },
 
-    demoLogin: function(req, res){
-        return res.render("loginPage/login");
+    getIngredients: function(req, res){
+        Ingredient.find()
+            .then((ingredients)=>{
+                return res.json(ingredients);
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
+    },
+
+    addMerchantIngredient: function(req, res){
+        Merchant.findOne({_id: req.body.merchantId})
+            .then((merchant)=>{
+                merchant.inventory.push(req.body.ingredient);
+                merchant.save()
+                    .then((newMerchant)=>{
+                        return res.json(newMerchant);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     }
 }

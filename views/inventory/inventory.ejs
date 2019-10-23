@@ -32,23 +32,46 @@
 
         <div class="add-ingredient">
             <div class="modal-content" onclick="event.stopPropagation()">
-                <label>Ingredient name:
-                    <input type="text">
-                </label>
+                <div id="existingIngredient">
+                    <button id="createNew">Create New</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Category</th>
+                                <th>Unit</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
 
-                <label>Category:
-                    <input type="text">
-                </label>
+                <div id="quantityInput">
+                    <h3 id="quantityInputTitle"></h3>
+                    <input type="number" step="0.01" required>
+                    <button id="addIngredient">Add Ingredient</button>
+                </div>
 
-                <label>Quantity:
-                    <input type="number" step="0.01">
-                </label>
+                <div id="newIngredient">
+                    <label>Ingredient Name:
+                        <input id="newName" type="text">
+                    </label>
 
-                <label>Unit:
-                    <input type="text">
-                </label>
+                    <label>Category:
+                        <input id="newCategory" type="text">
+                    </label>
 
-                <button onclick="addIngredient()">Create Ingredient</button>
+                    <label>Quantity:
+                        <input id="newQuantity" type="number" step="0.01">
+                    </label>
+
+                    <label>Unit:
+                        <input id="newUnit" type="text">
+                    </label>
+
+                    <button id="createIngredient">Create Ingredient</button>
+                </div>
             </div>
         </div>
 
