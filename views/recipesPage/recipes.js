@@ -120,7 +120,7 @@ let recipesPage = {
             quantity: quantity
         }
         
-        axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item, merchantId: merchant._id})
+        axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item})
             .then((newMerchant)=>{
                 let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
                 recipe.ingredients.push({

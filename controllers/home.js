@@ -15,6 +15,7 @@ module.exports = {
             .populate("inventory.ingredient")
             .then((merchant)=>{
                 if(merchant){
+                    req.session.user = merchant._id;
                     axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
                         .then((result)=>{
                             for(let order of result.data.elements){
@@ -76,7 +77,7 @@ module.exports = {
     },
 
     updateMerchant: function(req, res){
-        Merchant.updateOne({_id: req.body._id}, req.body)
+        Merchant.updateOne({_id: req.session.user}, req.body)
             .then((merchant)=>{
                 return res.json(merchant);
             })
@@ -147,13 +148,13 @@ module.exports = {
     },
 
     createIngredient: function(req, res){
-        Ingredient.create(req.body.ingredient.ingredient)
+        Ingredient.create(req.body.ingredient)
             .then((ingredient)=>{
-                Merchant.findOne({_id: req.body.merchantId})
+                Merchant.findOne({_id: req.session.user})
                     .then((merchant)=>{
                         let item = {
                             ingredient: ingredient,
-                            quantity: req.body.ingredient.quantity
+                            quantity: req.body.quantity
                         }
                         merchant.inventory.push(item);
                         merchant.save()
@@ -178,7 +179,7 @@ module.exports = {
     },
 
     displayRecipes: function(req, res){
-        Merchant.findOne({posId: merchantId})
+        Merchant.findOne({_id: req.session.user})
             .populate("recipes.ingredients.ingredient")
             .populate("inventory.ingredient")
             .then((merchant)=>{
@@ -217,7 +218,7 @@ module.exports = {
     },
 
     updateRecipes: function(req, res){
-        Merchant.findOne({posId: merchantId})
+        Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
                     .then((result)=>{
@@ -289,9 +290,9 @@ module.exports = {
     },
 
     addMerchantIngredient: function(req, res){
-        Merchant.findOne({_id: req.body.merchantId})
+        Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
-                merchant.inventory.push(req.body.ingredient);
+                merchant.inventory.push(req.body);
                 merchant.save()
                     .then((newMerchant)=>{
                         return res.json(newMerchant);
@@ -308,7 +309,7 @@ module.exports = {
     },
 
     addRecipeIngredient: function(req, res){
-        Merchant.findOne({_id: req.body.merchantId})
+        Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
                 recipe.ingredients.push(req.body.item)

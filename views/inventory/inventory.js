@@ -241,7 +241,7 @@ let addIngredient = (item)=>{
     if(validator.ingredient.all(item.ingredient, item.quantity)){
         merchant.inventory.push(item);
         if(item.ingredient._id){
-            axios.post("/merchant/ingredients/create", {ingredient: item, merchantId: merchant._id})
+            axios.post("/merchant/ingredients/create", item)
                 .then((newMerchant)=>{
                     filter();
                     banner.createNotification("The new ingredient has been successfully added to your inventory");
@@ -251,7 +251,7 @@ let addIngredient = (item)=>{
                     console.log(err);
                 });
         }else{
-            axios.post("/ingredients/createone", {ingredient: item, merchantId: merchant._id})
+            axios.post("/ingredients/createone", item)
                 .then((newMerchant)=>{
                     filter();
                     banner.createNotification("The new ingredient has been successfully added to your inventory");
