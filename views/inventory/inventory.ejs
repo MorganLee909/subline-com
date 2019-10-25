@@ -12,6 +12,8 @@
         <div class="container">
             <h1><%= merchant.name %> inventory</h1>
 
+            <a href="/recipes">View Recipes</a>
+
             <button onclick="displayAdd()">Add Ingredient</button>
 
             <input id="filter" onkeyup="filter()" type="text" placeholder="Start typing to filter">
@@ -29,7 +31,7 @@
                 </thead>
             </table>
 
-            <button id="viewRecipes">View Recipes</button>
+            
         </div>
 
         <div class="add-ingredient">
