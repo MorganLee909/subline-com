@@ -15,26 +15,36 @@ h2{
 
 #recipes{
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    padding: 25px;
+    flex-direction: column;
+    align-items: center;
 }
 
-    .recipe-card{
-        border: 2px solid #ff626b;
-        box-shadow: 2px 2px 2px #001b2d;
-        background: #001b2d;
-        color: #ff626b;
-        width: 20%;
-        padding: 35px;
-        margin: 25px;
-        border-radius: 10px;
-        cursor: pointer;
+    #recipeUpdate{
+        margin-bottom: 10px;
     }
 
-        .recipe-card:hover{
-            transform: translateY(-3px);
+    #recipesContainer{
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 25px;
+    }
+
+        .recipe-card{
+            border: 2px solid #ff626b;
+            box-shadow: 2px 2px 2px #001b2d;
+            background: #001b2d;
+            color: #ff626b;
+            width: 20%;
+            padding: 35px;
+            margin: 25px;
+            border-radius: 10px;
+            cursor: pointer;
         }
+
+            .recipe-card:hover{
+                transform: translateY(-3px);
+            }
 
 #ingredient{
     display: none;
