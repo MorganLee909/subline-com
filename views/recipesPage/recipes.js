@@ -1,10 +1,10 @@
 let recipesPage = {
     //Display all recipes on a card
     displayRecipes: function(){
-        let body = document.querySelector("#recipesContainer");
-        let recipeUpdate = document.querySelector("#recipeUpdate");
+        document.querySelector("#recipes").style.display = "flex";
+        document.querySelector("#ingredient").style.display = "none";
 
-        recipeUpdate.style.display = "inline-block";
+        let body = document.querySelector("#recipesContainer");
 
         while(body.children.length > 0){
             body.removeChild(body.firstChild);

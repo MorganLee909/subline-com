@@ -54,11 +54,6 @@ h2{
     align-items: center;
 }
 
-    #addButton{
-        max-width: 150px;
-        margin-bottom: 25px;
-    }
-
     th{
         border: 2px solid #ff626b;
         background: #001b2d;
