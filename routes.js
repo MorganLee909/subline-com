@@ -1,17 +1,25 @@
 const home = require("./controllers/home");
 
 module.exports = function(app){
+    //Render page
     app.get("/", home.displayInventory);
     app.get("/merchant/new", home.merchantSetup);
-    app.get("/getrecipes", home.getCloverRecipes);
-    app.post("/merchant/create", home.createMerchant);
-    app.post("/merchant/update", home.updateMerchant);
-    app.post("/ingredients/create", home.createNewIngredients);
-    app.post("/ingredients/createone", home.createIngredient);
     app.get("/recipes", home.displayRecipes);
-    app.post("/recipes/ingredients/remove", home.deleteRecipeIngredient);
-    app.get("/recipes/update", home.updateRecipes);
-    app.get("/ingredients", home.getIngredients);
+
+    //Merchant
+    app.get("/merchant/recipes/update", home.updateRecipes); //this is fucked
+    app.post("/merchant/create", home.createMerchant);
+    app.post("/merchant/update", home.updateMerchant); //Too generic
     app.post("/merchant/ingredients/create", home.addMerchantIngredient);
     app.post("/merchant/recipes/ingredients/create", home.addRecipeIngredient);
+    app.post("/merchant/recipes/ingredients/remove", home.removeRecipeIngredient);
+
+    //Ingredients
+    app.get("/ingredients", home.getIngredients);
+    app.post("/ingredients/create", home.createNewIngredients);
+    app.post("/ingredients/createone", home.createIngredient);  //also adds to merchant
+
+    //Clover API
+    
+    app.get("/getrecipes", home.getCloverRecipes);
 }

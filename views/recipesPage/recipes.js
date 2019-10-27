@@ -109,10 +109,10 @@ let recipesPage = {
         let saveButton = document.createElement("button");
         saveButton.innerText = "Save";
         actionTd.appendChild(saveButton);
-        saveButton.onclick = ()=>{this.addIngredient(recipe, name.value, quantity.value);};
+        saveButton.onclick = ()=>{this.addIngredient(recipe, name.value, quantity.value, row);};
     },
 
-    addIngredient: function(recipe, ingredientId, quantity){
+    addIngredient: function(recipe, ingredientId, quantity, row){
         let item = {
             ingredient: ingredientId,
             quantity: quantity
@@ -123,16 +123,41 @@ let recipesPage = {
                 let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
                 recipe.ingredients.push({
                     ingredient: addIngredient.ingredient,
-                    quantity: quantity
+                    quantity: item.quantity
                 });
+
+                //Change row from displaying options to showing default display
+                while(row.children.length > 0){
+                    row.removeChild(row.firstChild);
+                }
+
+                let name = document.createElement("td");
+                name.innerText = addIngredient.ingredient.name;
+                row.appendChild(name);
+
+                let quantity = document.createElement("td");
+                quantity.innerText = `${item.quantity} ${addIngredient.ingredient.unit}`;
+                row.appendChild(quantity);
+
+                let actions = document.createElement("td");
+                row.appendChild(actions);
+
+                let editButton = document.createElement("button");
+                editButton.innerText = "Edit";
+                editButton.onclick = ()=>{this.editIngredient(row, addIngredient);};
+                actions.appendChild(editButton);
+
+                let removeButton = document.createElement("button");
+                removeButton.innerText = "Remove";
+                removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, row);};
+                actions.appendChild(removeButton);
+
                 banner.createNotification("Ingredient successfully added to database");
             })
             .catch((err)=>{
+                row.parentNode.removeChild(row);
                 console.log(err);
                 banner.createError("There was an error and the recipe could not be updated");
-            })
-            .finally(()=>{
-                this.displayOneRecipe(recipe._id);
             });
     },
 
@@ -149,9 +174,8 @@ let recipesPage = {
             }
         }
         
-        axios.post("/merchant/update", merchant)
+        axios.post("/merchant/recipes/ingredients/remove", {ingredientId: ingredientId, recipeId: recipeId})
             .then((result)=>{
-                merchant = result;
                 banner.createNotification("Ingredient has been removed from recipe");
             })
             .catch((err)=>{
@@ -204,7 +228,7 @@ let recipesPage = {
     },
 
     updateRecipes: function(){
-        axios.get("/recipes/update")
+        axios.get("/merchant/recipes/update")
             .then((result)=>{
                 merchant = result.data.merchant;
                 this.displayRecipes();
