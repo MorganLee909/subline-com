@@ -1,10 +1,13 @@
 let recipesPage = {
+    currentRecipe: {},
     //Display all recipes on a card
     displayRecipes: function(){
         document.querySelector("#recipes").style.display = "flex";
         document.querySelector("#ingredient").style.display = "none";
 
         let body = document.querySelector("#recipesContainer");
+
+        currentRecipe = {};
 
         while(body.children.length > 0){
             body.removeChild(body.firstChild);
@@ -42,17 +45,17 @@ let recipesPage = {
             tbody.removeChild(tbody.firstChild);
         }
 
-        let recipe = merchant.recipes.find(r => r._id === recipeId);
+        this.currentRecipe = merchant.recipes.find(r => r._id === recipeId);
 
-        document.querySelector("#addButton").onclick = ()=>{this.displayAdd(recipe)};
-        title.innerText = recipe.name;
+        document.querySelector("#addButton").onclick = ()=>{this.displayAdd(this.currentRecipe)};
+        title.innerText = this.currentRecipe.name;
 
         recipesDiv.style.display = "none";
         ingredientDiv.style.display = "flex";
 
-        for(let ingredient of recipe.ingredients){
+        for(let ingredient of this.currentRecipe.ingredients){
             let row = document.createElement("tr");
-            row.recipeId = recipe._id;
+            row.recipeId = this.currentRecipe._id;
             tbody.appendChild(row);
 
             let name = document.createElement("td");
@@ -73,7 +76,7 @@ let recipesPage = {
 
             let removeButton = document.createElement("button");
             removeButton.innerText = "Remove";
-            removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient._id, row);};
+            removeButton.onclick = ()=>{this.deleteIngredient(recipeId, ingredient._id, row);};
             actions.appendChild(removeButton);
         }
     },
@@ -216,8 +219,9 @@ let recipesPage = {
         let button = row.children[2].children[0];
         button.innerText = "Edit";
         button.onclick = ()=>{this.editIngredient(row, ingredient);};
+        console.log(this.currentRecipe._id);
 
-        axios.post("/merchant/update", merchant)
+        axios.post("/merchant/recipes/ingredients/update", {recipeId: this.currentRecipe._id, ingredient: ingredient})
             .then((recipe)=>{
                 banner.createNotification("Ingredient successfully updated");
             })

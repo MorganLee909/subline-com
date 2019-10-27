@@ -326,5 +326,57 @@ module.exports = {
                 console.log(err);
                 return res.render("error");
             });
+    },
+
+    removeMerchantIngredient: function(req, res){
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    if(req.body.ingredientId === merchant.inventory[i]._id.toString()){
+                        merchant.inventory.splice(i, 1);
+                        break;
+                    }
+                }
+
+                merchant.save()
+                    .then(()=>{
+                        return res.json();
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
+    },
+
+    updateRecipeIngredient: function(req, res){
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
+                
+                for(let i = 0; i < recipe.ingredients.length; i++){
+                    if(recipe.ingredients[i]._id.toString() === req.body.ingredient._id){
+                        recipe.ingredients[i].quantity = req.body.ingredient.quantity;
+                        break;
+                    }
+                }
+
+                merchant.save()
+                    .then(()=>{
+                        return res.json();
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     }
 }
