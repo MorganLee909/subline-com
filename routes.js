@@ -7,7 +7,7 @@ module.exports = function(app){
     app.get("/recipes", home.displayRecipes);
 
     //Merchant
-    app.get("/merchant/recipes/update", home.updateRecipes); //this is fucked
+    app.get("/merchant/recipes/update", home.updateRecipes);
     app.post("/merchant/create", home.createMerchant);
     app.post("/merchant/ingredients/create", home.addMerchantIngredient);
     app.post("/merchant/ingredients/remove", home.removeMerchantIngredient);

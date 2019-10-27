@@ -209,23 +209,25 @@ let recipesPage = {
     },
 
     updateIngredient: function(row, ingredient){
+        let originalQuantity = ingredient.quantity;
         ingredient.quantity = row.children[1].children[0].value;
+
         let td = row.children[1];
         while(td.children.length > 0){
             td.removeChild(td.firstChild);
         }
-        td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
 
         let button = row.children[2].children[0];
         button.innerText = "Edit";
         button.onclick = ()=>{this.editIngredient(row, ingredient);};
-        console.log(this.currentRecipe._id);
 
         axios.post("/merchant/recipes/ingredients/update", {recipeId: this.currentRecipe._id, ingredient: ingredient})
-            .then((recipe)=>{
+            .then(()=>{
+                td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
                 banner.createNotification("Ingredient successfully updated");
             })
             .catch((err)=>{
+                td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
                 console.log(err);
                 banner.createError("There was an error and the ingredient could not be updated");
             });
