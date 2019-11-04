@@ -3,6 +3,8 @@ const axios = require("axios");
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 
+const homeHelper = require("./homeHelper");
+
 // const merchantId = "HCVKASXH94531";
 // const token = "f1c88a69-e3e4-059a-da06-8858d0636e82";
 
@@ -11,6 +13,7 @@ const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
     displayInventory: function(req, res){
+
         Merchant.findOne({posId: merchantId})
             .populate("inventory.ingredient")
             .then((merchant)=>{
@@ -73,10 +76,14 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
                 return res.render("error");
-            })
+            });
     },
 
     displayRecipes: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .populate("recipes.ingredients.ingredient")
             .populate("inventory.ingredient")
@@ -90,6 +97,10 @@ module.exports = {
     },
 
     updateRecipes: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
@@ -177,6 +188,7 @@ module.exports = {
 
                 newMerchant.save()
                     .then((newMerchant)=>{
+                        req.session.user = newMerchant._id;
                         return res.redirect("/");
                     })
                     .catch((err)=>{
@@ -190,6 +202,10 @@ module.exports = {
     },
 
     addMerchantIngredient: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 merchant.inventory.push(req.body);
@@ -209,6 +225,10 @@ module.exports = {
     },
 
     removeMerchantIngredient: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 for(let i = 0; i < merchant.inventory.length; i++){
@@ -234,6 +254,10 @@ module.exports = {
     },
 
     updateMerchantIngredient: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 let updateIngredient = merchant.inventory.find(i => i._id.toString() === req.body.ingredientId);
@@ -250,10 +274,14 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
                 return res.render("error");
-            })
+            });
     },
 
     addRecipeIngredient: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
@@ -274,6 +302,10 @@ module.exports = {
     },
 
     updateRecipeIngredient: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
@@ -301,6 +333,10 @@ module.exports = {
     },
 
     removeRecipeIngredient: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
@@ -380,12 +416,27 @@ module.exports = {
     },
 
     getCloverRecipes: function(req, res){
-        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
-            .then((recipes)=>{
-                return res.json(recipes);
+        if(!req.session.user){
+            return res.render("error");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/items?access_token=${token}`)
+                    .then((recipes)=>{
+                        return res.json(recipes);
+                    })
+                    .catch((err)=>{
+                        return res.json(err);
+                    });
             })
             .catch((err)=>{
-                return res.json(err);
+                console.log(err);
+                return res.render("error");
             });
+    },
+
+    unregistered: function(req, res){
+        return res.redirect("/");
     }
 }

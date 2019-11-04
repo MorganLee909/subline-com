@@ -23,4 +23,7 @@ module.exports = function(app){
 
     //Clover API
     app.get("/getrecipes", home.getCloverRecipes);
+
+    //Other
+    app.get("/unregistered", home.unregistered);
 }
