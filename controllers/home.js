@@ -233,6 +233,26 @@ module.exports = {
             });
     },
 
+    updateMerchantIngredient: function(req, res){
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                let updateIngredient = merchant.inventory.find(i => i._id.toString() === req.body.ingredientId);
+                updateIngredient.quantity = req.body.quantity;
+                merchant.save()
+                    .then((merchant)=>{
+                        return res.json();
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    })
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            })
+    },
+
     addRecipeIngredient: function(req, res){
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{

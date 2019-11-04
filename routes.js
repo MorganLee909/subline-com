@@ -11,6 +11,7 @@ module.exports = function(app){
     app.post("/merchant/create", home.createMerchant);
     app.post("/merchant/ingredients/create", home.addMerchantIngredient);
     app.post("/merchant/ingredients/remove", home.removeMerchantIngredient);
+    app.post("/merchant/ingredients/update", home.updateMerchantIngredient);
     app.post("/merchant/recipes/ingredients/create", home.addRecipeIngredient);
     app.post("/merchant/recipes/ingredients/update", home.updateRecipeIngredient);
     app.post("/merchant/recipes/ingredients/remove", home.removeRecipeIngredient);

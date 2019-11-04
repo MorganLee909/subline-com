@@ -1,6 +1,6 @@
 let inventoryPage = {
     items: [], //the ingredients to be displayed
-    currentSort: "",
+    currentSort: "", //boolean used for sorting
 
     //Remove any existing ingredients in table
     //loop through this.items and create rows for the table
@@ -110,7 +110,7 @@ let inventoryPage = {
         if(validator.ingredient.quantity(quantity)){
             let updateIngredient = merchant.inventory.find(i => i._id === id);
             updateIngredient.quantity = quantity;
-            axios.post("merchant/update", merchant)
+            axios.post("/merchant/ingredients/update", {ingredientId: id, quantity: quantity})
                 .then((merchant)=>{
                     banner.createNotification("The ingredient has been successfully updated");
                 })
