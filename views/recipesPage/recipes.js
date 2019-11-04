@@ -4,6 +4,7 @@ let recipesPage = {
     displayRecipes: function(){
         document.querySelector("#recipes").style.display = "flex";
         document.querySelector("#ingredient").style.display = "none";
+        document.querySelector("#title").innerText = "Recipes";
 
         let body = document.querySelector("#recipesContainer");
 
@@ -81,6 +82,7 @@ let recipesPage = {
         }
     },
 
+    //Display the box in the table for adding another ingredient to a recipe
     displayAdd: function(recipe){
         let tbody = document.querySelector("tbody");
 
