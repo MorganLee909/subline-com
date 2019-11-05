@@ -359,18 +359,16 @@ module.exports = {
             return res.render("error");
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
+        Recipe.findOne({_id: req.body.recipeId})
+            .then((recipe)=>{
                 for(let i = 0; i < recipe.ingredients.length; i++){
-                    if(req.body.ingredientId === recipe.ingredients[i]._id.toString()){
+                    if(recipe.ingredients[i]._id.toString() === req.body.ingredientId){
                         recipe.ingredients.splice(i, 1);
-                        break;
                     }
                 }
 
-                merchant.save()
-                    .then((result)=>{
+                recipe.save()
+                    .then((recipe)=>{
                         return res.json();
                     })
                     .catch((err)=>{
