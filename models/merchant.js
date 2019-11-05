@@ -13,6 +13,10 @@ const MerchantSchema = new mongoose.Schema({
         type: String,
         default: Date.now()
     },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
@@ -26,26 +30,8 @@ const MerchantSchema = new mongoose.Schema({
         }
     }],
     recipes: [{
-        posId: {
-            type: String,
-            required: true
-        },
-        name: {
-            type: String,
-            required: true,
-        },
-        ingredients: [{
-            ingredient: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Ingredient",
-                required: [true, "Must provide ingredient"]
-            },
-            quantity: {
-                type: Number,
-                min: [0, "Cannot have a negative quantity"],
-                required: [true, "Must provide a quantity"]
-            }
-        }]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Recipe",
     }]
 });
 

@@ -2,6 +2,7 @@ const axios = require("axios");
 
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
+const Recipe = require("../models/recipe");
 
 const homeHelper = require("./homeHelper");
 
@@ -13,9 +14,9 @@ const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
     displayInventory: function(req, res){
-
         Merchant.findOne({posId: merchantId})
             .populate("inventory.ingredient")
+            .populate("recipes")
             .then((merchant)=>{
                 if(merchant){
                     req.session.user = merchant._id;
@@ -85,7 +86,14 @@ module.exports = {
         }
 
         Merchant.findOne({_id: req.session.user})
-            .populate("recipes.ingredients.ingredient")
+            .populate({
+                path: "recipes",
+                model: "Recipe",
+                populate: {
+                    path: "ingredients.ingredient",
+                    model: "Ingredient"
+                }
+            })
             .populate("inventory.ingredient")
             .then((merchant)=>{
                 return res.render("recipesPage/recipes", {merchant: merchant});
@@ -182,19 +190,37 @@ module.exports = {
                     newMerchant.inventory.push(newIngredient);
                 }
 
+                let newRecipes = []
                 for(let recipe of data.recipes){
-                    newMerchant.recipes.push(recipe);
+                    let newRecipe = {
+                        posId: recipe.posId,
+                        name: recipe.name,
+                        ingredients: []
+                    };
+                    for(let ingredient of recipe.ingredients){
+                        newRecipe.ingredients.push(ingredient);
+                    }
+                    newRecipes.push(newRecipe);
                 }
 
-                newMerchant.save()
-                    .then((newMerchant)=>{
-                        req.session.user = newMerchant._id;
-                        return res.redirect("/");
+                Recipe.create(newRecipes)
+                    .then((recipes)=>{
+                        for(let recipe of recipes){
+                            newMerchant.recipes.push(recipe);
+                        }
+                        newMerchant.save()
+                                .then((merchant)=>{
+                                    return res.redirect("/");
+                                })
+                                .catch((err)=>{
+                                    console.log(err);
+                                    return res.render("error");
+                                });
                     })
                     .catch((err)=>{
                         console.log(err);
                         return res.render("error");
-                    })
+                    });
             })
             .catch((err)=>{
                 console.log(err);
@@ -306,25 +332,21 @@ module.exports = {
             return res.render("error");
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
-
-                for(let i = 0; i < recipe.ingredients.length; i++){
-                    if(recipe.ingredients[i]._id.toString() === req.body.ingredient._id){
-                        recipe.ingredients[i].quantity = req.body.ingredient.quantity;
-                        break;
+        Recipe.findOne({_id: req.body.recipeId})
+            .then((recipe)=>{
+                for(let ingredient of recipe.ingredients){
+                    if(ingredient._id.toString() === req.body.ingredient._id){
+                        ingredient.quantity = req.body.ingredient.quantity;
+                        recipe.save()
+                            .then((recipe)=>{
+                                return res.json();
+                            })
+                            .catch((err)=>{
+                                console.log(err);
+                                return res.render("error");
+                            })
                     }
                 }
-
-                merchant.save()
-                    .then(()=>{
-                        return res.json();
-                    })
-                    .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
-                    });
             })
             .catch((err)=>{
                 console.log(err);
