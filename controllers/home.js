@@ -4,8 +4,6 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Recipe = require("../models/recipe");
 
-const homeHelper = require("./homeHelper");
-
 // const merchantId = "HCVKASXH94531";
 // const token = "f1c88a69-e3e4-059a-da06-8858d0636e82";
 
