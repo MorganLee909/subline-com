@@ -308,13 +308,16 @@ module.exports = {
             return res.render("error");
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                let recipe = merchant.recipes.find(r => r._id.toString() === req.body.recipeId);
-                recipe.ingredients.push(req.body.item)
-                merchant.save()
-                    .then((newMerchant)=>{
-                        return res.json(newMerchant);
+        Recipe.findOne({_id: req.body.recipeId})
+            .then((recipe)=>{
+                recipe.ingredients.push({
+                    ingredient: req.body.item.ingredient,
+                    quantity: req.body.item.quantity
+                });
+                
+                recipe.save()
+                    .then((recipe)=>{
+                        return res.json();
                     })
                     .catch((err)=>{
                         console.log(err);
