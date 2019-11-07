@@ -5,6 +5,11 @@ const RecipeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    merchant: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Merchant",
+        required: true
+    },
     name: {
         type: String,
         required: true,

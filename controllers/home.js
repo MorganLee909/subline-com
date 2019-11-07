@@ -110,6 +110,7 @@ module.exports = {
         }
 
         Merchant.findOne({_id: req.session.user})
+            .populate("recipes")
             .then((merchant)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
                     .then((result)=>{
@@ -133,15 +134,27 @@ module.exports = {
                                 }
                             }
                         }
+                        console.log(result.data.elements);
 
+                        let newRecipes = []
                         for(let recipe of result.data.elements){
-                            merchant.recipes.push({
+                            let newRecipe = new Recipe({
                                 posId: recipe.id,
+                                merchant: merchant._id,
                                 name: recipe.name,
                                 ingredients: []
                             });
+
+                            merchant.recipes.push(newRecipe);
+                            newRecipes.push(newRecipe);
                         }
-                        
+
+                        Recipe.create(newRecipes)
+                            .catch((err)=>{
+                                console.log(err);
+                                return res.render("error");
+                            });
+
                         merchant.save()
                             .then((newMerchant)=>{
                                 newMerchant.populate("recipes.ingredients.ingredient").execPopulate()
@@ -194,6 +207,7 @@ module.exports = {
                 for(let recipe of data.recipes){
                     let newRecipe = {
                         posId: recipe.posId,
+                        merchant: newMerchant._id,
                         name: recipe.name,
                         ingredients: []
                     };
