@@ -20,6 +20,12 @@ let recipesPage = {
             recipeDiv.onclick = ()=>{this.displayOneRecipe(recipe._id)};
             body.appendChild(recipeDiv);
 
+            if(recipe.ingredients.length === 0){
+                recipeDiv.classList = "recipe-card empty-recipe";
+            }else{
+                recipeDiv.classList = "recipe-card";
+            }
+
             let title = document.createElement("h2");
             title.innerText = recipe.name;
             recipeDiv.appendChild(title);

@@ -46,6 +46,12 @@ h2{
                 transform: translateY(-3px);
             }
 
+            .empty-recipe{
+                background: #ff626b;
+                border: 2px solid #001b2d;
+                color: #001b2d;
+            }
+
 #ingredient{
     display: none;
     width: 50%;

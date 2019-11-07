@@ -134,7 +134,6 @@ module.exports = {
                                 }
                             }
                         }
-                        console.log(result.data.elements);
 
                         let newRecipes = []
                         for(let recipe of result.data.elements){
