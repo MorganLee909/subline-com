@@ -42,7 +42,7 @@ module.exports = {
 
                             merchant.save()
                                 .then((updatedMerchant)=>{
-                                    return res.render("inventory/inventory", {merchant: updatedMerchant});
+                                    return res.render("inventoryPage/inventory", {merchant: updatedMerchant});
                                 })
                                 .catch((err)=>{
                                     console.log(err);
