@@ -132,9 +132,10 @@ let inventoryPage = {
     removeIngredient: function(id, row){
         axios.post("/merchant/ingredients/remove", {ingredientId: id})
             .then(()=>{
-                for(let i = 0; i < this.items.length; i++){
-                    if(id === this.items[i].id){
-                        this.items.splice(i, 1);
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    if(id === merchant.inventory[i]._id){
+                        merchant.inventory.splice(i, 1);
+                        break;
                     }
                 }
 
