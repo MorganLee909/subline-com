@@ -53,9 +53,9 @@ let ingredientSetup = {
     //Display existing ingredients table
     //Hide other tables
     displayExistingIngredients: function(){
-        addIngredients.style.display = "flex";
-        newIngredients.style.display = "none";
-        createRecipes.style.display = "none";
+        controller.addIngredients.style.display = "flex";
+        controller.newIngredients.style.display = "none";
+        controller.createRecipes.style.display = "none";
     },
 
     //Display new ingredients table

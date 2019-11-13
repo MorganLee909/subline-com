@@ -51,5 +51,25 @@ let validator = {
 
             return true;
         }
+    },
+
+    merchant: {
+        password: function(pass, confirmPass, createBanner = true){
+            if(pass !== confirmPass){
+                if(createBanner){
+                    banner.createError("Your passwords do not match");
+                }
+                return false;
+            }
+
+            if(pass.length < 15){
+                if(createBanner){
+                    banner.createError("Your password must contain at least 15 characters");
+                }
+                return false;
+            }
+
+            return true;
+        }
     }
 }

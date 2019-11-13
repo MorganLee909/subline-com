@@ -1,14 +1,17 @@
 let landingPage = {
-    clearScreen: function(){
-        document.querySelector("#main").style.display = "none";
-        document.querySelector("#login").style.display = "none";
-        document.querySelector("#pos").style.display = "none";
-        document.querySelector("#register").style.display = "none";
+    mainComp: document.querySelector("#main"),
+    loginComp: document.querySelector("#login"),
+    posComp: document.querySelector("#pos"),
 
+    //Remove all displayed components
+    clearScreen: function(){
+        this.mainComp.style.display = "none";
+        this.loginComp.style.display = "none";
+        this.posComp.style.display = "none";
     },
 
     choosePos: function(){
         this.clearScreen();
-        document.querySelector("#pos").style.display = "flex";
+        this.posComp.style.display = "flex";
     }
 }

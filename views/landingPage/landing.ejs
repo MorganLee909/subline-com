@@ -15,37 +15,22 @@
             <button onclick="landingPage.choosePos()">Register</button>
         </div>
 
-        <form id="login">
-
-        </form>
+        <form id="login"></form>
 
         <div id="pos">
             <h1>Choose your POS System</h1>
             <div class="cards">
-                <div>
+                <a href="/merchant/new/clover">
                     <img src="../shared/images/clover-logo.jpeg">
-                </div>
-                <div>
+                </a>
+                <a href="/merchant/new/none">
                     <img src="../shared/images/logo.png">
                     <p>None</p>
-                </div>
+                </a>
             </div>
         </div>
 
-        <form id="register" onsubmit="landingPage.register()">
-            <label>Email
-                <input id="regEmail" type="email" required>
-            </label>
-
-            <label>Password
-                <input id="regPass" type="password" required>
-            </label>
-
-            <label>Confirm Password
-                <input id="regConfirmPass" type="password" required>
-            </label>
-        </form>
-
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/landingPage/landing.js"></script>
     </body>

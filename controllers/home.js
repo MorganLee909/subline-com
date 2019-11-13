@@ -64,7 +64,9 @@ module.exports = {
             });
     },
 
-    merchantSetup: function(req, res){
+    //Display page to set up new merchant with Clover POS
+    //TODO: This is for development, needs updating for production
+    merchantSetupClover: function(req, res){
         Ingredient.find()
             .then((ingredients)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
@@ -75,6 +77,18 @@ module.exports = {
                         console.log(err);
                         return res.render("error");
                     });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
+    },
+
+    //Display page to set up merchant with no POS system
+    merchantSetupNone: function(req, res){
+        Ingredient.find()
+            .then((ingredients)=>{
+                return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients});
             })
             .catch((err)=>{
                 console.log(err);
