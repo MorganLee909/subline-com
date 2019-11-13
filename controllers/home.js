@@ -11,6 +11,10 @@ const merchantId = "YHVPCQMVB1P81";
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
+    landingPage: function(req, res){
+        return res.render("landingPage/landing");
+    },
+
     displayInventory: function(req, res){
         Merchant.findOne({posId: merchantId})
             .populate("inventory.ingredient")
@@ -221,7 +225,7 @@ module.exports = {
                         }
                         newMerchant.save()
                                 .then((merchant)=>{
-                                    return res.redirect("/");
+                                    return res.redirect("/inventory");
                                 })
                                 .catch((err)=>{
                                     console.log(err);

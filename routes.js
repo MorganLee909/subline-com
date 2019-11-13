@@ -2,7 +2,8 @@ const home = require("./controllers/home");
 
 module.exports = function(app){
     //Render page
-    app.get("/", home.displayInventory);
+    app.get("/", home.landingPage);
+    app.get("/inventory", home.displayInventory);
     app.get("/merchant/new", home.merchantSetup);
     app.get("/recipes", home.displayRecipes);
 
