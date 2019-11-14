@@ -4,7 +4,7 @@ let ingredientSetup = {
 
     //Loops through all ingredients passed from database
     //Creates a row for each ingredient and adds it to table
-    populateIngredients: function(){
+    existingIngredients: function(){
         let tBody = document.createElement("tbody");
     
         for(let ingredient of ingredients){
@@ -45,25 +45,19 @@ let ingredientSetup = {
             let oldTBody = document.querySelector("#ingredient-display tbody");
             oldTBody.parentNode.replaceChild(tBody, oldTBody);
             this.existingIngredientElements.push(row);
-
-            this.displayExistingIngredients();
         }
     },
 
-    //Display existing ingredients table
-    //Hide other tables
-    displayExistingIngredients: function(){
-        controller.addIngredients.style.display = "flex";
-        controller.newIngredients.style.display = "none";
-        controller.createRecipes.style.display = "none";
+    redisplayExistingIngredients: function(){
+        controller.clearScreen();
+        controller.addIngredientsComp.style.display = "flex";
     },
 
     //Display new ingredients table
     //Hide other tables
-    displayNewIngredients: function(){
-        addIngredients.style.display = "none";
-        newIngredients.style.display = "flex";
-        createRecipes.style.display = "none";
+    createIngredients: function(){
+        controller.clearScreen();
+        controller.newIngredientsComp.style.display = "flex";
     },
 
     //Creates a new, empty row in table to input data
@@ -74,14 +68,14 @@ let ingredientSetup = {
         let name = document.createElement("td");
         let nameInput = document.createElement("input");
         nameInput.type = "text";
-        nameInput.onblur = ()=>{checkValid("name", nameInput)};
+        nameInput.onblur = ()=>{controller.checkValid("name", nameInput)};
         name.appendChild(nameInput);
         row.appendChild(name);
     
         let category = document.createElement("td");
         let categoryInput = document.createElement("input");
         categoryInput.type = "text"
-        categoryInput.onblur = ()=>{checkValid("category", categoryInput)};
+        categoryInput.onblur = ()=>{controller.checkValid("category", categoryInput)};
         category.appendChild(categoryInput);
         row.appendChild(category);
     
@@ -89,14 +83,14 @@ let ingredientSetup = {
         let quantityInput = document.createElement("input");
         quantityInput.type = "number";
         quantityInput.step = "0.01";
-        quantityInput.onblur = ()=>{checkValid("quantity", quantityInput)};
+        quantityInput.onblur = ()=>{controller.checkValid("quantity", quantityInput)};
         quantity.appendChild(quantityInput);
         row.appendChild(quantity);
     
         let unit = document.createElement("td");
         let unitInput = document.createElement("input");
         unitInput.type = "text";
-        unitInput.onblur = ()=>{checkValid("unit", unitInput)};
+        unitInput.onblur = ()=>{controller.checkValid("unit", unitInput)};
         unit.appendChild(unitInput);
         row.appendChild(unit);
     
@@ -124,10 +118,10 @@ let ingredientSetup = {
     //refactor
     //nothin should run unless everything is valid
     createIngredientsList: function(){
-        data.ingredients = [];
+        controller.data.ingredients = [];
         for(let ingredient of this.existingIngredientElements){
             if(ingredient.children[0].children[0].checked){
-                data.ingredients.push({
+                controller.data.ingredients.push({
                     id: ingredient.id,
                     name: ingredient.children[1].textContent,
                     quantity: ingredient.children[3].children[0].value,
@@ -154,7 +148,7 @@ let ingredientSetup = {
         for(let i = 0; i < newIngredient.length; i++){
             if(!validator.ingredient.all(newIngredient[i], newIngredientQuantity[i].quantity)){
                 isValid = false;
-                data.ingredients = [];
+                controller.data.ingredients = [];
                 break;
             }
         }
@@ -175,7 +169,7 @@ let ingredientSetup = {
                             }
                         }
     
-                        data.ingredients.push(newIngredient);
+                        controller.data.ingredients.push(newIngredient);
                     }
                     banner.createNotification("All ingredients have been created and added to your inventory");
                     recipeSetup.createRecipePage();

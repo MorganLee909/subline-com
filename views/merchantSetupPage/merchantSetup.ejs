@@ -30,7 +30,7 @@
                 <tbody></tbody>
             </table>
 
-            <button onclick="ingredientSetup.displayNewIngredients()">Next</button>
+            <button onclick="ingredientSetup.createIngredients()">Next</button>
         </div>
 
         <div id="newIngredients" class="container hide">
@@ -52,7 +52,7 @@
             </table>
             <button onclick="ingredientSetup.newIngredientField()">+</button>
             <button onclick="ingredientSetup.createIngredientsList()">Create Ingredients</button>
-            <button onclick="ingredientSetup.displayExistingIngredients()">Back</button>
+            <button onclick="ingredientSetup.redisplayExistingIngredients()">Back</button>
         </div>
 
         <div id="createRecipes" class="container hide">
@@ -76,15 +76,12 @@
             <button id="previous" onclick="recipeSetup.changeRecipe(-1)">Previous Recipe</button>
         </div>
 
-        <script>
-            let ingredients = <%- JSON.stringify(ingredients) %>;
-            if(locals.recipes){
-                console.log("something");
-                
-            }
-        </script>
+        <% if(locals.recipes){ %>
+            <script>let recipes = <%- JSON.stringify(recipes) %>;</script>
+        <% } %>
+        <script>let ingredients = <%- JSON.stringify(ingredients) %>;</script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="../shared/validation.js"></script>
+        <script src="/shared/validation.js"></script>
         <script src="/merchantSetupPage/recipeSetup.js"></script>
         <script src="/merchantSetupPage/ingredientSetup.js"></script>
         <script src="/merchantSetupPage/controller.js"></script>

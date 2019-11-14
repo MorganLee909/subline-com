@@ -10,13 +10,11 @@ let recipeSetup = {
         createRecipes.style.display = "flex";
 
         for(let recipe of recipes.elements){
-            this.recipeData.push(
-                {
+            this.recipeData.push({
                     id: recipe.id,
                     name: recipe.name,
                     ingredients: []
-                }
-            )
+            });
         }
 
         this.showRecipe();
@@ -37,7 +35,7 @@ let recipeSetup = {
             let ingTd = document.createElement("td");
             row.appendChild(ingTd);
             let ingName = document.createElement("select");
-            for(let ingredient of data.ingredients){
+            for(let ingredient of controller.data.ingredients){
                 let newOption = document.createElement("option");
                 newOption.innerText = ingredient.name;
                 newOption.value = ingredient.id;
@@ -112,7 +110,7 @@ let recipeSetup = {
     submitAll: function(){
         this.recipeData[this.recipeDataIndex].ingredients = [];
         let body = document.querySelector("#recipes tbody");
-        data.recipes = [];
+        controller.data.recipes = [];
         let isValid = true;
 
         for(let row of body.children){
@@ -142,7 +140,7 @@ let recipeSetup = {
                         quantity: ingredient.quantity
                     });
                 }
-                data.recipes.push(newRecipe);
+                controller.data.recipes.push(newRecipe);
             }
             
             let form = document.createElement("form");
@@ -152,7 +150,7 @@ let recipeSetup = {
             let dataInput = document.createElement("input");
             dataInput.type = "hidden";
             dataInput.name = "data";
-            dataInput.value = JSON.stringify(data);
+            dataInput.value = JSON.stringify(controller.data);
         
             form.appendChild(dataInput);
             document.body.appendChild(form);
@@ -170,7 +168,7 @@ let recipeSetup = {
         let ingTd = document.createElement("td");
         row.appendChild(ingTd);
         let ingName = document.createElement("select");
-        for(let ingredient of data.ingredients){
+        for(let ingredient of controller.data.ingredients){
             let newOption = document.createElement("option");
             newOption.innerText = ingredient.name;
             newOption.value = ingredient.id;
@@ -184,7 +182,7 @@ let recipeSetup = {
         ingQuant.type = "number";
         ingQuant.step = "0.01";
         ingQuant.min = "0";
-        ingQuant.onblur = ()=>{checkValid("quantity", ingQuant)};
+        ingQuant.onblur = ()=>{controller.checkValid("quantity", ingQuant)};
         quantTd.appendChild(ingQuant);
     
         let removeTd = document.createElement("td");
