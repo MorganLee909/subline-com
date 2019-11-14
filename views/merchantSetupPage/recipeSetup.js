@@ -5,15 +5,53 @@ let recipeSetup = {
     //Display recipe page and hide others
     //Populate recipeData with data from Clover
     createRecipePage: function(){
-        addIngredients.style.display = "none";
-        newIngredients.style.display = "none";
-        createRecipes.style.display = "flex";
+        if(recipes){
+            for(let recipe of recipes.elements){
+                this.recipeData.push({
+                        id: recipe.id,
+                        name: recipe.name,
+                        ingredients: []
+                });
+            }
 
-        for(let recipe of recipes.elements){
+            this.showRecipe();
+        }else{
+            this.createOwnRecipes();
+        }
+    },
+
+    //Display page to create recipe names
+    createOwnRecipes: function(){
+        controller.clearScreen();
+        controller.newRecipesComp.style.display = "flex";
+
+        this.addNameField();
+    },
+
+    //Add another input box to input another recipe name
+    addNameField: function(){
+        let nameList = document.querySelector("#nameList");
+
+        let nameDiv = document.createElement("div");
+        nameList.appendChild(nameDiv);
+
+        let nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameDiv.appendChild(nameInput);
+
+        let nameRemove = document.createElement("button");
+        nameRemove.innerText = "Remove";
+        nameRemove.onclick = ()=>{nameDiv.parentNode.removeChild(nameDiv)};
+        nameDiv.appendChild(nameRemove);
+    },
+
+    //Adds the names of the recipes
+    //Calls showRecipe to carry on 
+    createNames: function(){
+        for(let nameDiv of document.querySelector("#nameList").children){
             this.recipeData.push({
-                    id: recipe.id,
-                    name: recipe.name,
-                    ingredients: []
+                name: nameDiv.children[0].value,
+                ingredients: []
             });
         }
 
@@ -24,10 +62,13 @@ let recipeSetup = {
     //Displays each ingredient for current recipe
     //Create and display correct buttons for navigation
     showRecipe: function(){
+        controller.clearScreen();
+        controller.createRecipesComp.style.display = "flex";
+
         let title = document.querySelector("#recipeName");
         title.innerText = this.recipeData[this.recipeDataIndex].name;
     
-        let body = document.querySelector("#recipes tbody");
+        let body = document.querySelector("#recipeTable tbody");
         for(let ing of this.recipeData[this.recipeDataIndex].ingredients){
             let row = document.createElement("tr");
             body.appendChild(row);
@@ -78,7 +119,7 @@ let recipeSetup = {
     //Changes recipeDataIndex
     //Hands off to showRecipe function
     changeRecipe: function(num){
-        let body = document.querySelector("#recipes tbody");
+        let body = document.querySelector("#recipeTable tbody");
         this.recipeData[this.recipeDataIndex].ingredients = [];
         let isValid = true;
     
@@ -109,7 +150,7 @@ let recipeSetup = {
     //Creates a form and submits data
     submitAll: function(){
         this.recipeData[this.recipeDataIndex].ingredients = [];
-        let body = document.querySelector("#recipes tbody");
+        let body = document.querySelector("#recipeTable tbody");
         controller.data.recipes = [];
         let isValid = true;
 
@@ -160,7 +201,7 @@ let recipeSetup = {
 
     //Creates a new, empty row in table to input data
     addRecipeIngredientField: function(){
-        let body = document.querySelector("#recipes tbody");
+        let body = document.querySelector("#recipeTable tbody");
     
         let row = document.createElement("tr");
         body.appendChild(row);

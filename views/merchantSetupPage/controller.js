@@ -5,6 +5,7 @@ let controller = {
     addIngredientsComp: document.querySelector("#addIngredients"),
     newIngredientsComp: document.querySelector("#newIngredients"),
     createRecipesComp: document.querySelector("#createRecipes"),
+    newRecipesComp: document.querySelector("#newRecipes"),
 
     //General purpose data validator
     checkValid: function(valueToCheck, inputField){
@@ -19,6 +20,7 @@ let controller = {
         this.addIngredientsComp.style.display = "none";
         this.newIngredientsComp.style.display = "none";
         this.createRecipesComp.style.display = "none";
+        this.newRecipesComp.style.display = "none";
     }
 }
 

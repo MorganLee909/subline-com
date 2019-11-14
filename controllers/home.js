@@ -88,7 +88,7 @@ module.exports = {
     merchantSetupNone: function(req, res){
         Ingredient.find()
             .then((ingredients)=>{
-                return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients});
+                return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: null});
             })
             .catch((err)=>{
                 console.log(err);

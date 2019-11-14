@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const RecipeSchema = new mongoose.Schema({
-    posId: {
-        type: String,
-        required: true
-    },
+    posId: String,
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",

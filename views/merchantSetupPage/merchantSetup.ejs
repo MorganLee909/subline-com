@@ -56,11 +56,11 @@
         </div>
 
         <div id="createRecipes" class="container hide">
-            <h1>Create your recipes</h1>
+            <h1>Add ingredients to your recipes</h1>
 
             <h2 id="recipeName"></h2>
 
-            <table id="recipes">
+            <table id="recipeTable">
                 <thead>
                     <tr>
                         <th>Ingredient</th>
@@ -76,10 +76,20 @@
             <button id="previous" onclick="recipeSetup.changeRecipe(-1)">Previous Recipe</button>
         </div>
 
-        <% if(locals.recipes){ %>
-            <script>let recipes = <%- JSON.stringify(recipes) %>;</script>
-        <% } %>
-        <script>let ingredients = <%- JSON.stringify(ingredients) %>;</script>
+        <div id="newRecipes">
+            <h1>Name your recipes</h1>
+
+            <button onclick="recipeSetup.addNameField()">Add Recipe</button>
+
+            <div id="nameList"></div>
+
+            <button onclick="recipeSetup.createNames()">Submit</button>
+        </div>
+
+        <script>
+            let ingredients = <%- JSON.stringify(ingredients) %>;
+            let recipes = <%- JSON.stringify(recipes) %>;
+        </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/shared/validation.js"></script>
         <script src="/merchantSetupPage/recipeSetup.js"></script>
