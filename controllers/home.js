@@ -555,5 +555,24 @@ module.exports = {
 
     unregistered: function(req, res){
         return res.redirect("/");
+    },
+
+    login: function(req, res){
+        Merchant.findOne({email: req.body.email})
+            .then((merchant)=>{
+                bcrypt.compare(req.body.password, merchant.password, (err, result)=>{
+                    if(result){
+                        req.session.user = merchant._id;
+                        return res.redirect("/inventory");
+                    }
+
+                    console.log(err);
+                    return res.redirect("/");
+                });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.redirect("/");
+            });
     }
 }

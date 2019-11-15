@@ -29,4 +29,5 @@ module.exports = function(app){
 
     //Other
     app.get("/unregistered", home.unregistered);
+    app.post("/login", home.login);
 }

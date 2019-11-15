@@ -11,11 +11,23 @@
         <% include ../shared/banner %>
 
         <div id="publicStrand">
-            <button>Login</button>
+            <button onclick="loginObj.display()">Login</button>
             <button onclick="posChoiceObj.display()">Register</button>
         </div>
 
-        <form id="loginStrand"></form>
+        <div id="loginStrand">
+            <form action="/login" method="post">
+                <label>Email:
+                    <input name="email" type="email" required>
+                </label>
+
+                <label>Password:
+                    <input name="password" type="password" required>
+                </label>
+
+                <input type="submit" value="Log In">
+            </form>
+        </div>
 
         <div id="posChoiceStrand">
             <h1>Choose your POS System</h1>
@@ -33,6 +45,7 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/landingPage/public.js"></script>
+        <script src="/landingPage/login.js"></script>
         <script src="/landingPage/posChoice.js"></script>
         <script src="/landingPage/controller.js"></script>
     </body>
