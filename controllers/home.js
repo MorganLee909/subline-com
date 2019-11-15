@@ -17,12 +17,15 @@ module.exports = {
     },
 
     displayInventory: function(req, res){
-        Merchant.findOne({posId: merchantId})
+        if(!req.session.user){
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
             .populate("inventory.ingredient")
             .populate("recipes")
             .then((merchant)=>{
-                if(merchant){
-                    req.session.user = merchant._id;
+                if(merchant.pos === "clover"){
                     axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
                         .then((result)=>{
                             for(let order of result.data.elements){
@@ -55,8 +58,10 @@ module.exports = {
                         .catch((err)=>{
                             console.log(err);
                         });
+                }else if(merchant.pos === "none"){
+                    return res.render("inventoryPage/inventory", {merchant: merchant})
                 }else{
-                    return res.redirect("/merchant/new");
+                    return res.redirect("/");
                 }
             })
             .catch((err)=>{
