@@ -50,7 +50,7 @@ addIngredientsObj = {
     },
 
     submit: function(){
-        controller.data.ingredients = [];
+        controller.data.inventory = [];
 
         let tbody = document.querySelector("#ingredient-display tbody");
         let isValid = true;
@@ -59,7 +59,7 @@ addIngredientsObj = {
                 let quantity = row.children[3].children[0].value;
 
                 if(validator.ingredient.quantity(quantity)){
-                    controller.data.ingredients.push({
+                    controller.data.inventory.push({
                         ingredient: {
                             id: row.id,
                             name: row.children[1].innerText,

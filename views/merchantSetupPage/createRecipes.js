@@ -79,7 +79,7 @@ let createRecipesObj = {
 
             if(validator.ingredient.quantity(quantity)){
                 controller.data.recipes[this.recipeIndex].ingredients.push({
-                    id: row.children[0].children[0].value,
+                    ingredient: row.children[0].children[0].value,
                     quantity: quantity
                 });
             }else{
@@ -113,7 +113,7 @@ let createRecipesObj = {
         row.appendChild(ingTd);
 
         let ingName = document.createElement("select");
-        for(let ingredient of controller.data.ingredients){
+        for(let ingredient of controller.data.inventory){
             let newOption = document.createElement("option");
             newOption.innerText = ingredient.ingredient.name;
             newOption.value = ingredient.ingredient.id;

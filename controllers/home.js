@@ -1,4 +1,5 @@
 const axios = require("axios");
+const bcrypt = require("bcryptjs");
 
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
@@ -258,8 +259,48 @@ module.exports = {
 
     createMerchantNone: function(req, res){
         let data = JSON.parse(req.body.data);
+
+        let salt = bcrypt.genSaltSync(10);
+        let hash = bcrypt.hashSync(data.password, salt);
         
-        console.log(data);
+        let merchant = new Merchant({
+            name: data.name,
+            email: data.email,
+            password: hash,
+            pos: "none"
+        });
+
+        for(let item of data.inventory){
+            merchant.inventory.push({
+                ingredient: item.ingredient.id,
+                quantity: item.quantity
+            });
+        }
+
+        for(let recipe of data.recipes){
+            recipe.merchant = merchant._id;
+        }
+
+        Recipe.create(data.recipes)
+            .then((recipes)=>{
+                for(let recipe of recipes){
+                    merchant.recipes.push(recipe._id);
+                }
+
+                merchant.save()
+                    .then((merchant)=>{
+                        req.session.user = merchant._id;
+                        return res.redirect("/inventory");
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     },
 
     addMerchantIngredient: function(req, res){

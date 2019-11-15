@@ -58,6 +58,7 @@ let createIngredientsObj = {
         let isValid = true;
 
         let newIngredients = [];
+        let axiosIngredients = [];
         
         for(let row of tbody.children){
             let name = row.children[0].children[0].value;
@@ -71,10 +72,17 @@ let createIngredientsObj = {
             let checkUnit = validator.ingredient.unit(unit);
 
             if(checkName && checkCategory && checkQuantity && checkUnit){
-                newIngredients.push({
+                let newIngredient = {
                     name: name,
                     category: category,
                     unit: unit
+                }
+
+                axiosIngredients.push(newIngredient);
+
+                newIngredients.push({
+                    ingredient: newIngredient,
+                    quantity: quantity
                 });
             }else{
                 isValid = false;
@@ -83,18 +91,17 @@ let createIngredientsObj = {
         }
 
         if(isValid){
-            axios.post("/ingredients/create", newIngredients)
+            axios.post("/ingredients/create", axiosIngredients)
                 .then((ingredients)=>{
-                    for(let ingredient of ingredients.data){
-                        controller.data.ingredients.push({
-                            ingredient: {
-                                id: ingredient._id,
-                                name: ingredient.name,
-                                category: ingredient.category,
-                                unit: ingredient.unit
-                            },
-                            quantity: quantity
-                        });
+                    for(let ingredient of newIngredients){
+                        for(let createdIngredient of ingredients.data){
+                            if(createdIngredient.name === ingredient.ingredient.name){
+                                ingredient.ingredient.id = createdIngredient._id;
+                                break;
+                            }
+                        }
+
+                        controller.data.inventory.push(ingredient);
                     }
 
                     banner.createNotification("All ingredients have been created and added to your inventory");
