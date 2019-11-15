@@ -10,7 +10,33 @@
 
         <% include ../shared/banner %>
 
-        <div id="addIngredients" class="container">
+        <div id="basicInfoStrand" class="container">
+            <h1>Basic Information</h1>
+
+            <form onsubmit="basicInfoObj.submit()">
+                <% if(!locals.recipe){ %>
+                    <label>Name
+                        <input id="regName" type="text">
+                    </label>
+                <% } %>
+
+                <label>Email
+                    <input id="regEmail" type="email" required>
+                </label>
+
+                <label>Password
+                    <input id="regPass" type="password" required>
+                </label>
+
+                <label>Confirm Password
+                    <input id="regConfirmPass" type="password" required>
+                </label>
+
+                <input type="Submit" value="Create Account">
+            </form>
+        </div>
+
+        <div id="addIngredientsStrand" class="container">
             <h1>Add your first set of ingredients to your pantry</h1>
 
             <h3>Choose from our list of ingredients</h3>
@@ -30,10 +56,10 @@
                 <tbody></tbody>
             </table>
 
-            <button onclick="ingredientSetup.createIngredients()">Next</button>
+            <button onclick="addIngredientsObj.submit()">Next</button>
         </div>
 
-        <div id="newIngredients" class="container hide">
+        <div id="createIngredientsStrand" class="container">
             <h1>Add your first set of ingredients to your pantry</h1>
 
             <h3>Create your own ingredients</h3>
@@ -50,12 +76,22 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <button onclick="ingredientSetup.newIngredientField()">+</button>
-            <button onclick="ingredientSetup.createIngredientsList()">Create Ingredients</button>
-            <button onclick="ingredientSetup.redisplayExistingIngredients()">Back</button>
+            <button onclick="createIngredientsObj.newIngredientField()">+</button>
+            <button onclick="createIngredientsObj.submit()">Create Ingredients</button>
+            <button onclick="addIngredientsObj.display()">Back</button>
         </div>
 
-        <div id="createRecipes" class="container hide">
+        <div id="nameRecipesStrand" class="container">
+            <h1>Name your recipes</h1>
+
+            <button onclick="nameRecipesObj.addNameField()">Add Recipe</button>
+
+            <div id="nameList"></div>
+
+            <button onclick="nameRecipesObj.submit()">Submit</button>
+        </div>
+
+        <div id="createRecipesStrand" class="container">
             <h1>Add ingredients to your recipes</h1>
 
             <h2 id="recipeName"></h2>
@@ -71,19 +107,9 @@
                 <tbody></tbody>
             </table>
 
-            <button onclick="recipeSetup.addRecipeIngredientField()">+</button>
+            <button onclick="createRecipesObj.addRecipeIngredientField()">+</button>
             <button id="next"></button>
-            <button id="previous" onclick="recipeSetup.changeRecipe(-1)">Previous Recipe</button>
-        </div>
-
-        <div id="newRecipes">
-            <h1>Name your recipes</h1>
-
-            <button onclick="recipeSetup.addNameField()">Add Recipe</button>
-
-            <div id="nameList"></div>
-
-            <button onclick="recipeSetup.createNames()">Submit</button>
+            <button id="previous" onclick="createRecipesObj.changeRecipe(-1)">Previous Recipe</button>
         </div>
 
         <script>
@@ -92,8 +118,11 @@
         </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/shared/validation.js"></script>
-        <script src="/merchantSetupPage/recipeSetup.js"></script>
-        <script src="/merchantSetupPage/ingredientSetup.js"></script>
+        <script src="/merchantSetupPage/basicInfo.js"></script>
+        <script src="/merchantSetupPage/addIngredients.js"></script>
+        <script src="/merchantSetupPage/createIngredients.js"></script>
+        <script src="/merchantSetupPage/nameRecipes.js"></script>
+        <script src="/merchantSetupPage/createRecipes.js"></script>
         <script src="/merchantSetupPage/controller.js"></script>
     </body>
 </html>

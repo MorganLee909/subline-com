@@ -197,7 +197,7 @@ module.exports = {
             });
     },
 
-    createMerchant: function(req, res){
+    createMerchantClover: function(req, res){
         let data = JSON.parse(req.body.data);
 
         axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}?access_token=${token}`)
@@ -254,6 +254,12 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
             });
+    },
+
+    createMerchantNone: function(req, res){
+        let data = JSON.parse(req.body.data);
+        
+        console.log(data);
     },
 
     addMerchantIngredient: function(req, res){

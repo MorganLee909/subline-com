@@ -10,7 +10,8 @@ module.exports = function(app){
 
     //Merchant
     app.get("/merchant/recipes/update", home.updateRecipes);
-    app.post("/merchant/create", home.createMerchant);
+    app.post("/merchant/clover/create", home.createMerchantClover);
+    app.post("/merchant/none/create", home.createMerchantNone);
     app.post("/merchant/ingredients/create", home.addMerchantIngredient);
     app.post("/merchant/ingredients/remove", home.removeMerchantIngredient);
     app.post("/merchant/ingredients/update", home.updateMerchantIngredient);

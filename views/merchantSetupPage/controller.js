@@ -2,10 +2,11 @@ let controller = {
     data: {},  //For storing all data from user to pass to backend
 
     //Component divs
-    addIngredientsComp: document.querySelector("#addIngredients"),
-    newIngredientsComp: document.querySelector("#newIngredients"),
-    createRecipesComp: document.querySelector("#createRecipes"),
-    newRecipesComp: document.querySelector("#newRecipes"),
+    basicInfoStrand: document.querySelector("#basicInfoStrand"),
+    addIngredientsStrand: document.querySelector("#addIngredientsStrand"),
+    createIngredientsStrand: document.querySelector("#createIngredientsStrand"),
+    nameRecipesStrand: document.querySelector("#nameRecipesStrand"),
+    createRecipesStrand: document.querySelector("#createRecipesStrand"),
 
     //General purpose data validator
     checkValid: function(valueToCheck, inputField){
@@ -17,12 +18,13 @@ let controller = {
     },
 
     clearScreen: function(){
-        this.addIngredientsComp.style.display = "none";
-        this.newIngredientsComp.style.display = "none";
-        this.createRecipesComp.style.display = "none";
-        this.newRecipesComp.style.display = "none";
+        this.basicInfoStrand.style.display = "none";
+        this.addIngredientsStrand.style.display = "none";
+        this.createIngredientsStrand.style.display = "none";
+        this.nameRecipesStrand.style.display = "none";
+        this.createRecipesStrand.style.display = "none";
     }
 }
 
 //Run first function
-ingredientSetup.existingIngredients();
+basicInfoObj.display();
