@@ -54,17 +54,6 @@ let validator = {
     },
 
     merchant: {
-        name: function(name, createBanner = true){
-            if(name.length < 3){
-                if(createBanner){
-                    banner.createError("Your name is too short");
-                }
-                return false;
-            }
-
-            return true;
-        },
-
         password: function(pass, confirmPass, createBanner = true){
             if(pass !== confirmPass){
                 if(createBanner){

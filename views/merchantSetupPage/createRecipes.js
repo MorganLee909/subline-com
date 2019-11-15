@@ -6,7 +6,15 @@ let createRecipesObj = {
         controller.createRecipesStrand.style.display = "flex";
 
         if(recipes){
-            controller.data.recipes = recipes;
+            controller.data.recipes = [];
+
+            for(let recipe of recipes.elements){
+                controller.data.recipes.push({
+                    name: recipe.name,
+                    posId: recipe.id,
+                    ingredients: [],
+                });
+            }
         }
 
         this.showRecipe();

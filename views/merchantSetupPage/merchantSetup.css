@@ -69,6 +69,10 @@ table{
         flex-direction: column;
     }
 
+    #nameLabel{
+        display: none;
+    }
+
 #addIngredientsStrand{
     display: none;
 }

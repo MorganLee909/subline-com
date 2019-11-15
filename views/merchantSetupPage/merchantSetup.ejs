@@ -14,11 +14,9 @@
             <h1>Basic Information</h1>
 
             <form onsubmit="basicInfoObj.submit()">
-                <% if(!locals.recipe){ %>
-                    <label>Name
-                        <input id="regName" type="text">
-                    </label>
-                <% } %>
+                <label id="nameLabel">Name
+                    <input id="regName" type="text">
+                </label>
 
                 <label>Email
                     <input id="regEmail" type="email" required>
@@ -32,7 +30,7 @@
                     <input id="regConfirmPass" type="password" required>
                 </label>
 
-                <input type="Submit" value="Create Account">
+                <input type="Submit" value="Next">
             </form>
         </div>
 

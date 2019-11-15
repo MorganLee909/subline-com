@@ -5,10 +5,6 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Recipe = require("../models/recipe");
 
-// const merchantId = "HCVKASXH94531";
-// const token = "f1c88a69-e3e4-059a-da06-8858d0636e82";
-
-const merchantId = "YHVPCQMVB1P81";
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
@@ -73,9 +69,11 @@ module.exports = {
     //Display page to set up new merchant with Clover POS
     //TODO: This is for development, needs updating for production
     merchantSetupClover: function(req, res){
+        req.session.posId = "YHVPCQMVB1P81";
+        
         Ingredient.find()
             .then((ingredients)=>{
-                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}/items?access_token=${token}`)
+                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}/items?access_token=${token}`)
                     .then((recipes)=>{
                         return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data});
                     })
@@ -206,37 +204,52 @@ module.exports = {
     createMerchantClover: function(req, res){
         let data = JSON.parse(req.body.data);
 
-        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchantId}?access_token=${token}`)
-            .then((merchant)=>{
-                let newMerchant = new Merchant({
-                    name: merchant.data.name,
-                    posId: merchant.data.id,
-                    lastUpdatedTime: Date.now(),
-                    inventory: [],
-                    recipes: []
+        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}?access_token=${token}`)
+            .then((cloverMerchant)=>{
+                req.session.posId = undefined;
+
+                let salt = bcrypt.genSaltSync(10);
+                let hash = bcrypt.hashSync(data.password, salt);
+
+                let merchant = new Merchant({
+                    name: cloverMerchant.data.name,
+                    email: data.email,
+                    password: hash,
+                    pos: "clover",
+                    posId: cloverMerchant.data.id
                 });
 
-                for(let ingredient of data.ingredients){
-                    let newIngredient = {
-                        ingredient: ingredient.id,
-                        quantity: parseInt(ingredient.quantity)
-                    }
-                    newMerchant.inventory.push(newIngredient);
+                for(let item of data.inventory){
+                    merchant.inventory.push({
+                        ingredient: item.ingredient.id,
+                        quantity: item.quantity
+                    });
                 }
 
-                let newRecipes = []
                 for(let recipe of data.recipes){
-                    let newRecipe = {
-                        posId: recipe.posId,
-                        merchant: newMerchant._id,
-                        name: recipe.name,
-                        ingredients: []
-                    };
-                    for(let ingredient of recipe.ingredients){
-                        newRecipe.ingredients.push(ingredient);
-                    }
-                    newRecipes.push(newRecipe);
+                    recipe.merchant = merchant._id;
                 }
+
+                Recipe.create(data.recipes)
+                    .then((recipes)=>{
+                        for(let recipe of recipes){
+                            merchant.recipes.push(recipe._id);
+                        }
+
+                        merchant.save()
+                            .then((merchant)=>{
+                                req.session.user = merchant._id;
+                                return res.redirect("/inventory");
+                            })
+                            .catch((err)=>{
+                                console.log(err);
+                                return res.render("error");
+                            });
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
 
                 Recipe.create(newRecipes)
                     .then((recipes)=>{

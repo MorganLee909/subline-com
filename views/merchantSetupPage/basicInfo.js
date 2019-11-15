@@ -2,6 +2,10 @@ basicInfoObj = {
     display: function(){
         controller.clearScreen();
         controller.basicInfoStrand.style.display = "flex";
+
+        if(!recipes){
+            document.querySelector("#nameLabel").style.display = "block";
+        }
     },
 
     submit: function(){
@@ -12,10 +16,7 @@ basicInfoObj = {
         let password = document.querySelector("#regPass").value;
         let confirmPassword = document.querySelector("#regConfirmPass").value;
 
-        let nameCheck = validator.merchant.name(name);
-        let passCheck = validator.merchant.password(password, confirmPassword);
-
-        if(nameCheck && passCheck){
+        if(validator.merchant.password(password, confirmPassword)){
             controller.data.name = name;
             controller.data.email = email;
             controller.data.password = password;
