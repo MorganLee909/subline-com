@@ -4,13 +4,12 @@ body{
     font-family: 'Saira', sans-serif;
 }
 
-
-#login{
+#loginStrand{
     display: none;
 }
 
 /* Displaying the choice for the POS system */
-#pos{
+#posChoiceStrand{
     display: none;
     flex-direction: column;
     align-items: center;

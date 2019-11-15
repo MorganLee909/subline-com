@@ -10,14 +10,14 @@
 
         <% include ../shared/banner %>
 
-        <div id="main">
+        <div id="publicStrand">
             <button>Login</button>
-            <button onclick="landingPage.choosePos()">Register</button>
+            <button onclick="posChoiceObj.display()">Register</button>
         </div>
 
-        <form id="login"></form>
+        <form id="loginStrand"></form>
 
-        <div id="pos">
+        <div id="posChoiceStrand">
             <h1>Choose your POS System</h1>
             <div class="cards">
                 <a href="/merchant/new/clover">
@@ -32,6 +32,8 @@
 
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
-        <script src="/landingPage/landing.js"></script>
+        <script src="/landingPage/public.js"></script>
+        <script src="/landingPage/posChoice.js"></script>
+        <script src="/landingPage/controller.js"></script>
     </body>
 </html>
