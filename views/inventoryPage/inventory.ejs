@@ -9,7 +9,7 @@
 
         <% include ../shared/banner %>
 
-        <div class="container">
+        <div id="inventoryStrand">
             <h1><%= merchant.name %> inventory</h1>
 
             <a href="/recipes">View Recipes</a>
@@ -32,7 +32,9 @@
             </table>
         </div>
 
-        <div class="add-ingredient">
+        <div id="recipeStrand"></div>
+
+        <div id="addIngredientStrand" class="add-ingredient">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div id="existingIngredient">
                     <button id="createNew">Create New</button>
@@ -81,5 +83,8 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/inventoryPage/inventory.js"></script>
+        <script src="/inventoryPage/recipe.js"></script>
+        <script src="/inventoryPage/addIngredient.js"></script>
+        <script src="/inventoryPage/controller.js"></script>
     </body>
 </html>
