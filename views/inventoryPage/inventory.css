@@ -1,12 +1,5 @@
 *{margin:0;padding:0}
 
-#inventoryStrand{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-
 th{
     border: 2px solid #ff626b;
     background: #001b2d;
@@ -44,7 +37,25 @@ td{
     margin: 0;
 }
 
+#inventoryStrand{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #addIngredientStrand{
     display: none;
     justify-content: space-around;
 }
+
+    #addIngredientStrand form{
+        display: flex;
+        flex-direction: column;
+        border: 2px solid #ff626b;
+        padding: 25px;
+        border-radius: 10px;
+    }
+
+        #addIngredientStrand form > *{
+            margin: 5px;
+        }
