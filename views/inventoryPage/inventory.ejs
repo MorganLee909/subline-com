@@ -14,17 +14,17 @@
 
             <a href="/recipes">View Recipes</a>
 
-            <button onclick="inventoryPage.displayAdd()">Add Ingredient</button>
+            <button onclick="addIngredientObj.display()">Add Ingredient</button>
 
-            <input id="filter" onkeyup="inventoryPage.filter()" type="text" placeholder="Start typing to filter">
+            <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="Start typing to filter">
 
             <table>
                 <thead>
                     <tr>
-                        <th onclick="inventoryPage.sortIngredients('name')">Item</th>
-                        <th onclick="inventoryPage.sortIngredients('category')">Category</th>
-                        <th onclick="inventoryPage.sortIngredients('quantity')">Quantity</th>
-                        <th onclick="inventoryPage.sortIngredients('unit')">Unit</th>
+                        <th onclick="inventoryObj.sortIngredients('name')">Item</th>
+                        <th onclick="inventoryObj.sortIngredients('category')">Category</th>
+                        <th onclick="inventoryObj.sortIngredients('quantity')">Quantity</th>
+                        <th onclick="inventoryObj.sortIngredients('unit')">Unit</th>
                         <th></th>
                     </tr>
                     <tbody></tbody>

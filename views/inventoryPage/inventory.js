@@ -15,8 +15,6 @@ let inventoryObj = {
 
     populateIngredients: function(){
         let tbody = document.querySelector("#inventoryStrand tbody");
-        console.log("something else");
-        console.log(tbody);
 
         while(tbody.children.length > 0){
             tbody.removeChild(tbody.firstChild);
@@ -159,5 +157,5 @@ let inventoryObj = {
                 banner.createError("There was an error and the ingredient has not been removed from your inventory");
                 console.log(err);
             });
-    },   
+    },
 }

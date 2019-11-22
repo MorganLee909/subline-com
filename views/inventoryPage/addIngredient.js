@@ -1,7 +1,9 @@
-let addIngredientsObj = {
+let addIngredientObj = {
     display: function(){
         controller.clearScreen();
         controller.addIngredientStrand.style.display = "flex";
+
+        this.displayAdd();
     },
     
     //Fixerup
