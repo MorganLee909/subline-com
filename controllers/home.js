@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Recipe = require("../models/recipe");
+const Transaction = require("../models/transaction");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
@@ -24,12 +25,18 @@ module.exports = {
                 if(merchant.pos === "clover"){
                     axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
                         .then((result)=>{
+                            let transactions = [];
+
                             for(let order of result.data.elements){
-                                console.log(order);
+                                let newTransaction = new Transaction({
+                                    merchant: merchant._id,
+                                    date: new Date(order.createdTime)
+                                });
+
                                 for(let item of order.lineItems.elements){
-                                    console.log(item);
                                     let recipe = merchant.recipes.find(r => r.posId === item.item.id);
                                     if(recipe){
+                                        newTransaction.recipes.push(recipe._id);
                                         for(let ingredient of recipe.ingredients){
                                             let inventoryIngredient = {};
                                             for(let invItem of merchant.inventory){
@@ -41,13 +48,15 @@ module.exports = {
                                         }
                                     }
                                 }
+
+                                transactions.push(newTransaction);
                             }
                             merchant.lastUpdatedTime = Date.now();
 
                             merchant.save()
                                 .then((updatedMerchant)=>{
                                     res.render("inventoryPage/inventory", {merchant: updatedMerchant});
-                                    // this.storeTransactions(result);
+                                    Transaction.create(transactions);
                                     return;
                                 })
                                 .catch((err)=>{
@@ -585,10 +594,5 @@ module.exports = {
                 console.log(err);
                 return res.redirect("/");
             });
-    },
-
-    //Helper functions
-    storeTransactions: function(data){
-        console.log(data);
     }
 }
