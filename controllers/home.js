@@ -331,7 +331,14 @@ module.exports = {
                 merchant.inventory.push(req.body);
                 merchant.save()
                     .then((newMerchant)=>{
-                        return res.json(newMerchant);
+                        Ingredient.findOne({_id: req.body.ingredient})
+                            .then((ingredient)=>{
+                                return res.json(ingredient);
+                            })
+                            .catch((err)=>{
+                                console.log(err);
+                                return res.render("error");
+                            });
                     })
                     .catch((err)=>{
                         console.log(err);

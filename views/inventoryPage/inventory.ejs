@@ -35,47 +35,15 @@
         <div id="recipeStrand"></div>
 
         <div id="addIngredientStrand" class="add-ingredient">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div id="existingIngredient">
-                    <button id="createNew">Create New</button>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ingredient</th>
-                                <th>Category</th>
-                                <th>Unit</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <div id="quantityInput">
-                    <h3 id="quantityInputTitle"></h3>
-                    <input type="number" step="0.01" required>
-                    <button id="addIngredient">Add Ingredient</button>
-                </div>
-
-                <div id="newIngredient">
-                    <label>Ingredient Name:
-                        <input id="newName" type="text">
-                    </label>
-
-                    <label>Category:
-                        <input id="newCategory" type="text">
-                    </label>
-
-                    <label>Quantity:
-                        <input id="newQuantity" type="number" step="0.01">
-                    </label>
-
-                    <label>Unit:
-                        <input id="newUnit" type="text">
-                    </label>
-
-                    <button id="createIngredient">Create Ingredient</button>
-                </div>
+            <button onclick="inventoryObj.display()">Back to Inventory</button>
+            <form onsubmit="addIngredientObj.submitAdd()">
+                <h2>Select Ingredient</h2>
+                <select id="addName"></select>
+                <input id="addQuantity" type="number" step="0.01">
+                <input type="submit" value="Add Ingredient">
+            </form>
+            <div>
+                <h2>Create New Ingredient</h2>
             </div>
         </div>
 
