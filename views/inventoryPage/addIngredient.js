@@ -48,8 +48,31 @@ let addIngredientObj = {
                 .catch((err)=>{
                     banner.createError("Something went wrong and the ingredient could not be added");
                 });
+        }
+    },
 
-            
+    submitNew: function(){
+        event.preventDefault();
+
+        let ingredient = {
+            name: document.querySelector("#newName").value,
+            category: document.querySelector("#newCategory").value,
+            unit: document.querySelector("#newUnit").value
+        }
+
+        let quantity = document.querySelector("#newQuantity").value;
+
+        if(validator.ingredient.all(ingredient, quantity)){
+            axios.post("/ingredients/createone", {ingredient: ingredient, quantity: quantity})
+                .then((item)=>{
+                    merchant.inventory.push(item.data);
+
+                    inventoryObj.display();
+                    inventoryObj.filter();
+                })
+                .catch((err)=>{
+                    banner.createError("Something went wrong and the ingredient could not be created");
+                });
         }
     }
 }

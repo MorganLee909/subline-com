@@ -521,7 +521,7 @@ module.exports = {
                         merchant.save()
                             .then((merchant)=>{
                                 console.log("something");
-                                return res.json(merchant);
+                                return res.json(item);
                             })
                             .catch((err)=>{
                                 console.log(err);
