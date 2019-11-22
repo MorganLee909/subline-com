@@ -12,6 +12,7 @@ let createRecipesObj = {
                 controller.data.recipes.push({
                     name: recipe.name,
                     posId: recipe.id,
+                    price: recipe.price,
                     ingredients: [],
                 });
             }

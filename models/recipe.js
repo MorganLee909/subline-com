@@ -11,6 +11,10 @@ const RecipeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    price: {
+        type: Number,
+        min: 0
+    },
     ingredients: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
