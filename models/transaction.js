@@ -10,6 +10,10 @@ const TransactionSchema = new mongoose.Schema({
         type: Date,
         required: [true, "Must provide date and time transacted"]
     },
+    device: {
+        type: String,
+        required: [true, "Transactions must record the device used"]
+    },
     recipes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Recipe"

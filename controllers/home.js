@@ -28,9 +28,11 @@ module.exports = {
                             let transactions = [];
 
                             for(let order of result.data.elements){
+                                console.log(order);
                                 let newTransaction = new Transaction({
                                     merchant: merchant._id,
-                                    date: new Date(order.createdTime)
+                                    date: new Date(order.createdTime),
+                                    device: order.device.id
                                 });
 
                                 for(let item of order.lineItems.elements){
