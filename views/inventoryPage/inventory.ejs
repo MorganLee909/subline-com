@@ -16,6 +16,10 @@
 
             <button onclick="addIngredientObj.display()">Add Ingredient</button>
 
+            <% if(merchant.pos === "none"){ %>
+                <button onclick="enterTransactionsObj.display()">Enter Transactions</button>
+            <% } %>
+
             <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="Start typing to filter">
 
             <table>
@@ -74,12 +78,29 @@
             </form>
         </div>
 
+        <div id="enterTransactionsStrand">
+            <h1>Enter items sold since (Date)</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Recipe</th>
+                        <th>Number sold</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <button onclick="enterTransactionsObj.submit()">Submit</button>
+        </div>
+
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/inventoryPage/inventory.js"></script>
         <script src="/inventoryPage/recipe.js"></script>
         <script src="/inventoryPage/addIngredient.js"></script>
+        <script src="/inventoryPage/enterTransactions.js"></script>
         <script src="/inventoryPage/controller.js"></script>
     </body>
 </html>
