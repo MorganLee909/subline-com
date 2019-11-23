@@ -13,7 +13,7 @@ h2{
     margin-bottom: 15px;
 }
 
-#recipes{
+#recipesStrand{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,7 +52,7 @@ h2{
                 color: #001b2d;
             }
 
-#ingredient{
+#singleRecipeStrand{
     display: none;
     width: 50%;
     flex-direction: column;
