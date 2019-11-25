@@ -24,6 +24,9 @@ module.exports = function(app){
     app.post("/ingredients/create", home.createNewIngredients);
     app.post("/ingredients/createone", home.createIngredient);  //also adds to merchant
 
+    //Transactions
+    app.post("/transactions/create", home.createTransaction);
+
     //Clover API
     app.get("/getrecipes", home.getCloverRecipes);
 

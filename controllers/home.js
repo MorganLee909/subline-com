@@ -5,6 +5,7 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Recipe = require("../models/recipe");
 const Transaction = require("../models/transaction");
+const nonPosTransaction = require("../models/nonPosTransaction");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
@@ -28,7 +29,6 @@ module.exports = {
                             let transactions = [];
 
                             for(let order of result.data.elements){
-                                console.log(order);
                                 let newTransaction = new Transaction({
                                     merchant: merchant._id,
                                     date: new Date(order.createdTime),
@@ -552,6 +552,50 @@ module.exports = {
                 console.log(err);
                 return res.render("error");
             });  
+    },
+
+    createTransaction: function(req, res){
+        let transaction = new nonPosTransaction({
+            date: Date.now(),
+            author: "None",
+            merchant: req.session.user,
+            recipes: req.body
+        });
+
+        //Calculate all ingredients used, store to list
+        Merchant.findOne({_id: req.session.user})
+            .populate("recipes")
+            .then((merchant)=>{
+                for(let reqRecipe of req.body){
+                    let merchRecipe = merchant.recipes.find(r => r._id.toString() === reqRecipe.id);
+                    for(let recipeIngredient of merchRecipe.ingredients){
+                        let merchInvIngredient = merchant.inventory.find(i => i.ingredient.toString() === recipeIngredient.ingredient.toString());
+                        merchInvIngredient.quantity -= recipeIngredient.quantity * reqRecipe.quantity;
+                    }
+                }
+
+                merchant.save()
+                    .then((merchant)=>{
+                        res.json();
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return res.render("error");
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
+
+        transaction.save()
+            .then((transaction)=>{
+                return;
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            });
     },
 
     getCloverRecipes: function(req, res){

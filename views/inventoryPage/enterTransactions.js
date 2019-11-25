@@ -30,7 +30,6 @@ let enterTransactionsObj = {
             input.type = "number";
             input.step = "1";
             input.value = "0";
-            input.id = "transactionQuantity";
             quantity.appendChild(input);
         }
     },
@@ -41,16 +40,16 @@ let enterTransactionsObj = {
         let recipesSold = [];
 
         for(let row of tbody.children){
-            let quantity = document.querySelector("#transactionQuantity").value;
+            let quantity = row.children[1].children[0].value;
             
-            if(quantity >= 0){
+            if(quantity > 0){
                 let recipe = {
                     id: row._id,
                     quantity: quantity
                 }
 
                 recipesSold.push(recipe);
-            }else{
+            }else if(quantity < 0){
                 banner.createError("Cannot have negative quantities");
                 break;
             }
