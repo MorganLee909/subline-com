@@ -576,7 +576,7 @@ module.exports = {
 
                 merchant.save()
                     .then((merchant)=>{
-                        res.json();
+                        res.json(merchant.inventory);
                     })
                     .catch((err)=>{
                         console.log(err);
