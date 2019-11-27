@@ -6,6 +6,7 @@ const Ingredient = require("../models/ingredient");
 const Recipe = require("../models/recipe");
 const Transaction = require("../models/transaction");
 const nonPosTransaction = require("../models/nonPosTransaction");
+const InventoryAdjustment = require("../models/inventoryAdjustment");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
@@ -403,10 +404,10 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 let updateIngredient = merchant.inventory.find(i => i._id.toString() === req.body.ingredientId);
-                updateIngredient.quantity = req.body.quantity;
+                updateIngredient.quantity += req.body.quantityChange;
                 merchant.save()
                     .then((merchant)=>{
-                        return res.json();
+                        res.json();
                     })
                     .catch((err)=>{
                         console.log(err);
@@ -417,6 +418,22 @@ module.exports = {
                 console.log(err);
                 return res.render("error");
             });
+
+        let invAdj = new InventoryAdjustment({
+            date: Date.now(),
+            merchant: req.session.user,
+            ingredient: req.body.ingredientId,
+            quantity: req.body.quantityChange
+        });
+
+        invAdj.save()
+            .then((newAdjustment)=>{
+                return;
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.render("error");
+            })
     },
 
     addRecipeIngredient: function(req, res){

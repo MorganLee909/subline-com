@@ -120,7 +120,7 @@ let inventoryObj = {
         if(validator.ingredient.quantity(quantity)){
             let updateIngredient = merchant.inventory.find(i => i._id === id);
             updateIngredient.quantity = quantity;
-            axios.post("/merchant/ingredients/update", {ingredientId: id, quantity: quantity})
+            axios.post("/merchant/ingredients/update", {ingredientId: id, quantityChange: quantity - originalQuantity})
                 .then((merchant)=>{
                     banner.createNotification("The ingredient has been successfully updated");
                 })
