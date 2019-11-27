@@ -20,6 +20,7 @@ basicInfoObj = {
             controller.data.name = name;
             controller.data.email = email;
             controller.data.password = password;
+            controller.data.confirmPassword = confirmPassword;
 
             addIngredientsObj.display();
         }

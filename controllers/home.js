@@ -220,6 +220,10 @@ module.exports = {
     createMerchantClover: function(req, res){
         let data = JSON.parse(req.body.data);
 
+        if(data.password.length < 15 || data.password !== data.confirmPassword){
+            return res.render("error");
+        }
+
         axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}?access_token=${token}`)
             .then((cloverMerchant)=>{
                 req.session.posId = undefined;
@@ -657,5 +661,11 @@ module.exports = {
                 console.log(err);
                 return res.redirect("/");
             });
+    },
+
+    logout: function(req, res){
+        req.session.user = undefined;
+
+        return res.redirect("/");
     }
 }

@@ -151,9 +151,7 @@ let createRecipesObj = {
 
     //Add all recipes to data variable
     //Creates a form and submits data
-    submit: function(){
-        console.log("something");
-        
+    submit: function(){        
         let form = document.createElement("form");
         form.method = "post";
         form.action = recipes ? "/merchant/clover/create" : "/merchant/none/create";
@@ -161,7 +159,6 @@ let createRecipesObj = {
         let dataInput = document.createElement("input");
         dataInput.type = "hidden";
         dataInput.name = "data";
-        console.log(controller.data);
         dataInput.value = JSON.stringify(controller.data);
     
         form.appendChild(dataInput);
