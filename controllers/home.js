@@ -12,7 +12,15 @@ const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
     landingPage: function(req, res){
-        return res.render("landingPage/landing");
+        let error = {};
+        if(req.session.error){
+            error = req.session.error;
+            req.session.error = undefined;
+        }else{
+            error = undefined;
+        }
+
+        return res.render("landingPage/landing", {error: error});
     },
 
     displayInventory: function(req, res){
@@ -647,15 +655,21 @@ module.exports = {
     login: function(req, res){
         Merchant.findOne({email: req.body.email})
             .then((merchant)=>{
-                bcrypt.compare(req.body.password, merchant.password, (err, result)=>{
-                    if(result){
-                        req.session.user = merchant._id;
-                        return res.redirect("/inventory");
-                    }
+                if(merchant){
+                    bcrypt.compare(req.body.password, merchant.password, (err, result)=>{
+                        if(result){
+                            req.session.user = merchant._id;
+                            return res.redirect("/inventory");
+                        }
+                    });
+                }
 
-                    console.log(err);
-                    return res.redirect("/");
-                });
+                req.session.error = {
+                    type: "login",
+                    message: "Invalid email or password"
+                }
+
+                return res.redirect("/");
             })
             .catch((err)=>{
                 console.log(err);

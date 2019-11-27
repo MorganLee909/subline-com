@@ -10,4 +10,8 @@ let controller = {
     }
 }
 
+if(error){
+    banner.createError(error.message);
+    error = undefined;
+}
 publicObj.display();
