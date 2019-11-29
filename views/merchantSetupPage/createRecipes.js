@@ -28,8 +28,10 @@ let createRecipesObj = {
         let title = document.querySelector("#recipeName");
         title.innerText = controller.data.recipes[this.recipeIndex].name;
 
-        document.querySelector("#price").value = controller.data.recipes[this.recipeIndex].price || 0;
-    
+        if(!recipes){
+            document.querySelector("#price").value = controller.data.recipes[this.recipeIndex].price || 0;
+        }
+
         let tbody = document.querySelector("#recipeTable tbody");
         for(let recipeIngredient of controller.data.recipes[this.recipeIndex].ingredients){
             let row = document.createElement("tr");
@@ -56,7 +58,7 @@ let createRecipesObj = {
             ingQuant.type = "number";
             ingQuant.step = "0.01";
             ingQuant.value = recipeIngredient.quantity;
-            ingQuant.onblur = ()=>{checkValid("quantity", ingQuant)};
+            ingQuant.onblur = ()=>{controller.checkValid("quantity", ingQuant)};
             quantityTd.appendChild(ingQuant);
         }
     
@@ -83,7 +85,9 @@ let createRecipesObj = {
     changeRecipe: function(num){
         let tbody = document.querySelector("#recipeTable tbody");
         controller.data.recipes[this.recipeIndex].ingredients = [];
-        controller.data.recipes[this.recipeIndex].price = document.querySelector("#price").value;
+        if(!recipes){
+            controller.data.recipes[this.recipeIndex].price = document.querySelector("#price").value;
+        }
         let isValid = true;
         
     
