@@ -1,5 +1,6 @@
 const home = require("./controllers/home");
 const render = require("./controllers/render");
+const merchantData = require("./controllers/merchantData");
 
 module.exports = function(app){
     //Render page
@@ -10,15 +11,15 @@ module.exports = function(app){
     app.get("/recipes", render.displayRecipes);
 
     //Merchant
-    app.get("/merchant/recipes/update", home.updateRecipes);
-    app.post("/merchant/clover/create", home.createMerchantClover);
-    app.post("/merchant/none/create", home.createMerchantNone);
-    app.post("/merchant/ingredients/create", home.addMerchantIngredient);
-    app.post("/merchant/ingredients/remove", home.removeMerchantIngredient);
-    app.post("/merchant/ingredients/update", home.updateMerchantIngredient);
-    app.post("/merchant/recipes/ingredients/create", home.addRecipeIngredient);
-    app.post("/merchant/recipes/ingredients/update", home.updateRecipeIngredient);
-    app.post("/merchant/recipes/ingredients/remove", home.removeRecipeIngredient);
+    app.get("/merchant/recipes/update", merchantData.updateRecipes);
+    app.post("/merchant/clover/create", merchantData.createMerchantClover);
+    app.post("/merchant/none/create", merchantData.createMerchantNone);
+    app.post("/merchant/ingredients/create", merchantData.addMerchantIngredient);
+    app.post("/merchant/ingredients/remove", merchantData.removeMerchantIngredient);
+    app.post("/merchant/ingredients/update", merchantData.updateMerchantIngredient);
+    app.post("/merchant/recipes/ingredients/create", merchantData.addRecipeIngredient);
+    app.post("/merchant/recipes/ingredients/update", merchantData.updateRecipeIngredient);
+    app.post("/merchant/recipes/ingredients/remove", merchantData.removeRecipeIngredient);
 
     //Ingredients
     app.get("/ingredients", home.getIngredients);
