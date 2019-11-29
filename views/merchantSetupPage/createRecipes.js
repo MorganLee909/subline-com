@@ -27,6 +27,8 @@ let createRecipesObj = {
     showRecipe: function(){
         let title = document.querySelector("#recipeName");
         title.innerText = controller.data.recipes[this.recipeIndex].name;
+
+        document.querySelector("#price").value = controller.data.recipes[this.recipeIndex].price || 0;
     
         let tbody = document.querySelector("#recipeTable tbody");
         for(let recipeIngredient of controller.data.recipes[this.recipeIndex].ingredients){
@@ -36,11 +38,11 @@ let createRecipesObj = {
             let ingredientTd = document.createElement("td");
             row.appendChild(ingredientTd);
             let ingredientName = document.createElement("select");
-            for(let inventoryIngredient of controller.data.ingredients){
+            for(let inventoryIngredient of controller.data.inventory){
                 let newOption = document.createElement("option");
-                newOption.innerText = inventoryIngredient.name;
-                newOption.value = inventoryIngredient.id;
-                if(inventoryIngredient.id === recipeIngredient.id){
+                newOption.innerText = inventoryIngredient.ingredient.name;
+                newOption.value = inventoryIngredient.ingredient.id;
+                if(inventoryIngredient.ingredient.id === recipeIngredient.ingredient){
                     newOption.selected = "selected";
                 }
                 ingredientName.appendChild(newOption);
@@ -81,7 +83,9 @@ let createRecipesObj = {
     changeRecipe: function(num){
         let tbody = document.querySelector("#recipeTable tbody");
         controller.data.recipes[this.recipeIndex].ingredients = [];
+        controller.data.recipes[this.recipeIndex].price = document.querySelector("#price").value;
         let isValid = true;
+        
     
         for(let row of tbody.children){
             let quantity = row.children[1].children[0].value;
@@ -97,16 +101,18 @@ let createRecipesObj = {
             }
         }
 
+        this.recipeIndex += num
+
         if(isValid){
-            if(this.recipeIndex >= controller.data.recipes.length - 1){
+            if(this.recipeIndex > controller.data.recipes.length - 1){
                 this.submit();
             }else{
                 while(tbody.children.length > 0){
                     tbody.removeChild(tbody.firstChild);
                 }
 
-                this.recipeIndex += num;
                 this.showRecipe();
+
             }
         }
     },
@@ -166,3 +172,5 @@ let createRecipesObj = {
         form.submit();
     }
 }
+
+previous
