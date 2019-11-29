@@ -662,14 +662,14 @@ module.exports = {
                             return res.redirect("/inventory");
                         }
                     });
-                }
+                }else{
+                    req.session.error = {
+                        type: "login",
+                        message: "Invalid email or password"
+                    }
 
-                req.session.error = {
-                    type: "login",
-                    message: "Invalid email or password"
+                    return res.redirect("/");
                 }
-
-                return res.redirect("/");
             })
             .catch((err)=>{
                 console.log(err);
