@@ -9,7 +9,7 @@ mongoose.connect("mongodb://localhost/InventoryManagement", {useNewUrlParser: tr
 app.set("view engine", "ejs");
 
 app.use(session({
-    secret: "Super Secret Subline",
+    secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen",
     cookie: {secure: false},
     saveUninitialized: true,
     resave: false

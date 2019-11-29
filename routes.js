@@ -1,12 +1,13 @@
 const home = require("./controllers/home");
+const render = require("./controllers/render");
 
 module.exports = function(app){
     //Render page
-    app.get("/", home.landingPage);
-    app.get("/inventory", home.displayInventory);
-    app.get("/merchant/new/clover", home.merchantSetupClover);
-    app.get("/merchant/new/none", home.merchantSetupNone);
-    app.get("/recipes", home.displayRecipes);
+    app.get("/", render.landingPage);
+    app.get("/inventory", render.displayInventory);
+    app.get("/merchant/new/clover", render.merchantSetupClover);
+    app.get("/merchant/new/none", render.merchantSetupNone);
+    app.get("/recipes", render.displayRecipes);
 
     //Merchant
     app.get("/merchant/recipes/update", home.updateRecipes);
