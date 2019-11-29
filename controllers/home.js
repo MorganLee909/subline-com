@@ -227,6 +227,7 @@ module.exports = {
 
     createMerchantClover: function(req, res){
         let data = JSON.parse(req.body.data);
+        data.email = data.email.toLowerCase();
 
         if(data.password.length < 15 || data.password !== data.confirmPassword){
             return res.render("error");
@@ -305,6 +306,7 @@ module.exports = {
 
     createMerchantNone: function(req, res){
         let data = JSON.parse(req.body.data);
+        data.email = data.email.toLowerCase();
 
         let salt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(data.password, salt);
@@ -653,7 +655,7 @@ module.exports = {
     },
 
     login: function(req, res){
-        Merchant.findOne({email: req.body.email})
+        Merchant.findOne({email: req.body.email.toLowerCase()})
             .then((merchant)=>{
                 if(merchant){
                     bcrypt.compare(req.body.password, merchant.password, (err, result)=>{

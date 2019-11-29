@@ -5,7 +5,6 @@ let NonPosTransactionSchema = new mongoose.Schema({
         type: Date,
         required: [true, "Must provide a date and time"]
     },
-    author: String,
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
