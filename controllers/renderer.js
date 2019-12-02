@@ -9,7 +9,7 @@ const token = "b48068eb-411a-918e-ea64-52007147e42c";
 module.exports = {
     //GET - Shows the public landing page
     //Returns: 
-    //  Error: a single error message
+    //  Error: a single error message (only if there is an error)
     //Renders landingPage
     landingPage: function(req, res){
         let error = {};
@@ -69,6 +69,7 @@ module.exports = {
 
                             merchant.save()
                                 .then((updatedMerchant)=>{
+                                    merchant.password = undefined;
                                     res.render("inventoryPage/inventory", {merchant: updatedMerchant});
                                     Transaction.create(transactions);
                                     return;
@@ -82,6 +83,7 @@ module.exports = {
                             console.log(err);
                         });
                 }else if(merchant.pos === "none"){
+                    merchant.password = undefined;
                     return res.render("inventoryPage/inventory", {merchant: merchant})
                 }else{
                     return res.redirect("/");
@@ -154,6 +156,7 @@ module.exports = {
             })
             .populate("inventory.ingredient")
             .then((merchant)=>{
+                merchant.password = undefined;
                 return res.render("recipesPage/recipes", {merchant: merchant});
             })
             .catch((err)=>{

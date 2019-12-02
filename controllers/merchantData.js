@@ -67,6 +67,7 @@ module.exports = {
                             .then((newMerchant)=>{
                                 newMerchant.populate("recipes.ingredients.ingredient").execPopulate()
                                     .then((newestMerchant)=>{
+                                        merchant.password = undefined;
                                         return res.json({merchant: newestMerchant, count: result.data.elements.length});
                                     })
                                     .catch((err)=>{
