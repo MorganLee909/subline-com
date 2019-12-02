@@ -1,14 +1,16 @@
-const axios = require("axios");
 const bcrypt = require("bcryptjs");
 
-const Merchant = require("../models/merchant");
-const nonPosTransaction = require("../models/nonPosTransaction");
-
-const token = "b48068eb-411a-918e-ea64-52007147e42c";
+const NonPosTransaction = require("../models/nonPosTransaction");
+const Merchant = require("merchant");
 
 module.exports = {
+    //POST - Update non-pos merchant inventory and create a transaction
+    //Inputs:
+    //  recipesSold: list of recipes sold and how much (recipe._id and quantity)
+    //Returns:
+    //  merchant.inventory: entire merchant inventory after being updated
     createTransaction: function(req, res){
-        let transaction = new nonPosTransaction({
+        let transaction = new NonPosTransaction({
             date: Date.now(),
             author: "None",
             merchant: req.session.user,
@@ -51,31 +53,11 @@ module.exports = {
             });
     },
 
-    getCloverRecipes: function(req, res){
-        if(!req.session.user){
-            return res.render("error");
-        }
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/items?access_token=${token}`)
-                    .then((recipes)=>{
-                        return res.json(recipes);
-                    })
-                    .catch((err)=>{
-                        return res.json(err);
-                    });
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });
-    },
-
-    unregistered: function(req, res){
-        return res.redirect("/");
-    },
-
+    //POST - logs the user in
+    //Inputs:
+    //  req.body.email
+    //  req.body.password
+    //Redirects to "/inventory" on success
     login: function(req, res){
         Merchant.findOne({email: req.body.email.toLowerCase()})
             .then((merchant)=>{
@@ -101,6 +83,8 @@ module.exports = {
             });
     },
 
+    //GET - logs the user out
+    //Redirects to "/"
     logout: function(req, res){
         req.session.user = undefined;
 

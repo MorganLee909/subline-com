@@ -1,7 +1,7 @@
-const home = require("./controllers/home");
 const render = require("./controllers/render");
 const merchantData = require("./controllers/merchantData");
 const ingredientData = require("./controllers/ingredientData");
+const otherData = require("./controllers/otherData");
 
 module.exports = function(app){
     //Render page
@@ -27,14 +27,8 @@ module.exports = function(app){
     app.post("/ingredients/create", ingredientData.createNewIngredients);
     app.post("/ingredients/createone", ingredientData.createIngredient);  //also adds to merchant
 
-    //Transactions
-    app.post("/transactions/create", home.createTransaction);
-
-    //Clover API
-    app.get("/getrecipes", home.getCloverRecipes);
-
     //Other
-    app.get("/unregistered", home.unregistered);
-    app.post("/login", home.login);
-    app.get("/logout", home.logout);
+    app.post("/transactions/create", otherData.createTransaction);  //Creates transaction for non-pos merchant
+    app.post("/login", otherData.login);
+    app.get("/logout", otherData.logout);
 }
