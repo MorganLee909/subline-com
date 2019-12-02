@@ -148,28 +148,6 @@ module.exports = {
                         console.log(err);
                         return res.render("error");
                     });
-
-
-                //WTF IS THIS???
-
-                // Recipe.create(newRecipes)
-                //     .then((recipes)=>{
-                //         for(let recipe of recipes){
-                //             newMerchant.recipes.push(recipe);
-                //         }
-                //         newMerchant.save()
-                //                 .then((merchant)=>{
-                //                     return res.redirect("/inventory");
-                //                 })
-                //                 .catch((err)=>{
-                //                     console.log(err);
-                //                     return res.render("error");
-                //                 });
-                //     })
-                //     .catch((err)=>{
-                //         console.log(err);
-                //         return res.render("error");
-                //     });
             })
             .catch((err)=>{
                 console.log(err);

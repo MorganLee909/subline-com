@@ -10,6 +10,10 @@ module.exports = {
     //Returns:
     //  merchant.inventory: entire merchant inventory after being updated
     createTransaction: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+        
         let transaction = new NonPosTransaction({
             date: Date.now(),
             author: "None",

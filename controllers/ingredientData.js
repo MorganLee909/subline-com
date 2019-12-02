@@ -22,6 +22,10 @@ module.exports = {
     //Returns:
     //  ingredients: list containing the newly created ingredients
     createNewIngredients: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+
         Ingredient.create(req.body)
             .then((ingredients)=>{
                 return res.json(ingredients);
@@ -40,6 +44,10 @@ module.exports = {
     //Returns:
     //  item: ingredient and quantity
     createIngredient: function(req, res){
+        if(!req.session.user){
+            return res.render("error");
+        }
+        
         Ingredient.create(req.body.ingredient)
             .then((ingredient)=>{
                 Merchant.findOne({_id: req.session.user})
