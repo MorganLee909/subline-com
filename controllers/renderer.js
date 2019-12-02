@@ -40,7 +40,6 @@ module.exports = {
                     axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
                         .then((result)=>{
                             let transactions = [];
-
                             for(let order of result.data.elements){
                                 let newTransaction = new Transaction({
                                     merchant: merchant._id,
