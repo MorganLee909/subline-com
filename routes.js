@@ -1,15 +1,15 @@
-const render = require("./controllers/render");
+const renderer = require("./controllers/renderer");
 const merchantData = require("./controllers/merchantData");
 const ingredientData = require("./controllers/ingredientData");
 const otherData = require("./controllers/otherData");
 
 module.exports = function(app){
     //Render page
-    app.get("/", render.landingPage);
-    app.get("/inventory", render.displayInventory);
-    app.get("/merchant/new/clover", render.merchantSetupClover);
-    app.get("/merchant/new/none", render.merchantSetupNone);
-    app.get("/recipes", render.displayRecipes);
+    app.get("/", renderer.landingPage);
+    app.get("/inventory", renderer.displayInventory);
+    app.get("/merchant/new/clover", renderer.merchantSetupClover);
+    app.get("/merchant/new/none", renderer.merchantSetupNone);
+    app.get("/recipes", renderer.displayRecipes);
 
     //Merchant
     app.get("/merchant/recipes/update", merchantData.updateRecipes);

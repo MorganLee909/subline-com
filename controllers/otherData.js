@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 
 const NonPosTransaction = require("../models/nonPosTransaction");
-const Merchant = require("merchant");
+const Merchant = require("../models/merchant");
 
 module.exports = {
     //POST - Update non-pos merchant inventory and create a transaction

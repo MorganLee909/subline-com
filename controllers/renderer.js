@@ -7,7 +7,10 @@ const Transaction = require("../models/transaction");
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
-    //Public page including login and registration
+    //GET - Shows the public landing page
+    //Returns: 
+    //  Error: a single error message
+    //Renders landingPage
     landingPage: function(req, res){
         let error = {};
         if(req.session.error){
@@ -20,7 +23,10 @@ module.exports = {
         return res.render("landingPage/landing", {error: error});
     },
 
-    //Render the main page for merchants
+    //GET - Displays the main inventory page for merchants
+    //Returns:
+    //  merchant: the logged in merchant
+    //Renders inventoryPage
     displayInventory: function(req, res){
         if(!req.session.user){
             return res.redirect("/");
@@ -88,7 +94,11 @@ module.exports = {
             });
     },
 
-    //Display Merchant Setup Page
+    //GET - Renders the merchant setup page for a clover client
+    //Returns:
+    //  ingredients: all ingredients from database
+    //  recipes: recipes from the users clover account
+    //Renders merchantSetupPage
     merchantSetupClover: function(req, res){
         req.session.posId = "YHVPCQMVB1P81";
         
@@ -109,7 +119,11 @@ module.exports = {
             });
     },
 
-    //Display page to set up merchant with no POS system
+    //GET - Renders the merchant setup page for a non-pos client
+    //Returns:
+    //  ingredients: all ingredients from database
+    //  recipes: null (to signify non-post client)
+    //Renders merchantSetupPage
     merchantSetupNone: function(req, res){
         Ingredient.find()
             .then((ingredients)=>{
@@ -121,7 +135,10 @@ module.exports = {
             });
     },
 
-    //Display page with recipe information
+    //GET - Renders the recipe display page
+    //Returns:
+    //  merchant: merchant with recipes and recipe ingredients populated
+    //Renders recipesPage
     displayRecipes: function(req, res){
         if(!req.session.user){
             return res.render("error");
