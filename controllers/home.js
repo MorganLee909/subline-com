@@ -2,65 +2,11 @@ const axios = require("axios");
 const bcrypt = require("bcryptjs");
 
 const Merchant = require("../models/merchant");
-const Ingredient = require("../models/ingredient");
 const nonPosTransaction = require("../models/nonPosTransaction");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
-    getIngredients: function(req, res){
-        Ingredient.find()
-            .then((ingredients)=>{
-                return res.json(ingredients);
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });
-    },
-
-    createNewIngredients: function(req, res){
-        Ingredient.create(req.body)
-            .then((ingredients)=>{
-                return res.json(ingredients);
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });
-    },
-
-    createIngredient: function(req, res){
-        Ingredient.create(req.body.ingredient)
-            .then((ingredient)=>{
-                Merchant.findOne({_id: req.session.user})
-                    .then((merchant)=>{
-                        let item = {
-                            ingredient: ingredient,
-                            quantity: req.body.quantity
-                        }
-                        merchant.inventory.push(item);
-                        merchant.save()
-                            .then((merchant)=>{
-                                console.log("something");
-                                return res.json(item);
-                            })
-                            .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
-                            });
-                    })
-                    .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
-                    });
-            })
-            .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });  
-    },
-
     createTransaction: function(req, res){
         let transaction = new nonPosTransaction({
             date: Date.now(),

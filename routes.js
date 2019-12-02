@@ -1,6 +1,7 @@
 const home = require("./controllers/home");
 const render = require("./controllers/render");
 const merchantData = require("./controllers/merchantData");
+const ingredientData = require("./controllers/ingredientData");
 
 module.exports = function(app){
     //Render page
@@ -22,9 +23,9 @@ module.exports = function(app){
     app.post("/merchant/recipes/ingredients/remove", merchantData.removeRecipeIngredient);
 
     //Ingredients
-    app.get("/ingredients", home.getIngredients);
-    app.post("/ingredients/create", home.createNewIngredients);
-    app.post("/ingredients/createone", home.createIngredient);  //also adds to merchant
+    app.get("/ingredients", ingredientData.getIngredients);
+    app.post("/ingredients/create", ingredientData.createNewIngredients);
+    app.post("/ingredients/createone", ingredientData.createIngredient);  //also adds to merchant
 
     //Transactions
     app.post("/transactions/create", home.createTransaction);
