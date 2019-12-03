@@ -3,6 +3,14 @@ let controller = {
     loginStrand: document.querySelector("#loginStrand"),
     posChoiceStrand: document.querySelector("#posChoiceStrand"),
 
+    onStart: function(){
+        if(error){
+            banner.createError(error);
+            error = undefined;
+        }
+        publicObj.display();
+    },
+
     clearScreen: function(){
         this.publicStrand.style.display = "none";
         this.loginStrand.style.display = "none";
@@ -10,8 +18,4 @@ let controller = {
     }
 }
 
-if(error){
-    banner.createError(error.message);
-    error = undefined;
-}
-publicObj.display();
+controller.onStart();

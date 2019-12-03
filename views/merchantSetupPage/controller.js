@@ -8,6 +8,10 @@ let controller = {
     nameRecipesStrand: document.querySelector("#nameRecipesStrand"),
     createRecipesStrand: document.querySelector("#createRecipesStrand"),
 
+    onStart: function(){
+        basicInfoObj.display();
+    },
+
     //General purpose data validator
     checkValid: function(valueToCheck, inputField){
         if(!validator.ingredient[valueToCheck](inputField.value, createBanner = false)){
@@ -26,5 +30,4 @@ let controller = {
     }
 }
 
-//Run first function
-basicInfoObj.display();
+controller.onStart();

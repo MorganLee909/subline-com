@@ -96,7 +96,10 @@
             <button onclick="enterTransactionsObj.submit()">Submit</button>
         </div>
 
-        <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
+        <script>
+            let merchant = <%- JSON.stringify(merchant) %>;
+            let error = <%- JSON.stringify(error) %>;
+        </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/inventoryPage/inventory.js"></script>

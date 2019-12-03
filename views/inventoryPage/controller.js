@@ -4,6 +4,14 @@ let controller = {
     addIngredientStrand: document.querySelector("#addIngredientStrand"),
     enterTransactionsStrand: document.querySelector("#enterTransactionsStrand"),
 
+    onStart: function(){
+        if(error){
+            banner.createError(error);
+        }
+
+        inventoryObj.display();
+    },
+
     clearScreen: function(){
         this.inventoryStrand.style.display = "none";
         this.recipeStrand.style.display = "none";
@@ -12,4 +20,4 @@ let controller = {
     }
 }
 
-inventoryObj.display();
+controller.onStart();

@@ -73,11 +73,7 @@ module.exports = {
                         }
                     });
                 }else{
-                    req.session.error = {
-                        type: "login",
-                        message: "Invalid email or password"
-                    }
-
+                    req.session.error = "Invalid email or password";
                     return res.redirect("/");
                 }
             })
@@ -93,5 +89,5 @@ module.exports = {
         req.session.user = undefined;
 
         return res.redirect("/");
-    }
+    },
 }

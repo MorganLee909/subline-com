@@ -1,5 +1,6 @@
 const axios = require("axios");
 
+const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
@@ -29,6 +30,13 @@ module.exports = {
     //Renders inventoryPage
     displayInventory: function(req, res){
         if(!req.session.user){
+            req.session.error = "You must logged in to view that page"
+            let error = new Error({
+                code: 953,
+                displayMessage: req.session.error,
+                error: "User not logged in"
+            });
+            error.save();
             return res.redirect("/");
         }
 
@@ -70,28 +78,60 @@ module.exports = {
                             merchant.save()
                                 .then((updatedMerchant)=>{
                                     merchant.password = undefined;
-                                    res.render("inventoryPage/inventory", {merchant: updatedMerchant});
+                                    res.render("inventoryPage/inventory", {merchant: updatedMerchant, error: undefined});
                                     Transaction.create(transactions);
                                     return;
                                 })
                                 .catch((err)=>{
-                                    console.log(err);
-                                    return res.render("error");
+                                    let errorMessage = "There was an error and your transactions could not be updated";
+                                    let error = new Error({
+                                        code: 547,
+                                        displayMessage: errorMessage,
+                                        error: err
+                                    });
+                                    error.save()
+
+                                    merchant.password = undefined;
+                                    return res.render("inventoryPage/inventory", {merchant: updatedMerchant, error: errorMessage});
                                 });
                         })
                         .catch((err)=>{
-                            console.log(err);
+                            let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
+                            let error = new Error({
+                                code: 111,
+                                displayMessage: errorMessage,
+                                error: err
+                            });
+                            error.save()
+
+                            merchant.password = undefined;
+                            return res.render("inventoryPage/inventory", {merchant: merchant, error: errorMessage});
                         });
                 }else if(merchant.pos === "none"){
                     merchant.password = undefined;
-                    return res.render("inventoryPage/inventory", {merchant: merchant})
+                    return res.render("inventoryPage/inventory", {merchant: merchant, error: undefined})
                 }else{
+                    req.session.error = "There was an error and your data could not be retrieved";
+                    let error = new Error({
+                        code: 626,
+                        displayMessage: req.session.error,
+                        error = "merchant.pos did not conform to expectations"
+                    });
+                    error.save();
+
                     return res.redirect("/");
                 }
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                req.session.error = "There was an error and your data could not be retrieved";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: req.session.error,
+                    error: err
+                });
+                error.save();
+
+                return res.redirect("/");
             });
     },
 
@@ -110,13 +150,27 @@ module.exports = {
                         return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data});
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        req.session.error = "We were unable to retrieve your data from Clover"
+                        let error = new Error({
+                            code: 111,
+                            displayMessage: req.session.error,
+                            error: err
+                        });
+                        error.save();
+
+                        return res.redirect("/");
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                req.session.error = "Data for new merchants could not be retrieved";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: req.session.error,
+                    error: err
+                });
+                error.save();
+
+                return res.redirect("/");
             });
     },
 
@@ -131,8 +185,13 @@ module.exports = {
                 return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: null});
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                req.session.error = "Data for new merchants could not be retrieved";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: req.session.error,
+                    error: err
+                });
+                error.save();
             });
     },
 
@@ -142,7 +201,15 @@ module.exports = {
     //Renders recipesPage
     displayRecipes: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "You must be logged in to view that page";
+            let error = new Error({
+                code: 549,
+                displayMessage: req.session.error,
+                error: "User not logged in"
+            });
+            error.save();
+
+            return res.redirect("/");
         }
 
         Merchant.findOne({_id: req.session.user})
@@ -160,8 +227,15 @@ module.exports = {
                 return res.render("recipesPage/recipes", {merchant: merchant});
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                req.session.error = "There was an error and your data could not be retrieved";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: req.session.error,
+                    error: err
+                });
+                error.save();
+
+                return res.redirect("/");
             });
     }
 }
