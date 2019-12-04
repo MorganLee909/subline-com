@@ -183,7 +183,7 @@ let singleRecipeObj = {
 
         let button = row.children[2].children[0];
         button.innerText = "Edit";
-        button.onclick = ()=>{this.editIngredient(row, ingredient);};
+        button.onclick = ()=>{this.editIngredient(row, ingredient, recipe);};
 
         axios.post("/merchant/recipes/ingredients/update", {recipeId: recipe._id, ingredient: ingredient})
             .then((result)=>{

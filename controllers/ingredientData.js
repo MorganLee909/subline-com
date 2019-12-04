@@ -29,13 +29,9 @@ module.exports = {
     //Returns:
     //  ingredients: list containing the newly created ingredients
     createNewIngredients: function(req, res){
-        if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
-            return res.redirect("/");
-        }
-
         Ingredient.create(req.body)
             .then((ingredients)=>{
+                console.log(ingredients);
                 return res.json(ingredients);
             })
             .catch((err)=>{

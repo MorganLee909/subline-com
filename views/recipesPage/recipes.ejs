@@ -12,7 +12,9 @@
         <div id="recipesStrand">
             <h1>Recipes</h1>
 
-            <button id="recipeUpdate" onclick="recipesObj.updateRecipes()">Update Recipes</button>
+            <% if(merchant.pos !== "none"){ %>
+                <button id="recipeUpdate" onclick="recipesObj.updateRecipes()">Update Recipes</button>
+            <% } %>
 
             <a href="/inventory">Return to Inventory</a>
 

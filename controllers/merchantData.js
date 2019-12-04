@@ -469,7 +469,7 @@ module.exports = {
                 
                 recipe.save()
                     .then((recipe)=>{
-                        return res.json();
+                        return res.json({});
                     })
                     .catch((err)=>{
                         let errorMessage = "There was an error and the recipe could not be updated";
@@ -514,7 +514,7 @@ module.exports = {
                         ingredient.quantity = req.body.ingredient.quantity;
                         recipe.save()
                             .then((recipe)=>{
-                                return res.json();
+                                return res.json({});
                             })
                             .catch((err)=>{
                                 let errorMessage = "There was an error and the recipe could not be updated";
