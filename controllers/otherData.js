@@ -100,7 +100,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                let req.session.error = "There was an error and your data could not be retrieved";
+                req.session.error = "There was an error and your data could not be retrieved";
                 let error = new Error({
                     code: 626,
                     displayMessage: req.session.error,
