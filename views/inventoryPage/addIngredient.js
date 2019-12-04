@@ -28,7 +28,7 @@ let addIngredientObj = {
                 }
             })
             .catch((err)=>{
-                banner.createError("Could not reach the database");
+                banner.createError("Error: Could not retrieve ingredients");
             });
     },
 
@@ -53,7 +53,7 @@ let addIngredientObj = {
                     }
                 })
                 .catch((err)=>{
-                    banner.createError("Something went wrong and the ingredient could not be added");
+                    banner.createError("Error: Unable to add ingredient");
                 });
         }
     },
