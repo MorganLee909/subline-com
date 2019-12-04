@@ -30,7 +30,8 @@ module.exports = {
     //  ingredients: list containing the newly created ingredients
     createNewIngredients: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Ingredient.create(req.body)
@@ -59,7 +60,8 @@ module.exports = {
     //  item: ingredient and quantity
     createIngredient: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
         
         Ingredient.create(req.body.ingredient)

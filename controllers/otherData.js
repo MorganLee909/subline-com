@@ -11,7 +11,8 @@ module.exports = {
     //  merchant.inventory: entire merchant inventory after being updated
     createTransaction: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            res.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
         
         let transaction = new NonPosTransaction({
@@ -38,13 +39,27 @@ module.exports = {
                         res.json(merchant.inventory);
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "There was an error and your transactions could not be saved";
+                        let error = new Error({
+                            code: 547,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+
+                        return res.json(errorMessage);
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "There was an error and your data could not be retrieved";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
 
         transaction.save()
@@ -52,8 +67,12 @@ module.exports = {
                 return;
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let error = new Error({
+                    code: 120,
+                    displayMessage: "none",
+                    error: err
+                });
+                error.save();
             });
     },
 
@@ -70,6 +89,9 @@ module.exports = {
                         if(result){
                             req.session.user = merchant._id;
                             return res.redirect("/inventory");
+                        }else{
+                            req.session.error = "Invalid email or password";
+                            return res.redirect("/");
                         }
                     });
                 }else{
@@ -78,7 +100,14 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
+                let req.session.error = "There was an error and your data could not be retrieved";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: req.session.error,
+                    error: err
+                });
+                error.save();
+
                 return res.redirect("/");
             });
     },

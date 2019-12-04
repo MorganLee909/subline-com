@@ -56,18 +56,22 @@ let enterTransactionsObj = {
         }
 
         axios.post("/transactions/create", recipesSold)
-            .then(()=>{
-                for(let soldRecipe of recipesSold){
-                    let merchRecipe = merchant.recipes.find(r => r._id === soldRecipe.id);
-                    for(let recipeIngredient of merchRecipe.ingredients){
-                        let merchInvIngredient = merchant.inventory.find(i => i.ingredient._id === recipeIngredient.ingredient);
-                        merchInvIngredient.quantity -= recipeIngredient.quantity * soldRecipe.quantity;
+            .then((response)=>{
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    for(let soldRecipe of recipesSold){
+                        let merchRecipe = merchant.recipes.find(r => r._id === soldRecipe.id);
+                        for(let recipeIngredient of merchRecipe.ingredients){
+                            let merchInvIngredient = merchant.inventory.find(i => i.ingredient._id === recipeIngredient.ingredient);
+                            merchInvIngredient.quantity -= recipeIngredient.quantity * soldRecipe.quantity;
+                        }
                     }
-                }
 
-                inventoryObj.isPopulated = false;
-                inventoryObj.display();
-                banner.createNotification("Your sales have been logged");
+                    inventoryObj.isPopulated = false;
+                    inventoryObj.display();
+                    banner.createNotification("Your sales have been logged");
+                }
             })
             .catch((err)=>{
                 banner.createError("Something went wrong and your sales could not be logged");
