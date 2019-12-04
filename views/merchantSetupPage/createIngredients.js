@@ -92,24 +92,28 @@ let createIngredientsObj = {
 
         if(isValid){
             axios.post("/ingredients/create", axiosIngredients)
-                .then((ingredients)=>{
-                    for(let ingredient of newIngredients){
-                        for(let createdIngredient of ingredients.data){
-                            if(createdIngredient.name === ingredient.ingredient.name){
-                                ingredient.ingredient.id = createdIngredient._id;
-                                break;
+                .then((response)=>{
+                    if(typeof(response.data) === "string"){
+                        banner.createError(response.data);
+                    }else{
+                        for(let ingredient of newIngredients){
+                            for(let createdIngredient of response.data){
+                                if(createdIngredient.name === ingredient.ingredient.name){
+                                    ingredient.ingredient.id = createdIngredient._id;
+                                    break;
+                                }
                             }
+
+                            controller.data.inventory.push(ingredient);
                         }
 
-                        controller.data.inventory.push(ingredient);
-                    }
+                        banner.createNotification("All ingredients have been created and added to your inventory");
 
-                    banner.createNotification("All ingredients have been created and added to your inventory");
-
-                    if(recipes){
-                        createRecipesObj.display();
-                    }else{
-                        nameRecipesObj.display();
+                        if(recipes){
+                            createRecipesObj.display();
+                        }else{
+                            nameRecipesObj.display();
+                        }
                     }
                 })
                 .catch((err)=>{

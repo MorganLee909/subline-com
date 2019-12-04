@@ -11,8 +11,15 @@ module.exports = {
                 return res.json(ingredients);
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "Unable to retrieve ingredients";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
     },
 
@@ -31,8 +38,15 @@ module.exports = {
                 return res.json(ingredients);
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "There was an error and the ingredients could not be created";
+                let error = new Error({
+                    code: 547,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
     },
 
@@ -62,18 +76,39 @@ module.exports = {
                                 return res.json(item);
                             })
                             .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
+                                let errorMessage = "There was an error and the data could not be saved";
+                                let error = new Error({
+                                    code: 547,
+                                    displayMessage: errorMessage,
+                                    error: err
+                                });
+                                error.save();
+                
+                                return res.json(errorMessage);
                             });
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "There was an error and your data could not be retrieved";
+                        let error = new Error({
+                            code: 626,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+        
+                        return res.json(errorMessage);
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
-            });  
+                let errorMessage = "There was an error and the ingredient could not be created";
+                let error = new Error({
+                    code: 547,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
+            });
     }
 }

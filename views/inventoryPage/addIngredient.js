@@ -13,14 +13,18 @@ let addIngredientObj = {
 
     populateIngredients: function(){
         axios.get("/ingredients")
-            .then((ingredients)=>{
-                let select = document.querySelector("#addIngredientStrand select");
+            .then((response)=>{
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    let select = document.querySelector("#addIngredientStrand select");
 
-                for(let ingredient of ingredients.data){
-                    let option = document.createElement("option");
-                    option.value = ingredient._id;
-                    option.innerText = `${ingredient.name} (${ingredient.unit})`;
-                    select.appendChild(option);
+                    for(let ingredient of response.data){
+                        let option = document.createElement("option");
+                        option.value = ingredient._id;
+                        option.innerText = `${ingredient.name} (${ingredient.unit})`;
+                        select.appendChild(option);
+                    }
                 }
             })
             .catch((err)=>{
@@ -67,11 +71,15 @@ let addIngredientObj = {
 
         if(validator.ingredient.all(ingredient, quantity)){
             axios.post("/ingredients/createone", {ingredient: ingredient, quantity: quantity})
-                .then((item)=>{
-                    merchant.inventory.push(item.data);
+                .then((response)=>{
+                    if(typeof(response.data) === "string"){
+                        banner.createError(response.data);
+                    }else{
+                        merchant.inventory.push(response.data);
 
-                    inventoryObj.display();
-                    inventoryObj.filter();
+                        inventoryObj.display();
+                        inventoryObj.filter();
+                    }
                 })
                 .catch((err)=>{
                     banner.createError("Something went wrong and the ingredient could not be created");
