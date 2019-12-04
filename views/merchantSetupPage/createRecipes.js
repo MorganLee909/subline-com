@@ -176,5 +176,3 @@ let createRecipesObj = {
         form.submit();
     }
 }
-
-previous

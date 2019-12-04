@@ -30,13 +30,7 @@ module.exports = {
     //Renders inventoryPage
     displayInventory: function(req, res){
         if(!req.session.user){
-            req.session.error = "You must logged in to view that page"
-            let error = new Error({
-                code: 953,
-                displayMessage: req.session.error,
-                error: "User not logged in"
-            });
-            error.save();
+            req.session.error = "You must logged in to view that page";
             return res.redirect("/");
         }
 
@@ -115,7 +109,7 @@ module.exports = {
                     let error = new Error({
                         code: 626,
                         displayMessage: req.session.error,
-                        error = "merchant.pos did not conform to expectations"
+                        error: "merchant.pos did not conform to expectations"
                     });
                     error.save();
 
@@ -202,13 +196,6 @@ module.exports = {
     displayRecipes: function(req, res){
         if(!req.session.user){
             req.session.error = "You must be logged in to view that page";
-            let error = new Error({
-                code: 549,
-                displayMessage: req.session.error,
-                error: "User not logged in"
-            });
-            error.save();
-
             return res.redirect("/");
         }
 

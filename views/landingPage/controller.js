@@ -6,8 +6,8 @@ let controller = {
     onStart: function(){
         if(error){
             banner.createError(error);
-            error = undefined;
         }
+        
         publicObj.display();
     },
 

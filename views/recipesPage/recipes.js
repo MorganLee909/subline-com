@@ -48,11 +48,15 @@ let recipesObj = {
     updateRecipes: function(){
         axios.get("/merchant/recipes/update")
             .then((result)=>{
-                merchant = result.data.merchant;
-                this.populateRecipes();
-                banner.createNotification("Your recipes have been updated successfully");
-                if(result.data.count > 0){
-                    banner.createError(`You have ${result.data.count} recipes with no ingredients.  Please update them.`);
+                if(typeof(result.data) === "string"){
+                    banner.createError(result.data);
+                }else{
+                    merchant = result.data.merchant;
+                    this.populateRecipes();
+                    banner.createNotification("Your recipes have been updated successfully");
+                    if(result.data.count > 0){
+                        banner.createError(`You have ${result.data.count} recipes with no ingredients.  Please update them.`);
+                    }
                 }
             })
             .catch((err)=>{

@@ -1,6 +1,7 @@
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
 
+const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const Ingredient = require("../models/ingredient");
@@ -15,7 +16,8 @@ module.exports = {
     //  count: Number of new recipes
     updateRecipes: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Merchant.findOne({_id: req.session.user})
@@ -59,8 +61,15 @@ module.exports = {
 
                         Recipe.create(newRecipes)
                             .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
+                                let errorMessage = "There was an error and your new recipes could not be saved";
+                                let error = new Error({
+                                    code: 547,
+                                    displayMessage: errorMessage,
+                                    error: err
+                                });
+                                error.save();
+
+                                return res.json(errorMessage);
                             });
 
                         merchant.save()
@@ -71,23 +80,51 @@ module.exports = {
                                         return res.json({merchant: newestMerchant, count: result.data.elements.length});
                                     })
                                     .catch((err)=>{
-                                        console.log(err);
-                                        return res.render("error");
+                                        let errorMessage = "Unable to retrieve recipe ingredients";
+                                        let error = new Error({
+                                            code: 626,
+                                            displayMessage: errorMessage,
+                                            error: err
+                                        });
+                                        error.save();
+
+                                        return res.json(errorMessage);
                                     });
                             })
                             .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
+                                let errorMessage = "Unable to save changes from Clover";
+                                let error = new Error({
+                                    code: 547,
+                                    displayMessage: errorMessage,
+                                    error: err
+                                });
+                                error.save();
+
+                                return res.json(errorMessage);
                             });
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "Unable to retrieve data from Clover";
+                        let error = new Error({
+                            code: 111,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+
+                        return res.json(errorMessage);
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "Unable to retrieve merchant data";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
     },
 
@@ -100,7 +137,8 @@ module.exports = {
         data.email = data.email.toLowerCase();
 
         if(data.password.length < 15 || data.password !== data.confirmPassword){
-            return res.render("error");
+            req.session.error = "Passwords must match and contain at least 15 characters";
+            return res.redirect("/");
         }
 
         axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}?access_token=${token}`)
@@ -141,17 +179,39 @@ module.exports = {
                                 return res.redirect("/inventory");
                             })
                             .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
+                                let errorMessage = "There was an error and your account could not be created";
+                                let error = new Error({
+                                    code: 547,
+                                    displayMessage: errorMessage,
+                                    error: err
+                                });
+                                error.save();
+
+                                return;
                             });
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "There was an error and your recipes could not be saved";
+                        let error = new Error({
+                            code: 547,
+                            displaymessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+
+                        return;
                     });
             })
             .catch((err)=>{
-                console.log(err);
+                let errorMessage = "Unable to retrieve your data from Clover";
+                let error = new Error({
+                    code: 111,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return;
             });
     },
 
@@ -196,13 +256,27 @@ module.exports = {
                         return res.redirect("/inventory");
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "There was an error and your account could not be created";
+                        let error = new Error({
+                            code: 547,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+
+                        return;
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "There was an error while trying to save your recipes";
+                let error = new Error({
+                    code: 547,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return;
             });
     },
 
@@ -213,7 +287,8 @@ module.exports = {
     //  ingredient: Newly added ingredient
     addMerchantIngredient: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Merchant.findOne({_id: req.session.user})
@@ -221,23 +296,47 @@ module.exports = {
                 merchant.inventory.push(req.body);
                 merchant.save()
                     .then((newMerchant)=>{
-                        Ingredient.findOne({_id: req.body.ingredient})
-                            .then((ingredient)=>{
-                                return res.json(ingredient);
-                            })
-                            .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
-                            });
+                        newMerchant.populate("inventory.ingredient", (err)=>{
+                            if(err){
+                                let errorMessage = "Ingredient updated, page refresh required to display";
+                                let error = new Error({
+                                    code: 626,
+                                    displayMessage: errorMessage,
+                                    error: err
+                                });
+                                error.save();
+
+                                return res.json(errorMessage);
+                            }else{
+                                let newIngredient = newMerchant.inventory.find(i => i.ingredient._id.toString() === req.body.ingredient);
+                                return res.json(newIngredient);
+                            }
+                        });
                     })
                     .catch((err)=>{
+                        let errorMessage = "Unable to save new ingredient";
+                        let error = new Error({
+                            code: 547,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
                         console.log(err);
-                        return res.render("error");
+
+                        return res.json(errorMessage);
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "Unable to retrieve merchant data";
+                let error = new Error({
+                    code: 547,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+                console.log("error2");
+
+                return res.json(errorMessage);
             });
     },
 
@@ -247,7 +346,8 @@ module.exports = {
     //Returns: Nothing
     removeMerchantIngredient: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Merchant.findOne({_id: req.session.user})
@@ -260,17 +360,31 @@ module.exports = {
                 }
 
                 merchant.save()
-                    .then(()=>{
-                        return res.json();
+                    .then((merchant)=>{
+                        return res.json(req.body);
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "Unable to update ingredients";
+                        let error = new Error({
+                            code: 547,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+
+                        return res.json(errorMessage);
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "Unable to retrieve merchant data";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
     },
 
@@ -281,7 +395,8 @@ module.exports = {
     //Returns: Nothing
     updateMerchantIngredient: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Merchant.findOne({_id: req.session.user})
@@ -290,16 +405,30 @@ module.exports = {
                 updateIngredient.quantity += req.body.quantityChange;
                 merchant.save()
                     .then((merchant)=>{
-                        res.json();
+                        res.json(req.body.quantityChange);
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "There was an error and your data could not be saved";
+                        let error = new Error({
+                            code: 547,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+
+                        return res.json(errorMessage);
                     })
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "There was an error and we could not retrieve your data";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
 
         let invAdj = new InventoryAdjustment({
@@ -310,12 +439,13 @@ module.exports = {
         });
 
         invAdj.save()
-            .then((newAdjustment)=>{
-                return;
-            })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let error = new Error({
+                    code: 547,
+                    displayMessage: "none",
+                    error: err
+                });
+                error.save();
             });
     },
 
@@ -326,7 +456,8 @@ module.exports = {
     //Returns: Nothing
     addRecipeIngredient: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Recipe.findOne({_id: req.body.recipeId})
@@ -341,13 +472,27 @@ module.exports = {
                         return res.json();
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "There was an error and the recipe could not be updated";
+                        let error = new Error({
+                            code: 547,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+
+                        return res.json(errorMessage);
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "There was an error and the recipe could not be updated"
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
     },
 
@@ -358,7 +503,8 @@ module.exports = {
     //Returns: Nothing
     updateRecipeIngredient: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Recipe.findOne({_id: req.body.recipeId})
@@ -371,15 +517,29 @@ module.exports = {
                                 return res.json();
                             })
                             .catch((err)=>{
-                                console.log(err);
-                                return res.render("error");
+                                let errorMessage = "There was an error and the recipe could not be updated";
+                                let error = new Error({
+                                    code: 547,
+                                    displayMessage: errorMessage,
+                                    error: err
+                                });
+                                error.save();
+                
+                                return res.json(errorMessage);
                             });
                     }
                 }
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "There was an error and the recipe could not be updated";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
     },
 
@@ -390,7 +550,8 @@ module.exports = {
     //Returns: Nothing
     removeRecipeIngredient: function(req, res){
         if(!req.session.user){
-            return res.render("error");
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
         }
 
         Recipe.findOne({_id: req.body.recipeId})
@@ -406,13 +567,27 @@ module.exports = {
                         return res.json();
                     })
                     .catch((err)=>{
-                        console.log(err);
-                        return res.render("error");
+                        let errorMessage = "There was an error and the ingredient could not be remove from the recipe";
+                        let error = new Error({
+                            code: 547,
+                            displayMessage: errorMessage,
+                            error: err
+                        });
+                        error.save();
+        
+                        return res.json(errorMessage);
                     });
             })
             .catch((err)=>{
-                console.log(err);
-                return res.render("error");
+                let errorMessage = "There was an error and the ingredient could not be removed from the recipe";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
             });
     },
 }

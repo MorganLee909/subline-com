@@ -81,39 +81,43 @@ let singleRecipeObj = {
         
         axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item})
             .then((newMerchant)=>{
-                let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
-                recipe.ingredients.push({
-                    ingredient: addIngredient.ingredient,
-                    quantity: item.quantity
-                });
+                if(typeof(newMerchant.data) === "string"){
+                    banner.createError(newMerchant.data);
+                }else{
+                    let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
+                    recipe.ingredients.push({
+                        ingredient: addIngredient.ingredient,
+                        quantity: item.quantity
+                    });
 
-                //Change row from displaying options to showing default display
-                while(row.children.length > 0){
-                    row.removeChild(row.firstChild);
+                    //Change row from displaying options to showing default display
+                    while(row.children.length > 0){
+                        row.removeChild(row.firstChild);
+                    }
+
+                    let name = document.createElement("td");
+                    name.innerText = addIngredient.ingredient.name;
+                    row.appendChild(name);
+
+                    let quantity = document.createElement("td");
+                    quantity.innerText = `${item.quantity} ${addIngredient.ingredient.unit}`;
+                    row.appendChild(quantity);
+
+                    let actions = document.createElement("td");
+                    row.appendChild(actions);
+
+                    let editButton = document.createElement("button");
+                    editButton.innerText = "Edit";
+                    editButton.onclick = ()=>{this.editIngredient(row, addIngredient, recipe);};
+                    actions.appendChild(editButton);
+
+                    let removeButton = document.createElement("button");
+                    removeButton.innerText = "Remove";
+                    removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, row);};
+                    actions.appendChild(removeButton);
+
+                    banner.createNotification("Ingredient successfully added to database");
                 }
-
-                let name = document.createElement("td");
-                name.innerText = addIngredient.ingredient.name;
-                row.appendChild(name);
-
-                let quantity = document.createElement("td");
-                quantity.innerText = `${item.quantity} ${addIngredient.ingredient.unit}`;
-                row.appendChild(quantity);
-
-                let actions = document.createElement("td");
-                row.appendChild(actions);
-
-                let editButton = document.createElement("button");
-                editButton.innerText = "Edit";
-                editButton.onclick = ()=>{this.editIngredient(row, addIngredient, recipe);};
-                actions.appendChild(editButton);
-
-                let removeButton = document.createElement("button");
-                removeButton.innerText = "Remove";
-                removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, row);};
-                actions.appendChild(removeButton);
-
-                banner.createNotification("Ingredient successfully added to database");
             })
             .catch((err)=>{
                 row.parentNode.removeChild(row);
@@ -136,7 +140,11 @@ let singleRecipeObj = {
         
         axios.post("/merchant/recipes/ingredients/remove", {ingredientId: ingredientId, recipeId: recipeId})
             .then((result)=>{
-                banner.createNotification("Ingredient has been removed from recipe");
+                if(typeof(result.data) === "string"){
+                    banner.createError(result.data);
+                }else{
+                    banner.createNotification("Ingredient has been removed from recipe");
+                }
             })
             .catch((err)=>{
                 banner.createError("There was an error and the ingredient could not be removed from the recipe");
@@ -178,9 +186,13 @@ let singleRecipeObj = {
         button.onclick = ()=>{this.editIngredient(row, ingredient);};
 
         axios.post("/merchant/recipes/ingredients/update", {recipeId: recipe._id, ingredient: ingredient})
-            .then(()=>{
-                td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
-                banner.createNotification("Ingredient successfully updated");
+            .then((result)=>{
+                if(typeof(result.data) === "string"){
+                    banner.createError(result.data);
+                }else{
+                    td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+                    banner.createNotification("Ingredient successfully updated");
+                }
             })
             .catch((err)=>{
                 td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;

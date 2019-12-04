@@ -39,11 +39,14 @@ let addIngredientObj = {
         if(validator.ingredient.quantity){
             axios.post("/merchant/ingredients/create", item)
                 .then((ingredient)=>{
-                    item.ingredient = ingredient.data;
-                    merchant.inventory.push(item);
+                    if(typeof(ingredient.data) === "string"){
+                        banner.createError(ingredient.data);
+                    }else{
+                        merchant.inventory.push(ingredient.data);
 
-                    inventoryObj.display();
-                    inventoryObj.filter();
+                        inventoryObj.display();
+                        inventoryObj.filter();
+                    }
                 })
                 .catch((err)=>{
                     banner.createError("Something went wrong and the ingredient could not be added");

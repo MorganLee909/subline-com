@@ -121,15 +121,18 @@ let inventoryObj = {
             let updateIngredient = merchant.inventory.find(i => i._id === id);
             updateIngredient.quantity = quantity;
             axios.post("/merchant/ingredients/update", {ingredientId: id, quantityChange: quantity - originalQuantity})
-                .then((merchant)=>{
-                    banner.createNotification("The ingredient has been successfully updated");
+                .then((response)=>{
+                    if(typeof(response.data) === "string"){
+                        banner.createError(response.data);
+                    }else{
+                        banner.createNotification("The ingredient has been successfully updated");
+                        quantityField.innerText = quantity;
+                    }
                 })
                 .catch((err)=>{
                     banner.createError("There was an error and the ingredient was not updated");
                     console.log(err);
                 });
-
-            quantityField.innerText = quantity;
         }else{
             quantityField.innerText = originalQuantity;
         }
@@ -141,17 +144,21 @@ let inventoryObj = {
     //Delete an ingredient from both the page and the database
     removeIngredient: function(id, row){
         axios.post("/merchant/ingredients/remove", {ingredientId: id})
-            .then(()=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(id === merchant.inventory[i]._id){
-                        merchant.inventory.splice(i, 1);
-                        break;
+            .then((result)=>{
+                if(typeof(result.data) === "string"){
+                    banner.createError(result.data);
+                }else{
+                    for(let i = 0; i < merchant.inventory.length; i++){
+                        if(id === merchant.inventory[i]._id){
+                            merchant.inventory.splice(i, 1);
+                            break;
+                        }
                     }
+
+                    row.parentNode.removeChild(row);
+
+                    banner.createNotification("The ingredient has been removed from your inventory");
                 }
-
-                row.parentNode.removeChild(row);
-
-                banner.createNotification("The ingredient has been removed from your inventory");
             })
             .catch((err)=>{
                 banner.createError("There was an error and the ingredient has not been removed from your inventory");

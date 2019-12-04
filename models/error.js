@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const ErrorSchema = new mongoose.Schema({
     code: Number,
-    date: Date.now(),
+    date: {
+        type: Date,
+        default: Date.now
+    },
     displayMessage: String,
     error: {}
 });
