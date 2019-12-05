@@ -96,23 +96,22 @@ let createIngredientsObj = {
                     if(typeof(response.data) === "string"){
                         banner.createError(response.data);
                         return;
+                    }else{
+                        for(let ingredient of newIngredients){
+                            for(let createdIngredient of response.data){
+                                if(createdIngredient.name === ingredient.ingredient.name){
+                                    ingredient.ingredient.id = createdIngredient._id;
+                                    break;
+                                }
+                            }
+                
+                            controller.data.inventory.push(ingredient);
+                        }
                     }
                 })
                 .catch((err)=>{
                     banner.createError("There has been an error and your ingredients have not been saved");
-                    console.log(err);
                 });
-        }
-
-        for(let ingredient of newIngredients){
-            for(let createdIngredient of response.data){
-                if(createdIngredient.name === ingredient.ingredient.name){
-                    ingredient.ingredient.id = createdIngredient._id;
-                    break;
-                }
-            }
-
-            controller.data.inventory.push(ingredient);
         }
 
         if(recipes){

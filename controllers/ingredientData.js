@@ -31,7 +31,6 @@ module.exports = {
     createNewIngredients: function(req, res){
         Ingredient.create(req.body)
             .then((ingredients)=>{
-                console.log(ingredients);
                 return res.json(ingredients);
             })
             .catch((err)=>{
