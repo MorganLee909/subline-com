@@ -80,20 +80,25 @@ let singleRecipeObj = {
         }
         
         axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item})
-            .then((newMerchant)=>{
-                if(typeof(newMerchant.data) === "string"){
-                    banner.createError(newMerchant.data);
+            .then((response)=>{
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
                 }else{
-                    let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
-                    recipe.ingredients.push({
-                        ingredient: addIngredient.ingredient,
-                        quantity: item.quantity
-                    });
+                    for(let i = 0; i < merchant.recipes.length; i++){
+                        if(merchant.recipes[i]._id === recipe._id){
+                            merchant.recipes.splice(i, 1);
+                            break;
+                        }
+                    }
+                    merchant.recipes.push(response.data);
+                    recipesObj.isPopulated = false;
 
                     //Change row from displaying options to showing default display
                     while(row.children.length > 0){
                         row.removeChild(row.firstChild);
                     }
+
+                    let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
 
                     let name = document.createElement("td");
                     name.innerText = addIngredient.ingredient.name;
@@ -115,8 +120,6 @@ let singleRecipeObj = {
                     removeButton.innerText = "Remove";
                     removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, row);};
                     actions.appendChild(removeButton);
-
-                    banner.createNotification("Ingredient successfully added to database");
                 }
             })
             .catch((err)=>{

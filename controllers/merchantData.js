@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
+const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
@@ -452,7 +453,8 @@ module.exports = {
     //Inputs:
     //  req.body.recipeId: Id of recipe to change
     //  req.body.item:  Ingredient to add with a quantity
-    //Returns: Nothing
+    //Returns: 
+    //  recipe: Updated recipe with populated ingredients
     addRecipeIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -468,7 +470,20 @@ module.exports = {
                 
                 recipe.save()
                     .then((recipe)=>{
-                        return res.json({});
+                        recipe.populate("ingredients.ingredient", (err)=>{
+                            if(err){
+                                let errorMessage = "Error: could not retrieve ingredients.  Please refresh page to see changes";
+                                let error = new Error({
+                                    code: 626,
+                                    displayMessage: errorMessage,
+                                    error: err
+                                });
+                                error.save();
+
+                                return res.json(errorMessage);
+                            }
+                            return res.json(recipe);
+                        })
                     })
                     .catch((err)=>{
                         let errorMessage = "There was an error and the recipe could not be updated";
