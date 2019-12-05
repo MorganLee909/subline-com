@@ -131,22 +131,24 @@ let singleRecipeObj = {
     //Delete ingredient from table
     //Delete ingredient from database
     deleteIngredient: function(recipeId, ingredientId, row){
-        row.parentNode.removeChild(row);
-
-        let updateRecipe = merchant.recipes.find(r => r._id === recipeId);
-        for(let i = 0; i < updateRecipe.ingredients.length; i++){
-            if(updateRecipe.ingredients[i]._id === ingredientId){
-                updateRecipe.ingredients.splice(i, 1);
-                break;
-            }
-        }
+        
         
         axios.post("/merchant/recipes/ingredients/remove", {ingredientId: ingredientId, recipeId: recipeId})
             .then((result)=>{
                 if(typeof(result.data) === "string"){
                     banner.createError(result.data);
                 }else{
-                    banner.createNotification("Ingredient has been removed from recipe");
+                    row.parentNode.removeChild(row);
+
+                    let updateRecipe = merchant.recipes.find(r => r._id === recipeId);
+                    for(let i = 0; i < updateRecipe.ingredients.length; i++){
+                        if(updateRecipe.ingredients[i]._id === ingredientId){
+                            updateRecipe.ingredients.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    recipesObj.isPopulated = false;
                 }
             })
             .catch((err)=>{
