@@ -17,6 +17,8 @@ let recipesObj = {
         while(body.children.length > 0){
             body.removeChild(body.firstChild);
         }
+
+        merchant.recipes.sort((a, b) => (a.name > b.name)? 1 : -1);
         
         for(let recipe of merchant.recipes){
             let recipeDiv = document.createElement("div");

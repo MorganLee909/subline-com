@@ -1,7 +1,6 @@
 let controller = {
     data: {},  //For storing all data from user to pass to backend
 
-    //Component divs
     basicInfoStrand: document.querySelector("#basicInfoStrand"),
     addIngredientsStrand: document.querySelector("#addIngredientsStrand"),
     createIngredientsStrand: document.querySelector("#createIngredientsStrand"),
