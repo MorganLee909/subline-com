@@ -132,9 +132,15 @@ module.exports = {
     //Inputs:
     //  req.body.data: All data from frontend in form of merchant model
     //Redirect to "/inventory"
-    createMerchantClover: function(req, res){
+    createMerchantClover: async function(req, res){
         let data = JSON.parse(req.body.data);
         data.email = data.email.toLowerCase();
+
+        let merchant = await Merchant.findOne({email: data.email});
+        if(merchant){
+            req.session.error = "Email already in use";
+            return res.redirect("/merchant/new/clover");
+        }
 
         if(data.password.length < 15 || data.password !== data.confirmPassword){
             req.session.error = "Passwords must match and contain at least 15 characters";
@@ -219,9 +225,15 @@ module.exports = {
     //Inputs:
     //  req.body.data: All data from frontend in form of merchant model
     //Redirects to "/inventory"
-    createMerchantNone: function(req, res){
+    createMerchantNone: async function(req, res){
         let data = JSON.parse(req.body.data);
         data.email = data.email.toLowerCase();
+
+        let merchantExists = await Merchant.findOne({email: data.email});
+        if(merchantExists){
+            req.session.error = "Email already in use";
+            return res.redirect("/merchant/new/none");
+        }
 
         if(data.password.length < 15 || data.password !== data.confirmPassword){
             req.session.error = "Passwords must match and contain at least 15 characters";

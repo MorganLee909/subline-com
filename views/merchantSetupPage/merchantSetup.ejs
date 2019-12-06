@@ -115,6 +115,13 @@
         </div>
 
         <script>
+            <% if(locals.error){ %>
+                let error = <%- JSON.stringify(error) %>;
+            <% }else{ %>
+                let error = undefined;
+            <% } %>
+        </script>
+        <script>
             let ingredients = <%- JSON.stringify(ingredients) %>;
             let recipes = <%- JSON.stringify(recipes) %>;
         </script>

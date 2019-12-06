@@ -9,6 +9,10 @@ let controller = {
     createRecipesStrand: document.querySelector("#createRecipesStrand"),
 
     onStart: function(){
+        if(error){
+            banner.createError(error);
+        }
+        
         basicInfoObj.display();
     },
 

@@ -136,12 +136,20 @@ module.exports = {
     //Renders merchantSetupPage
     merchantSetupClover: function(req, res){
         req.session.posId = "YHVPCQMVB1P81";
+
+        let errorMessage = {};
+        if(req.session.error){
+            errorMessage = req.session.error;
+            req.session.error = undefined;
+        }else{
+            errorMessage = undefined;
+        }
         
         Ingredient.find()
             .then((ingredients)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}/items?access_token=${token}`)
                     .then((recipes)=>{
-                        return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data});
+                        return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data, error: errorMessage});
                     })
                     .catch((err)=>{
                         req.session.error = "We were unable to retrieve your data from Clover"
@@ -174,9 +182,17 @@ module.exports = {
     //  recipes: null (to signify non-post client)
     //Renders merchantSetupPage
     merchantSetupNone: function(req, res){
+        let errorMessage = {};
+        if(req.session.error){
+            errorMessage = req.session.error;
+            req.session.error = undefined;
+        }else{
+            errorMessage = undefined;
+        }
+
         Ingredient.find()
             .then((ingredients)=>{
-                return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: null});
+                return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: null, error: errorMessage});
             })
             .catch((err)=>{
                 req.session.error = "Data for new merchants could not be retrieved";
