@@ -141,11 +141,6 @@ module.exports = {
             return res.redirect("/");
         }
 
-        if(!this.isUniqueEmail){
-            req.session.error = "Email already in use";
-            return res.redirect("/");
-        }
-
         axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}?access_token=${token}`)
             .then((cloverMerchant)=>{
                 req.session.posId = undefined;
@@ -230,11 +225,6 @@ module.exports = {
 
         if(data.password.length < 15 || data.password !== data.confirmPassword){
             req.session.error = "Passwords must match and contain at least 15 characters";
-            return res.redirect("/");
-        }
-
-        if(!this.isUniqueEmail){
-            req.session.error = "Email already in use";
             return res.redirect("/");
         }
 
@@ -618,19 +608,5 @@ module.exports = {
 
                 return res.json(errorMessage);
             });
-    },
-
-    //Helper
-    isUniqueEmail: function(email){
-        Merchant.findOne({email: email})
-            .then((merchant)=>{
-                if(merchant){
-                    return false;
-                }else{
-                    return true;
-                }
-            });
-
-        return false;
     }
 }

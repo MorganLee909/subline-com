@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 
+const Error = require("../models/error");
 const NonPosTransaction = require("../models/nonPosTransaction");
 const Merchant = require("../models/merchant");
 
@@ -119,4 +120,28 @@ module.exports = {
 
         return res.redirect("/");
     },
+
+    //POST - check an email for uniqueness
+    //
+    checkUniqueEmail: function(req, res){
+        Merchant.findOne({email: req.body.email})
+            .then((merchant)=>{
+                if(merchant){
+                    return res.json(false);
+                }else{
+                    return res.json(true);
+                }
+            })
+            .catch((err)=>{
+                let errorMessage = "Error: unable to validate email address";
+                let error = new Error({
+                    code: 626,
+                    displayMessage: errorMessage,
+                    error: err
+                });
+                error.save();
+
+                return res.json(errorMessage);
+            });
+    }
 }

@@ -31,4 +31,5 @@ module.exports = function(app){
     app.post("/transactions/create", otherData.createTransaction);  //Creates transaction for non-pos merchant
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
+    app.post("/email", otherData.checkUniqueEmail);
 }

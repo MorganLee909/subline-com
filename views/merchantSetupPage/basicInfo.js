@@ -16,13 +16,25 @@ basicInfoObj = {
         let password = document.querySelector("#regPass").value;
         let confirmPassword = document.querySelector("#regConfirmPass").value;
 
-        if(validator.merchant.password(password, confirmPassword)){
-            controller.data.name = name;
-            controller.data.email = email;
-            controller.data.password = password;
-            controller.data.confirmPassword = confirmPassword;
-
-            addIngredientsObj.display();
-        }
+        axios.post("/email", {email: email})
+            .then((response)=>{
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else if(response.data){
+                    if(validator.merchant.password(password, confirmPassword)){
+                        controller.data.name = name;
+                        controller.data.email = email;
+                        controller.data.password = password;
+                        controller.data.confirmPassword = confirmPassword;
+            
+                        addIngredientsObj.display();
+                    }
+                }else{
+                    banner.createError("Email address already in use");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Error: unable to validate email address");
+            });
     }
 }
