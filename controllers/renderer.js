@@ -133,6 +133,7 @@ module.exports = {
     //Returns:
     //  ingredients: all ingredients from database
     //  recipes: recipes from the users clover account
+    //  error: returns error (if any) from session
     //Renders merchantSetupPage
     merchantSetupClover: function(req, res){
         req.session.posId = "YHVPCQMVB1P81";
@@ -180,6 +181,7 @@ module.exports = {
     //Returns:
     //  ingredients: all ingredients from database
     //  recipes: null (to signify non-post client)
+    //  error: returns error (if any) from session
     //Renders merchantSetupPage
     merchantSetupNone: function(req, res){
         let errorMessage = {};
