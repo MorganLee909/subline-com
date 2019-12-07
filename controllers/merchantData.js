@@ -418,14 +418,14 @@ module.exports = {
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
-                let updateIngredient = merchant.inventory.find(i => i._id.toString() === req.body.ingredientId);
+                let updateIngredient = merchant.inventory.find(i => i.ingredient.toString() === req.body.ingredientId);
                 updateIngredient.quantity += req.body.quantityChange;
                 merchant.save()
                     .then((merchant)=>{
                         res.json(req.body.quantityChange);
                     })
                     .catch((err)=>{
-                        let errorMessage = "There was an error and your data could not be saved";
+                        let errorMessage = "Error: your data could not be saved";
                         let error = new Error({
                             code: 547,
                             displayMessage: errorMessage,
@@ -437,7 +437,7 @@ module.exports = {
                     })
             })
             .catch((err)=>{
-                let errorMessage = "There was an error and we could not retrieve your data";
+                let errorMessage = "Error: your data could not be retrieved";
                 let error = new Error({
                     code: 626,
                     displayMessage: errorMessage,

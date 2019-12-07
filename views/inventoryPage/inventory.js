@@ -1,3 +1,6 @@
+item.id
+items
+
 let inventoryObj = {
     items: [],
     currentSort: "",
@@ -78,7 +81,7 @@ let inventoryObj = {
         for(let item of merchant.inventory){
             if(item.ingredient.name.toLowerCase().includes(searchString)){
                 this.items.push({
-                    id: item._id,
+                    id: item.ingredient._id,
                     name: item.ingredient.name,
                     category: item.ingredient.category,
                     quantity: item.quantity,
@@ -118,7 +121,7 @@ let inventoryObj = {
         quantityField.removeChild(quantityField.firstChild);
 
         if(validator.ingredient.quantity(quantity)){
-            let updateIngredient = merchant.inventory.find(i => i._id === id);
+            let updateIngredient = merchant.inventory.find(i => i.ingredient._id === id);
             updateIngredient.quantity = quantity;
             axios.post("/merchant/ingredients/update", {ingredientId: id, quantityChange: quantity - originalQuantity})
                 .then((response)=>{
@@ -130,8 +133,7 @@ let inventoryObj = {
                     }
                 })
                 .catch((err)=>{
-                    banner.createError("There was an error and the ingredient was not updated");
-                    console.log(err);
+                    banner.createError("Error: The ingredient could not be updated");
                 });
         }else{
             quantityField.innerText = originalQuantity;
@@ -143,26 +145,39 @@ let inventoryObj = {
 
     //Delete an ingredient from both the page and the database
     removeIngredient: function(id, row){
-        axios.post("/merchant/ingredients/remove", {ingredientId: id})
-            .then((result)=>{
-                if(typeof(result.data) === "string"){
-                    banner.createError(result.data);
-                }else{
-                    for(let i = 0; i < merchant.inventory.length; i++){
-                        if(id === merchant.inventory[i]._id){
-                            merchant.inventory.splice(i, 1);
-                            break;
-                        }
-                    }
-
-                    row.parentNode.removeChild(row);
-
-                    banner.createNotification("The ingredient has been removed from your inventory");
+        let canRemove = true;
+        for(let recipe of merchant.recipes){
+            for(let ingredient of recipe.ingredients){
+                if(ingredient.ingredient._id === id){
+                    canRemove = false;
+                    break;
                 }
-            })
-            .catch((err)=>{
-                banner.createError("There was an error and the ingredient has not been removed from your inventory");
-                console.log(err);
-            });
+            }
+        }
+        if(canRemove){
+            axios.post("/merchant/ingredients/remove", {ingredientId: id})
+                .then((result)=>{
+                    if(typeof(result.data) === "string"){
+                        banner.createError(result.data);
+                    }else{
+                        for(let i = 0; i < merchant.inventory.length; i++){
+                            if(id === merchant.inventory[i]._id){
+                                merchant.inventory.splice(i, 1);
+                                break;
+                            }
+                        }
+
+                        row.parentNode.removeChild(row);
+
+                        banner.createNotification("The ingredient has been removed from your inventory");
+                    }
+                })
+                .catch((err)=>{
+                    banner.createError("There was an error and the ingredient has not been removed from your inventory");
+                    console.log(err);
+                });
+        }else{
+            banner.createError("You must remove this ingredient from all recipes before you can remove it from your inventory");
+        }
     },
 }
