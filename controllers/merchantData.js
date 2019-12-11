@@ -370,7 +370,7 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 for(let i = 0; i < merchant.inventory.length; i++){
-                    if(req.body.ingredientId === merchant.inventory[i]._id.toString()){
+                    if(req.body.ingredientId === merchant.inventory[i].ingredient._id.toString()){
                         merchant.inventory.splice(i, 1);
                         break;
                     }

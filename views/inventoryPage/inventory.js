@@ -1,6 +1,3 @@
-item.id
-items
-
 let inventoryObj = {
     items: [],
     currentSort: "",
