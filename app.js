@@ -21,6 +21,6 @@ app.use(express.json());
 require("./routes")(app);
 
 const port = 8000;
-app.listen(port, ()=>{
-    console.log(`Listening on port ${port}`);
+app.listen(process.env.PORT || port, ()=>{
+    console.log("APP RUNNING");
 });
