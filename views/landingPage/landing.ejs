@@ -12,7 +12,7 @@
 
         <div id="publicStrand">
             <button onclick="loginObj.display()">Login</button>
-            <button onclick="posChoiceObj.display()">Register</button>
+            <a href="/merchant/new/clover">Register</a>
         </div>
 
         <div id="loginStrand">
@@ -29,25 +29,11 @@
             </form>
         </div>
 
-        <div id="posChoiceStrand">
-            <h1>Choose your POS System</h1>
-            <div class="cards">
-                <a href="/merchant/new/clover">
-                    <img src="../shared/images/clover-logo.jpeg">
-                </a>
-                <a href="/merchant/new/none">
-                    <img src="../shared/images/logo.png">
-                    <p>None</p>
-                </a>
-            </div>
-        </div>
-
         <script>let error = <%- JSON.stringify(error) %>;</script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/landingPage/public.js"></script>
         <script src="/landingPage/login.js"></script>
-        <script src="/landingPage/posChoice.js"></script>
         <script src="/landingPage/controller.js"></script>
     </body>
 </html>

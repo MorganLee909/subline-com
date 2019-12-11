@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
-const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
