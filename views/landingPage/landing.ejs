@@ -42,13 +42,7 @@
             </div>
         </div>
 
-        <script>
-                <% if(locals.error){ %>
-                    let error = <%- JSON.stringify(error) %>;
-                <% }else{ %>
-                    let error = undefined;
-                <% } %>
-        </script>
+        <script>let error = <%- JSON.stringify(error) %>;</script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/landingPage/public.js"></script>

@@ -18,7 +18,7 @@ module.exports = {
             error = req.session.error;
             req.session.error = undefined;
         }else{
-            error = undefined;
+            error = null;
         }
 
         return res.render("landingPage/landing", {error: error});
@@ -150,7 +150,7 @@ module.exports = {
             errorMessage = req.session.error;
             req.session.error = undefined;
         }else{
-            errorMessage = undefined;
+            errorMessage = null;
         }
         
         Ingredient.find()
@@ -196,7 +196,7 @@ module.exports = {
             errorMessage = req.session.error;
             req.session.error = undefined;
         }else{
-            errorMessage = undefined;
+            errorMessage = null;
         }
 
         Ingredient.find()
