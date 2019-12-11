@@ -79,6 +79,13 @@ let singleRecipeObj = {
             quantity: quantity
         }
         
+        for(let ingredient of recipe.ingredients){
+            if(ingredient.ingredient._id === ingredientId){
+                banner.createError("That ingredient is already in this recipe");
+                return;
+            }
+        }
+        
         axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item})
             .then((response)=>{
                 if(typeof(response.data) === "string"){
