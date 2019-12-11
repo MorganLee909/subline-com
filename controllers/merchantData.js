@@ -299,7 +299,8 @@ module.exports = {
 
     //POST - Adds an ingredient to merchant's inventory
     //Inputs:
-    //  req.body: A merchant inventory item (ingredient id and quantity)
+    //  req.body.ingredient: ingredient id
+    //  req.body.quantity: quantity for the ingredient
     //Returns:
     //  ingredient: Newly added ingredient
     addMerchantIngredient: function(req, res){
@@ -310,6 +311,12 @@ module.exports = {
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
+                for(let item of merchant.inventory){
+                    if(item.ingredient.toString() === req.body.ingredient){
+                        return res.json("Ingredient is already in your inventory");
+                    }
+                }
+
                 merchant.inventory.push(req.body);
                 merchant.save()
                     .then((newMerchant)=>{

@@ -67,6 +67,7 @@ module.exports = {
                             ingredient: ingredient,
                             quantity: req.body.quantity
                         }
+
                         merchant.inventory.push(item);
                         merchant.save()
                             .then((merchant)=>{
