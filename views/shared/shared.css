@@ -1,3 +1,26 @@
+*{
+    margin:0;
+    padding:0;
+    font-family:'Saira',sans-serif;
+}
+
+.button{
+    background: none;
+    border: 5px solid rgb(255, 99, 107);
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 10px 5px;
+    color: #001b2d;
+    cursor: pointer;
+    font-size: 25px;
+    box-shadow: 2px 2px 2px black;
+}
+
+.line-break{
+    border: 1px solid rgb(255, 99, 107);
+    margin: 30px 0;
+}
+
 .header{
     display: flex;
     justify-content: space-between;
@@ -22,13 +45,13 @@
 
     .header h1{
         display: inline-block;
-        color: #ff626b;
+        color: rgb(255, 99, 107);
     }
 
     .header .logout{
         display: flex;
         align-items: center;
-        color: #ff626b;
+        color: rgb(255, 99, 107);
         float: right;
         margin-right: 25px;
         text-decoration: none;
@@ -37,7 +60,6 @@
 .banner{
     width: 100%;
     text-align: center;
-    min-height: 50px;
 }
 
     .banner .notification{
