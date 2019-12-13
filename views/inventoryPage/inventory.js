@@ -46,13 +46,13 @@ let inventoryObj = {
             let editBtn = document.createElement("button");
             editBtn.onclick = ()=>{this.editIngredient(item.id, row)};
             editBtn.innerText = "Edit";
-            editBtn.className = "edit-button"
+            editBtn.className = "button-small"
             action.appendChild(editBtn);
 
             let removeBtn = document.createElement("button");
             removeBtn.onclick = ()=>{this.removeIngredient(item.id, row)};
             removeBtn.innerText = "Remove";
-            removeBtn.className = "edit-button";
+            removeBtn.className = "button-small";
             action.appendChild(removeBtn);
         }
     },

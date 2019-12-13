@@ -13,17 +13,21 @@
         <% include ../shared/banner %>
 
         <div id="inventoryStrand">
-            <h1><%= merchant.name %> inventory</h1>
+            <h1><span><%= merchant.name %></span> inventory</h1>
 
-            <a href="/recipes">View Recipes</a>
+            <div class="options">
+                <a class="button" href="/recipes">View Recipes</a>
 
-            <button onclick="addIngredientObj.display()">Add Ingredient</button>
+                <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="FILTER INGREDIENTS">
 
-            <% if(merchant.pos === "none"){ %>
-                <button onclick="enterTransactionsObj.display()">Enter Transactions</button>
-            <% } %>
+                <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
 
-            <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="Start typing to filter">
+                <% if(merchant.pos === "none"){ %>
+                    <button class="button" onclick="enterTransactionsObj.display()">Enter Transactions</button>
+                <% } %>
+
+                
+            </div>
 
             <table>
                 <thead>
@@ -32,14 +36,12 @@
                         <th onclick="inventoryObj.sortIngredients('category')">Category</th>
                         <th onclick="inventoryObj.sortIngredients('quantity')">Quantity</th>
                         <th onclick="inventoryObj.sortIngredients('unit')">Unit</th>
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                     <tbody></tbody>
                 </thead>
             </table>
         </div>
-
-        <div id="recipeStrand"></div>
 
         <div id="addIngredientStrand" class="add-ingredient">
             <button onclick="inventoryObj.display()">Back to Inventory</button>

@@ -1,8 +1,43 @@
+/* Initialization for all pages */
 *{
     margin:0;
     padding:0;
-    font-family:'Saira',sans-serif;
 }
+
+body{
+    font-family:'Saira',sans-serif;
+    color: rgb(0, 27, 45);
+}
+
+/* General components that should apply to all pages */
+table{
+    border-spacing: 0;
+}
+
+    th{
+        color: rgb(240, 252, 255);
+        padding: 20px;
+        cursor: pointer;
+        background: rgb(0, 27, 45);
+        color: rgb(255, 99, 107);
+    }
+
+    tr{
+        color: rgb(0, 27, 45);
+        text-align: center;
+    }
+
+    tr, td{
+        padding: 5px 20px;
+    }
+
+    tr:nth-of-type(even){
+        background: rgb(201, 201, 201);
+    }
+
+    tr:nth-of-type(odd){
+        background: rgb(240, 252, 255);
+    }
 
 .button{
     background: none;
@@ -14,13 +49,40 @@
     cursor: pointer;
     font-size: 25px;
     box-shadow: 2px 2px 2px black;
+    transition: 0.3s;
+    text-align: center;
 }
+
+    .button:hover{
+        background: rgb(0, 27, 45);
+        color: rgb(240, 252, 255);
+    }
+
+.button-small{
+    background: none;
+    border: 2px solid rgb(255, 99, 107);
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 3px 5px;
+    color: #001b2d;
+    cursor: pointer;
+    font-size: 15px;
+    box-shadow: 1px 1px 1px black;
+    margin: 0 2px;
+    transition: 0.3s; 
+}
+
+    .button-small:hover{
+        background: rgb(0, 27, 45);
+        color: rgb(240, 252, 255);
+    }
 
 .line-break{
     border: 1px solid rgb(255, 99, 107);
     margin: 30px 0;
 }
 
+/* Header partial */
 .header{
     display: flex;
     justify-content: space-between;
@@ -57,6 +119,7 @@
         text-decoration: none;
     }
 
+/* Banner partial */
 .banner{
     width: 100%;
     text-align: center;
@@ -75,3 +138,9 @@
         font-weight: bold;
         list-style-type: none;
     }
+
+@media screen and (max-width: 600px){
+    .button{
+        font-size: 15px;
+    }
+}
