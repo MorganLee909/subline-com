@@ -44,43 +44,45 @@
         </div>
 
         <div id="addIngredientStrand" class="add-ingredient">
-            <button onclick="inventoryObj.display()">Back to Inventory</button>
+            <button class="button" onclick="inventoryObj.display()">Back to Inventory</button>
 
-            <form onsubmit="addIngredientObj.submitAdd()">
-                <h2>Select Ingredient</h2>
+            <div class="container">
+                <form onsubmit="addIngredientObj.submitAdd()">
+                    <h2>Select Ingredient</h2>
 
-                <label>Ingredient
-                    <select id="addName"></select>
-                </label>
-                
-                <label>Quantity
-                    <input id="addQuantity" type="number" step="0.01" required>
-                </label>
-                
-                <input type="submit" value="Add Ingredient">
-            </form>
+                    <label>Ingredient
+                        <select id="addName"></select>
+                    </label>
+                    
+                    <label>Quantity
+                        <input id="addQuantity" type="number" step="0.01" required>
+                    </label>
+                    
+                    <input class="button" type="submit" value="Add Ingredient">
+                </form>
 
-            <form onsubmit="addIngredientObj.submitNew()">
-                <h2>Create New Ingredient</h2>
+                <form onsubmit="addIngredientObj.submitNew()">
+                    <h2>Create New Ingredient</h2>
 
-                <label>Name
-                    <input id="newName" type="text" required>
-                </label>
+                    <label>Name
+                        <input id="newName" type="text" required>
+                    </label>
 
-                <label>Category
-                    <input id="newCategory" type="text" required>
-                </label>
+                    <label>Category
+                        <input id="newCategory" type="text" required>
+                    </label>
 
-                <label>Unit
-                    <input id="newUnit" type="text" required>
-                </label>
+                    <label>Unit
+                        <input id="newUnit" type="text" required>
+                    </label>
 
-                <label>Quantity
-                    <input id="newQuantity" type="number" step="0.01" required>
-                </label>
+                    <label>Quantity
+                        <input id="newQuantity" type="number" step="0.01" required>
+                    </label>
 
-                <input type="submit" value="Create Ingredient">
-            </form>
+                    <input class="button" type="submit" value="Create Ingredient">
+                </form>
+            </div>
         </div>
 
         <div id="enterTransactionsStrand">

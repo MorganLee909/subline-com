@@ -39,6 +39,22 @@ table{
         background: rgb(240, 252, 255);
     }
 
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid rgb(0, 27, 45);
+    padding: 25px;
+    border-radius: 10px;
+    margin: 10px;
+    background: rgb(240, 252, 255);
+    box-shadow: 1px 1px 1px rgb(0, 27, 45);
+}
+
+    form > *{
+        margin: 10px;
+    }
+
 .button{
     background: none;
     border: 5px solid rgb(255, 99, 107);

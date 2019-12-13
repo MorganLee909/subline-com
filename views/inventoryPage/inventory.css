@@ -29,20 +29,18 @@
 
 #addIngredientStrand{
     display: none;
-    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
 }
 
-    #addIngredientStrand form{
-        display: flex;
-        flex-direction: column;
-        border: 2px solid rgb(255, 99, 107);
-        padding: 25px;
-        border-radius: 10px;
+    #addIngredientStrand > *{
+        margin: 25px;
     }
 
-        #addIngredientStrand form > *{
-            margin: 5px;
-        }
+    .container{
+        display: flex;
+        justify-content: space-around;
+    }
 
 #enterTransactionsStrand{
     display: none;
@@ -51,6 +49,7 @@
 }
 
 @media screen and (max-width: 600px){
+    /* inventoryStrand */
     #inventoryStrand h1{
         font-size: 20px;
         text-align: center;
@@ -72,5 +71,14 @@
     #inventoryStrand td, #inventoryStrand th{
         padding: 3px;
         font-size: 12px;
+    }
+
+    /* addIngredientStrand */
+    .container{
+        flex-direction: column;
+    }
+
+    #addIngredientStrand > *{
+        margin: 10px;
     }
 }
