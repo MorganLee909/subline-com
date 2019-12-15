@@ -41,6 +41,7 @@ addIngredientsObj = {
             quantityInput.type = "number";
             quantityInput.step = "0.01";
             quantityInput.min = "0";
+            quantityInput.classList = "inputField";
             quantity.appendChild(quantityInput);
             
             let unit = document.createElement("td");

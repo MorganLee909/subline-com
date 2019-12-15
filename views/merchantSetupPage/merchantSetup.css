@@ -1,94 +1,119 @@
-*{margin:0;padding:0;}
-
-table{
-    margin: 20px;
+/* General purpose */
+.buttonDiv{
+    display: flex;
+    justify-content: space-between;
 }
 
-
-
-.anticolumn{
-    border: none;
-    background: white;
-    color: black;
-    min-width: 0;
-}
-
-.container{
-    flex-direction: column;
-    align-items: center;
-}
-
-    h1{
-        margin: 10px;
+    .buttonDiv > *{
+        margin: 5px;
     }
 
-    .horizontal-container{
-        display: flex;
-    }
-
-        .horizontal-container div{
-            text-align: center;
-            max-width: 50%;
-        }
-
-        th{
-            border: 2px solid #ff626b;
-            background: #001b2d;
-            color: darkgray;
-            padding: 3px;
-            min-width: 150px;
-        }
-
-        td{
-            border: 1px solid black;
-            text-align: center;
-            padding: 1px 10px;
-        }
-
-        .input-new{
-            display: flex;
-            flex-wrap: nowrap;
-        }
-
-.input-error{
-    border-color: red;
-}
-
-#newRecipes{
-    display: none;
-    flex-direction: column;
-    align-items: center;
-}
-
+/* basicInfoStrand */
 #basicInfoStrand{
     display: flex;
 }
 
-    #basicInfoStrand form{
-        display: flex;
-        flex-direction: column;
+    #basicInfoStrand > *{
+        margin: 10px;
     }
 
     #nameLabel{
         display: none;
     }
 
+/* addIngredientsStrand */
 #addIngredientsStrand{
     display: none;
 }
 
+    #addIngredientsStrand > *{
+        margin: 10px;
+    }
+
+    #addIngredientsStrand h5{
+        margin-top: 0;
+    }
+
+/* createIngredientsStrand */
 #createIngredientsStrand{
     display: none;
 }
 
+    #createIngredientsStrand > *{
+        margin: 10px;
+    }
+
+/* nameRecipesStrand */
 #nameRecipesStrand{
     display: none;
 }
 
+/* createRecipesStrand */
 #createRecipesStrand{
     display: none;
 }
 
+    #createRecipesStrand > *{
+        margin: 10px;
+    }
+
     #recipeName{
         color: #ff626b;
     }
+
+.container{
+    flex-direction: column;
+    align-items: center;
+}
+    .input-new{
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+@media screen and (max-width: 1000px){
+    /* createIngredientsStrand */
+    #createIngredientsStrand td, #createIngredientsStrand th{
+        font-size: 15px;
+        padding: 5px;
+    }
+
+    #createIngredientsStrand .button{
+        font-size: 16px;
+    }
+
+    .inputField{
+        max-width: 100px;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .inputField{
+        max-width: 50px;
+    }
+
+    /* addIngredientsStrand */
+    #addIngredientsStrand h1, #addIngredientsStrand h5{
+        text-align: center;
+    }
+
+    #addIngredientsStrand td, #addIngredientsStrand th{
+        font-size: 12px;
+        padding: 2px;
+    }
+
+    /* createIngredientsStrand */
+    #createIngredientsStrand td, #createIngredientsStrand th{
+        font-size: 12px;
+        padding: 2px;
+    }
+
+    #createIngredientsStrand .button{
+        font-size: 13px;
+    }
+
+    /* createRecipesStrand */
+    #createRecipesStrand td, #createRecipesStrand th{
+        font-size: 12px;
+        padding: 2px;
+    }
+}

@@ -32,13 +32,21 @@ let createRecipesObj = {
             document.querySelector("#price").value = controller.data.recipes[this.recipeIndex].price || 0;
         }
 
-        let tbody = document.querySelector("#recipeTable tbody");
+        let tbody = document.querySelector("#createRecipesStrand tbody");
+
+        if(controller.data.recipes[this.recipeIndex].ingredients.length <= 0){
+            document.querySelector("#createRecipesStrand table").style.display = "none";
+        }else{
+            document.querySelector("#createRecipesStrand table").style.display = "table";
+        }
+
         for(let recipeIngredient of controller.data.recipes[this.recipeIndex].ingredients){
             let row = document.createElement("tr");
             tbody.appendChild(row);
     
             let ingredientTd = document.createElement("td");
             row.appendChild(ingredientTd);
+
             let ingredientName = document.createElement("select");
             for(let inventoryIngredient of controller.data.inventory){
                 let newOption = document.createElement("option");
@@ -60,6 +68,15 @@ let createRecipesObj = {
             ingQuant.value = recipeIngredient.quantity;
             ingQuant.onblur = ()=>{controller.checkValid("quantity", ingQuant)};
             quantityTd.appendChild(ingQuant);
+
+            let actionTd = document.createElement("td");
+            row.appendChild(actionTd);
+
+            let removeButton = document.createElement("button");
+            removeButton.innerText = "Remove";
+            removeButton.classList = "button-small";
+            removeButton.onclick = ()=>{this.removeRow(row)};
+            actionTd.appendChild(removeButton);
         }
     
         let nextButton = document.querySelector("#next");
@@ -83,7 +100,7 @@ let createRecipesObj = {
     //Changes recipeDataIndex
     //Hands off to showRecipe function
     changeRecipe: function(num){
-        let tbody = document.querySelector("#recipeTable tbody");
+        let tbody = document.querySelector("#createRecipesStrand tbody");
         controller.data.recipes[this.recipeIndex].ingredients = [];
         if(!recipes){
             controller.data.recipes[this.recipeIndex].price = document.querySelector("#price").value;
@@ -123,7 +140,8 @@ let createRecipesObj = {
 
     //Creates a new, empty row in table to input data
     addRecipeIngredientField: function(){
-        let tbody = document.querySelector("#recipeTable tbody");
+        let tbody = document.querySelector("#createRecipesStrand tbody");
+        document.querySelector("#createRecipesStrand table").style.display = "table";
     
         let row = document.createElement("tr");
         tbody.appendChild(row);
@@ -154,9 +172,20 @@ let createRecipesObj = {
         row.appendChild(removeTd);
         
         let removeButton = document.createElement("button");
-        removeButton.innerText = "-";
-        removeButton.onclick = ()=>{row.parentNode.removeChild(row)};
+        removeButton.innerText = "Remove";
+        removeButton.classList = "button-small";
+        removeButton.onclick = ()=>{this.removeRow(row)};
         removeTd.appendChild(removeButton);
+    },
+
+    removeRow: function(row){
+        let tbody = document.querySelector("#createRecipesStrand tbody");
+
+        row.parentNode.removeChild(row);
+
+        if(tbody.children.length <= 0){
+            document.querySelector("#createRecipesStrand table").style.display = "none";
+        }
     },
 
     //Add all recipes to data variable

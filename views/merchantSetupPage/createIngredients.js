@@ -2,11 +2,20 @@ let createIngredientsObj = {
     display: function(){
         controller.clearScreen();
         controller.createIngredientsStrand.style.display = "flex";
+
+        let tbody = document.querySelector("#createIngredientsStrand tbody");
+        if(tbody.children.length === 0){
+            document.querySelector("#createIngredientsStrand thead").style.display = "none";
+            document.querySelector("#finishButton").innerText = "No new ingredients";
+        }
     },
 
     //Creates a new, empty row in table to input data
     newIngredientField: function(){
         let tbody = document.querySelector("#inputField tbody");
+
+        document.querySelector("#inputField thead").style.display = "table-header-group"
+        document.querySelector("#finishButton").innerText = "Finish";
 
         let row = document.createElement("tr");
         tbody.appendChild(row);
@@ -16,6 +25,7 @@ let createIngredientsObj = {
 
         let nameInput = document.createElement("input");
         nameInput.type = "text";
+        nameInput.classList = "inputField";
         nameInput.onblur = ()=>{controller.checkValid("name", nameInput)};
         name.appendChild(nameInput);
         
@@ -24,6 +34,7 @@ let createIngredientsObj = {
 
         let categoryInput = document.createElement("input");
         categoryInput.type = "text"
+        categoryInput.classList = "inputField";
         categoryInput.onblur = ()=>{controller.checkValid("category", categoryInput)};
         category.appendChild(categoryInput);
         
@@ -33,6 +44,7 @@ let createIngredientsObj = {
         let quantityInput = document.createElement("input");
         quantityInput.type = "number";
         quantityInput.step = "0.01";
+        quantityInput.classList = "inputField";
         quantityInput.onblur = ()=>{controller.checkValid("quantity", quantityInput)};
         quantity.appendChild(quantityInput);
     
@@ -41,6 +53,7 @@ let createIngredientsObj = {
 
         let unitInput = document.createElement("input");
         unitInput.type = "text";
+        unitInput.classList = "inputField";
         unitInput.onblur = ()=>{controller.checkValid("unit", unitInput)};
         unit.appendChild(unitInput);
     
@@ -48,9 +61,19 @@ let createIngredientsObj = {
         row.appendChild(removeTd);
 
         let removeButton = document.createElement("button");
-        removeButton.innerText = "-";
-        removeButton.onclick = ()=>{row.parentNode.removeChild(row);};
+        removeButton.innerText = "Remove";
+        removeButton.classList = "button-small";
+        removeButton.onclick = ()=>{this.removeIngredient(row)};
         removeTd.appendChild(removeButton);
+    },
+
+    removeIngredient: function(row){
+        if(row.parentNode.children.length <= 1){
+            document.querySelector("#createIngredientsStrand thead").style.display = "none";
+            document.querySelector("#finishButton").innerText = "No new ingredients";
+        }
+
+        row.parentNode.removeChild(row);
     },
 
     submit: function(){
