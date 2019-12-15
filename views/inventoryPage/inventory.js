@@ -158,7 +158,7 @@ let inventoryObj = {
                         banner.createError(result.data);
                     }else{
                         for(let i = 0; i < merchant.inventory.length; i++){
-                            if(id === merchant.inventory[i]._id){
+                            if(id === merchant.inventory[i].ingredient._id){
                                 merchant.inventory.splice(i, 1);
                                 break;
                             }
