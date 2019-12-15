@@ -9,7 +9,7 @@ let singleRecipeObj = {
             tbody.removeChild(tbody.firstChild);
         }
 
-        document.querySelector("#singleRecipeStrand h1").innerText = recipe.name;
+        document.querySelector("#recipeName").innerText = recipe.name;
         document.querySelector("#addButton").onclick = ()=>{this.displayAdd(recipe)};
 
         for(let ingredient of recipe.ingredients){
@@ -29,11 +29,13 @@ let singleRecipeObj = {
 
             let editButton = document.createElement("button");
             editButton.innerText = "Edit";
+            editButton.classList = "button-small";
             editButton.onclick = ()=>{this.editIngredient(row, ingredient, recipe);};
             actions.appendChild(editButton);
 
             let removeButton = document.createElement("button");
             removeButton.innerText = "Remove";
+            removeButton.classList = "button-small";
             removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient._id, row);};
             actions.appendChild(removeButton);
         }

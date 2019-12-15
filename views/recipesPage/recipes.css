@@ -1,23 +1,18 @@
-*{margin:0;padding:0;}
-
-body{
-    text-align: center;
+/* General use */
+span{
+    color: rgb(255, 99, 107);
 }
 
-h1{
-    margin-bottom: 25px;
-}
-
-h2{
-    border-bottom: 2px solid #ff626b;
-    margin-bottom: 15px;
-}
-
+/* recipesStrand */
 #recipesStrand{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
+    #recipesStrand > *{
+        margin: 15px;
+    }
 
     #recipeUpdate{
         margin-bottom: 10px;
@@ -31,11 +26,12 @@ h2{
     }
 
         .recipe-card{
-            border: 2px solid #ff626b;
-            box-shadow: 2px 2px 2px #001b2d;
-            background: #001b2d;
-            color: #ff626b;
+            border: 2px solid rgb(255, 99, 107);
+            box-shadow: 2px 2px 2px rgb(0, 27, 45);
+            background: rgb(0, 27, 45);
+            color: rgb(255, 99, 107);
             width: 20%;
+            min-width: 200px;
             padding: 35px;
             margin: 25px;
             border-radius: 10px;
@@ -47,45 +43,40 @@ h2{
             }
 
             .empty-recipe{
-                background: #ff626b;
-                border: 2px solid #001b2d;
-                color: #001b2d;
+                background: rgb(255, 99, 107);
+                border: 2px solid rgb(0, 27, 45);
+                color: rgb(0, 27, 45);
             }
 
+/* singleRecipeStrand */
 #singleRecipeStrand{
     display: none;
-    width: 50%;
+    /* width: 50%; */
     flex-direction: column;
     margin: auto;
     align-items: center;
 }
 
-    th{
-        border: 2px solid #ff626b;
-        background: #001b2d;
-        color: darkgray;
-        padding: 3px;
-        min-width: 150px;
-    }
-
-    th:nth-of-type(3){
-        border: none;
-        background: none;
-        color: white;
-        min-width: 0;
-        cursor: auto;
-    }
-
-    td{
-        border: 1px solid black;
-        text-align: center;
-        padding: 1px 10px;
-    }
-
-    td:nth-of-type(3n){
-        border: none;
+    #singleRecipeStrand > *{
+        margin: 15px;
     }
 
     #delRecipe{
         display: "none"
     }
+
+    #recipeName{
+        margin-top: 0;
+    }
+
+@media screen and (max-width: 1000px){
+    /* General use */
+    body{
+        text-align: center;
+    }
+
+    /* singlerecipeStrand */
+    #singleRecipeStrand .buttonsDiv{
+        font-size: 15px;
+    }
+}
