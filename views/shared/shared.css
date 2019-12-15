@@ -143,20 +143,24 @@ form{
 .banner{
     width: 100%;
     text-align: center;
+    list-style-type: none;
+    font-weight: bold;
+    color: white;
+    
 }
 
     .banner .notification{
-        background: green;
-        color: white;
-        font-weight: bold;
+        background: rgb(201, 201, 201);
         list-style-type: none;
+        padding: 3px;
+        color: black;
     }
 
     .banner .error{
-        background: red;
-        color: white;
-        font-weight: bold;
+        background: rgb(255, 99, 107);
         list-style-type: none;
+        padding: 5px;
+        color: white;
     }
 
 @media screen and (max-width: 600px){
