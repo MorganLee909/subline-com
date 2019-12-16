@@ -194,6 +194,7 @@ let createRecipesObj = {
         let form = document.createElement("form");
         form.method = "post";
         form.action = recipes ? "/merchant/clover/create" : "/merchant/none/create";
+        form.style.display = "none";
         
         let dataInput = document.createElement("input");
         dataInput.type = "hidden";

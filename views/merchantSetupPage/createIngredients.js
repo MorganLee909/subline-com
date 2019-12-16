@@ -113,34 +113,43 @@ let createIngredientsObj = {
             }
         }
 
-        if(isValid  && axiosIngredients.length > 0){
-            axios.post("/ingredients/create", axiosIngredients)
-                .then((response)=>{
-                    if(typeof(response.data) === "string"){
-                        banner.createError(response.data);
-                        return;
-                    }else{
-                        for(let ingredient of newIngredients){
-                            for(let createdIngredient of response.data){
-                                if(createdIngredient.name === ingredient.ingredient.name){
-                                    ingredient.ingredient.id = createdIngredient._id;
-                                    break;
-                                }
-                            }
-                
-                            controller.data.inventory.push(ingredient);
-                        }
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("There has been an error and your ingredients have not been saved");
-                });
+        if(controller.data.inventory.length <= 0 && axiosIngredients.length <= 0){
+            banner.createError("You must add at least one ingredient to your inventory");
+            isValid = false;
         }
 
-        if(recipes){
-            createRecipesObj.display();
-        }else{
-            nameRecipesObj.display();
+        if(isValid){
+            if(axiosIngredients.length > 0){
+                axios.post("/ingredients/create", axiosIngredients)
+                    .then((response)=>{
+                        if(typeof(response.data) === "string"){
+                            banner.createError(response.data);
+                            return;
+                        }else{
+                            for(let ingredient of newIngredients){
+                                for(let createdIngredient of response.data){
+                                    if(createdIngredient.name === ingredient.ingredient.name){
+                                        ingredient.ingredient.id = createdIngredient._id; //changed id a bit here
+                                        break;
+                                    }
+                                }
+                    
+                                controller.data.inventory.push(ingredient);
+                            }
+                        }
+                    })
+                    .catch((err)=>{
+                        banner.createError("There has been an error and your ingredients have not been saved");
+                    });
+            }
+
+            if(recipes){
+                createRecipesObj.display();
+            }else{
+                nameRecipesObj.display();
+            }
         }
+
+        
     }
 }

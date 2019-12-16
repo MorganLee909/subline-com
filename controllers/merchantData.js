@@ -214,7 +214,7 @@ module.exports = {
                     displayMessage: errorMessage,
                     error: err
                 });
-                error.save();
+                error.save()
 
                 return;
             });
