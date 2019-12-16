@@ -73,10 +73,10 @@ module.exports = {
 
                         merchant.save()
                             .then((newMerchant)=>{
-                                newMerchant.populate("recipes.ingredients.ingredient").execPopulate()
+                                newMerchant.populate(["recipes.ingredients.ingredient", "inventory.ingredient"]).execPopulate()
                                     .then((newestMerchant)=>{
                                         merchant.password = undefined;
-                                        return res.json({merchant: newestMerchant, count: result.data.elements.length});
+                                        return res.json(newestMerchant);
                                     })
                                     .catch((err)=>{
                                         let errorMessage = "Unable to retrieve recipe ingredients";

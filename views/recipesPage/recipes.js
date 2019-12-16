@@ -13,6 +13,7 @@ let recipesObj = {
 
     populateRecipes: function(){
         let body = document.querySelector("#recipesContainer");
+        let blankRecipes = 0;
 
         while(body.children.length > 0){
             body.removeChild(body.firstChild);
@@ -28,6 +29,7 @@ let recipesObj = {
 
             if(recipe.ingredients.length === 0){
                 recipeDiv.classList = "recipe-card empty-recipe";
+                blankRecipes++;
             }else{
                 recipeDiv.classList = "recipe-card";
             }
@@ -45,6 +47,10 @@ let recipesObj = {
                 ingredientList.appendChild(ul);
             }
         }
+
+        if(blankRecipes > 0){
+            banner.createError(`You have ${blankRecipes} recipes without ingredients, please add ingredients to all recipes`);
+        }
     },
 
     updateRecipes: function(){
@@ -53,12 +59,9 @@ let recipesObj = {
                 if(typeof(result.data) === "string"){
                     banner.createError(result.data);
                 }else{
-                    merchant = result.data.merchant;
+                    merchant = result.data;
                     this.populateRecipes();
                     banner.createNotification("Your recipes have been updated successfully");
-                    if(result.data.count > 0){
-                        banner.createError(`You have ${result.data.count} recipes with no ingredients.  Please update them.`);
-                    }
                 }
             })
             .catch((err)=>{
