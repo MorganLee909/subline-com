@@ -14,6 +14,7 @@ app.use(session({
     saveUninitialized: true,
     resave: false
 }));
+app.use(require("sanitize").middleware);
 app.use(express.static(__dirname + "/views"));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());

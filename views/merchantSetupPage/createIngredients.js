@@ -84,23 +84,15 @@ let createIngredientsObj = {
         let axiosIngredients = [];
         
         for(let row of tbody.children){
-            let name = row.children[0].children[0].value;
-            let category = row.children[1].children[0].value;
             let quantity = row.children[2].children[0].value;
-            let unit = row.children[3].children[0].value;
 
-            let checkName = validator.ingredient.name(name);
-            let checkCategory = validator.ingredient.category(category);
-            let checkQuantity = validator.ingredient.quantity(quantity);
-            let checkUnit = validator.ingredient.unit(unit);
+            let newIngredient = {
+                name: row.children[0].children[0].value,
+                category: row.children[1].children[0].value,
+                unit: row.children[3].children[0].value
+            }
 
-            if(checkName && checkCategory && checkQuantity && checkUnit){
-                let newIngredient = {
-                    name: name,
-                    category: category,
-                    unit: unit
-                }
-
+            if(validator.ingredient.all(newIngredient, quantity)){
                 axiosIngredients.push(newIngredient);
 
                 newIngredients.push({

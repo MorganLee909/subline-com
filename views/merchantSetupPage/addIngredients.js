@@ -59,11 +59,6 @@ addIngredientsObj = {
             if(row.children[0].children[0].checked){
                 let quantity = row.children[3].children[0].value;
 
-                if(quantity === ""){
-                    banner.createError("Must provide a quantity for all checked ingredients");
-                    return;
-                }
-
                 if(validator.ingredient.quantity(quantity)){
                     controller.data.inventory.push({
                         ingredient: {

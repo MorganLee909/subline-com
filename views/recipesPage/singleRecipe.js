@@ -71,8 +71,9 @@ let singleRecipeObj = {
 
         let saveButton = document.createElement("button");
         saveButton.innerText = "Save";
-        actionTd.appendChild(saveButton);
+        saveButton.classList = "button-small";
         saveButton.onclick = ()=>{this.addIngredient(recipe, name.value, quantity.value, row);};
+        actionTd.appendChild(saveButton);
     },
 
     addIngredient: function(recipe, ingredientId, quantity, row){
@@ -81,6 +82,8 @@ let singleRecipeObj = {
             quantity: quantity
         }
         
+
+        // Lets just not show the ingredient... duh
         for(let ingredient of recipe.ingredients){
             if(ingredient.ingredient._id === ingredientId){
                 banner.createError("That ingredient is already in this recipe");
@@ -88,60 +91,62 @@ let singleRecipeObj = {
             }
         }
         
-        axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item})
-            .then((response)=>{
-                if(typeof(response.data) === "string"){
-                    banner.createError(response.data);
-                }else{
-                    for(let i = 0; i < merchant.recipes.length; i++){
-                        if(merchant.recipes[i]._id === recipe._id){
-                            merchant.recipes.splice(i, 1);
-                            break;
+        if(validator.ingredient.quantity(item.quantity)){
+            axios.post("/merchant/recipes/ingredients/create", {recipeId: recipe._id, item: item})
+                .then((response)=>{
+                    if(typeof(response.data) === "string"){
+                        banner.createError(response.data);
+                    }else{
+                        for(let i = 0; i < merchant.recipes.length; i++){
+                            if(merchant.recipes[i]._id === recipe._id){
+                                merchant.recipes.splice(i, 1);
+                                break;
+                            }
                         }
+                        merchant.recipes.push(response.data);
+                        recipesObj.isPopulated = false;
+
+                        //Change row from displaying options to showing default display
+                        while(row.children.length > 0){
+                            row.removeChild(row.firstChild);
+                        }
+
+                        let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
+
+                        let name = document.createElement("td");
+                        name.innerText = addIngredient.ingredient.name;
+                        row.appendChild(name);
+
+                        let quantity = document.createElement("td");
+                        quantity.innerText = `${item.quantity} ${addIngredient.ingredient.unit}`;
+                        row.appendChild(quantity);
+
+                        let actions = document.createElement("td");
+                        row.appendChild(actions);
+
+                        let editButton = document.createElement("button");
+                        editButton.innerText = "Edit";
+                        editButton.classList = "button-small";
+                        editButton.onclick = ()=>{this.editIngredient(row, addIngredient, recipe);};
+                        actions.appendChild(editButton);
+
+                        let removeButton = document.createElement("button");
+                        removeButton.innerText = "Remove";
+                        removeButton.classList = "button-small";
+                        removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, row);};
+                        actions.appendChild(removeButton);
                     }
-                    merchant.recipes.push(response.data);
-                    recipesObj.isPopulated = false;
-
-                    //Change row from displaying options to showing default display
-                    while(row.children.length > 0){
-                        row.removeChild(row.firstChild);
-                    }
-
-                    let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
-
-                    let name = document.createElement("td");
-                    name.innerText = addIngredient.ingredient.name;
-                    row.appendChild(name);
-
-                    let quantity = document.createElement("td");
-                    quantity.innerText = `${item.quantity} ${addIngredient.ingredient.unit}`;
-                    row.appendChild(quantity);
-
-                    let actions = document.createElement("td");
-                    row.appendChild(actions);
-
-                    let editButton = document.createElement("button");
-                    editButton.innerText = "Edit";
-                    editButton.onclick = ()=>{this.editIngredient(row, addIngredient, recipe);};
-                    actions.appendChild(editButton);
-
-                    let removeButton = document.createElement("button");
-                    removeButton.innerText = "Remove";
-                    removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, row);};
-                    actions.appendChild(removeButton);
-                }
-            })
-            .catch((err)=>{
-                row.parentNode.removeChild(row);
-                banner.createError("There was an error and the recipe could not be updated");
-            });
+                })
+                .catch((err)=>{
+                    row.parentNode.removeChild(row);
+                    banner.createError("There was an error and the recipe could not be updated");
+                });
+        }
     },
 
     //Delete ingredient from table
     //Delete ingredient from database
     deleteIngredient: function(recipeId, ingredientId, row){
-        
-        
         axios.post("/merchant/recipes/ingredients/remove", {ingredientId: ingredientId, recipeId: recipeId})
             .then((result)=>{
                 if(typeof(result.data) === "string"){
@@ -199,18 +204,23 @@ let singleRecipeObj = {
         button.innerText = "Edit";
         button.onclick = ()=>{this.editIngredient(row, ingredient, recipe);};
 
-        axios.post("/merchant/recipes/ingredients/update", {recipeId: recipe._id, ingredient: ingredient})
-            .then((result)=>{
-                if(typeof(result.data) === "string"){
-                    banner.createError(result.data);
-                }else{
-                    td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
-                    banner.createNotification("Ingredient successfully updated");
-                }
-            })
-            .catch((err)=>{
-                td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
-                banner.createError("There was an error and the ingredient could not be updated");
-            });
+        if(validator.ingredient.quantity(ingredient.quantity)){
+            axios.post("/merchant/recipes/ingredients/update", {recipeId: recipe._id, ingredient: ingredient})
+                .then((result)=>{
+                    if(typeof(result.data) === "string"){
+                        td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
+                        banner.createError(result.data);
+                    }else{
+                        td.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+                        banner.createNotification("Ingredient successfully updated");
+                    }
+                })
+                .catch((err)=>{
+                    td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
+                    banner.createError("There was an error and the ingredient could not be updated");
+                });
+        }else{
+            td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
+        }
     },
 }

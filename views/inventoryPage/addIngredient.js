@@ -40,7 +40,7 @@ let addIngredientObj = {
             quantity: document.querySelector("#addQuantity").value
         }
 
-        if(validator.ingredient.quantity){
+        if(validator.ingredient.quantity(item.quantity)){
             axios.post("/merchant/ingredients/create", item)
                 .then((ingredient)=>{
                     if(typeof(ingredient.data) === "string"){

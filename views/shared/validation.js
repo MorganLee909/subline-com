@@ -1,6 +1,15 @@
 let validator = {
     ingredient: {
         name: function(ingName, createBanner = true){
+            //Check for special chars
+            if(!validator.isSanitary(ingName)){
+                if(createBanner){
+                    banner.createError("Your inputs contain illegal characters");
+                }
+                return false
+            }
+
+            //Check for length
             if(ingName.length < 2){
                 if(createBanner){
                     banner.createError("Ingredient name must contain at least 2 characters");
@@ -12,6 +21,16 @@ let validator = {
         },
 
         category: function(ingCategory, createBanner = true){
+            //Check for special chars
+            if(!validator.isSanitary(ingCategory)){
+                if(createBanner){
+                    banner.createError("Your inputs contain illegal characters");
+                }
+
+                return false;
+            }
+
+            //Check for length
             if(ingCategory.length < 3){
                 if(createBanner){
                     banner.createError("Category name must contain at least 3 characters");
@@ -23,17 +42,35 @@ let validator = {
         },
 
         quantity: function(num, createBanner = true){
+            if(isNaN(num) || num === ""){
+                if(createBanner){
+                    banner.createError("Must enter a valid number");
+                }
+
+                return false;
+            }
+
             if(num < 0){
                 if(createBanner){
                     banner.createError("Quantity cannot be a negative number");
                 }
+
                 return false;
             }
 
             return true;
         },
 
-        unit: (ingUnit)=>{
+        unit: function(ingUnit, createBanner = true){
+            //Check for special chars
+            if(!validator.isSanitary(ingUnit)){
+                if(createBanner){
+                    banner.createError("Your inputs contain illegal characters");
+                }
+
+                return false;
+            }
+
             return true;
         },
 
@@ -42,8 +79,8 @@ let validator = {
         all: function(ingObject, quantity = 0, createBanner = true){
             let nameCheck = this.name(ingObject.name, createBanner);
             let categoryCheck = this.category(ingObject.category, createBanner);
-            let unitCheck = this.unit(ingObject.unitType, createBanner);
-            let quantityCheck = this.quantity(Number(quantity), createBanner);
+            let unitCheck = this.unit(ingObject.unit, createBanner);
+            let quantityCheck = this.quantity(quantity, createBanner);
 
             if(!nameCheck || !categoryCheck || !quantityCheck || !unitCheck){
                 return false;
@@ -71,5 +108,17 @@ let validator = {
 
             return true;
         }
+    },
+
+    isSanitary: function(str){
+        let disallowed = ["\\", "<", ">", "$"];
+
+        for(let char of disallowed){
+            if(str.includes(char)){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
