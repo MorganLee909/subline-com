@@ -192,9 +192,27 @@ let singleRecipeObj = {
         para.innerText = ingredient.ingredient.unit;
         td.appendChild(para);
 
-        let button = row.children[2].children[0];
-        button.innerText = "Save";
-        button.onclick = ()=>{this.updateIngredient(row, ingredient, recipe);}; 
+        let editButton = row.children[2].children[0];
+        editButton.innerText = "Save";
+        editButton.onclick = ()=>{this.updateIngredient(row, ingredient, recipe);};
+
+        let removeButton = row.children[2].children[1];
+        removeButton.innerText = "Cancel";
+        removeButton.onclick = ()=>{this.cancelEdit(row, ingredient, recipe)};
+    },
+
+    cancelEdit: function(row, ingredient, recipe){
+        let quantity = row.children[1];
+        quantity.removeChild(quantity.firstChild);
+        quantity.innerText = `${ingredient.quantity} (${recipe.unit})`;
+
+        let saveButton = row.children[2].children[0];
+        saveButton.innerText = "Edit";
+        saveButton.onclick = ()=>{this.editIngredient(row, ingredient, recipe)};
+
+        let cancelButton = row.children[2].children[1];
+        cancelButton.innerText = "Remove";
+        cancelButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient.ingredient._id, row)};
     },
 
     updateIngredient: function(row, ingredient, recipe){
@@ -206,9 +224,13 @@ let singleRecipeObj = {
             td.removeChild(td.firstChild);
         }
 
-        let button = row.children[2].children[0];
-        button.innerText = "Edit";
-        button.onclick = ()=>{this.editIngredient(row, ingredient, recipe);};
+        let saveButton = row.children[2].children[0];
+        saveButton.innerText = "Edit";
+        saveButton.onclick = ()=>{this.editIngredient(row, ingredient, recipe);};
+
+        let cancelButton = row.children[2].children[1];
+        cancelButton.innerText = "Remove";
+        cancelButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient.ingredient._id, row)};
 
         if(validator.ingredient.quantity(ingredient.quantity)){
             axios.post("/merchant/recipes/ingredients/update", {recipeId: recipe._id, ingredient: ingredient})
