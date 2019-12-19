@@ -67,7 +67,7 @@ module.exports = {
                                                     inventoryIngredient = invItem;
                                                 }
                                             }
-                                            inventoryIngredient.quantity -= ingredient.quantity;
+                                            inventoryIngredient.quantity = (inventoryIngredient.quantity - ingredient.quantity).toFixed(2);
                                         }
                                     }
                                 }

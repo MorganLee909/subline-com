@@ -425,7 +425,7 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 let updateIngredient = merchant.inventory.find(i => i.ingredient.toString() === req.body.ingredientId);
-                updateIngredient.quantity += req.body.quantityChange;
+                updateIngredient.quantity = (updateIngredient.quantity + req.body.quantityChange).toFixed(2);
                 merchant.save()
                     .then((merchant)=>{
                         res.json(req.body.quantityChange);
