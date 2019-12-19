@@ -89,6 +89,12 @@ let singleRecipeObj = {
         saveButton.classList = "button-small";
         saveButton.onclick = ()=>{this.addIngredient(recipe, name.value, quantity.value, row);};
         actionTd.appendChild(saveButton);
+
+        let cancelButton = document.createElement("button");
+        cancelButton.innerText = "Cancel";
+        cancelButton.classList = "button-small";
+        cancelButton.onclick = ()=>{tbody.removeChild(row)};
+        actionTd.appendChild(cancelButton);
     },
 
     addIngredient: function(recipe, ingredientId, quantity, row){
@@ -116,7 +122,7 @@ let singleRecipeObj = {
                             row.removeChild(row.firstChild);
                         }
 
-                        let addIngredient = merchant.inventory.find(i => i.ingredient._id === ingredientId);
+                        let addIngredient = response.data.ingredients.find(i => i.ingredient._id === ingredientId);
 
                         let name = document.createElement("td");
                         name.innerText = addIngredient.ingredient.name;
@@ -204,7 +210,7 @@ let singleRecipeObj = {
     cancelEdit: function(row, ingredient, recipe){
         let quantity = row.children[1];
         quantity.removeChild(quantity.firstChild);
-        quantity.innerText = `${ingredient.quantity} (${recipe.unit})`;
+        quantity.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
 
         let saveButton = row.children[2].children[0];
         saveButton.innerText = "Edit";
