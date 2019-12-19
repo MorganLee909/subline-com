@@ -18,6 +18,7 @@ let singleRecipeObj = {
 
             let name = document.createElement("td");
             name.innerText = ingredient.ingredient.name;
+            name.classList = "truncateLong";
             row.appendChild(name);
 
             let quantity = document.createElement("td");
@@ -51,6 +52,7 @@ let singleRecipeObj = {
         row.appendChild(nameTd);
 
         let name = document.createElement("select");
+        name.classList = "truncateLong";
         nameTd.appendChild(name);
 
         for(let item of merchant.inventory){

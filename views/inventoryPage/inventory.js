@@ -26,6 +26,7 @@ let inventoryObj = {
 
             let name = document.createElement("td");
             name.innerText = item.name;
+            name.classList = "truncateLong";
             row.appendChild(name);
 
             let category = document.createElement("td");

@@ -29,6 +29,7 @@ let addIngredientObj = {
             })
             .catch((err)=>{
                 banner.createError("Error: Could not retrieve ingredients");
+                inventoryObj.display();
             });
     },
 
