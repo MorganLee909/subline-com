@@ -594,7 +594,7 @@ module.exports = {
         Recipe.findOne({_id: req.body.recipeId})
             .then((recipe)=>{
                 for(let i = 0; i < recipe.ingredients.length; i++){
-                    if(recipe.ingredients[i]._id.toString() === req.body.ingredientId){
+                    if(recipe.ingredients[i].ingredient._id.toString() === req.body.ingredientId){
                         recipe.ingredients.splice(i, 1);
                     }
                 }

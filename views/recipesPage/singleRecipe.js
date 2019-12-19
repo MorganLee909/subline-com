@@ -36,7 +36,7 @@ let singleRecipeObj = {
             let removeButton = document.createElement("button");
             removeButton.innerText = "Remove";
             removeButton.classList = "button-small";
-            removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient._id, row);};
+            removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient.ingredient._id, row);};
             actions.appendChild(removeButton);
         }
     },
@@ -49,6 +49,7 @@ let singleRecipeObj = {
 
         let nameTd = document.createElement("td");
         row.appendChild(nameTd);
+
         let name = document.createElement("select");
         nameTd.appendChild(name);
 
@@ -84,6 +85,7 @@ let singleRecipeObj = {
             quantity: quantity
         }
 
+        //Just don't display duplicates...
         for(let ingredient of recipe.ingredients){
             if(ingredient.ingredient._id === ingredientId){
                 banner.createError("That ingredient is already in this recipe");
@@ -106,7 +108,6 @@ let singleRecipeObj = {
                         merchant.recipes.push(response.data);
                         recipesObj.isPopulated = false;
 
-                        //Change row from displaying options to showing default display
                         while(row.children.length > 0){
                             row.removeChild(row.firstChild);
                         }
@@ -156,7 +157,7 @@ let singleRecipeObj = {
 
                     let updateRecipe = merchant.recipes.find(r => r._id === recipeId);
                     for(let i = 0; i < updateRecipe.ingredients.length; i++){
-                        if(updateRecipe.ingredients[i]._id === ingredientId){
+                        if(updateRecipe.ingredients[i].ingredient._id === ingredientId){
                             updateRecipe.ingredients.splice(i, 1);
                             break;
                         }
