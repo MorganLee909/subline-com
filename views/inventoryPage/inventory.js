@@ -94,7 +94,8 @@ let inventoryObj = {
     //Create input allowing for user edit of ingredient
     editIngredient: function(id, row){
         let quantity = row.children[2];
-        let button = row.children[4].children[0];
+        let editButton = row.children[4].children[0];
+        let removeButton = row.children[4].children[1];
         let originalQuantity = quantity.innerText;
 
         let quantityInput = document.createElement("input");
@@ -106,8 +107,25 @@ let inventoryObj = {
         quantity.innerText = "";
         quantity.appendChild(quantityInput);
 
-        button.innerText = "Save";
-        button.onclick = ()=>{this.updateOne(id, row, originalQuantity)};
+        editButton.innerText = "Save";
+        editButton.onclick = ()=>{this.updateOne(id, row, originalQuantity)};
+
+        removeButton.innerText = "Cancel";
+        removeButton.onclick = ()=>{this.cancelEdit(id, row, originalQuantity)};
+    },
+
+    cancelEdit: function(id, row, amount){
+        let quantityField = row.children[2];
+        quantityField.removeChild(quantityField.firstChild);
+        quantityField.innerText = amount;
+
+        let saveButton = row.children[4].children[0];
+        saveButton.innerText = "Edit";
+        saveButton.onclick = ()=>{this.editIngredient(id, row)};
+
+        let cancelButton = row.children[4].children[1];
+        cancelButton.innerText = "Remove";
+        cancelButton.onclick = ()=>{this.removeIngredient(id, row)};
     },
 
     //Save user input of ingredient
