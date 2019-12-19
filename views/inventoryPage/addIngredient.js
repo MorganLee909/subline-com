@@ -19,11 +19,22 @@ let addIngredientObj = {
                 }else{
                     let select = document.querySelector("#addIngredientStrand select");
 
+                    
                     for(let ingredient of response.data){
-                        let option = document.createElement("option");
-                        option.value = ingredient._id;
-                        option.innerText = `${ingredient.name} (${ingredient.unit})`;
-                        select.appendChild(option);
+                        let exists = false;
+                        for(let merchIngredient of merchant.inventory){
+                            if(ingredient._id === merchIngredient.ingredient._id){
+                                exists = true;
+                                break;
+                            }
+                        }
+
+                        if(!exists){
+                            let option = document.createElement("option");
+                            option.value = ingredient._id;
+                            option.innerText = `${ingredient.name} (${ingredient.unit})`;
+                            select.appendChild(option);
+                        }
                     }
                 }
             })

@@ -56,10 +56,20 @@ let singleRecipeObj = {
         nameTd.appendChild(name);
 
         for(let item of merchant.inventory){
-            let nameOption = document.createElement("option");
-            nameOption.innerText = `${item.ingredient.name} (${item.ingredient.unit})`;
-            nameOption.value = item.ingredient._id;
-            name.appendChild(nameOption);
+            let exists = false;
+            for(let recipeIngredient of recipe.ingredients){
+                if(item.ingredient._id === recipeIngredient.ingredient._id){
+                    exists = true;
+                    break;
+                }
+            }
+
+            if(!exists){
+                let nameOption = document.createElement("option");
+                nameOption.innerText = `${item.ingredient.name} (${item.ingredient.unit})`;
+                nameOption.value = item.ingredient._id;
+                name.appendChild(nameOption);
+            }
         }
 
         let quantityTd = document.createElement("td");
@@ -85,14 +95,6 @@ let singleRecipeObj = {
         let item = {
             ingredient: ingredientId,
             quantity: quantity
-        }
-
-        //Just don't display duplicates...
-        for(let ingredient of recipe.ingredients){
-            if(ingredient.ingredient._id === ingredientId){
-                banner.createError("That ingredient is already in this recipe");
-                return;
-            }
         }
         
         if(validator.ingredient.quantity(item.quantity)){
