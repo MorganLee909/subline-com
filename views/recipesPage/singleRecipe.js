@@ -54,16 +54,18 @@ let singleRecipeObj = {
 
         for(let item of merchant.inventory){
             let nameOption = document.createElement("option");
-            nameOption.innerText = item.ingredient.name;
+            nameOption.innerText = `${item.ingredient.name} (${item.ingredient.unit})`;
             nameOption.value = item.ingredient._id;
             name.appendChild(nameOption);
         }
 
         let quantityTd = document.createElement("td");
         row.appendChild(quantityTd);
+
         let quantity = document.createElement("input");
         quantity.type = "text";
         quantity.step = "0.01";
+        quantity.onkeypress = (event)=>{if(event.keyCode===13) this.addIngredient(recipe, name.value, quantity.value, row)};
         quantityTd.appendChild(quantity);
 
         let actionTd = document.createElement("td");
@@ -81,9 +83,7 @@ let singleRecipeObj = {
             ingredient: ingredientId,
             quantity: quantity
         }
-        
 
-        // Lets just not show the ingredient... duh
         for(let ingredient of recipe.ingredients){
             if(ingredient.ingredient._id === ingredientId){
                 banner.createError("That ingredient is already in this recipe");
@@ -180,6 +180,7 @@ let singleRecipeObj = {
         input.type = "number";
         input.step = "0.01";
         input.value = ingredient.quantity;
+        input.onkeypress = (event)=>{if(event.keyCode===13) this.updateIngredient(row, ingredient, recipe)};
         td.appendChild(input);
 
         let para = document.createElement("p");

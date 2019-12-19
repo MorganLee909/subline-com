@@ -99,6 +99,7 @@ let inventoryObj = {
         let quantityInput = document.createElement("input");
         quantityInput.type = "number";
         quantityInput.step = "0.01";
+        quantityInput.onkeypress = (event)=>{if(event.keyCode===13) this.updateOne(id, row, originalQuantity)};
         quantityInput.value = quantity.innerText;
 
         quantity.innerText = "";
