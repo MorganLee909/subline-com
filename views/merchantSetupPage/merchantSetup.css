@@ -53,6 +53,10 @@
     display: none;
 }
 
+    #nameRecipesStrand > *{
+        margin: 10px;
+    }
+
 /* createRecipesStrand */
 #createRecipesStrand{
     display: none;

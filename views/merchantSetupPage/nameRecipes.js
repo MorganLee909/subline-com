@@ -19,6 +19,7 @@ let nameRecipesObj = {
 
         let nameRemove = document.createElement("button");
         nameRemove.innerText = "Remove";
+        nameRemove.classList = "button-small";
         nameRemove.onclick = ()=>{nameDiv.parentNode.removeChild(nameDiv)};
         nameDiv.appendChild(nameRemove);
     },
