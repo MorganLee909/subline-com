@@ -37,7 +37,7 @@ module.exports = {
 
                 merchant.save()
                     .then((merchant)=>{
-                        res.json(merchant.inventory);
+                        res.json({});
                     })
                     .catch((err)=>{
                         let errorMessage = "There was an error and your transactions could not be saved";

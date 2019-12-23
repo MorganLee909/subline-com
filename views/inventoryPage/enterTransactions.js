@@ -37,7 +37,7 @@ let enterTransactionsObj = {
     submit: function(){
         let tbody = document.querySelector("#enterTransactionsStrand tbody");
 
-        let recipesSold = [];
+        let recipes = [];
 
         for(let row of tbody.children){
             let quantity = row.children[1].children[0].value;
@@ -48,23 +48,23 @@ let enterTransactionsObj = {
                     quantity: quantity
                 }
 
-                recipesSold.push(recipe);
+                recipes.push(recipe);
             }else if(quantity < 0){
                 banner.createError("Cannot have negative quantities");
                 break;
             }
         }
 
-        axios.post("/transactions/create", recipesSold)
+        axios.post("/transactions/create", recipes)
             .then((response)=>{
                 if(typeof(response.data) === "string"){
                     banner.createError(response.data);
                 }else{
-                    for(let soldRecipe of recipesSold){
-                        let merchRecipe = merchant.recipes.find(r => r._id === soldRecipe.id);
+                    for(let recipe of recipes){
+                        let merchRecipe = merchant.recipes.find(r => r._id === recipe.id);
                         for(let recipeIngredient of merchRecipe.ingredients){
-                            let merchInvIngredient = merchant.inventory.find(i => i.ingredient._id === recipeIngredient.ingredient);
-                            merchInvIngredient.quantity -= recipeIngredient.quantity * soldRecipe.quantity;
+                            let merchInvIngredient = merchant.inventory.find(i => i.ingredient._id === recipeIngredient.ingredient._id);
+                            merchInvIngredient.quantity -= recipeIngredient.quantity * recipe.quantity;
                         }
                     }
 
