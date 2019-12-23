@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+    #inventoryStrand > *{
+        margin: 10px;
+    }
+
     #inventoryStrand h1{
         font-size: 40px;
         margin: 40px;
@@ -47,6 +51,9 @@
     flex-direction: column;
     align-items: center;
 }
+    #enterTransactionsStrand > *{
+        margin: 10px;
+    }
 
 @media screen and (max-width: 600px){
     /* inventoryStrand */

@@ -18,16 +18,14 @@
             <div class="options">
                 <a class="button" href="/recipes">View Recipes</a>
 
-                <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="FILTER INGREDIENTS">
-
                 <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
 
                 <% if(merchant.pos === "none"){ %>
                     <button class="button" onclick="enterTransactionsObj.display()">Enter Transactions</button>
                 <% } %>
-
-                
             </div>
+
+            <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="FILTER INGREDIENTS">
 
             <table>
                 <thead>
@@ -88,7 +86,7 @@
         <div id="enterTransactionsStrand">
             <h1>Enter items sold since (Date)</h1>
             
-            <button onclick="inventoryObj.display()">Back to inventory</button>
+            <button class="button" onclick="inventoryObj.display()">Back to inventory</button>
 
             <table>
                 <thead>
@@ -100,7 +98,7 @@
                 <tbody></tbody>
             </table>
 
-            <button onclick="enterTransactionsObj.submit()">Submit</button>
+            <button class="button" onclick="enterTransactionsObj.submit()">Submit</button>
         </div>
 
         <script>
