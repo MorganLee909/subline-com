@@ -205,6 +205,8 @@ let singleRecipeObj = {
         let removeButton = row.children[2].children[1];
         removeButton.innerText = "Cancel";
         removeButton.onclick = ()=>{this.cancelEdit(row, ingredient, recipe)};
+
+        input.focus();
     },
 
     cancelEdit: function(row, ingredient, recipe){

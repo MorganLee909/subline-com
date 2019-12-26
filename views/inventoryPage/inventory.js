@@ -112,6 +112,8 @@ let inventoryObj = {
 
         removeButton.innerText = "Cancel";
         removeButton.onclick = ()=>{this.cancelEdit(id, row, originalQuantity)};
+
+        quantityInput.focus();
     },
 
     cancelEdit: function(id, row, amount){
