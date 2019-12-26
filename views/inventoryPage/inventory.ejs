@@ -20,6 +20,8 @@
 
                 <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
 
+                <button class="button" onclick="enterPurchaseObj.display()">Enter Purchases</button>
+
                 <% if(merchant.pos === "none"){ %>
                     <button class="button" onclick="enterTransactionsObj.display()">Enter Transactions</button>
                 <% } %>
@@ -101,6 +103,24 @@
             <button class="button" onclick="enterTransactionsObj.submit()">Submit</button>
         </div>
 
+        <div id="enterPurchaseStrand">
+            <h1>Enter Purchases</h1>
+            
+            <button class="button" onclick="inventoryObj.display()">Back to inventory</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <button class="button" onclick="enterPurchaseObj.submit()">Submit</button>
+        </div>
+
         <script>
                 <% if(locals.error){ %>
                     let error = <%- JSON.stringify(error) %>;
@@ -117,6 +137,7 @@
         <script src="/inventoryPage/recipe.js"></script>
         <script src="/inventoryPage/addIngredient.js"></script>
         <script src="/inventoryPage/enterTransactions.js"></script>
+        <script src="/inventoryPage/enterPurchase.js"></script>
         <script src="/inventoryPage/controller.js"></script>
     </body>
 </html>

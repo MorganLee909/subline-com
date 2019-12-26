@@ -55,6 +55,16 @@
         margin: 10px;
     }
 
+#enterPurchaseStrand{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+    #enterPurchaseStrand > *{
+        margin: 10px;
+    }
+
 @media screen and (max-width: 600px){
     /* inventoryStrand */
     #inventoryStrand h1{
