@@ -19,6 +19,19 @@ in order to better manage future costs and reduce food waste for restaurants.
 
 5. $ npm install -g nodemon (only if you are developing or adding code)
 
+6. Create two environment variables:
+    export PORT="8080"
+    export SUBLINE="mongodb://localhost/InventoryManagement"
+    
+    Mac/Linux Instructions:
+    1.  Open '.bashrc' or .bash_profile' from the home directory
+    2.  Type the two variables at the bottom file
+    3.  Save file
+    4.  Close and re-open terminal
+    
+    Windows Instructions:
+    https://ubuntu.com/download/desktop
+
 6. $ sudo service mongod start
 
 7. $ nodemon app.js (if developing)
