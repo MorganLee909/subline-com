@@ -133,7 +133,8 @@ let inventoryObj = {
     updateOne: function(id, row, originalQuantity){
         let quantityField = row.children[2];
         let quantity = quantityField.children[0].value;
-        let button = row.children[4].children[0];
+        let saveButton = row.children[4].children[0];
+        let cancelButton = row.children[4].children[1];
 
         quantityField.removeChild(quantityField.firstChild);
 
@@ -156,8 +157,11 @@ let inventoryObj = {
             quantityField.innerText = originalQuantity;
         }
 
-        button.innerText = "Edit";
-        button.onclick = ()=>{this.editIngredient(id, row)};
+        saveButton.innerText = "Edit";
+        saveButton.onclick = ()=>{this.editIngredient(id, row)};
+
+        cancelButton.innerText = "Remove";
+        cancelButton.onclick = ()=>{this.removeIngredient(id, row)};
     },
 
     //Delete an ingredient from both the page and the database
