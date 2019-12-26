@@ -17,6 +17,10 @@
         color: rgb(255, 99, 107);
     }
 
+    #inventoryStrand th{
+        cursor: pointer;
+    }
+
     .options{
         display: flex;
         justify-content: space-between;

@@ -17,7 +17,6 @@ table{
     th{
         color: rgb(240, 252, 255);
         padding: 20px;
-        cursor: pointer;
         background: rgb(0, 27, 45);
         color: rgb(255, 99, 107);
     }
