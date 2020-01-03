@@ -16,7 +16,8 @@
 /* Agreement Strand */
 #agreementStrand{
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
     #agreementStrand > *{
@@ -58,7 +59,7 @@
         margin: 10px;
     }
 
-/* nameRecipesStrand */
+/* Name Recipes Strand */
 #nameRecipesStrand{
     display: none;
 }
@@ -67,7 +68,7 @@
         margin: 10px;
     }
 
-/* createRecipesStrand */
+/* Create Recipes Strand */
 #createRecipesStrand{
     display: none;
 }

@@ -14,6 +14,12 @@
 
         <div id="agreementStrand">
             <% include ../shared/legal %>
+
+            <label>
+                <input onclick="agreementObj.agree()" type="checkbox">
+            I agree to all terms and conditions</label>
+
+            <button onclick="basicInfoObj.display()" disabled>Continue</button>
         </div>
 
         <div id="basicInfoStrand" class="container">
