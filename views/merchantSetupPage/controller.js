@@ -1,6 +1,7 @@
 let controller = {
     data: {},  //For storing all data from user to pass to backend
 
+    agreementStrand: document.querySelector("#agreementStrand"),
     basicInfoStrand: document.querySelector("#basicInfoStrand"),
     addIngredientsStrand: document.querySelector("#addIngredientsStrand"),
     createIngredientsStrand: document.querySelector("#createIngredientsStrand"),
@@ -12,7 +13,7 @@ let controller = {
             banner.createError(error);
         }
         
-        basicInfoObj.display();
+        agreementObj.display();
     },
 
     //General purpose data validator
@@ -25,6 +26,7 @@ let controller = {
     },
 
     clearScreen: function(){
+        this.agreementStrand.style.display = "none";
         this.basicInfoStrand.style.display = "none";
         this.addIngredientsStrand.style.display = "none";
         this.createIngredientsStrand.style.display = "none";
