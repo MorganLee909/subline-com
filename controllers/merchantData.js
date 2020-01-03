@@ -5,6 +5,7 @@ const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
+const RecipeChange = require("../models/recipeChange");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
@@ -505,7 +506,22 @@ module.exports = {
 
                                 return res.json(errorMessage);
                             }
-                            return res.json(recipe);
+                            res.json(recipe);
+
+                            let rc = new RecipeChange({
+                                recipe: recipe,
+                                ingredient: req.body.item.ingredient,
+                                amount: req.body.item.quantity
+                            });
+                            rc.save()
+                                .catch((err)=>{
+                                    let error = new Error({
+                                        code: 120,
+                                        displayMessage: "none",
+                                        error: err
+                                    });
+                                    error.save();
+                                });
                         })
                     })
                     .catch((err)=>{
