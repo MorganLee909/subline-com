@@ -13,9 +13,19 @@
     align-items: center;
 }
 
-/* basicInfoStrand */
-#basicInfoStrand{
+/* Agreement Strand */
+#agreementStrand{
     display: flex;
+    justify-content: center;
+}
+
+    #agreementStrand > *{
+        margin: 10px;
+    }
+
+/* Basic Info Strand */
+#basicInfoStrand{
+    display: none;
 }
 
     #basicInfoStrand > *{
@@ -26,7 +36,7 @@
         display: none;
     }
 
-/* addIngredientsStrand */
+/* Add Ingredients Strand */
 #addIngredientsStrand{
     display: none;
 }
@@ -39,7 +49,7 @@
         margin-top: 0;
     }
 
-/* createIngredientsStrand */
+/* Create Ingredients Strand */
 #createIngredientsStrand{
     display: none;
 }

@@ -174,3 +174,23 @@ form{
         text-overflow: ellipsis;
     }
 }
+
+/* Legal partial */
+#legal{
+    border: 2px solid black;
+    box-shadow: -5px -5px 5px rgb(0, 27, 45) inset;
+    padding: 30px;
+    max-width: 800px;
+}
+
+    #legal > *{
+        margin: 15px;
+    }
+
+    ol{
+        list-style: decimal inside none;
+    }
+
+        ol > *{
+            margin: 10px;
+        }
