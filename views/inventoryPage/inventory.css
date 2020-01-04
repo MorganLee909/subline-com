@@ -1,3 +1,4 @@
+/* Inventory Strand */
 #inventoryStrand{
     display: flex;
     flex-direction: column;
@@ -35,6 +36,7 @@
             max-height: 32px;
         }
 
+/* Add Ingredient Strand */
 #addIngredientStrand{
     display: none;
     flex-direction: column;
@@ -50,6 +52,7 @@
         justify-content: space-around;
     }
 
+/* Enter Transactions Strand */
 #enterTransactionsStrand{
     display: none;
     flex-direction: column;
@@ -59,6 +62,7 @@
         margin: 10px;
     }
 
+/* Enter Purchases Strand */
 #enterPurchaseStrand{
     display: none;
     flex-direction: column;
@@ -70,7 +74,7 @@
     }
 
 @media screen and (max-width: 600px){
-    /* inventoryStrand */
+    /* Inventory Strand */
     #inventoryStrand h1{
         font-size: 20px;
         text-align: center;

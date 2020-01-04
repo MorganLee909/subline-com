@@ -8,6 +8,19 @@ basicInfoObj = {
         }
     },
 
+    agree: function(){
+        let checkbox = document.querySelector("#agree");
+        let button = document.querySelector("#subButton");
+
+        if(checkbox.checked){
+            button.disabled = false;
+            button.classList = "button";
+        }else{
+            button.disabled = true;
+            button.classList = "buttonDisabled";
+        }
+    },
+
     submit: function(){
         event.preventDefault();
 

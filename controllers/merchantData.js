@@ -5,6 +5,7 @@ const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
+const RecipeChange = require("../models/recipeChange");
 
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
@@ -505,7 +506,24 @@ module.exports = {
 
                                 return res.json(errorMessage);
                             }
-                            return res.json(recipe);
+                            res.json(recipe);
+
+                            let rc = new RecipeChange({
+                                recipe: recipe,
+                                ingredient: req.body.item.ingredient,
+                                change: req.body.item.quantity
+                            });
+                            rc.save()
+                                .catch((err)=>{
+                                    let error = new Error({
+                                        code: 120,
+                                        displayMessage: "none",
+                                        error: err
+                                    });
+                                    error.save();
+                                });
+
+                            return;
                         })
                     })
                     .catch((err)=>{
@@ -548,10 +566,29 @@ module.exports = {
             .then((recipe)=>{
                 for(let ingredient of recipe.ingredients){
                     if(ingredient._id.toString() === req.body.ingredient._id){
+                        let change = Number(req.body.ingredient.quantity) - ingredient.quantity;
                         ingredient.quantity = req.body.ingredient.quantity;
+
                         recipe.save()
                             .then((recipe)=>{
-                                return res.json({});
+                                res.json({});
+
+                                let rc = new RecipeChange({
+                                    recipe: recipe,
+                                    ingredient: ingredient.ingredient,
+                                    change: change
+                                });
+                                rc.save()
+                                    .catch((err)=>{
+                                        let error = new Error({
+                                            code: 120,
+                                            errorMessage: "none",
+                                            error: err
+                                        });
+                                        error.save();
+                                    });
+
+                                return;
                             })
                             .catch((err)=>{
                                 let errorMessage = "There was an error and the recipe could not be updated";
@@ -584,6 +621,7 @@ module.exports = {
     //Inputs:
     //  req.body.ingredientId: Id of ingredient to be removed
     //  req.body.recipeId: Id of recipe to remove ingredient from
+    //  req.body.quantity: quantity of recipe ingredient for storing
     //Returns: Nothing
     removeRecipeIngredient: function(req, res){
         if(!req.session.user){
@@ -596,12 +634,30 @@ module.exports = {
                 for(let i = 0; i < recipe.ingredients.length; i++){
                     if(recipe.ingredients[i].ingredient._id.toString() === req.body.ingredientId){
                         recipe.ingredients.splice(i, 1);
+                        break;
                     }
                 }
 
                 recipe.save()
                     .then((recipe)=>{
-                        return res.json({});
+                        res.json({});
+
+                        let rc = new RecipeChange({
+                            recipe: req.body.recipeId,
+                            ingredient: req.body.ingredientId,
+                            change: -req.body.quantity
+                        });
+                        rc.save()
+                            .catch((err)=>{
+                                let error = new Error({
+                                    code: 120,
+                                    displayMessage: "none",
+                                    error: err
+                                });
+                                error.save();
+                            });
+
+                        return;
                     })
                     .catch((err)=>{
                         let errorMessage = "There was an error and the ingredient could not be remove from the recipe";

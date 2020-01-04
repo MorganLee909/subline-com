@@ -249,5 +249,11 @@ module.exports = {
 
                 return res.redirect("/");
             });
+    },
+
+    //GET - Renders the information page
+    //Renders information page
+    informationPage: function(req, res){
+        return res.render("informationPage/information");
     }
 }
