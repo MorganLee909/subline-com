@@ -11,9 +11,13 @@ const RecipeChangeSchema = new mongoose.Schema({
         ref: "Ingredient",
         required: true
     },
-    amount: {
+    change: {
         type: Number,
         required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
     }
 });
 

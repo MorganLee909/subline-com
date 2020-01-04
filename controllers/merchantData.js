@@ -511,7 +511,7 @@ module.exports = {
                             let rc = new RecipeChange({
                                 recipe: recipe,
                                 ingredient: req.body.item.ingredient,
-                                amount: req.body.item.quantity
+                                change: req.body.item.quantity
                             });
                             rc.save()
                                 .catch((err)=>{
@@ -522,6 +522,8 @@ module.exports = {
                                     });
                                     error.save();
                                 });
+
+                            return;
                         })
                     })
                     .catch((err)=>{
@@ -564,12 +566,32 @@ module.exports = {
             .then((recipe)=>{
                 for(let ingredient of recipe.ingredients){
                     if(ingredient._id.toString() === req.body.ingredient._id){
+                        let change = Number(req.body.ingredient.quantity) - ingredient.quantity;
                         ingredient.quantity = req.body.ingredient.quantity;
+
                         recipe.save()
                             .then((recipe)=>{
-                                return res.json({});
+                                res.json({});
+                                
+                                let rc = new RecipeChange({
+                                    recipe: recipe,
+                                    ingredient: ingredient.ingredient,
+                                    change: change
+                                });
+                                rc.save()
+                                    .catch((err)=>{
+                                        let error = new Error({
+                                            code: 120,
+                                            errorMessage: "none",
+                                            error: err
+                                        });
+                                        error.save();
+                                    });
+
+                                return;
                             })
                             .catch((err)=>{
+                                console.log(err);
                                 let errorMessage = "There was an error and the recipe could not be updated";
                                 let error = new Error({
                                     code: 547,
@@ -584,6 +606,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 let errorMessage = "There was an error and the recipe could not be updated";
                 let error = new Error({
                     code: 626,

@@ -252,6 +252,7 @@ let singleRecipeObj = {
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
                     banner.createError("There was an error and the ingredient could not be updated");
                 });

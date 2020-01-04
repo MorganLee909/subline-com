@@ -33,6 +33,7 @@ module.exports = {
             req.session.error = "You must logged in to view that page";
             return res.redirect("/");
         }
+        console.log("Session good, start of function");
 
         Merchant.findOne({_id: req.session.user})
             .populate("inventory.ingredient")
@@ -45,9 +46,11 @@ module.exports = {
                 }
             })
             .then((merchant)=>{
+                console.log("Got the merchant");
                 if(merchant.pos === "clover"){
                     axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
                         .then((result)=>{
+                            console.log("axios to clover returned");
                             let transactions = [];
                             for(let order of result.data.elements){
                                 let newTransaction = new Transaction({
@@ -75,12 +78,14 @@ module.exports = {
                                 transactions.push(newTransaction);
                             }
                             merchant.lastUpdatedTime = Date.now();
+                            console.log("Did all calculations on Clover data");
 
                             merchant.save()
                                 .then((updatedMerchant)=>{
                                     merchant.password = undefined;
                                     res.render("inventoryPage/inventory", {merchant: updatedMerchant, error: undefined});
                                     Transaction.create(transactions);
+                                    console.log("Saved merchant, render page");
                                     return;
                                 })
                                 .catch((err)=>{
