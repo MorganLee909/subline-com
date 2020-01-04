@@ -174,34 +174,3 @@ form{
         text-overflow: ellipsis;
     }
 }
-
-/* Legal partial */
-#legal{
-    border: 2px solid black;
-    box-shadow: -5px -5px 5px rgb(0, 27, 45) inset;
-    padding: 30px;
-    text-align: justify;
-    max-width: 800px;
-    max-height: 65vh;
-    overflow-y: auto;
-}
-
-    #legal > *{
-        margin: 15px;
-    }
-
-    ol{
-        list-style: decimal inside none;
-    }
-
-        ol > *{
-            margin: 10px;
-        }
-
-    #legal .contactInfo{
-        margin: 0 15px;
-    }
-
-    #legal .last{
-        margin-bottom: 35px;
-    }
