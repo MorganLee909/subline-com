@@ -1,15 +1,27 @@
 /* Legal Strand */
 #legalStrand{
-    border: 2px solid black;
-    box-shadow: -5px -5px 5px rgb(0, 27, 45) inset;
-    padding: 30px;
-    text-align: justify;
-    max-width: 800px;
-    max-height: 65vh;
-    overflow-y: auto;
+    display: flex;
+    justify-content: center;
 }
 
     #legalStrand > *{
+        margin: 50px;
+    }
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 2px solid black;
+        box-shadow: -5px -5px 5px rgb(0, 27, 45) inset;
+        padding: 30px;
+        text-align: justify;
+        max-width: 800px;
+        max-height: 65vh;
+        overflow-y: auto;
+    }
+
+    .content > *{
         margin: 15px;
     }
 

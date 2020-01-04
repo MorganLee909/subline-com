@@ -1,5 +1,5 @@
 let controller = {
-    legalStrand = document.querySelector("#legalStrand"),
+    legalStrand: document.querySelector("#legalStrand"),
 
     clearScreen: function(){
         this.legalStrand.style.display = "none";

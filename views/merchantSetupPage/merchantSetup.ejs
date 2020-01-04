@@ -12,16 +12,6 @@
 
         <% include ../shared/banner %>
 
-        <div id="agreementStrand">
-            <% include ../shared/legal %>
-
-            <label>
-                <input onclick="agreementObj.agree()" type="checkbox">
-            I agree to all terms and conditions</label>
-
-            <button onclick="basicInfoObj.display()" disabled>Continue</button>
-        </div>
-
         <div id="basicInfoStrand" class="container">
             <h1>Basic Information</h1>
 
@@ -42,7 +32,12 @@
                     <input id="regConfirmPass" type="password" required>
                 </label>
 
-                <input class="button" type="Submit" value="Continue">
+                <label>
+                    <input id="agree" onclick="basicInfoObj.agree()" type="checkbox">
+                    I agree to the <a href="/legal">Privacy Policy</a>
+                </label>
+
+                <input id="subButton" class="buttonDisabled" type="Submit" value="Continue" disabled>
             </form>
         </div>
 
@@ -141,7 +136,6 @@
         </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/shared/validation.js"></script>
-        <script src="/merchantSetupPage/agreement.js"></script>
         <script src="/merchantSetupPage/basicInfo.js"></script>
         <script src="/merchantSetupPage/addIngredients.js"></script>
         <script src="/merchantSetupPage/createIngredients.js"></script>
