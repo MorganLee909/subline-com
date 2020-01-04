@@ -37,7 +37,7 @@ let singleRecipeObj = {
             let removeButton = document.createElement("button");
             removeButton.innerText = "Remove";
             removeButton.classList = "button-small";
-            removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient.ingredient._id, row);};
+            removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredient.ingredient._id, ingredient.quantity, row);};
             actions.appendChild(removeButton);
         }
     },
@@ -144,7 +144,7 @@ let singleRecipeObj = {
                         let removeButton = document.createElement("button");
                         removeButton.innerText = "Remove";
                         removeButton.classList = "button-small";
-                        removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, row);};
+                        removeButton.onclick = ()=>{this.deleteIngredient(recipe._id, ingredientId, quantity, row);};
                         actions.appendChild(removeButton);
                     }
                 })
@@ -157,8 +157,8 @@ let singleRecipeObj = {
 
     //Delete ingredient from table
     //Delete ingredient from database
-    deleteIngredient: function(recipeId, ingredientId, row){
-        axios.post("/merchant/recipes/ingredients/remove", {ingredientId: ingredientId, recipeId: recipeId})
+    deleteIngredient: function(recipeId, ingredientId, quantity, row){
+        axios.post("/merchant/recipes/ingredients/remove", {ingredientId: ingredientId, recipeId: recipeId, quantity: quantity})
             .then((result)=>{
                 if(typeof(result.data) === "string"){
                     banner.createError(result.data);
@@ -252,7 +252,6 @@ let singleRecipeObj = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
                     banner.createError("There was an error and the ingredient could not be updated");
                 });
