@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-mongoose.connect(process.env.SUBLINE, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.SUBLINE_DB, {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.set("view engine", "ejs");
 
