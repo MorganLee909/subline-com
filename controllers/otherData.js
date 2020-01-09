@@ -212,7 +212,7 @@ module.exports = {
 
     //Get - Redirects user to Clover OAuth page
     clover: function(req, res){
-        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=localhost:8080/cloverauth`);
+        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=${process.env.SUBLINE_CLOVER_URI});
     },
 
     cloverAuth: function(req, res){
