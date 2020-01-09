@@ -211,7 +211,28 @@ module.exports = {
     },
 
     //Get - Redirects user to Clover OAuth page
-    cloverAuth: function(req, res){
+    clover: function(req, res){
+        let url = "https://www.example.com/oauth_callback?merchant_id={mId}&client_id={APP_ID}&employee_id={EMPLOYEE_ID}&code={AUTHORIZATION_CODE}";
+        let str = url.slice(url.indexOf("merchant_id=") + 12, url.indexOf("&client_id"));
+        console.log(str);
         return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=localhost:8080/clover`);
+    },
+
+    cloverAuth: function(req, res){
+        let authorizationCode = req.url.slice(req.url.indexOf("code=") + 5);
+        req.session.merchantId = req.url.slice(req.url.indexOf("merchant_id=") + 12, req.url.indexOf("&client_id"))
+        
+        axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
+            .then((response)=>{
+                req.session.accessToken = response.data.access_token;
+                return res.redirect("/merchant/new/clover");
+            })
+            .catch((err)=>{
+                console.log(err);
+                req.session.error = "Error: Unable to retrieve data from Clover";
+                return res.redirect("/");
+            });
     }
 }
+
+//https://www.example.com/oauth_callback?merchant_id={mId}&client_id={APP_ID}&employee_id={EMPLOYEE_ID}&code={AUTHORIZATION_CODE}

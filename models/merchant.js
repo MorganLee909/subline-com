@@ -19,6 +19,7 @@ const MerchantSchema = new mongoose.Schema({
         required: true
     },
     posId: String,
+    posAccessToken: String,
     lastUpdatedTime: {
         type: String,
         default: Date.now()
