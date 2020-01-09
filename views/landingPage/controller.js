@@ -7,7 +7,7 @@ let controller = {
         if(error){
             banner.createError(error);
         }
-        
+
         publicObj.display();
     },
 

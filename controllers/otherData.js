@@ -184,7 +184,10 @@ module.exports = {
     },
 
     //POST - check an email for uniqueness
-    //
+    //Inputs:
+    //  req.body.email: email to check
+    //Returns:
+    //  Boolean
     checkUniqueEmail: function(req, res){
         Merchant.findOne({email: req.body.email})
             .then((merchant)=>{
@@ -204,6 +207,26 @@ module.exports = {
                 error.save();
 
                 return res.json(errorMessage);
+            });
+    },
+
+    //Get - Redirects user to Clover OAuth page
+    clover: function(req, res){
+        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=localhost:8080/cloverauth`);
+    },
+
+    cloverAuth: function(req, res){
+        let authorizationCode = req.url.slice(req.url.indexOf("code=") + 5);
+        req.session.merchantId = req.url.slice(req.url.indexOf("merchant_id=") + 12, req.url.indexOf("&client_id"))
+        
+        axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
+            .then((response)=>{
+                req.session.accessToken = response.data.access_token;
+                return res.redirect("/merchant/new/clover");
+            })
+            .catch((err)=>{
+                req.session.error = "Error: Unable to retrieve data from Clover";
+                return res.redirect("/");
             });
     }
 }
