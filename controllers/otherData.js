@@ -212,10 +212,7 @@ module.exports = {
 
     //Get - Redirects user to Clover OAuth page
     clover: function(req, res){
-        let url = "https://www.example.com/oauth_callback?merchant_id={mId}&client_id={APP_ID}&employee_id={EMPLOYEE_ID}&code={AUTHORIZATION_CODE}";
-        let str = url.slice(url.indexOf("merchant_id=") + 12, url.indexOf("&client_id"));
-        console.log(str);
-        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=localhost:8080/clover`);
+        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=localhost:8080/cloverauth`);
     },
 
     cloverAuth: function(req, res){
@@ -228,7 +225,6 @@ module.exports = {
                 return res.redirect("/merchant/new/clover");
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
             });
