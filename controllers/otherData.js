@@ -184,7 +184,10 @@ module.exports = {
     },
 
     //POST - check an email for uniqueness
-    //
+    //Inputs:
+    //  req.body.email: email to check
+    //Returns:
+    //  Boolean
     checkUniqueEmail: function(req, res){
         Merchant.findOne({email: req.body.email})
             .then((merchant)=>{
@@ -205,5 +208,10 @@ module.exports = {
 
                 return res.json(errorMessage);
             });
+    },
+
+    //Get - Redirects user to Clover OAuth page
+    cloverAuth: function(req, res){
+        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=localhost:8080/clover`);
     }
 }

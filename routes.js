@@ -34,4 +34,5 @@ module.exports = function(app){
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
     app.post("/email", otherData.checkUniqueEmail);
+    app.get("/cloverauth", otherData.cloverAuth);
 }
