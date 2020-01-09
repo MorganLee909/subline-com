@@ -5,8 +5,6 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
 
-const token = "b48068eb-411a-918e-ea64-52007147e42c";
-
 module.exports = {
     //GET - Shows the public landing page
     //Returns: 
@@ -46,7 +44,7 @@ module.exports = {
             })
             .then((merchant)=>{
                 if(merchant.pos === "clover"){
-                    axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${token}`)
+                    axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
                         .then((result)=>{
                             let transactions = [];
                             for(let order of result.data.elements){
@@ -78,7 +76,8 @@ module.exports = {
 
                             merchant.save()
                                 .then((updatedMerchant)=>{
-                                    merchant.password = undefined;
+                                    updatedMerchant.password = undefined;
+                                    updatedMerchant.accessToken = undefined;
                                     res.render("inventoryPage/inventory", {merchant: updatedMerchant, error: undefined});
                                     Transaction.create(transactions);
                                     return;
@@ -143,7 +142,7 @@ module.exports = {
     //  error: returns error (if any) from session
     //Renders merchantSetupPage
     merchantSetupClover: function(req, res){
-        req.session.posId = "YHVPCQMVB1P81";
+        // req.session.posId = "YHVPCQMVB1P81";
 
         let errorMessage = {};
         if(req.session.error){
@@ -155,7 +154,7 @@ module.exports = {
         
         Ingredient.find()
             .then((ingredients)=>{
-                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}/items?access_token=${token}`)
+                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
                     .then((recipes)=>{
                         return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data, error: errorMessage});
                     })
