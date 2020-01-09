@@ -230,5 +230,3 @@ module.exports = {
             });
     }
 }
-
-//https://www.example.com/oauth_callback?merchant_id={mId}&client_id={APP_ID}&employee_id={EMPLOYEE_ID}&code={AUTHORIZATION_CODE}
