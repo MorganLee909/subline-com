@@ -147,7 +147,7 @@ module.exports = {
             return res.redirect("/");
         }
 
-        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.posId}?access_token=${token}`)
+        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
             .then((cloverMerchant)=>{
                 req.session.posId = undefined;
 
@@ -159,8 +159,12 @@ module.exports = {
                     email: data.email,
                     password: hash,
                     pos: "clover",
-                    posId: cloverMerchant.data.id
+                    posId: cloverMerchant.data.id,
+                    posAccessToken: req.session.accessToken
                 });
+
+                req.session.merchantId = undefined;
+                req.session.accessToken = undefined;
 
                 for(let item of data.inventory){
                     merchant.inventory.push({
