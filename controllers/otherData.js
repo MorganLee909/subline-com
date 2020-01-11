@@ -219,6 +219,8 @@ module.exports = {
         let authorizationCode = req.url.slice(req.url.indexOf("code=") + 5);
         req.session.merchantId = req.url.slice(req.url.indexOf("merchant_id=") + 12, req.url.indexOf("&client_id"))
         
+        console.log("I have run");
+
         axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
             .then((response)=>{
                 req.session.accessToken = response.data.access_token;
