@@ -149,15 +149,11 @@ module.exports = {
         }else{
             errorMessage = null;
         }
-
-        console.log(req.session.merchantId);
-        console.log(req.session.accessToken);
         
         Ingredient.find()
             .then((ingredients)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
                     .then((recipes)=>{
-                        console.log("Other things and stuff");
                         return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data, error: errorMessage});
                     })
                     .catch((err)=>{
