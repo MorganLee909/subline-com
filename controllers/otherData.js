@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const axios = require("axios");
 
 const Error = require("../models/error");
 const NonPosTransaction = require("../models/nonPosTransaction");
@@ -212,12 +213,13 @@ module.exports = {
 
     //Get - Redirects user to Clover OAuth page
     clover: function(req, res){
-        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}`);
+        return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=http://localhost:8080/cloverauth`);
     },
 
     cloverAuth: function(req, res){
         let authorizationCode = req.url.slice(req.url.indexOf("code=") + 5);
-        req.session.merchantId = req.url.slice(req.url.indexOf("merchant_id=") + 12, req.url.indexOf("&client_id"))
+        console.log(req.url);
+        req.session.merchantId = req.url.slice(req.url.indexOf("merchant_id=") + 12, req.url.indexOf("&"));
         
         axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
             .then((response)=>{
