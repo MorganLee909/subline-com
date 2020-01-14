@@ -213,27 +213,27 @@ module.exports = {
 
     //Get - Redirects user to Clover OAuth page
     clover: function(req, res){
-        console.log("I know that this is working");
-        console.log(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=${process.env.SUBLINE_CLOVER_URI}`);
         return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=${process.env.SUBLINE_CLOVER_URI}`);
     },
 
     cloverAuth: function(req, res){
-        console.log("Things and doing stuff and what not");
-        let authorizationCode = req.url.slice(req.url.indexOf("code=") + 5);
-        req.session.merchantId = req.url.slice(req.url.indexOf("merchant_id=") + 12, req.url.indexOf("&"))
-        console.log("###################################");
-        console.log(authorizationCode);
-        console.log(req.url);
+        let dataArr = req.url.slice(req.url.indexOf("?") + 1).split("&");
+        let authorizationCode = "";
+
+        for(let str of dataArr){
+            if(str.slice(0, str.indexOf("=")) === "merchant_id"){
+                req.session.merchantId = str.slice(str.indexOf("=") + 1);
+            }else if(str.slice(0, str.indexOf("=")) === "code"){
+                authorizationCode = str.slice(str.indexOf("=") + 1);
+            }
+        }
         
         axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
             .then((response)=>{
-                console.log(response);
                 req.session.accessToken = response.data.access_token;
                 return res.redirect("/merchant/new/clover");
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
             });

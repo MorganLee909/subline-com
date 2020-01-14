@@ -11,7 +11,6 @@ module.exports = {
     //  Error: a single error message (only if there is an error)
     //Renders landingPage
     landingPage: function(req, res){
-        console.log(req.url);
         let error = {};
         if(req.session.error){
             error = req.session.error;
