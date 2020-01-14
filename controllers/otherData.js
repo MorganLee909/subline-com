@@ -229,6 +229,7 @@ module.exports = {
                 return res.redirect("/merchant/new/clover");
             })
             .catch((err)=>{
+                console.log(err);
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
             });
