@@ -219,10 +219,12 @@ module.exports = {
     },
 
     cloverAuth: function(req, res){
+        console.log("Things and doing stuff and what not");
         let authorizationCode = req.url.slice(req.url.indexOf("code=") + 5);
         req.session.merchantId = req.url.slice(req.url.indexOf("merchant_id=") + 12, req.url.indexOf("&"))
         console.log("###################################");
         console.log(authorizationCode);
+        console.log(req.url);
         
         axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
             .then((response)=>{
