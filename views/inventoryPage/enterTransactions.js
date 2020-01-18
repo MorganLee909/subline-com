@@ -5,8 +5,6 @@ window.enterTransactionsObj = {
         clearScreen();
         document.querySelector("#enterTransactionsAction").style.display = "flex";
 
-        console.log(typeof(merchant.lastUpdatedTime));
-
         document.querySelector("#updated").innerText = new Date(Number(merchant.lastUpdatedTime)).toDateString();
 
         if(!this.isPopulated){

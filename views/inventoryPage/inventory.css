@@ -133,10 +133,6 @@
         display: "none"
     }
 
-    #recipeName{
-        margin-top: 0;
-    }
-
 @media screen and (max-width: 1000px){
     /* General use */
     body{
