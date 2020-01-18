@@ -197,7 +197,6 @@ window.inventoryObj = {
                 })
                 .catch((err)=>{
                     banner.createError("There was an error and the ingredient has not been removed from your inventory");
-                    console.log(err);
                 });
         }else{
             banner.createError("You must remove this ingredient from all recipes before you can remove it from your inventory");

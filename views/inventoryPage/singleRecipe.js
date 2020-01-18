@@ -3,7 +3,7 @@ window.singleRecipeObj = {
         clearScreen();
         document.querySelector("#singleRecipeAction").style.display = "flex";
 
-        let tbody = document.querySelector("tbody");
+        let tbody = document.querySelector("#singleRecipeAction tbody");
 
         while(tbody.children.length > 0){
             tbody.removeChild(tbody.firstChild);
@@ -43,7 +43,7 @@ window.singleRecipeObj = {
     },
 
     displayAdd: function(recipe){
-        let tbody = document.querySelector("tbody");
+        let tbody = document.querySelector("#singleRecipeAction tbody");
 
         let row = document.createElement("tr");
         tbody.appendChild(row);

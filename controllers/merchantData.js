@@ -432,7 +432,7 @@ module.exports = {
                 let updateIngredient = merchant.inventory.find(i => i.ingredient.toString() === req.body.ingredientId);
                 updateIngredient.quantity = (updateIngredient.quantity + req.body.quantityChange).toFixed(2);
                 merchant.save()
-                    .then((merchant)=>{
+                    .then((newMerchant)=>{
                         res.json(req.body.quantityChange);
                     })
                     .catch((err)=>{
