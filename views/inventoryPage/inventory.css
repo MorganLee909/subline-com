@@ -83,6 +83,10 @@
     align-items: center;
 }
 
+    #accountStrand label{
+        display: flex;
+    }
+
 /* Add Ingredient Action */
 #addIngredientAction{
     flex-direction: column;

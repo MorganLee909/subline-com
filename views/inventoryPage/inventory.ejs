@@ -54,8 +54,15 @@
         </div>
 
         <div id="accountStrand" class="strand">
-            <h1>Account Strand</h1>
-            <form onsubmit="accountObj.submitForm()"></form>
+            <form onsubmit="accountObj.submitForm()">
+                <label>Name:&nbsp;&nbsp;
+                    <p><%=merchant.name%></p>
+                </label>
+
+                <label>Email:&nbsp;&nbsp;
+                    <p><%=merchant.email%></p>
+                </label>
+            </form>
         </div>
 
         <div id="addIngredientAction" class="action">
