@@ -433,7 +433,7 @@ module.exports = {
                 updateIngredient.quantity = (updateIngredient.quantity + req.body.quantityChange).toFixed(2);
                 merchant.save()
                     .then((newMerchant)=>{
-                        res.json(req.body.quantityChange);
+                        res.json({});
                     })
                     .catch((err)=>{
                         let errorMessage = "Error: your data could not be saved";

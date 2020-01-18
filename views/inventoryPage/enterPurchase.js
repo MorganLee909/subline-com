@@ -11,7 +11,7 @@ window.enterPurchaseObj = {
     },
 
     populateTable: function(){
-        let tbody = document.querySelector("#enterPurchaseStrand tbody");
+        let tbody = document.querySelector("#enterPurchaseAction tbody");
 
         while(tbody.children.length > 0){
             tbody.removeChild(tbody.firstChild);
@@ -38,7 +38,7 @@ window.enterPurchaseObj = {
     },
 
     submit: function(){
-        let tbody = document.querySelector("#enterPurchaseStrand tbody");
+        let tbody = document.querySelector("#enterPurchaseAction tbody");
 
         let purchases = [];
 

@@ -5,6 +5,10 @@ window.enterTransactionsObj = {
         clearScreen();
         document.querySelector("#enterTransactionsAction").style.display = "flex";
 
+        console.log(typeof(merchant.lastUpdatedTime));
+
+        document.querySelector("#updated").innerText = new Date(Number(merchant.lastUpdatedTime)).toDateString();
+
         if(!this.isPopulated){
             this.populateRecipes();
             this.isPopulated = true;
@@ -12,7 +16,7 @@ window.enterTransactionsObj = {
     },
 
     populateRecipes: function(){
-        let tbody = document.querySelector("#enterTransactionsStrand tbody");
+        let tbody = document.querySelector("#enterTransactionsAction tbody");
 
         for(let recipe of merchant.recipes){
             let row = document.createElement("tr");
@@ -35,7 +39,7 @@ window.enterTransactionsObj = {
     },
 
     submit: function(){
-        let tbody = document.querySelector("#enterTransactionsStrand tbody");
+        let tbody = document.querySelector("#enterTransactionsAction tbody");
 
         let recipes = [];
 
