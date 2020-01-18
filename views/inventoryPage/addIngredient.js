@@ -17,8 +17,7 @@ window.addIngredientObj = {
                 if(typeof(response.data) === "string"){
                     banner.createError(response.data);
                 }else{
-                    console.log("something");
-                    let select = document.querySelector("#addIngredientStrand select");
+                    let select = document.querySelector("#addIngredientAction select");
 
                     for(let ingredient of response.data){
                         let exists = false;
