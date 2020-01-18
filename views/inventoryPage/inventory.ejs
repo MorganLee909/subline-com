@@ -18,8 +18,6 @@
 
         <div id="inventoryStrand" class="strand">
             <div class="options">
-                <a class="button" href="/recipes">View Recipes</a>
-
                 <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
 
                 <button class="button" onclick="enterPurchaseObj.display()">Enter Purchases</button>
@@ -61,8 +59,6 @@
         </div>
 
         <div id="addIngredientAction" class="action">
-            <button class="button" onclick="inventoryObj.display()">Back to Inventory</button>
-
             <div class="container">
                 <form onsubmit="addIngredientObj.submitAdd()">
                     <h2>Select Ingredient</h2>
@@ -78,7 +74,7 @@
                     <input class="button" type="submit" value="Add Ingredient">
                 </form>
 
-                <form onsubmit="addIngredientObj.submitNew()">
+                <form id="createIngredientInput" onsubmit="addIngredientObj.submitNew()">
                     <h2>Create New Ingredient</h2>
 
                     <label>Name
@@ -97,7 +93,7 @@
                         <input id="newQuantity" type="number" step="0.01" required>
                     </label>
 
-                    <input class="button" type="submit" value="Create Ingredient">
+                    <button class="button">Create Ingredient</button>
                 </form>
             </div>
         </div>

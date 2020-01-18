@@ -90,6 +90,10 @@ window.addIngredientObj = {
 
                         inventoryObj.display();
                         inventoryObj.filter();
+
+                        for(let input of document.querySelectorAll("#createIngredientInput input")){
+                            input.value = "";
+                        }
                     }
                 })
                 .catch((err)=>{
