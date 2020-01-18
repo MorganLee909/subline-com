@@ -1,9 +1,9 @@
-let enterPurchaseObj = {
+window.enterPurchaseObj = {
     isPopulated: false,
 
     display: function(){
-        controller.clearScreen();
-        controller.enterPurchaseStrand.style.display = "flex";
+        clearScreen();
+        document.querySelector("#enterPurchaseAction").style.display = "flex";
 
         if(!this.isPopulated){
             this.populateTable();

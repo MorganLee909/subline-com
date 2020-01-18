@@ -9,7 +9,7 @@ body{
     color: rgb(0, 27, 45);
 }
 
-/* General components that should apply to all pages */
+/* General style that should apply to all pages */
 table{
     border-spacing: 0;
 }
@@ -110,6 +110,34 @@ form{
 
 .input-error{
     border-color: red;
+}
+
+.strand, .action{
+    display: none;
+}
+
+/* Components */
+strand-selector{
+    display: flex;
+    justify-content: center;
+}
+
+    strand-selector button{
+        margin: 10px;
+        background: none;
+        font-size: 25px;
+        font-weight: bold;
+        border: none;
+        transition: box-shadow 1s;
+        padding: 5px;
+    }
+
+        strand-selector button:hover{
+            box-shadow: 15px 15px 15px gray;
+        }
+
+.strand{
+    transition: width 1s linear;
 }
 
 /* Header partial */

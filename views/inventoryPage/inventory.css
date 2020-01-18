@@ -1,6 +1,5 @@
 /* Inventory Strand */
 #inventoryStrand{
-    display: flex;
     flex-direction: column;
     align-items: center;
 }
@@ -36,14 +35,19 @@
             max-height: 32px;
         }
 
-/* Add Ingredient Strand */
-#addIngredientStrand{
-    display: none;
+/* Account Strand */
+#accountStrand{
     flex-direction: column;
     align-items: center;
 }
 
-    #addIngredientStrand > *{
+/* Add Ingredient Action */
+#addIngredientAction{
+    flex-direction: column;
+    align-items: center;
+}
+
+    #addIngredientAction > *{
         margin: 25px;
     }
 
@@ -52,24 +56,22 @@
         justify-content: space-around;
     }
 
-/* Enter Transactions Strand */
-#enterTransactionsStrand{
-    display: none;
+/* Enter Transactions Action */
+#enterTransactionsAction{
     flex-direction: column;
     align-items: center;
 }
-    #enterTransactionsStrand > *{
+    #enterTransactionsAction > *{
         margin: 10px;
     }
 
-/* Enter Purchases Strand */
-#enterPurchaseStrand{
-    display: none;
+/* Enter Purchases Action */
+#enterPurchasesAction{
     flex-direction: column;
     align-items: center;
 }
 
-    #enterPurchaseStrand > *{
+    #enterPurchasesAction > *{
         margin: 10px;
     }
 
@@ -103,7 +105,7 @@
         flex-direction: column;
     }
 
-    #addIngredientStrand > *{
+    #addIngredientAction > *{
         margin: 10px;
     }
 }

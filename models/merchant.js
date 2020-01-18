@@ -28,6 +28,13 @@ const MerchantSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    accountStatus: {
+        status: {
+            type: String,
+            required: true
+        },
+        expiration: Date,
+    },
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,

@@ -1,11 +1,11 @@
-let inventoryObj = {
+window.inventoryObj = {
     items: [],
     currentSort: "",
     isPopulated: false,
 
     display: function(){
-        controller.clearScreen();
-        controller.inventoryStrand.style.display = "flex";
+        clearScreen();
+        document.querySelector("#inventoryStrand").style.display = "flex";
 
         if(!this.isPopulated){
             this.filter();

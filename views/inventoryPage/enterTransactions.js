@@ -1,9 +1,9 @@
-let enterTransactionsObj = {
+window.enterTransactionsObj = {
     isPopulated: false,
 
     display: function(){
-        controller.clearScreen();
-        controller.enterTransactionsStrand.style.display = "flex";
+        clearScreen();
+        document.querySelector("#enterTransactionsAction").style.display = "flex";
 
         if(!this.isPopulated){
             this.populateRecipes();

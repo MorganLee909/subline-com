@@ -1,9 +1,9 @@
-let addIngredientObj = {
+window.addIngredientObj = {
     isPopulated: false,
 
     display: function(){
-        controller.clearScreen();
-        controller.addIngredientStrand.style.display = "flex";
+        clearScreen();
+        document.querySelector("#addIngredientAction").style.display = "flex";
 
         if(!this.isPopulated){
             this.populateIngredients();
@@ -17,9 +17,9 @@ let addIngredientObj = {
                 if(typeof(response.data) === "string"){
                     banner.createError(response.data);
                 }else{
+                    console.log("something");
                     let select = document.querySelector("#addIngredientStrand select");
 
-                    
                     for(let ingredient of response.data){
                         let exists = false;
                         for(let merchIngredient of merchant.inventory){
