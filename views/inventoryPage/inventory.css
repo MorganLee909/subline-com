@@ -1,3 +1,8 @@
+#title{
+    text-align: center;
+    margin-top: 25px;
+}
+
 /* Inventory Strand */
 #inventoryStrand{
     flex-direction: column;
@@ -6,15 +11,6 @@
 
     #inventoryStrand > *{
         margin: 10px;
-    }
-
-    #inventoryStrand h1{
-        font-size: 40px;
-        margin: 40px;
-    }
-
-    #inventoryStrand span{
-        color: rgb(255, 99, 107);
     }
 
     #inventoryStrand th{
@@ -34,6 +30,50 @@
         #filter{
             max-height: 32px;
         }
+
+/* Recipes Strand */
+#recipesStrand{
+    flex-direction: column;
+    align-items: center;
+}
+
+    #recipesStrand > *{
+        margin: 15px;
+    }
+
+    #recipeUpdate{
+        margin-bottom: 10px;
+    }
+
+    #recipesContainer{
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 25px;
+    }
+
+        .recipe-card{
+            border: 2px solid rgb(255, 99, 107);
+            box-shadow: 2px 2px 2px rgb(0, 27, 45);
+            background: rgb(0, 27, 45);
+            color: rgb(255, 99, 107);
+            width: 20%;
+            min-width: 200px;
+            padding: 35px;
+            margin: 25px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+            .recipe-card:hover{
+                transform: translateY(-3px);
+            }
+
+            .empty-recipe{
+                background: rgb(255, 99, 107);
+                border: 2px solid rgb(0, 27, 45);
+                color: rgb(0, 27, 45);
+            }
 
 /* Account Strand */
 #accountStrand{
@@ -74,6 +114,42 @@
     #enterPurchasesAction > *{
         margin: 10px;
     }
+
+/* Single Recipe Action */
+#singleRecipeAction{
+    display: none;
+    flex-direction: column;
+    margin: auto;
+    align-items: center;
+}
+
+    #singleRecipeAction > *{
+        margin: 15px;
+    }
+
+    #delRecipe{
+        display: "none"
+    }
+
+    #recipeName{
+        margin-top: 0;
+    }
+
+@media screen and (max-width: 1000px){
+    /* General use */
+    body{
+        text-align: center;
+    }
+
+    /* Single Recipe Action */
+    #singleRecipeAction .buttonsDiv{
+        font-size: 15px;
+    }
+
+    #singleRecipeAction input{
+        max-width: 100px;
+    }
+}
 
 @media screen and (max-width: 600px){
     /* Inventory Strand */
