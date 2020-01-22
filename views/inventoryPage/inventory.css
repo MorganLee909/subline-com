@@ -87,6 +87,10 @@
         display: flex;
     }
 
+    #accountEdit{
+        display: none;
+    }
+
 /* Add Ingredient Action */
 #addIngredientAction{
     flex-direction: column;

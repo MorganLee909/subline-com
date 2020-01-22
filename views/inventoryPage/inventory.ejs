@@ -16,6 +16,7 @@
 
         <strand-selector></strand-selector>
 
+
         <div id="inventoryStrand" class="strand">
             <div class="options">
                 <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
@@ -43,6 +44,7 @@
             </table>
         </div>
 
+
         <div id="recipesStrand" class="strand">
             <div>
                 <% if(merchant.pos !== "none"){ %>
@@ -53,8 +55,9 @@
             <div id="recipesContainer"></div>
         </div>
 
+
         <div id="accountStrand" class="strand">
-            <form onsubmit="accountObj.submitForm()">
+            <form id="accountDisplay" onsubmit="accountObj.editAccount()">
                 <label>Name:&nbsp;&nbsp;
                     <p><%=merchant.name%></p>
                 </label>
@@ -62,8 +65,25 @@
                 <label>Email:&nbsp;&nbsp;
                     <p><%=merchant.email%></p>
                 </label>
+
+                <button class="button">Edit</button>
             </form>
+
+            <form id="accountEdit" onsubmit="accountObj.updateAccount()">
+                <label>Name:&nbsp;&nbsp;
+                    <input id="accountName" type="text" value="<%=merchant.name%>">
+                </label>
+
+                <label>Email:&nbsp;&nbsp;
+                    <input id="accountEmail" type="email" value="<%=merchant.email%>">
+                </label>
+
+                <button class="button">Save</button>
+            </form>
+
+            <button class="button" onclick="accountObj.passChangeDisplay()">Change password</button>
         </div>
+
 
         <div id="addIngredientAction" class="action">
             <div class="container">
@@ -105,6 +125,7 @@
             </div>
         </div>
 
+
         <div id="enterTransactionsAction" class="action">
             <h1>Enter all sales</h1>
             <h3>Last updated: <span id="updated"></span></h3>
@@ -122,6 +143,7 @@
             <button class="button" onclick="enterTransactionsObj.submit()">Submit</button>
         </div>
 
+
         <div id="enterPurchaseAction" class="action">
             <h1>Enter Purchases</h1>
             
@@ -137,6 +159,7 @@
 
             <button class="button" onclick="enterPurchaseObj.submit()">Submit</button>
         </div>
+
 
         <div id="singleRecipeAction" class="action">
             <h2 id="recipeName"></h2>
@@ -156,6 +179,7 @@
                 <tbody></tbody>
             </table>
         </div>
+
 
         <script>
                 <% if(locals.error){ %>

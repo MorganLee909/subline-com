@@ -251,7 +251,12 @@ module.exports = {
             name: data.name,
             email: data.email,
             password: hash,
-            pos: "none"
+            pos: "none",
+            accountStatus: {
+                status: "valid",
+                //working here
+            }
+
         });
 
         for(let item of data.inventory){

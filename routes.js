@@ -22,6 +22,7 @@ module.exports = function(app){
     app.post("/merchant/recipes/ingredients/create", merchantData.addRecipeIngredient);
     app.post("/merchant/recipes/ingredients/update", merchantData.updateRecipeIngredient);
     app.post("/merchant/recipes/ingredients/remove", merchantData.removeRecipeIngredient);
+    app.post("/merchant/update", merchantData.updateMerchant);
 
     //Ingredients
     app.get("/ingredients", ingredientData.getIngredients);
