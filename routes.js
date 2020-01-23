@@ -10,7 +10,7 @@ module.exports = function(app){
     app.get("/merchant/new/clover", renderer.merchantSetupClover);
     app.get("/merchant/new/none", renderer.merchantSetupNone);
     app.get("/recipes", renderer.displayRecipes);
-    app.get("/legal", renderer.informationPage);
+    app.get("/legal", renderer.displayLegal);
 
     //Merchant
     app.get("/merchant/recipes/update", merchantData.updateRecipes);
