@@ -203,6 +203,22 @@ strand-selector{
         color: white;
     }
 
+/* Footer Partial */
+.footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+    .footer > *{
+        margin: 5px;
+    }
+
+    .footer div > *{
+        margin: 0 25px;
+    }
+
 @media screen and (max-width: 600px){
     .button{
         font-size: 15px;
