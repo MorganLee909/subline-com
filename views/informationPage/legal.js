@@ -1,6 +1,6 @@
-let legalObj = {
+window.legalObj = {
     display: function(){
-        controller.clearScreen();
-        controller.legalStrand.style.display = "flex";
+        clearScreen();
+        document.querySelector("#legalStrand").style.display = "flex";
     }
 }

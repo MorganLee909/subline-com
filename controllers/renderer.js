@@ -251,6 +251,6 @@ module.exports = {
     //GET - Renders the information page
     //Renders information page
     displayLegal: function(req, res){
-        return res.render("legalPage/legal");
+        return res.render("informationPage/information");
     }
 }
