@@ -691,5 +691,9 @@ module.exports = {
 
                 return res.json(errorMessage);
             });
+    },
+
+    updateMerchant: function(req, res){
+        console.log("Something or other");
     }
 }

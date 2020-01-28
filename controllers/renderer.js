@@ -250,7 +250,7 @@ module.exports = {
 
     //GET - Renders the information page
     //Renders information page
-    informationPage: function(req, res){
+    legalPage: function(req, res){
         return res.render("informationPage/information");
     }
 }
