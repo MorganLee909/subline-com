@@ -91,6 +91,10 @@
         display: none;
     }
 
+    #passwordEdit{
+        display: none;
+    }
+
 /* Add Ingredient Action */
 #addIngredientAction{
     flex-direction: column;

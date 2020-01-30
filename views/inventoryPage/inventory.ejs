@@ -66,7 +66,7 @@
                     <p><%=merchant.email%></p>
                 </label>
 
-                <button class="button">Edit</button>
+                <button class="button" onclick="accountObj.editAccount()">Edit</button>
             </form>
 
             <form id="accountEdit" onsubmit="accountObj.updateAccount()">
@@ -78,10 +78,35 @@
                     <input id="accountEmail" type="email" value="<%=merchant.email%>">
                 </label>
 
-                <button class="button">Save</button>
+                <div class="buttonBox">
+                    <button class="button" onclick="accountObj.updateAccount()">Save</button>
+
+                    <button class="button" onclick="accountObj.editAccountCancel()">Cancel</button>
+                </div>
             </form>
 
-            <button class="button" onclick="accountObj.passChangeDisplay()">Change password</button>
+            <form id="passwordEdit" onsubmit="accountObj.updatePassword()">
+                <label>Old password:
+                    <input id="oldPass" type="password" required>
+                </label>
+
+                <label>New password:
+                    <input id="newPass" type="password" required>
+                </label>
+
+                <label>Confirm new password:
+                    <input id="confirmNewPass" type="password" required>
+                </label>
+
+
+                <div class="buttonBox">
+                    <input class="button" type="submit" value="Submit">
+
+                    <button class="button" onclick="accountObj.editPasswordCancel()">Cancel</button>
+                </div>
+            </form>
+
+            <button class="button" onclick="accountObj.editPassword()">Change password</button>
         </div>
 
 

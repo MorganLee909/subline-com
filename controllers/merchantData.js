@@ -693,7 +693,67 @@ module.exports = {
             });
     },
 
+    //POST - Update merchant information
+    //Inputs:
+    //  req.body.name: name update
+    //  req.body.email: email update
+    //Returns: Nothing
     updateMerchant: function(req, res){
-        console.log("Something or other");
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                merchant.name = req.body.name;
+                merchant.email = req.body.email;
+                merchant.save()
+                    .then((updatedMerchant)=>{
+                        return res.json({});
+                    })
+                    .catch((err)=>{
+                        return res.json("Error: unable to save merchant data");
+                    });
+            })
+            .catch((err)=>{
+                return res.json("Error: unable to retrieve merchant data");
+            });
+    },
+
+    //POST - Update merchant password
+    //Inputs:
+    //  req.body.oldPass:  current merchant password (supposedly)
+    //  req.body.newPass:  replacement password
+    //Returns: Nothing
+    updatePassword: function(req, res){
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                bcrypt.compare(req.body.oldPass, merchant.password, (err, result)=>{
+                    if(result){
+                        let salt = bcrypt.genSaltSync(10);
+                        let hash = bcrypt.hashSync(req.body.newPass, salt);
+
+                        merchant.password = hash;
+                        merchant.save()
+                            .then((updatedMerchant)=>{
+                                return res.json({});
+                            })
+                            .catch((err)=>{
+                                return res.json("Error: Unable to save new password");
+                            });
+                    }else{
+                        return res.json("Error: old password does not match current password");
+                    }
+                });
+            })
+            .catch((err)=>{
+                return res.json("Error: Unable to retrieve merchant data");
+            });
     }
 }

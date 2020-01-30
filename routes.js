@@ -23,6 +23,7 @@ module.exports = function(app){
     app.post("/merchant/recipes/ingredients/update", merchantData.updateRecipeIngredient);
     app.post("/merchant/recipes/ingredients/remove", merchantData.removeRecipeIngredient);
     app.post("/merchant/update", merchantData.updateMerchant);
+    app.post("/merchant/password", merchantData.updatePassword);
 
     //Ingredients
     app.get("/ingredients", ingredientData.getIngredients);

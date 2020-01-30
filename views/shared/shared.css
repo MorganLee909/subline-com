@@ -88,6 +88,11 @@ form{
     transition: 0.3s; 
 }
 
+.buttonBox{
+    display: flex;
+    justify-content: space-around;
+}
+
     .button-small:hover{
         background: rgb(0, 27, 45);
         color: rgb(240, 252, 255);
