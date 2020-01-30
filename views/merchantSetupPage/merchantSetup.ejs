@@ -45,15 +45,17 @@
             <h1>Choose the ingredients in your inventory</h1>
 
             <h5>(Can't find something?  You can create it in the next step)</h5>
+
+            <input id="filter" type="text" onkeyup="addIngredientsObj.filter()" placeholder="FILTER INGREDIENTS">
             
             <table id="ingredient-display">
                 <thead>
                     <tr>
                         <th>Add</th>
-                        <th>Ingredient</th>
-                        <th>Category</th>
+                        <th class="clickable" onclick="addIngredientsObj.sortIngredients('name')">Ingredient</th>
+                        <th class="clickable" onclick="addIngredientsObj.sortIngredients('category')">Category</th>
                         <th>Quantity</th>
-                        <th>Unit</th>
+                        <th class="clickable" onclick="addIngredientsObj.sortIngredients('unit')">Unit</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

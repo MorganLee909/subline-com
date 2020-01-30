@@ -197,6 +197,7 @@ module.exports = {
                 }else{
                     return res.json(true);
                 }
+                
             })
             .catch((err)=>{
                 let errorMessage = "Error: unable to validate email address";

@@ -50,6 +50,10 @@
         margin-top: 0;
     }
 
+    .clickable{
+        cursor: pointer;
+    }
+
 /* Create Ingredients Strand */
 #createIngredientsStrand{
     display: none;
