@@ -1,6 +1,5 @@
 const axios = require("axios");
 
-const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
@@ -83,26 +82,14 @@ module.exports = {
                                     return;
                                 })
                                 .catch((err)=>{
-                                    let errorMessage = "There was an error and your transactions could not be updated";
-                                    let error = new Error({
-                                        code: 547,
-                                        displayMessage: errorMessage,
-                                        error: err
-                                    });
-                                    error.save()
-
+                                    let errorMessage = "Error: unable to save user data";
+                                    
                                     merchant.password = undefined;
                                     return res.render("inventoryPage/inventory", {merchant: updatedMerchant, error: errorMessage});
                                 });
                         })
                         .catch((err)=>{
                             let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
-                            let error = new Error({
-                                code: 111,
-                                displayMessage: errorMessage,
-                                error: err
-                            });
-                            error.save()
 
                             merchant.password = undefined;
                             return res.render("inventoryPage/inventory", {merchant: merchant, error: errorMessage});
@@ -111,26 +98,14 @@ module.exports = {
                     merchant.password = undefined;
                     return res.render("inventoryPage/inventory", {merchant: merchant, error: undefined})
                 }else{
-                    req.session.error = "There was an error and your data could not be retrieved";
-                    let error = new Error({
-                        code: 626,
-                        displayMessage: req.session.error,
-                        error: "merchant.pos did not conform to expectations"
-                    });
-                    error.save();
-
+                    req.session.error = "Error: WEBSITE PANIC";
+                    
                     return res.redirect("/");
                 }
             })
             .catch((err)=>{
-                req.session.error = "There was an error and your data could not be retrieved";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: req.session.error,
-                    error: err
-                });
-                error.save();
-
+                req.session.error = "Error: could not retrieve user data";
+                
                 return res.redirect("/");
             });
     },
@@ -157,26 +132,14 @@ module.exports = {
                         return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data, error: errorMessage});
                     })
                     .catch((err)=>{
-                        req.session.error = "We were unable to retrieve your data from Clover"
-                        let error = new Error({
-                            code: 111,
-                            displayMessage: req.session.error,
-                            error: err
-                        });
-                        error.save();
-
+                        req.session.error = "Error: unable to retrieve data from Clover";
+                        
                         return res.redirect("/");
                     });
             })
             .catch((err)=>{
-                req.session.error = "Data for new merchants could not be retrieved";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: req.session.error,
-                    error: err
-                });
-                error.save();
-
+                req.session.error = "Error: data for new merchants could not be retrieved";
+                
                 return res.redirect("/");
             });
     },
@@ -201,13 +164,9 @@ module.exports = {
                 return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: null, error: errorMessage});
             })
             .catch((err)=>{
-                req.session.error = "Data for new merchants could not be retrieved";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: req.session.error,
-                    error: err
-                });
-                error.save();
+                req.session.error = "Error: data for new merchants could not be retrieved";
+
+                return res.redirect("/");
             });
     },
 
@@ -236,14 +195,8 @@ module.exports = {
                 return res.render("recipesPage/recipes", {merchant: merchant});
             })
             .catch((err)=>{
-                req.session.error = "There was an error and your data could not be retrieved";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: req.session.error,
-                    error: err
-                });
-                error.save();
-
+                req.session.error = "Error: unable to retrieve user data";
+            
                 return res.redirect("/");
             });
     },

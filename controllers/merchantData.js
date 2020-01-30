@@ -1,7 +1,6 @@
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
 
-const Error = require("../models/error");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
@@ -61,15 +60,7 @@ module.exports = {
 
                         Recipe.create(newRecipes)
                             .catch((err)=>{
-                                let errorMessage = "There was an error and your new recipes could not be saved";
-                                let error = new Error({
-                                    code: 547,
-                                    displayMessage: errorMessage,
-                                    error: err
-                                });
-                                error.save();
-
-                                return res.json(errorMessage);
+                                return res.json("Error: unable to create recipes");
                             });
 
                         merchant.save()
@@ -80,51 +71,19 @@ module.exports = {
                                         return res.json(newestMerchant);
                                     })
                                     .catch((err)=>{
-                                        let errorMessage = "Unable to retrieve recipe ingredients";
-                                        let error = new Error({
-                                            code: 626,
-                                            displayMessage: errorMessage,
-                                            error: err
-                                        });
-                                        error.save();
-
-                                        return res.json(errorMessage);
+                                        return res.json("Error: unable to retrieve user data");
                                     });
                             })
                             .catch((err)=>{
-                                let errorMessage = "Unable to save changes from Clover";
-                                let error = new Error({
-                                    code: 547,
-                                    displayMessage: errorMessage,
-                                    error: err
-                                });
-                                error.save();
-
-                                return res.json(errorMessage);
+                                return res.json("Error: unable to retrieve user data");
                             });
                     })
                     .catch((err)=>{
-                        let errorMessage = "Unable to retrieve data from Clover";
-                        let error = new Error({
-                            code: 111,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-
-                        return res.json(errorMessage);
+                        return res.json("Error: unable to retrieve data from Clover");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "Unable to retrieve merchant data";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to retrieve user data");
             });
     },
 
@@ -189,39 +148,21 @@ module.exports = {
                                 return res.redirect("/inventory");
                             })
                             .catch((err)=>{
-                                let errorMessage = "There was an error and your account could not be created";
-                                let error = new Error({
-                                    code: 547,
-                                    displayMessage: errorMessage,
-                                    error: err
-                                });
-                                error.save();
+                                req.session.error = "Error: your data could not be saved";
 
-                                return;
+                                return res.redirect("/");
                             });
                     })
                     .catch((err)=>{
-                        let errorMessage = "There was an error and your recipes could not be saved";
-                        let error = new Error({
-                            code: 547,
-                            displaymessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-
-                        return;
+                        req.session.error = "Error: your recipes could not be created";
+                        
+                        return res.redirect("/");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "Unable to retrieve your data from Clover";
-                let error = new Error({
-                    code: 111,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save()
+                req.session.error = "Error: Unable to retrieve your data from Clover";
 
-                return;
+                return res.redirect("/");
             });
     },
 
@@ -282,27 +223,15 @@ module.exports = {
                         return res.redirect("/inventory");
                     })
                     .catch((err)=>{
-                        let errorMessage = "There was an error and your account could not be created";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
+                        req.session.error = "Error: unable to save user data";
 
-                        return;
+                        return res.redirect("/");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "There was an error while trying to save your recipes";
-                let error = new Error({
-                    code: 547,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
+                req.session.error = "Error: unable to create recipes";
 
-                return;
+                return res.redirect("/");
             });
     },
 
@@ -331,15 +260,7 @@ module.exports = {
                     .then((newMerchant)=>{
                         newMerchant.populate("inventory.ingredient", (err)=>{
                             if(err){
-                                let errorMessage = "Ingredient updated, page refresh required to display";
-                                let error = new Error({
-                                    code: 626,
-                                    displayMessage: errorMessage,
-                                    error: err
-                                });
-                                error.save();
-
-                                return res.json(errorMessage);
+                                return res.json("Warning: refresh page to view updates");
                             }else{
                                 let newIngredient = newMerchant.inventory.find(i => i.ingredient._id.toString() === req.body.ingredient);
                                 return res.json(newIngredient);
@@ -347,29 +268,11 @@ module.exports = {
                         });
                     })
                     .catch((err)=>{
-                        let errorMessage = "Unable to save new ingredient";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-                        console.log(err);
-
-                        return res.json(errorMessage);
+                        return res.json("Error: unable to save new ingredient");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "Unable to retrieve merchant data";
-                let error = new Error({
-                    code: 547,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-                console.log("error2");
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to retrieve user data");
             });
     },
 
@@ -397,27 +300,11 @@ module.exports = {
                         return res.json(req.body);
                     })
                     .catch((err)=>{
-                        let errorMessage = "Unable to update ingredients";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-
-                        return res.json(errorMessage);
+                        return res.json("Error: unable to save user data");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "Unable to retrieve merchant data";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to retrieve user data");
             });
     },
 
@@ -441,27 +328,11 @@ module.exports = {
                         res.json({});
                     })
                     .catch((err)=>{
-                        let errorMessage = "Error: your data could not be saved";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-
-                        return res.json(errorMessage);
+                        return res.json("Error: your data could not be saved");
                     })
             })
             .catch((err)=>{
-                let errorMessage = "Error: your data could not be retrieved";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: your data could not be retrieved");
             });
 
         let invAdj = new InventoryAdjustment({
@@ -471,15 +342,7 @@ module.exports = {
             quantity: req.body.quantityChange
         });
 
-        invAdj.save()
-            .catch((err)=>{
-                let error = new Error({
-                    code: 547,
-                    displayMessage: "none",
-                    error: err
-                });
-                error.save();
-            });
+        invAdj.save().catch((err)=>{});
     },
 
     //POST - Adds an ingredient to a recipe
@@ -505,15 +368,7 @@ module.exports = {
                     .then((recipe)=>{
                         recipe.populate("ingredients.ingredient", (err)=>{
                             if(err){
-                                let errorMessage = "Error: could not retrieve ingredients.  Please refresh page to see changes";
-                                let error = new Error({
-                                    code: 626,
-                                    displayMessage: errorMessage,
-                                    error: err
-                                });
-                                error.save();
-
-                                return res.json(errorMessage);
+                                return res.json("Error: could not retrieve ingredients.  Please refresh page to see changes");
                             }
                             res.json(recipe);
 
@@ -522,41 +377,17 @@ module.exports = {
                                 ingredient: req.body.item.ingredient,
                                 change: req.body.item.quantity
                             });
-                            rc.save()
-                                .catch((err)=>{
-                                    let error = new Error({
-                                        code: 120,
-                                        displayMessage: "none",
-                                        error: err
-                                    });
-                                    error.save();
-                                });
+                            rc.save().catch((err)=>{});
 
                             return;
                         })
                     })
                     .catch((err)=>{
-                        let errorMessage = "There was an error and the recipe could not be updated";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-
-                        return res.json(errorMessage);
+                        return res.json("Error: unable to save recipe data");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "There was an error and the recipe could not be updated"
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to retrieve recipe data");
             });
     },
 
@@ -587,42 +418,18 @@ module.exports = {
                                     ingredient: ingredient.ingredient,
                                     change: change
                                 });
-                                rc.save()
-                                    .catch((err)=>{
-                                        let error = new Error({
-                                            code: 120,
-                                            errorMessage: "none",
-                                            error: err
-                                        });
-                                        error.save();
-                                    });
+                                rc.save().catch((err)=>{});
 
                                 return;
                             })
                             .catch((err)=>{
-                                let errorMessage = "There was an error and the recipe could not be updated";
-                                let error = new Error({
-                                    code: 547,
-                                    displayMessage: errorMessage,
-                                    error: err
-                                });
-                                error.save();
-                
-                                return res.json(errorMessage);
+                                return res.json("Error: Could not save recipe data");
                             });
                     }
                 }
             })
             .catch((err)=>{
-                let errorMessage = "There was an error and the recipe could not be updated";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to retrieve recipe data");
             });
     },
 
@@ -656,40 +463,16 @@ module.exports = {
                             ingredient: req.body.ingredientId,
                             change: -req.body.quantity
                         });
-                        rc.save()
-                            .catch((err)=>{
-                                let error = new Error({
-                                    code: 120,
-                                    displayMessage: "none",
-                                    error: err
-                                });
-                                error.save();
-                            });
+                        rc.save().catch((err)=>{});
 
                         return;
                     })
                     .catch((err)=>{
-                        let errorMessage = "There was an error and the ingredient could not be remove from the recipe";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-        
-                        return res.json(errorMessage);
+                        return res.json("Error: unable to save recipe data");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "There was an error and the ingredient could not be removed from the recipe";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to retrieve recipe data");
             });
     },
 

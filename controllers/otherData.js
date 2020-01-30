@@ -42,41 +42,18 @@ module.exports = {
                         res.json({});
                     })
                     .catch((err)=>{
-                        let errorMessage = "There was an error and your transactions could not be saved";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-
-                        return res.json(errorMessage);
+                        return res.json("Error: unable to save user data");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "There was an error and your data could not be retrieved";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to retrieve user data");
             });
 
         transaction.save()
             .then((transaction)=>{
                 return;
             })
-            .catch((err)=>{
-                let error = new Error({
-                    code: 120,
-                    displayMessage: "none",
-                    error: err
-                });
-                error.save();
-            });
+            .catch((err)=>{});
     },
 
     //POST - Creates a new purchase for a merchant
@@ -100,27 +77,11 @@ module.exports = {
                         res.json({});
                     })
                     .catch((err)=>{
-                        let errorMessage = "Error: Unable to save data";
-                        let error = new Error({
-                            code: 547,
-                            displayMessage: errorMessage,
-                            error: err
-                        });
-                        error.save();
-
-                        return res.json(errorMessage);
+                        return res.json("Error: Unable to save data");
                     });
             })
             .catch((err)=>{
-                let errorMessage = "Error: Unable to retrieve user data";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: Unable to retrieve user data");
             });
 
             let purchase = new Purchase({
@@ -128,16 +89,7 @@ module.exports = {
                 date: Date.now(),
                 ingredients: req.body
             });
-
-            purchase.save()
-                .catch((err)=>{
-                    let error = new Error({
-                        code: 120,
-                        displayMessage: "none",
-                        error: err
-                    });
-                    error.save();
-                });
+            purchase.save().catch((err)=>{});
     },
 
     //POST - logs the user in
@@ -165,12 +117,6 @@ module.exports = {
             })
             .catch((err)=>{
                 req.session.error = "There was an error and your data could not be retrieved";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: req.session.error,
-                    error: err
-                });
-                error.save();
 
                 return res.redirect("/");
             });
@@ -194,29 +140,21 @@ module.exports = {
             .then((merchant)=>{
                 if(merchant){
                     return res.json(false);
-                }else{
-                    return res.json(true);
                 }
-                
+
+                return res.json(true);
             })
             .catch((err)=>{
-                let errorMessage = "Error: unable to validate email address";
-                let error = new Error({
-                    code: 626,
-                    displayMessage: errorMessage,
-                    error: err
-                });
-                error.save();
-
-                return res.json(errorMessage);
+                return res.json("Error: unable to validate email address");
             });
     },
 
-    //Get - Redirects user to Clover OAuth page
+    //GET - Redirects user to Clover OAuth page
     clover: function(req, res){
         return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=${process.env.SUBLINE_CLOVER_URI}`);
     },
 
+    //GET - Get access token from clover and  redirect to mearchant creation
     cloverAuth: function(req, res){
         let dataArr = req.url.slice(req.url.indexOf("?") + 1).split("&");
         let authorizationCode = "";
