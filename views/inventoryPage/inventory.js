@@ -190,7 +190,7 @@ window.inventoryObj = {
                             }
                         }
 
-                        row.parentNode.removeChild(row);
+                        this.filter();
 
                         banner.createNotification("The ingredient has been removed from your inventory");
                     }
