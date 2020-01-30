@@ -80,10 +80,10 @@ window.inventoryObj = {
             if(item.ingredient.name.toLowerCase().includes(searchString)){
                 this.items.push({
                     id: item.ingredient._id,
-                    name: item.ingredient.name,
-                    category: item.ingredient.category,
+                    name: item.ingredient.name.toLowerCase(),
+                    category: item.ingredient.category.toLowerCase(),
                     quantity: item.quantity,
-                    unit: item.ingredient.unit
+                    unit: item.ingredient.unit.toLowerCase()
                 });
             }
         }

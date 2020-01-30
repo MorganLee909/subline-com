@@ -19,6 +19,10 @@
         cursor: pointer;
     }
 
+    #inventoryStrand tbody{
+        text-transform: capitalize;
+    }
+
     .options{
         display: flex;
         justify-content: space-between;
