@@ -55,6 +55,25 @@
             <div id="recipesContainer"></div>
         </div>
 
+        <div id="dataStrand" class="strand">
+            <!-- Ingredients used -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Amount used</th>
+                        <th>Amount remaining</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Recipes used -->
+
+            <!-- Purchases -->
+
+            <!-- Totals -->
+        </div>
 
         <div id="accountStrand" class="strand">
             <form id="accountDisplay" onsubmit="accountObj.editAccount()">
@@ -221,11 +240,26 @@
         <script src="../shared/validation.js"></script>
         <script src="/inventoryPage/inventory.js"></script>
         <script src="/inventoryPage/recipes.js"></script>
+        <script src="/inventoryPage/data.js"></script>
         <script src="/inventoryPage/account.js"></script>
         <script src="/inventoryPage/addIngredient.js"></script>
         <script src="/inventoryPage/enterTransactions.js"></script>
         <script src="/inventoryPage/enterPurchase.js"></script>
         <script src="/inventoryPage/singleRecipe.js"></script>
         <script src="/shared/controller.js"></script>
+
+        <script>
+            axios.get("/transactions")
+                .then((response)=>{
+                    if(typeof(response.data) === "string"){
+                        banner.createError(response.data);
+                    }else{
+                        dataObj.populate(response.data);
+                    }
+                })
+                .catch((err)=>{
+                    banner.createError("Error: unable to render sales data");
+                });
+        </script>
     </body>
 </html>

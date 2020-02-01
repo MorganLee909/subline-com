@@ -81,11 +81,25 @@
                 color: rgb(0, 27, 45);
             }
 
+/* Data Strand */
+#dataStrand{
+    flex-direction: column;
+    align-items: center;
+}
+
+    #dataStrand > *{
+        margin: 15px;
+    }
+
 /* Account Strand */
 #accountStrand{
     flex-direction: column;
     align-items: center;
 }
+
+    #accountStrand > *{
+        margin: 15px;
+    }
 
     #accountStrand label{
         display: flex;

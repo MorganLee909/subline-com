@@ -2,6 +2,7 @@ const renderer = require("./controllers/renderer");
 const merchantData = require("./controllers/merchantData");
 const ingredientData = require("./controllers/ingredientData");
 const otherData = require("./controllers/otherData");
+const transactionData = require("./controllers/transactionData");
 
 module.exports = function(app){
     //Render page
@@ -38,4 +39,7 @@ module.exports = function(app){
     app.post("/email", otherData.checkUniqueEmail);
     app.get("/cloverlogin", otherData.clover);
     app.get("/cloverauth*", otherData.cloverAuth);
+
+    //Transactions
+    app.get("/transactions", transactionData.getTransactions);
 }
