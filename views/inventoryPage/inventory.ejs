@@ -56,23 +56,56 @@
         </div>
 
         <div id="dataStrand" class="strand">
-            <!-- Ingredients used -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ingredient</th>
-                        <th>Amount used</th>
-                        <th>Amount remaining</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <h2 id="month"></h2>
+            <div class="tables">
+                <!-- Ingredients used -->
+                <div id="ingredientsData" class="dataTable">
+                    <h3>Ingredients</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Used</th>
+                                <th>Remaining</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
 
-            <!-- Recipes used -->
+                <!-- Recipes used -->
+                <div id="recipesData" class="dataTable">
+                    <h3>Recipes</h3>
 
-            <!-- Purchases -->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Recipe</th>
+                                <th># sold</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
 
-            <!-- Totals -->
+                <!-- Purchases -->
+                <div id="purchasesData" class="dataTable">
+                    <h3>Purchases</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Totals -->
+            </div>
         </div>
 
         <div id="accountStrand" class="strand">
@@ -260,6 +293,18 @@
                 .catch((err)=>{
                     banner.createError("Error: unable to render sales data");
                 });
+
+            axios.get("/purchases")
+                .then((response)=>{
+                    if(typeof(response.data) === "string"){
+                        banner.createError(response.data);
+                    }else{
+                        dataObj.populatePurchases(response.data);
+                    }
+                })
+                .catch((err)=>{
+                    banner.createError("Error: unable to render purchases data");
+                })
         </script>
     </body>
 </html>

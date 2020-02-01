@@ -1,4 +1,5 @@
 const Transaction = require("../models/transaction");
+const Purchase = require("../models/purchase");
 
 module.exports = {
     getTransactions: function(req, res){
@@ -18,6 +19,21 @@ module.exports = {
             .catch((err)=>{
                 return res.json("Error: could not retrieve sales data");
             });
+    },
+
+    getPurchases: function(req, res){
+        if(!req.session.user){
+            req.session.error = "You must be logged in to view that page";
+            return res.redirect("/");
+        }
+
+        Purchase.find({merchant: req.session.user})
+            .then((purchases)=>{
+                return res.json(purchases);
+            })
+            .catch((err)=>{
+                return res.json("Error: could not retrieve purchases data");
+            })
     }
 }
 

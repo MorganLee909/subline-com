@@ -42,4 +42,5 @@ module.exports = function(app){
 
     //Transactions
     app.get("/transactions", transactionData.getTransactions);
+    app.get("/purchases", transactionData.getPurchases);
 }
