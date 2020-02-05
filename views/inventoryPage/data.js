@@ -21,12 +21,19 @@ window.dataObj = {
             });
         }
 
+        console.log(transactions);
+
         //Populate number of recipes sold
+        let revenueTotal = 0;
+        let recipeTotal = 0;
         for(let transaction of transactions){
             for(let transactionRecipe of transaction.recipes){
                 for(let recipeCounter of recipes){
                     if(transactionRecipe === recipeCounter.id){
                         recipeCounter.quantity++;
+                        recipeTotal++;
+                        revenueTotal += (recipeCounter.price * recipeCounter.quantity);
+                        break;
                     }
                 }
             }
@@ -95,6 +102,10 @@ window.dataObj = {
             revenue.innerText = `$${recipe.quantity * recipe.price}`;
             row.appendChild(revenue);
         }
+
+        //Populate totals
+        document.querySelector("#revenueTotal").innerText = `$${revenueTotal.toFixed(2)}`;
+        document.querySelector("#soldTotal").innerText = recipeTotal;
     },
 
     populatePurchases: function(purchases){

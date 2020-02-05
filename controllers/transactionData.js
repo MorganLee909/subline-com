@@ -12,7 +12,7 @@ module.exports = {
         let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-        Transaction.find({merchant: req.session.user})
+        Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
             .then((transactions)=>{
                 return res.json(transactions);
             })

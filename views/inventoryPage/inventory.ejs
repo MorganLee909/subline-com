@@ -77,6 +77,11 @@
                 <div id="recipesData" class="dataTable">
                     <h3>Recipes</h3>
 
+                    <div>
+                        <p>Total Revenue: <span id="revenueTotal"></span></p>
+                        <p>Total sold: <span id="soldTotal"></span></p>
+                    </div>
+
                     <table>
                         <thead>
                             <tr>
@@ -103,8 +108,6 @@
                         <tbody></tbody>
                     </table>
                 </div>
-
-                <!-- Totals -->
             </div>
         </div>
 
@@ -291,6 +294,7 @@
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("Error: unable to render sales data");
                 });
 
@@ -303,6 +307,7 @@
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("Error: unable to render purchases data");
                 })
         </script>
