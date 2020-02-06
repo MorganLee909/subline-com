@@ -36,5 +36,3 @@ module.exports = {
             })
     }
 }
-
-// {merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}}

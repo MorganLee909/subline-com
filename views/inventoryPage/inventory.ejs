@@ -16,7 +16,6 @@
 
         <strand-selector></strand-selector>
 
-
         <div id="inventoryStrand" class="strand">
             <div class="options">
                 <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
@@ -44,7 +43,6 @@
             </table>
         </div>
 
-
         <div id="recipesStrand" class="strand">
             <div>
                 <% if(merchant.pos !== "none"){ %>
@@ -53,62 +51,6 @@
             </div>
 
             <div id="recipesContainer"></div>
-        </div>
-
-        <div id="dataStrand" class="strand">
-            <h2 id="month"></h2>
-            <div class="tables">
-                <!-- Ingredients used -->
-                <div id="ingredientsData" class="dataTable">
-                    <h3>Ingredients</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ingredient</th>
-                                <th>Used</th>
-                                <th>Remaining</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <!-- Recipes used -->
-                <div id="recipesData" class="dataTable">
-                    <h3>Recipes</h3>
-
-                    <div>
-                        <p>Total Revenue: <span id="revenueTotal"></span></p>
-                        <p>Total sold: <span id="soldTotal"></span></p>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Recipe</th>
-                                <th># sold</th>
-                                <th>Revenue</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <!-- Purchases -->
-                <div id="purchasesData" class="dataTable">
-                    <h3>Purchases</h3>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ingredient</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
         </div>
 
         <div id="accountStrand" class="strand">
@@ -269,47 +211,16 @@
                     let error = undefined;
                 <% } %>
         </script>
-        <script>
-            let merchant = <%- JSON.stringify(merchant) %>;
-        </script>
+        <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/inventoryPage/inventory.js"></script>
         <script src="/inventoryPage/recipes.js"></script>
-        <script src="/inventoryPage/data.js"></script>
         <script src="/inventoryPage/account.js"></script>
         <script src="/inventoryPage/addIngredient.js"></script>
         <script src="/inventoryPage/enterTransactions.js"></script>
         <script src="/inventoryPage/enterPurchase.js"></script>
         <script src="/inventoryPage/singleRecipe.js"></script>
         <script src="/shared/controller.js"></script>
-
-        <script>
-            axios.get("/transactions")
-                .then((response)=>{
-                    if(typeof(response.data) === "string"){
-                        banner.createError(response.data);
-                    }else{
-                        dataObj.populate(response.data);
-                    }
-                })
-                .catch((err)=>{
-                    console.log(err);
-                    banner.createError("Error: unable to render sales data");
-                });
-
-            axios.get("/purchases")
-                .then((response)=>{
-                    if(typeof(response.data) === "string"){
-                        banner.createError(response.data);
-                    }else{
-                        dataObj.populatePurchases(response.data);
-                    }
-                })
-                .catch((err)=>{
-                    console.log(err);
-                    banner.createError("Error: unable to render purchases data");
-                })
-        </script>
     </body>
 </html>

@@ -12,6 +12,7 @@ module.exports = function(app){
     app.get("/merchant/new/none", renderer.merchantSetupNone);
     app.get("/recipes", renderer.displayRecipes);
     app.get("/information", renderer.displayLegal);
+    app.get("/data", renderer.displayData);
 
     //Merchant
     app.get("/merchant/recipes/update", merchantData.updateRecipes);

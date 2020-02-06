@@ -4,7 +4,7 @@
         <h1>SUBLINE</h1>
     </a>
     
-    <% if(locals.merchant){ %>
+    <% if(locals.merchant || locals.data){ %>
         <a class="logout" href="/logout">Log out</a>
     <% } %>
 </div>

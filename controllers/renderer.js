@@ -3,6 +3,7 @@ const axios = require("axios");
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
+const Purchase = require("../models/purchase");
 
 module.exports = {
     //GET - Shows the public landing page
@@ -205,5 +206,58 @@ module.exports = {
     //Renders information page
     displayLegal: function(req, res){
         return res.render("informationPage/information");
+    },
+
+    displayData: function(req, res){
+        if(!req.session.user){
+            req.session.error = "You must be logged in to view that page";
+            return res.redirect("/");
+        }
+
+        let merchantPromise = new Promise((resolve, reject)=>{
+            Merchant.findOne({_id: req.session.user})
+                .populate("recipes")
+                .populate("inventory.ingredient")
+                .then((merchant)=>{
+                    resolve(merchant);
+                })
+                .catch((err)=>{});
+        });
+
+        let transactionPromise = new Promise((resolve, reject)=>{
+            let date = new Date();
+            let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
+                .then((transactions)=>{
+                    resolve(transactions);
+                })
+                .catch((err)=>{});
+        });
+
+        let purchasePromise = new Promise((resolve, reject)=>{
+            Purchase.find({merchant: req.session.user})
+                .then((purchases)=>{
+                    resolve(purchases);
+                })
+                .catch((err)=>{});
+        });
+
+        Promise.all([merchantPromise, transactionPromise, purchasePromise])
+            .then((response)=>{
+                let data = {
+                    merchant: response[0],
+                    transactions: response[1],
+                    purchases: response[2]
+                }
+
+                return res.render("dataPage/data", {data: data});
+            })
+            .catch((err)=>{
+                req.session.error = "Error: unable to retrieve user data";
+
+                return res.redirect("/");
+            });
     }
 }

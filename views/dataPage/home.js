@@ -1,17 +1,19 @@
-window.dataObj = {
+window.homeObj = {
     display: function(){
         clearScreen();
-        document.querySelector("#dataStrand").style.display = "flex";
+        document.querySelector("#homeStrand").style.display = "flex";
 
         //Fill in month
         let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         document.querySelector("#month").innerText = `Month of ${months[new Date().getMonth()]}`;
+
+        this.populate();
     },
 
-    populate: function(transactions){
+    populate: function(){
         //Create object to store number of recipes sold
         let recipes = [];
-        for(let recipe of merchant.recipes){
+        for(let recipe of data.merchant.recipes){
             recipes.push({
                 id: recipe._id,
                 name: recipe.name,
@@ -21,12 +23,33 @@ window.dataObj = {
             });
         }
 
-        console.log(transactions);
+        //Create object to store amount of ingredients sold
+        let soldIngredients = [];
+        for(let item of data.merchant.inventory){
+            soldIngredients.push({
+                id: item.ingredient._id,
+                name: item.ingredient.name,
+                quantity: 0,
+                quantityRemaining: item.quantity,
+                unit: item.ingredient.unit
+            });
+        }
 
+        //Create object for each merchant ingredient
+        let purchaseIngredients = [];
+        for(let item of data.merchant.inventory){
+            purchaseIngredients.push({
+                id: item.ingredient._id,
+                name: item.ingredient.name,
+                amount: 0,
+                unit: item.ingredient.unit
+            });
+        }
+        
         //Populate number of recipes sold
         let revenueTotal = 0;
         let recipeTotal = 0;
-        for(let transaction of transactions){
+        for(let transaction of data.transactions){
             for(let transactionRecipe of transaction.recipes){
                 for(let recipeCounter of recipes){
                     if(transactionRecipe === recipeCounter.id){
@@ -39,24 +62,24 @@ window.dataObj = {
             }
         }
 
-        //Create object to store amount of ingredients sold
-        let ingredients = [];
-        for(let item of merchant.inventory){
-            ingredients.push({
-                id: item.ingredient._id,
-                name: item.ingredient.name,
-                quantity: 0,
-                quantityRemaining: item.quantity,
-                unit: item.ingredient.unit
-            });
-        }
-
         //Populate amount of ingredients sold
         for(let recipe of recipes){
             for(let recipeIngredient of recipe.ingredients){
-                for(let newIngredient of ingredients){
+                for(let newIngredient of soldIngredients){
                     if(newIngredient.id === recipeIngredient.ingredient._id){
                         newIngredient.quantity += (recipeIngredient.quantity * recipe.quantity);
+                        break;
+                    }
+                }
+            }
+        }
+
+        //Populate amount of ingredients purchased
+        for(let purchase of data.purchases){
+            for(let newPurchaseIngredient of purchase.ingredients){
+                for(let newIngredient of purchaseIngredients){
+                    if(newIngredient.id === newPurchaseIngredient.ingredient){
+                        newIngredient.amount += newPurchaseIngredient.quantity;
                         break;
                     }
                 }
@@ -66,7 +89,7 @@ window.dataObj = {
         //Populate Ingredients table
         let ingredientsBody = document.querySelector("#ingredientsData tbody");
         
-        for(let ingredient of ingredients){
+        for(let ingredient of soldIngredients){
             let row = document.createElement("tr");
             ingredientsBody.appendChild(row);
 
@@ -103,40 +126,10 @@ window.dataObj = {
             row.appendChild(revenue);
         }
 
-        //Populate totals
-        document.querySelector("#revenueTotal").innerText = `$${revenueTotal.toFixed(2)}`;
-        document.querySelector("#soldTotal").innerText = recipeTotal;
-    },
-
-    populatePurchases: function(purchases){
-        //Create object for each merchant ingredient
-        let ingredients = [];
-
-        for(let item of merchant.inventory){
-            ingredients.push({
-                id: item.ingredient._id,
-                name: item.ingredient.name,
-                amount: 0,
-                unit: item.ingredient.unit
-            });
-        }
-
-        //Populate amount of ingredients purchased
-        for(let purchase of purchases){
-            for(let purchaseIngredient of purchase.ingredients){
-                for(let newIngredient of ingredients){
-                    if(newIngredient.id === purchaseIngredient.ingredient){
-                        newIngredient.amount += purchaseIngredient.quantity;
-                        break;
-                    }
-                }
-            }
-        }
-
         //Populate purchases table
         let purchasesBody = document.querySelector("#purchasesData tbody");
         
-        for(let ingredient of ingredients){
+        for(let ingredient of purchaseIngredients){
             let row = document.createElement("tr");
             purchasesBody.appendChild(row);
             
@@ -148,5 +141,9 @@ window.dataObj = {
             amount.innerText = ingredient.amount;
             row.appendChild(amount);
         }
+
+        //Populate totals
+        document.querySelector("#revenueTotal").innerText = `$${revenueTotal.toFixed(2)}`;
+        document.querySelector("#soldTotal").innerText = recipeTotal;
     }
 }

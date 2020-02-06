@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>The Subline</title>
+        <link rel="icon" type="img/png" href="/shared/images/logo.png">
+        <link rel="stylesheet" href="/shared/shared.css">
+        <link rel="stylesheet" href="/dataPage/data.css">
+    </head>
+    <body>
+        <% include ../shared/header %>
+
+        <% include ../shared/banner %>
+
+        <h1 id="title"><%=data.merchant.name%></h1>
+
+        <strand-selector></strand-selector>
+
+        <div id="homeStrand" class="strand">
+            <h2 id="month"></h2>
+            <div class="tables">
+                <!-- Ingredients used -->
+                <div id="ingredientsData" class="dataTable">
+                    <h3>Ingredients</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Used</th>
+                                <th>Remaining</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Recipes used -->
+                <div id="recipesData" class="dataTable">
+                    <h3>Recipes</h3>
+
+                    <div>
+                        <p>Total Revenue: <span id="revenueTotal"></span></p>
+                        <p>Total sold: <span id="soldTotal"></span></p>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Recipe</th>
+                                <th># sold</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Purchases -->
+                <div id="purchasesData" class="dataTable">
+                    <h3>Purchases</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script>let data = <%- JSON.stringify(data); %></script>
+        <script src="/dataPage/home.js"></script>
+        <script src="/shared/controller.js"></script>
+    </body>
+</html>

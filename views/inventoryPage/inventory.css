@@ -81,28 +81,6 @@
                 color: rgb(0, 27, 45);
             }
 
-/* Data Strand */
-#dataStrand{
-    flex-direction: column;
-    align-items: center;
-}
-
-    #dataStrand > *{
-        margin: 15px;
-    }
-
-    .tables{
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-    }
-
-    .dataTable{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
 /* Account Strand */
 #accountStrand{
     flex-direction: column;
