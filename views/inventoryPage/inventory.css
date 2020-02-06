@@ -23,19 +23,9 @@
         text-transform: capitalize;
     }
 
-    .options{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    #filter{
+        max-height: 32px;
     }
-
-        .options > *{
-            margin: 10px;
-        }
-
-        #filter{
-            max-height: 32px;
-        }
 
 /* Recipes Strand */
 #recipesStrand{

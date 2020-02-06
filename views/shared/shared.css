@@ -57,8 +57,19 @@ form{
         margin: 10px;
     }
 
+.buttonBox{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .buttonBox > *{
+        margin: 10px;
+    }
+
 .button{
     background: none;
+    font-family:'Saira',sans-serif;
     border: 5px solid rgb(255, 99, 107);
     text-decoration: none;
     border-radius: 10px;

@@ -17,7 +17,7 @@
         <strand-selector></strand-selector>
 
         <div id="inventoryStrand" class="strand">
-            <div class="options">
+            <div class="buttonBox">
                 <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
 
                 <button class="button" onclick="enterPurchaseObj.display()">Enter Purchases</button>
@@ -25,6 +25,8 @@
                 <% if(merchant.pos === "none"){ %>
                     <button class="button" onclick="enterTransactionsObj.display()">Enter Transactions</button>
                 <% } %>
+
+                <a class="button" href="/data">Analyze data</a>
             </div>
 
             <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="FILTER INGREDIENTS">
