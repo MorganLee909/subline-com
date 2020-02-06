@@ -52,7 +52,9 @@ window.homeObj = {
         for(let transaction of data.transactions){
             for(let transactionRecipe of transaction.recipes){
                 for(let recipeCounter of recipes){
+                    console.log("recipecounter");
                     if(transactionRecipe === recipeCounter.id){
+                        console.log(transactionRecipe);
                         recipeCounter.quantity++;
                         recipeTotal++;
                         revenueTotal += (recipeCounter.price * recipeCounter.quantity);
@@ -66,7 +68,7 @@ window.homeObj = {
         for(let recipe of recipes){
             for(let recipeIngredient of recipe.ingredients){
                 for(let newIngredient of soldIngredients){
-                    if(newIngredient.id === recipeIngredient.ingredient._id){
+                    if(newIngredient.id === recipeIngredient.ingredient){
                         newIngredient.quantity += (recipeIngredient.quantity * recipe.quantity);
                         break;
                     }

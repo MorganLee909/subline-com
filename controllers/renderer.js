@@ -4,6 +4,7 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
 const Purchase = require("../models/purchase");
+const NonPosTransaction = require("../models/nonPosTransaction");
 
 module.exports = {
     //GET - Shows the public landing page
@@ -214,24 +215,29 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let merchantPromise = new Promise((resolve, reject)=>{
+        let merchTransPromise = new Promise((resolve, reject)=>{
             Merchant.findOne({_id: req.session.user})
                 .populate("recipes")
                 .populate("inventory.ingredient")
                 .then((merchant)=>{
-                    resolve(merchant);
-                })
-                .catch((err)=>{});
-        });
+                    let date = new Date();
+                    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                    let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-        let transactionPromise = new Promise((resolve, reject)=>{
-            let date = new Date();
-            let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-            let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-            Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
-                .then((transactions)=>{
-                    resolve(transactions);
+                    if(merchant.pos === "clover"){
+                        Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
+                            .then((transactions)=>{
+                                resolve({merchant: merchant, transactions: transactions});
+                            })
+                            .catch((err)=>{});
+                    }else{
+                        NonPosTransaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
+                        
+                            .then((transactions)=>{
+                                resolve({merchant: merchant, transactions: transactions});
+                            })
+                            .catch((err)=>{});
+                    }
                 })
                 .catch((err)=>{});
         });
@@ -244,12 +250,12 @@ module.exports = {
                 .catch((err)=>{});
         });
 
-        Promise.all([merchantPromise, transactionPromise, purchasePromise])
+        Promise.all([merchTransPromise, purchasePromise])
             .then((response)=>{
                 let data = {
-                    merchant: response[0],
-                    transactions: response[1],
-                    purchases: response[2]
+                    merchant: response[0].merchant,
+                    transactions: response[0].transactions,
+                    purchases: response[1]
                 }
 
                 return res.render("dataPage/data", {data: data});
