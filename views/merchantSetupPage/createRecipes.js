@@ -103,7 +103,7 @@ let createRecipesObj = {
         let tbody = document.querySelector("#createRecipesStrand tbody");
         controller.data.recipes[this.recipeIndex].ingredients = [];
         if(!recipes){
-            controller.data.recipes[this.recipeIndex].price = document.querySelector("#price").value;
+            controller.data.recipes[this.recipeIndex].price = Math.floor(document.querySelector("#price").value * 100);
         }
         let isValid = true;
         
