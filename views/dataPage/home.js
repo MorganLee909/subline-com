@@ -1,4 +1,7 @@
 window.homeObj = {
+    recipeTotal: 0,
+    revenueTotal: 0,
+
     display: function(){
         clearScreen();
         document.querySelector("#homeStrand").style.display = "flex";
@@ -47,22 +50,7 @@ window.homeObj = {
         }
         
         //Populate number of recipes sold
-        let revenueTotal = 0;
-        let recipeTotal = 0;
-        for(let transaction of data.transactions){
-            for(let transactionRecipe of transaction.recipes){
-                for(let recipeCounter of recipes){
-                    console.log("recipecounter");
-                    if(transactionRecipe === recipeCounter.id){
-                        console.log(transactionRecipe);
-                        recipeCounter.quantity++;
-                        recipeTotal++;
-                        revenueTotal += (recipeCounter.price * recipeCounter.quantity);
-                        break;
-                    }
-                }
-            }
-        }
+        this.populateRecipesObject(recipes);
 
         //Populate amount of ingredients sold
         for(let recipe of recipes){
@@ -145,7 +133,37 @@ window.homeObj = {
         }
 
         //Populate totals
-        document.querySelector("#revenueTotal").innerText = `$${revenueTotal.toFixed(2)}`;
-        document.querySelector("#soldTotal").innerText = recipeTotal;
+        document.querySelector("#revenueTotal").innerText = `$${this.revenueTotal.toFixed(2)}`;
+        document.querySelector("#soldTotal").innerText = this.recipeTotal;
+    },
+
+    populateRecipesObject: function(recipes){
+        if(data.merchant.pos === "clover"){
+            for(let transaction of data.transactions){
+                for(let transactionRecipe of transaction.recipes){
+                    for(let recipeCounter of recipes){
+                        if(transactionRecipe === recipeCounter.id){
+                            recipeCounter.quantity++;
+                            this.recipeTotal++;
+                            this.revenueTotal += recipeCounter.price;
+                            break;
+                        }
+                    }
+                }
+            }
+        }else{
+            for(let transaction of data.transactions){
+                for(let recipe of transaction.recipes){
+                    for(let newRecipe of recipes){
+                        if(recipe.recipe === newRecipe.id){
+                            newRecipe.quantity += recipe.quantity;
+                            this.recipeTotal += recipe.quantity;
+                            this.revenueTotal += (newRecipe.price * recipe.quantity);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

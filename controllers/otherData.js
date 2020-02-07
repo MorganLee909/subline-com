@@ -16,13 +16,19 @@ module.exports = {
             res.session.error = "Must be logged in to do that";
             return res.redirect("/");
         }
-        
+
         let transaction = new NonPosTransaction({
             date: Date.now(),
-            author: "None",
             merchant: req.session.user,
-            recipes: req.body
+            recipes: []
         });
+
+        for(let recipe of req.body){
+            transaction.recipes.push({
+                recipe: recipe.id,
+                quantity: recipe.quantity
+            });
+        }
 
         //Calculate all ingredients used, store to list
         Merchant.findOne({_id: req.session.user})
