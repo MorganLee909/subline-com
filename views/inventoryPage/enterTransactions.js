@@ -49,14 +49,13 @@ window.enterTransactionsObj = {
                     id: row._id,
                     quantity: quantity
                 }
-                console.log(recipe.id);
                 recipes.push(recipe);
             }else if(quantity < 0){
                 banner.createError("Cannot have negative quantities");
-                break;
+                return;
             }
         }
-        console.log(recipes);
+
         axios.post("/transactions/create", recipes)
             .then((response)=>{
                 if(typeof(response.data) === "string"){
