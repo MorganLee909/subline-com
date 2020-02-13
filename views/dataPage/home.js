@@ -112,7 +112,7 @@ window.homeObj = {
             row.appendChild(quantity);
 
             let revenue = document.createElement("td");
-            revenue.innerText = `$${recipe.quantity * recipe.price}`;
+            revenue.innerText = `$${(recipe.quantity * recipe.price).toFixed(2)}`;
             row.appendChild(revenue);
         }
 
