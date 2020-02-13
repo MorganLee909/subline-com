@@ -86,7 +86,10 @@
 
         <% include ../shared/footer %>
 
-        <script>let error = <%- JSON.stringify(error) %>;</script>
+        <script>
+            let error = <%- JSON.stringify(error) %>;
+            let isLoggedIn = <%- JSON.stringify(isLoggedIn) %>;
+        </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
         <script src="/landingPage/public.js"></script>

@@ -13,6 +13,7 @@ module.exports = {
     //Renders landingPage
     landingPage: function(req, res){
         let error = {};
+        let isLoggedIn = req.session.isLoggedIn || false;
         if(req.session.error){
             error = req.session.error;
             req.session.error = undefined;
@@ -20,7 +21,7 @@ module.exports = {
             error = null;
         }
 
-        return res.render("landingPage/landing", {error: error});
+        return res.render("landingPage/landing", {error: error, isLoggedIn: isLoggedIn});
     },
 
     //GET - Displays the main inventory page for merchants

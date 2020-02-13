@@ -1,5 +1,5 @@
 let loginObj = {
-    display: function(){
+    display: function(username){
         controller.clearScreen();
         controller.loginStrand.style.display = "flex";
     },

@@ -154,12 +154,32 @@ module.exports = {
             });
     },
 
+    clover: async function(req, res){
+        if(req.url.includes("?")){
+            let urlArgs = req.url.slice(req.url.indexOf("?") + 1).split("&");
+            for(let str of urlArgs){
+                if(str.slice(0, str.indexOf("=")) === "merchant_id"){
+                    let mId = str.slice(str.indexOf("=") + 1);
+                    let merchant = await Merchant.findOne({posId: mId});
+                    if(merchant){
+                        req.session.isLoggedIn = true;
+                        return res.redirect("/");
+                    }else{
+                        return res.redirect("/cloverlogin");
+                    }
+                }
+            }
+        }
+
+        return res.redirect("/");
+    },
+
     //GET - Redirects user to Clover OAuth page
-    clover: function(req, res){
+    cloverRedirect: function(req, res){
         return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=${process.env.SUBLINE_CLOVER_URI}`);
     },
 
-    //GET - Get access token from clover and  redirect to mearchant creation
+    //GET - Get access token from clover and  redirect to merchant creation
     cloverAuth: function(req, res){
         let dataArr = req.url.slice(req.url.indexOf("?") + 1).split("&");
         let authorizationCode = "";

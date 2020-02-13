@@ -38,7 +38,8 @@ module.exports = function(app){
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
     app.post("/email", otherData.checkUniqueEmail);
-    app.get("/cloverlogin", otherData.clover);
+    app.get("/clover", otherData.clover);
+    app.get("/cloverlogin", otherData.cloverRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
 
     //Transactions
