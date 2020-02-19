@@ -73,20 +73,24 @@ window.recipesObj = {
         document.querySelector("#newRecipe").style.display = "block";
     },
 
-    cancel: function(){
-        document.querySelector("#newRecipe input").value = "";
+    cancelAdd: function(){
+        document.querySelector("#newName").value = "";
+        document.querySelector("#newPrice").value = 0;
         document.querySelector("#newRecipe").style.display = "none";
     },
 
     submitNew: function(){
         let inputDiv = document.querySelector("#newRecipe");
-        let input = document.querySelector("#newRecipe input");
+        let nameInput = document.querySelector("#newName");
+        let priceInput = document.querySelector("#newPrice");
 
         let data = {
-            name: input.value
+            name: nameInput.value,
+            price: priceInput.value
         };
 
-        input.value = "";
+        nameInput.value = "";
+        priceInput.value = 0;
         inputDiv.style.display = "none";
 
         axios.post("/recipe/create", data)

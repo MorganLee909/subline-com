@@ -55,7 +55,13 @@
             </div>
 
             <div id="newRecipe">
-                <input type="text">
+                <label>Name:
+                    <input id="newName" type="text">
+                </label>
+
+                <label>Price:
+                    <input id="newPrice" type="number" step="0.01">
+                </label>
 
                 <button class="button-small" onclick="window.recipesObj.submitNew()">Create</button>
 

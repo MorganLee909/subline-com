@@ -15,6 +15,7 @@ module.exports = {
         let recipe = new Recipe({
             merchant: req.session.user,
             name: req.body.name,
+            price: Math.round(req.body.price * 100),
             ingredients: []
         });
 
