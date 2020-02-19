@@ -15,21 +15,6 @@ module.exports = {
             });
     },
 
-    //POST - creates new ingredients from a list
-    //Inputs:
-    //  req.body: list of ingredients (name, category, unit)
-    //Returns:
-    //  ingredients: list containing the newly created ingredients
-    createNewIngredients: function(req, res){
-        Ingredient.create(req.body)
-            .then((ingredients)=>{
-                return res.json(ingredients);
-            })
-            .catch((err)=>{
-                return res.json("Error: new ingredients could not be created");
-            });
-    },
-
     //TODO - Redirect to merchantData.js rather than adding here
     //POST - create a single ingredient and then add to the merchant
     //Inputs: 

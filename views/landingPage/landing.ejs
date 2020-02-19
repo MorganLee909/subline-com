@@ -17,7 +17,7 @@
                 <div class="public-buttons">
                     <button class="button" onclick="loginObj.display()">Log In</button>
 
-                    <button class="button" onclick="posChoiceObj.display()">Join</button>
+                    <button class="button" onclick="registerObj.display()">Join</button>
                 </div>
 
                 <div class="logo-text">
@@ -69,6 +69,29 @@
             </form>
         </div>
 
+        <div id="registerStrand" onsubmit="registerObj.submit()">
+            <form>
+                <label>Restaurant Name:
+                    <input id="regName" type="text">
+                </label>
+
+                <label>Email:
+                    <input id="regEmail" type="email">
+                </label>
+
+                <label>Password:
+                    <input id="regPass" type="password">
+                </label>
+
+                <label>Confirm Password:
+                    <input id="regConfirmPass" type="password">
+                </label>
+
+                <input type="submit" value="Register">
+            </form>
+        </div>
+        
+
         <div id="posChoiceStrand">
             <h1>Choose your POS System</h1>
 
@@ -94,7 +117,7 @@
         <script src="../shared/validation.js"></script>
         <script src="/landingPage/public.js"></script>
         <script src="/landingPage/login.js"></script>
-        <script src="/landingPage/posChoice.js"></script>
+        <script src="/landingPage/register.js"></script>
         <script src="/landingPage/controller.js"></script>
     </body>
 </html>

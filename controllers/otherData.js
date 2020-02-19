@@ -135,25 +135,6 @@ module.exports = {
         return res.redirect("/");
     },
 
-    //POST - check an email for uniqueness
-    //Inputs:
-    //  req.body.email: email to check
-    //Returns:
-    //  Boolean
-    checkUniqueEmail: function(req, res){
-        Merchant.findOne({email: req.body.email})
-            .then((merchant)=>{
-                if(merchant){
-                    return res.json(false);
-                }
-
-                return res.json(true);
-            })
-            .catch((err)=>{
-                return res.json("Error: unable to validate email address");
-            });
-    },
-
     clover: async function(req, res){
         if(req.url.includes("?")){
             let urlArgs = req.url.slice(req.url.indexOf("?") + 1).split("&");
