@@ -176,7 +176,7 @@ module.exports = {
         axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
             .then((response)=>{
                 req.session.accessToken = response.data.access_token;
-                return res.redirect("/merchant/new/clover");
+                return res.redirect("/merchant/create/clover");
             })
             .catch((err)=>{
                 req.session.error = "Error: Unable to retrieve data from Clover";

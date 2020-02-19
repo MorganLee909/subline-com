@@ -51,6 +51,42 @@ module.exports = {
         }
     },
 
+    //POST - Creates a Clover merchant from all entered data
+    //Inputs:
+    //  req.body.data: All data from frontend in form of merchant model
+    //Redirect to "/inventory"
+    createMerchantClover: async function(req, res){
+        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
+            .then((response)=>{
+                let merchant = new Merchant({
+                    name: response.data.name,
+                    pos: "clover",
+                    posAccessToken: req.session.accessToken,
+                    lastUpdatedTime: Date.now(),
+                    createdAt: Date.now(),
+                    inventory: [],
+                    recipes: []
+                });
+
+                merchant.save()
+                    .then((newMerchant)=>{
+                        req.session.user = newMerchant._id;
+                        
+                        return res.redirect("/inventory");
+                    })
+                    .catch((err)=>{
+                        req.session.error = "Error: unable to save data from Clover";
+
+                        return res.redirect("/");
+                    });
+            })
+            .catch((err)=>{
+                req.session.error = "Error: Unable to retrieve data from Clover";
+
+                return res.redirect("/");
+            });
+    },
+
     //GET - Checks clover for new or deleted recipes
     //Returns: 
     //  merchant: Full merchant (recipe ingredients populated)

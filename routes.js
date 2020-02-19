@@ -8,14 +8,15 @@ module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
     app.get("/inventory", renderer.displayInventory);
-    app.get("/merchant/new/clover", renderer.merchantSetupClover);
-    app.get("/merchant/new/none", renderer.merchantSetupNone);
+    // app.get("/merchant/new/clover", renderer.merchantSetupClover);
+    // app.get("/merchant/new/none", renderer.merchantSetupNone);
     app.get("/recipes", renderer.displayRecipes);
     app.get("/information", renderer.displayLegal);
     app.get("/data", renderer.displayData);
 
     //Merchant
     app.post("/merchant/create/none", merchantData.createMerchantNone);
+    app.get("/merchant/create/clover", merchantData.createMerchantClover);
     app.get("/merchant/recipes/update", merchantData.updateRecipes);
     app.post("/merchant/ingredients/create", merchantData.addMerchantIngredient);
     app.post("/merchant/ingredients/remove", merchantData.removeMerchantIngredient);

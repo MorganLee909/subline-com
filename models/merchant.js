@@ -5,13 +5,9 @@ const MerchantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        required: true
-    },
+    email: String,
     password: {
         type: String,
-        required: true,
         minlength: [15, "Password must contain at least 15 characters"]
     },
     pos: {
