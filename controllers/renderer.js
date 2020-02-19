@@ -46,7 +46,7 @@ module.exports = {
             })
             .then((merchant)=>{
                 if(merchant.pos === "clover"){
-                    axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
+                    axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
                         .then((result)=>{
                             let transactions = [];
                             for(let order of result.data.elements){
@@ -131,7 +131,7 @@ module.exports = {
         
         Ingredient.find()
             .then((ingredients)=>{
-                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
+                axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
                     .then((recipes)=>{
                         return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data, error: errorMessage});
                     })
