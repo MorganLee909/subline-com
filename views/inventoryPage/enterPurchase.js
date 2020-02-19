@@ -77,7 +77,6 @@ window.enterPurchaseObj = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("Something went wrong and changes could not be made");
             });
     }

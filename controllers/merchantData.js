@@ -56,7 +56,7 @@ module.exports = {
     //  req.body.data: All data from frontend in form of merchant model
     //Redirect to "/inventory"
     createMerchantClover: async function(req, res){
-        axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
+        axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
             .then((response)=>{
                 let merchant = new Merchant({
                     name: response.data.name,
@@ -71,7 +71,7 @@ module.exports = {
                 merchant.save()
                     .then((newMerchant)=>{
                         req.session.user = newMerchant._id;
-                        
+
                         return res.redirect("/inventory");
                     })
                     .catch((err)=>{
@@ -100,7 +100,7 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .populate("recipes")
             .then((merchant)=>{
-                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/items?access_token=${token}`)
+                axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/items?access_token=${token}`)
                     .then((result)=>{
                         let deletedRecipes = merchant.recipes.slice();
                         for(let i = 0; i < result.data.elements.length; i++){
