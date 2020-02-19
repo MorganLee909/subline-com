@@ -1,3 +1,4 @@
+/* Public Strand */
 #publicStrand{
     display: flex;
     flex-direction: column;
@@ -78,6 +79,7 @@
             color: rgb(255, 99, 107);
         }
 
+/* Login Strand */
 #loginStrand{
     display: none;
     align-items: center;
@@ -103,6 +105,12 @@
         #loginStrand form > *{
             margin: 10px 0;
         }
+
+/* Register Strand */
+#registerStrand{
+    display: none;
+    justify-content: space-around;
+}
 
 @media screen and (max-width: 600px){
     .logo-text img{

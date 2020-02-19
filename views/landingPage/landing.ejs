@@ -69,26 +69,30 @@
             </form>
         </div>
 
-        <div id="registerStrand" onsubmit="registerObj.submit()">
-            <form>
+        <div id="registerStrand">
+            <form action="/merchant/create/none" method="post">
                 <label>Restaurant Name:
-                    <input id="regName" type="text">
+                    <input name="name" type="text">
                 </label>
 
                 <label>Email:
-                    <input id="regEmail" type="email">
+                    <input name="email" type="email">
                 </label>
 
                 <label>Password:
-                    <input id="regPass" type="password">
+                    <input name="password" type="password">
                 </label>
 
                 <label>Confirm Password:
-                    <input id="regConfirmPass" type="password">
+                    <input name="confirmPassword" type="password">
                 </label>
 
                 <input type="submit" value="Register">
             </form>
+
+            <button onclick="registerObj.submitClover()">Register with Clover</button>
+
+            <button onclick="registerObj.cancel">Cancel</button>
         </div>
         
 

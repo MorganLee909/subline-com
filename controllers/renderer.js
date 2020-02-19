@@ -99,7 +99,8 @@ module.exports = {
                         });
                 }else if(merchant.pos === "none"){
                     merchant.password = undefined;
-                    return res.render("inventoryPage/inventory", {merchant: merchant, error: undefined})
+                    console.log(merchant);
+                    return res.render("inventoryPage/inventory", {merchant: merchant, error: undefined});
                 }else{
                     req.session.error = "Error: WEBSITE PANIC";
                     

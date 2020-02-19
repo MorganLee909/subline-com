@@ -9,6 +9,48 @@ const RecipeChange = require("../models/recipeChange");
 const token = "b48068eb-411a-918e-ea64-52007147e42c";
 
 module.exports = {
+    //POST - Create a new merchant with no POS system
+    //Inputs:
+    //  req.body.name: restaurant name
+    //  req.body.email: registration email
+    //  req.body.password: password
+    //  req.body.confirmPassword: confirmation password
+    //Redirects to /inventory
+    createMerchantNone: function(req, res){
+        if(req.body.password === req.body.confirmPassword){
+            var salt = bcrypt.genSaltSync(10);
+            var hash = bcrypt.hashSync(req.body.password, salt);
+
+            let merchant = new Merchant({
+                name: req.body.name,
+                email: req.body.email.toLowerCase(),
+                password: hash,
+                pos: "none",
+                lastUpdatedTime: Date.now(),
+                createdAt: Date.now(),
+                accountStatus: "valid",
+                inventory: [],
+                recipes: []
+            });
+
+            merchant.save()
+                .then((merchant)=>{
+                    req.session.user = merchant._id;
+
+                    return res.redirect("/inventory");
+                })
+                .catch((err)=>{
+                    req.session.error = "Error: Unable to create account at this time";
+
+                    return res.redirect("/");
+                });
+        }else{
+            req.session.error = "Error: Passwords must match";
+
+            return res.redirect("/");
+        }
+    },
+
     //GET - Checks clover for new or deleted recipes
     //Returns: 
     //  merchant: Full merchant (recipe ingredients populated)
