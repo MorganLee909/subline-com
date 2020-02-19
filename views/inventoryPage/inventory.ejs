@@ -47,11 +47,21 @@
 
         <div id="recipesStrand" class="strand">
             <div>
-                <% if(merchant.pos !== "none"){ %>
+                <% if(merchant.pos === "none"){ %>
+                    <button class="button" onclick="window.recipesObj.showInput()">Add a Recipe</button>
+                <% }else{%>
                     <button class="button" id="recipeUpdate" onclick="recipesObj.updateRecipes()">Update Recipes</button>
                 <% } %>
             </div>
 
+            <div id="newRecipe">
+                <input type="text">
+
+                <button class="button-small" onclick="window.recipesObj.submitNew()">Create</button>
+
+                <button class="button-small" onclick="window.recipesObj.cancelAdd()">Cancel</button>
+            </div>
+            
             <div id="recipesContainer"></div>
         </div>
 

@@ -67,5 +67,40 @@ window.recipesObj = {
             .catch((err)=>{
                 banner.createError("There was an error and your recipes could not be updated");
             });
+    },
+
+    showInput: function(){
+        document.querySelector("#newRecipe").style.display = "block";
+    },
+
+    cancel: function(){
+        document.querySelector("#newRecipe input").value = "";
+        document.querySelector("#newRecipe").style.display = "none";
+    },
+
+    submitNew: function(){
+        let inputDiv = document.querySelector("#newRecipe");
+        let input = document.querySelector("#newRecipe input");
+
+        let data = {
+            name: input.value
+        };
+
+        input.value = "";
+        inputDiv.style.display = "none";
+
+        axios.post("/recipe/create", data)
+            .then((response)=>{
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    merchant.recipes.push(response.data);
+
+                    this.populateRecipes();
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Error: Unable to display new data");
+            });
     }
 }

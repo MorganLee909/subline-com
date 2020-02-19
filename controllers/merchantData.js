@@ -6,8 +6,6 @@ const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 const RecipeChange = require("../models/recipeChange");
 
-const token = "b48068eb-411a-918e-ea64-52007147e42c";
-
 module.exports = {
     //POST - Create a new merchant with no POS system
     //Inputs:

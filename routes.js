@@ -3,6 +3,7 @@ const merchantData = require("./controllers/merchantData");
 const ingredientData = require("./controllers/ingredientData");
 const otherData = require("./controllers/otherData");
 const transactionData = require("./controllers/transactionData");
+const recipeData = require("./controllers/recipeData");
 
 module.exports = function(app){
     //Render page
@@ -28,6 +29,9 @@ module.exports = function(app){
     //Ingredients
     app.get("/ingredients", ingredientData.getIngredients);
     app.post("/ingredients/createone", ingredientData.createIngredient);  //also adds to merchant
+
+    //Recipes
+    app.post("/recipe/create", recipeData.createRecipe);
 
     //Other
     app.post("/transactions/create", otherData.createTransaction);  //Creates transaction for non-pos merchant

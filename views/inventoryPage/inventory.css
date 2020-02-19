@@ -41,6 +41,11 @@
         margin-bottom: 10px;
     }
 
+    #newRecipe{
+        display: none;
+        justify-content: center;
+    }
+
     #recipesContainer{
         display: flex;
         justify-content: space-around;
