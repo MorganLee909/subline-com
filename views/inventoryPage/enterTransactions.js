@@ -56,26 +56,28 @@ window.enterTransactionsObj = {
             }
         }
 
-        axios.post("/transactions/create", recipes)
-            .then((response)=>{
-                if(typeof(response.data) === "string"){
-                    banner.createError(response.data);
-                }else{
-                    for(let recipe of recipes){
-                        let merchRecipe = merchant.recipes.find(r => r._id === recipe.id);
-                        for(let recipeIngredient of merchRecipe.ingredients){
-                            let merchInvIngredient = merchant.inventory.find(i => i.ingredient._id === recipeIngredient.ingredient._id);
-                            merchInvIngredient.quantity -= recipeIngredient.quantity * recipe.quantity;
+        if(recipes.length > 0){
+            axios.post("/transactions/create", recipes)
+                .then((response)=>{
+                    if(typeof(response.data) === "string"){
+                        banner.createError(response.data);
+                    }else{
+                        for(let recipe of recipes){
+                            let merchRecipe = merchant.recipes.find(r => r._id === recipe.id);
+                            for(let recipeIngredient of merchRecipe.ingredients){
+                                let merchInvIngredient = merchant.inventory.find(i => i.ingredient._id === recipeIngredient.ingredient._id);
+                                merchInvIngredient.quantity -= recipeIngredient.quantity * recipe.quantity;
+                            }
                         }
-                    }
 
-                    inventoryObj.isPopulated = false;
-                    inventoryObj.display();
-                    banner.createNotification("Your sales have been logged");
-                }
-            })
-            .catch((err)=>{
-                banner.createError("Something went wrong and your sales could not be logged");
-            });
+                        inventoryObj.isPopulated = false;
+                        inventoryObj.display();
+                        banner.createNotification("Your sales have been logged");
+                    }
+                })
+                .catch((err)=>{
+                    banner.createError("Something went wrong and your sales could not be logged");
+                });
+        }
     }
 }

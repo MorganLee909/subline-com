@@ -6,61 +6,6 @@ const Merchant = require("../models/merchant");
 const Purchase = require("../models/purchase");
 
 module.exports = {
-    //POST - Update non-pos merchant inventory and create a transaction
-    //Inputs:
-    //  recipesSold: list of recipes sold and how much (recipe._id and quantity)
-    //Returns:
-    //  merchant.inventory: entire merchant inventory after being updated
-    createTransaction: function(req, res){
-        if(!req.session.user){
-            res.session.error = "Must be logged in to do that";
-            return res.redirect("/");
-        }
-
-        let transaction = new NonPosTransaction({
-            date: Date.now(),
-            merchant: req.session.user,
-            recipes: []
-        });
-
-        for(let recipe of req.body){
-            transaction.recipes.push({
-                recipe: recipe.id,
-                quantity: recipe.quantity
-            });
-        }
-
-        //Calculate all ingredients used, store to list
-        Merchant.findOne({_id: req.session.user})
-            .populate("recipes")
-            .then((merchant)=>{
-                for(let reqRecipe of req.body){
-                    let merchRecipe = merchant.recipes.find(r => r._id.toString() === reqRecipe.id);
-                    for(let recipeIngredient of merchRecipe.ingredients){
-                        let merchInvIngredient = merchant.inventory.find(i => i.ingredient.toString() === recipeIngredient.ingredient.toString());
-                        merchInvIngredient.quantity -= recipeIngredient.quantity * reqRecipe.quantity;
-                    }
-                }
-
-                merchant.save()
-                    .then((merchant)=>{
-                        res.json({});
-                    })
-                    .catch((err)=>{
-                        return res.json("Error: unable to save user data");
-                    });
-            })
-            .catch((err)=>{
-                return res.json("Error: unable to retrieve user data");
-            });
-
-        transaction.save()
-            .then((transaction)=>{
-                return;
-            })
-            .catch((err)=>{});
-    },
-
     //POST - Creates a new purchase for a merchant
     //Inputs:
     //  req.body: list of purchases (ingredient id and quantity)

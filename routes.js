@@ -34,7 +34,7 @@ module.exports = function(app){
     app.post("/recipe/create", recipeData.createRecipe);
 
     //Other
-    app.post("/transactions/create", otherData.createTransaction);  //Creates transaction for non-pos merchant
+    
     app.post("/purchases/create", otherData.createPurchase);
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
@@ -45,4 +45,5 @@ module.exports = function(app){
     //Transactions
     app.get("/transactions", transactionData.getTransactions);
     app.get("/purchases", transactionData.getPurchases);
+    app.post("/transactions/create", transactionData.createTransaction);  //Creates transaction for non-pos merchant
 }
