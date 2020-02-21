@@ -59,7 +59,25 @@ module.exports = {
                                 for(let item of order.lineItems.elements){
                                     let recipe = merchant.recipes.find(r => r.posId === item.item.id);
                                     if(recipe){
-                                        newTransaction.recipes.push(recipe._id);
+                                        //Search and increment/add instead of just push
+                                        // newTransaction.recipes.push(recipe._id);
+                                        let isNewRecipe = true;
+                                        for(let newRecipe of newTransaction.recipes){
+                                            if(newRecipe.recipe === recipe._id){
+                                                newRecipe.quantity++;
+                                                isNewRecipe = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if(isNewRecipe){
+                                            newTransaction.recipes.push({
+                                                recipe: recipe._id,
+                                                quantity: 1
+                                            });
+                                        }
+
+                                        //End modifications
                                         for(let ingredient of recipe.ingredients){
                                             let inventoryIngredient = {};
                                             for(let invItem of merchant.inventory){

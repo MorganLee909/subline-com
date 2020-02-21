@@ -12,8 +12,14 @@ const TransactionSchema = new mongoose.Schema({
     },
     device: String,
     recipes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Recipe"
+        recipe: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Recipe"
+        },
+        quantity: {
+            type: Number,
+            min: [0, "Must be a positive number"]
+        }
     }]
 });
 
