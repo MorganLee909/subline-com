@@ -4,7 +4,6 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
 const Purchase = require("../models/purchase");
-const NonPosTransaction = require("../models/nonPosTransaction");
 
 module.exports = {
     //GET - Shows the public landing page
@@ -243,20 +242,11 @@ module.exports = {
                     let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
                     let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-                    if(merchant.pos === "clover"){
-                        Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
-                            .then((transactions)=>{
-                                resolve({merchant: merchant, transactions: transactions});
-                            })
-                            .catch((err)=>{});
-                    }else{
-                        NonPosTransaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
-                        
-                            .then((transactions)=>{
-                                resolve({merchant: merchant, transactions: transactions});
-                            })
-                            .catch((err)=>{});
-                    }
+                    Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
+                        .then((transactions)=>{
+                            resolve({merchant: merchant, transactions: transactions});
+                        })
+                        .catch((err)=>{});
                 })
                 .catch((err)=>{});
         });
