@@ -70,24 +70,30 @@
         </div>
 
         <div id="registerStrand">
-            <form action="/merchant/create/none" method="post">
+            <form action="/merchant/create/none" method="post" onsubmit="registerObj.submit()">
                 <label>Restaurant Name:
-                    <input name="name" type="text">
+                    <input id="restName" name="name" type="text" required>
                 </label>
 
                 <label>Email:
-                    <input name="email" type="email">
+                    <input name="email" type="email" required>
                 </label>
 
                 <label>Password:
-                    <input name="password" type="password">
+                    <input name="password" type="password" required>
                 </label>
 
                 <label>Confirm Password:
-                    <input name="confirmPassword" type="password">
+                    <input name="confirmPassword" type="password" required>
                 </label>
 
-                <input class="button" type="submit" value="Register">
+                <div id="agreement">
+                    <input id="checkAgree" type="checkbox" onchange="registerObj.agreement()">
+
+                    <p>I agree to the <a href="/information">Privacy Policy</a> and the <a href="/information">Terms and Conditions</a></p>
+                </div>
+
+                <input id="regButton" class="buttonDisabled" type="submit" value="Register">
             </form>
 
             <a class="button" href="/cloverlogin">Register with Clover</a>
