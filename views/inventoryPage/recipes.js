@@ -100,6 +100,7 @@ window.recipesObj = {
                 }else{
                     merchant.recipes.push(response.data);
 
+                    window.enterTransactionsObj.isPopulated = false;
                     this.populateRecipes();
                 }
             })

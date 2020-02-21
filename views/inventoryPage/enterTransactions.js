@@ -16,6 +16,10 @@ window.enterTransactionsObj = {
     populateRecipes: function(){
         let tbody = document.querySelector("#enterTransactionsAction tbody");
 
+        while(tbody.children.length > 0){
+            tbody.removeChild(tbody.firstChild);
+        }
+
         for(let recipe of merchant.recipes){
             let row = document.createElement("tr");
             row._id = recipe._id;
