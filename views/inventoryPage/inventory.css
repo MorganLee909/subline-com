@@ -124,6 +124,10 @@
             align-items: center;
         }
 
+            .container > div > *{
+                margin: 10px;
+            }
+
 /* Enter Transactions Action */
 #enterTransactionsAction{
     flex-direction: column;
