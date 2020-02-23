@@ -34,10 +34,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th onclick="inventoryObj.sortIngredients('name')">Item</th>
-                        <th onclick="inventoryObj.sortIngredients('category')">Category</th>
-                        <th onclick="inventoryObj.sortIngredients('quantity')">Quantity</th>
-                        <th onclick="inventoryObj.sortIngredients('unit')">Unit</th>
+                        <th class="cursor" onclick="inventoryObj.sortIngredients('name')">Item</th>
+                        <th class="cursor" onclick="inventoryObj.sortIngredients('category')">Category</th>
+                        <th class="cursor" onclick="inventoryObj.sortIngredients('quantity')">Quantity</th>
+                        <th class="cursor" onclick="inventoryObj.sortIngredients('unit')">Unit</th>
                         <th>Actions</th>
                     </tr>
                     <tbody></tbody>
@@ -130,13 +130,15 @@
                 <div>
                     <h2>Choose Ingredients</h2>
 
+                    <input id="addFilter" type="text" placeholder="FILTER INGREDIENTS" onkeyup="window.addIngredientObj.filter()">
+
                     <table>
                         <thead>
                             <tr>
                                 <th>Add</th>
-                                <th>Ingredient</th>
-                                <th>Category</th>
-                                <th>Unit</th>
+                                <th class="cursor" onclick="window.addIngredientObj.sort(1)">Ingredient</th>
+                                <th class="cursor" onclick="window.addIngredientObj.sort(2)">Category</th>
+                                <th class="cursor" onclick="window.addIngredientObj.sort(3)">Unit</th>
                                 <th>Quantity</th>
                             </tr>
                         </thead>

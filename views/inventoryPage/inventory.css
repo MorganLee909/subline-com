@@ -5,6 +5,10 @@
     margin-top: 25px;
 }
 
+.cursor{
+    cursor: pointer;
+}
+
 /* Inventory Strand */
 #inventoryStrand{
     flex-direction: column;
@@ -13,10 +17,6 @@
 
     #inventoryStrand > *{
         margin: 10px;
-    }
-
-    #inventoryStrand th{
-        cursor: pointer;
     }
 
     #inventoryStrand tbody{

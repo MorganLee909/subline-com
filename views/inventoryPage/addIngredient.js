@@ -1,24 +1,21 @@
 window.addIngredientObj = {
     isPopulated: false,
     rows: [],
+    currentSort: 0,
 
     display: function(){
         clearScreen();
         document.querySelector("#addIngredientAction").style.display = "flex";
 
         if(!this.isPopulated){
-            this.populateIngredients();
+            this.filter();
             this.isPopulated = true;
         }
     },
 
-    populateIngredients: function(){
-        let tbody = document.querySelector("#addIngredientAction tbody");
-
-        while(tbody.children.length > 0){
-            tbody.removeChild(tbody.firstChild);
-        }
-
+    filter: function(){
+        this.rows = [];
+        
         axios.get("/ingredients")
             .then((response)=>{
                 if(typeof(response.data) === "string"){
@@ -33,11 +30,12 @@ window.addIngredientObj = {
                             }
                         }
 
-                        if(!exists){
+                        let searchStr = document.querySelector("#addFilter").value;
+
+                        if(!exists && ingredient.name.includes(searchStr)){
                             let row = document.createElement("tr");
                             row._id = ingredient._id;
                             this.rows.push(row);
-                            tbody.appendChild(row);
 
                             let checkbox = document.createElement("td");
                             row.appendChild(checkbox);
@@ -68,12 +66,38 @@ window.addIngredientObj = {
                             quantity.appendChild(quantityInput);
                         }
                     }
+
+                    this.displayIngredients();
                 }
             })
             .catch((err)=>{
                 banner.createError("Error: Could not retrieve ingredients");
                 inventoryObj.display();
             });
+    },
+
+    displayIngredients: function(){
+        let tbody = document.querySelector("#addIngredientAction tbody");
+
+        while(tbody.children.length > 0){
+            tbody.removeChild(tbody.firstChild);
+        }
+
+        for(let row of this.rows){
+            tbody.appendChild(row);
+        }
+    },
+
+    sort: function(child){
+        if(this.currentSort === child){
+            this.rows.sort((a, b) => (a.children[child].innerText > b.children[child].innerText) ? -1 : 1);
+            this.currentSort = 0;
+        }else{
+            this.rows.sort((a, b) => (a.children[child].innerText > b.children[child].innerText) ? 1 : -1);
+            this.currentSort = child;
+        }
+
+        this.displayIngredients();
     },
 
     submitAdd: function(){
