@@ -13,13 +13,17 @@ window.addIngredientObj = {
     },
 
     populateIngredients: function(){
+        let tbody = document.querySelector("#addIngredientAction tbody");
+
+        while(tbody.children.length > 0){
+            tbody.removeChild(tbody.firstChild);
+        }
+
         axios.get("/ingredients")
             .then((response)=>{
                 if(typeof(response.data) === "string"){
                     banner.createError(response.data);
                 }else{
-                    let tbody = document.querySelector("#addIngredientAction tbody");
-
                     for(let ingredient of response.data){
                         let exists = false;
                         for(let merchIngredient of merchant.inventory){
@@ -81,8 +85,8 @@ window.addIngredientObj = {
             if(row.children[0].children[0].checked){
                 let quantity = row.children[4].children[0].value;
                 if(validator.ingredient.quantity(quantity)){
-                    addList.append({
-                        ingredient: row._id,
+                    addList.push({
+                        id: row._id,
                         quantity: quantity
                     });
                 }else{
@@ -93,9 +97,15 @@ window.addIngredientObj = {
 
         axios.post("/merchant/ingredients/create", addList)
             .then((response)=>{
-                banner.createNotification("All ingredients successfully added");
-                this.isPopulated = false;
-                window.inventoryObj.display();
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    banner.createNotification("All ingredients successfully added");
+                    merchant.inventory = response.data;
+                    this.isPopulated = false;
+                    window.inventoryObj.isPopulated = false;
+                    window.inventoryObj.display();
+                }
             })
             .catch((err)=>{
                 banner.createError("Error: Something went wrong.  Try refreshing the page");

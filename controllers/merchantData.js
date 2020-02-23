@@ -165,10 +165,9 @@ module.exports = {
 
     //POST - Adds an ingredient to merchant's inventory
     //Inputs:
-    //  req.body.ingredient: ingredient id
-    //  req.body.quantity: quantity for the ingredient
+    //  req.body: array of objects containing ingredient id and quantity
     //Returns:
-    //  ingredient: Newly added ingredient
+    //  entire inventory of merchant
     addMerchantIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -177,21 +176,26 @@ module.exports = {
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
-                for(let item of merchant.inventory){
-                    if(item.ingredient.toString() === req.body.ingredient){
-                        return res.json("Ingredient is already in your inventory");
+                for(let ingredient of req.body){
+                    for(let item of merchant.inventory){
+                        if(item.ingredient.toString() === ingredient.id){
+                            return res.json("Error: Duplicate ingredient detected");
+                        }
                     }
+                    
+                    merchant.inventory.push({
+                        ingredient: ingredient.id,
+                        quantity: ingredient.quantity
+                    });
                 }
 
-                merchant.inventory.push(req.body);
                 merchant.save()
                     .then((newMerchant)=>{
                         newMerchant.populate("inventory.ingredient", (err)=>{
                             if(err){
                                 return res.json("Warning: refresh page to view updates");
                             }else{
-                                let newIngredient = newMerchant.inventory.find(i => i.ingredient._id.toString() === req.body.ingredient);
-                                return res.json(newIngredient);
+                                return res.json(newMerchant.inventory);
                             }
                         });
                     })
