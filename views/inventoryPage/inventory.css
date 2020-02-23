@@ -111,7 +111,18 @@
     .container{
         display: flex;
         justify-content: space-around;
+        align-items: center;
     }
+
+        .container > *{
+            margin: 50px;
+        }
+
+        .container > div{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
 /* Enter Transactions Action */
 #enterTransactionsAction{

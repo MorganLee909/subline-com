@@ -1,5 +1,6 @@
 window.addIngredientObj = {
     isPopulated: false,
+    rows: [],
 
     display: function(){
         clearScreen();
@@ -17,7 +18,7 @@ window.addIngredientObj = {
                 if(typeof(response.data) === "string"){
                     banner.createError(response.data);
                 }else{
-                    let select = document.querySelector("#addIngredientAction select");
+                    let tbody = document.querySelector("#addIngredientAction tbody");
 
                     for(let ingredient of response.data){
                         let exists = false;
@@ -29,10 +30,38 @@ window.addIngredientObj = {
                         }
 
                         if(!exists){
-                            let option = document.createElement("option");
-                            option.value = ingredient._id;
-                            option.innerText = `${ingredient.name} (${ingredient.unit})`;
-                            select.appendChild(option);
+                            let row = document.createElement("tr");
+                            row._id = ingredient._id;
+                            this.rows.push(row);
+                            tbody.appendChild(row);
+
+                            let checkbox = document.createElement("td");
+                            row.appendChild(checkbox);
+
+                            let checkboxInput = document.createElement("input");
+                            checkboxInput.type = "checkbox";
+                            checkbox.appendChild(checkboxInput);
+
+                            let name = document.createElement("td");
+                            name.innerText = ingredient.name;
+                            row.appendChild(name);
+
+                            let category = document.createElement("td");
+                            category.innerText = ingredient.category;
+                            row.appendChild(category);
+
+                            let unit = document.createElement("td");
+                            unit.innerText = ingredient.unit;
+                            row.appendChild(unit);
+
+                            let quantity = document.createElement("td");
+                            row.appendChild(quantity);
+
+                            let quantityInput = document.createElement("input");
+                            quantityInput.type = "number";
+                            quantityInput.step = "0.01";
+                            quantityInput.min = "0";
+                            quantity.appendChild(quantityInput);
                         }
                     }
                 }
@@ -46,27 +75,31 @@ window.addIngredientObj = {
     submitAdd: function(){
         event.preventDefault();
 
-        let item = {
-            ingredient: document.querySelector("#addName").value,
-            quantity: document.querySelector("#addQuantity").value
+        let addList = [];
+
+        for(let row of this.rows){
+            if(row.children[0].children[0].checked){
+                let quantity = row.children[4].children[0].value;
+                if(validator.ingredient.quantity(quantity)){
+                    addList.append({
+                        ingredient: row._id,
+                        quantity: quantity
+                    });
+                }else{
+                    break;
+                }
+            }
         }
 
-        if(validator.ingredient.quantity(item.quantity)){
-            axios.post("/merchant/ingredients/create", item)
-                .then((ingredient)=>{
-                    if(typeof(ingredient.data) === "string"){
-                        banner.createError(ingredient.data);
-                    }else{
-                        merchant.inventory.push(ingredient.data);
-
-                        inventoryObj.display();
-                        inventoryObj.filter();
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("Error: Unable to add ingredient");
-                });
-        }
+        axios.post("/merchant/ingredients/create", addList)
+            .then((response)=>{
+                banner.createNotification("All ingredients successfully added");
+                this.isPopulated = false;
+                window.inventoryObj.display();
+            })
+            .catch((err)=>{
+                banner.createError("Error: Something went wrong.  Try refreshing the page");
+            });
     },
 
     submitNew: function(){

@@ -34,7 +34,6 @@ module.exports = function(app){
     app.post("/recipe/create", recipeData.createRecipe);
 
     //Other
-    
     app.post("/purchases/create", otherData.createPurchase);
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);

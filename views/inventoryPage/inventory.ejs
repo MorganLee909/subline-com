@@ -127,19 +127,26 @@
 
         <div id="addIngredientAction" class="action">
             <div class="container">
-                <form onsubmit="addIngredientObj.submitAdd()">
-                    <h2>Select Ingredient</h2>
+                <div>
+                    <h2>Choose Ingredients</h2>
 
-                    <label>Ingredient
-                        <select id="addName"></select>
-                    </label>
-                    
-                    <label>Quantity
-                        <input id="addQuantity" type="number" step="0.01" required>
-                    </label>
-                    
-                    <input class="button" type="submit" value="Add Ingredient">
-                </form>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Add</th>
+                                <th>Ingredient</th>
+                                <th>Category</th>
+                                <th>Unit</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <button class="button" onclick="addIngredientObj.submitAdd()">Submit</button>
+                </div>
+
+                <h1>Or</h1>
 
                 <form id="createIngredientInput" onsubmit="addIngredientObj.submitNew()">
                     <h2>Create New Ingredient</h2>
