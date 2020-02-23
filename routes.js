@@ -17,6 +17,7 @@ module.exports = function(app){
     app.post("/merchant/create/none", merchantData.createMerchantNone);
     app.get("/merchant/create/clover", merchantData.createMerchantClover);
     app.get("/merchant/recipes/update", merchantData.updateRecipes);
+    app.post("/merchant/recipes/remove", merchantData.removeRecipe);
     app.post("/merchant/ingredients/create", merchantData.addMerchantIngredient);
     app.post("/merchant/ingredients/remove", merchantData.removeMerchantIngredient);
     app.post("/merchant/ingredients/update", merchantData.updateMerchantIngredient);

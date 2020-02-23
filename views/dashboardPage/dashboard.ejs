@@ -213,8 +213,11 @@
         <div id="singleRecipeAction" class="action">
             <h2 id="recipeName"></h2>
 
-            <div class="buttonsDiv">
+            <div class="buttonBox">
                 <button class="button" id="addButton">Add Ingredient</button>
+                <% if(merchant.pos === "none"){ %>
+                    <button class="button" id="removeButton">Remove</button>
+                <% } %>
             </div>
 
             <table>

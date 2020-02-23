@@ -163,6 +163,41 @@ module.exports = {
             });
     },
 
+    //POST - removes a single recipe
+    //Inputs:
+    // req.body: the id of the recipe to be removed
+    removeRecipe: function(req, res){
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                if(merchant.pos === "clover"){
+                    return res.json("Error: you must edit your recipes inside Clover");
+                }
+                
+                for(let i = 0; i < merchant.recipes.length; i++){
+                    if(merchant.recipes[i].toString() === req.body.id){
+                        merchant.recipes.splice(i, 1);
+                        break;
+                    }
+                }
+
+                merchant.save()
+                    .then((updatedMerchant)=>{
+                        return res.json({});
+                    })
+                    .catch((err)=>{
+                        return res.json("Error: unable to save data")
+                    })
+            })
+            .catch((err)=>{
+                return res.json("Error: unable to retrieve merchant data");
+            });
+    },
+
     //POST - Adds an ingredient to merchant's inventory
     //Inputs:
     //  req.body: array of objects containing ingredient id and quantity
