@@ -97,7 +97,7 @@ module.exports = {
                                 .then((updatedMerchant)=>{
                                     updatedMerchant.password = undefined;
                                     updatedMerchant.accessToken = undefined;
-                                    res.render("inventoryPage/inventory", {merchant: updatedMerchant, error: undefined});
+                                    res.render("dashboardPage/dashboard", {merchant: updatedMerchant, error: undefined});
                                     Transaction.create(transactions);
                                     return;
                                 })
@@ -105,18 +105,18 @@ module.exports = {
                                     let errorMessage = "Error: unable to save user data";
                                     
                                     merchant.password = undefined;
-                                    return res.render("inventoryPage/inventory", {merchant: updatedMerchant, error: errorMessage});
+                                    return res.render("dashboardPage/dashboard", {merchant: updatedMerchant, error: errorMessage});
                                 });
                         })
                         .catch((err)=>{
                             let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
 
                             merchant.password = undefined;
-                            return res.render("inventoryPage/inventory", {merchant: merchant, error: errorMessage});
+                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage});
                         });
                 }else if(merchant.pos === "none"){
                     merchant.password = undefined;
-                    return res.render("inventoryPage/inventory", {merchant: merchant, error: undefined});
+                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: undefined});
                 }else{
                     req.session.error = "Error: WEBSITE PANIC";
                     
