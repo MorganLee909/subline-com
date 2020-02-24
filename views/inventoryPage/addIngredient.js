@@ -140,10 +140,11 @@ window.addIngredientObj = {
         event.preventDefault();
 
         let ingredient = {
-            name: document.querySelector("#newName").value,
+            name: document.querySelector("#newIngName").value,
             category: document.querySelector("#newCategory").value,
             unit: document.querySelector("#newUnit").value
         }
+
 
         let quantity = document.querySelector("#newQuantity").value;
 
