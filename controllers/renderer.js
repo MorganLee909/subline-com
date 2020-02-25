@@ -33,7 +33,7 @@ module.exports = {
             return res.redirect("/");
         }
 
-        Merchant.findOne({_id: req.session.user})
+        Merchant.findOne({_id: req.session.user}, {password: 0, createdAt: 0})
             .populate("inventory.ingredient")
             .populate({
                 path: "recipes",
@@ -95,7 +95,6 @@ module.exports = {
 
                             merchant.save()
                                 .then((updatedMerchant)=>{
-                                    updatedMerchant.password = undefined;
                                     updatedMerchant.accessToken = undefined;
                                     res.render("dashboardPage/dashboard", {merchant: updatedMerchant, error: undefined});
                                     Transaction.create(transactions);
@@ -130,103 +129,13 @@ module.exports = {
             });
     },
 
-    //GET - Renders the merchant setup page for a clover client
-    //Returns:
-    //  ingredients: all ingredients from database
-    //  recipes: recipes from the users clover account
-    //  error: returns error (if any) from session
-    //Renders merchantSetupPage
-    merchantSetupClover: function(req, res){
-        let errorMessage = {};
-        if(req.session.error){
-            errorMessage = req.session.error;
-            req.session.error = undefined;
-        }else{
-            errorMessage = null;
-        }
-        
-        Ingredient.find()
-            .then((ingredients)=>{
-                axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
-                    .then((recipes)=>{
-                        return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: recipes.data, error: errorMessage});
-                    })
-                    .catch((err)=>{
-                        req.session.error = "Error: unable to retrieve data from Clover";
-                        
-                        return res.redirect("/");
-                    });
-            })
-            .catch((err)=>{
-                req.session.error = "Error: data for new merchants could not be retrieved";
-                
-                return res.redirect("/");
-            });
-    },
-
-    //GET - Renders the merchant setup page for a non-pos client
-    //Returns:
-    //  ingredients: all ingredients from database
-    //  recipes: null (to signify non-post client)
-    //  error: returns error (if any) from session
-    //Renders merchantSetupPage
-    merchantSetupNone: function(req, res){
-        let errorMessage = {};
-        if(req.session.error){
-            errorMessage = req.session.error;
-            req.session.error = undefined;
-        }else{
-            errorMessage = null;
-        }
-
-        Ingredient.find()
-            .then((ingredients)=>{
-                return res.render("merchantSetupPage/merchantSetup", {ingredients: ingredients, recipes: null, error: errorMessage});
-            })
-            .catch((err)=>{
-                req.session.error = "Error: data for new merchants could not be retrieved";
-
-                return res.redirect("/");
-            });
-    },
-
-    //GET - Renders the recipe display page
-    //Returns:
-    //  merchant: merchant with recipes and recipe ingredients populated
-    //Renders recipesPage
-    displayRecipes: function(req, res){
-        if(!req.session.user){
-            req.session.error = "You must be logged in to view that page";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
-            .populate({
-                path: "recipes",
-                model: "Recipe",
-                populate: {
-                    path: "ingredients.ingredient",
-                    model: "Ingredient"
-                }
-            })
-            .populate("inventory.ingredient")
-            .then((merchant)=>{
-                merchant.password = undefined;
-                return res.render("recipesPage/recipes", {merchant: merchant});
-            })
-            .catch((err)=>{
-                req.session.error = "Error: unable to retrieve user data";
-            
-                return res.redirect("/");
-            });
-    },
-
     //GET - Renders the information page
-    //Renders information page
     displayLegal: function(req, res){
         return res.render("informationPage/information");
     },
 
+    //GET - Renders the data display page
+    //Returns data
     displayData: function(req, res){
         if(!req.session.user){
             req.session.error = "You must be logged in to view that page";
@@ -234,7 +143,8 @@ module.exports = {
         }
 
         let merchTransPromise = new Promise((resolve, reject)=>{
-            Merchant.findOne({_id: req.session.user})
+            Merchant.findOne({_id: req.session.user}, 
+                {name: 1, inventory: 1, recipes: 1, _id: 0})
                 .populate("recipes")
                 .populate("inventory.ingredient")
                 .then((merchant)=>{
@@ -242,7 +152,8 @@ module.exports = {
                     let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
                     let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-                    Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
+                    Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
+                        {date: 1, recipes: 1, _id: 0})
                         .then((transactions)=>{
                             resolve({merchant: merchant, transactions: transactions});
                         })
@@ -252,7 +163,8 @@ module.exports = {
         });
 
         let purchasePromise = new Promise((resolve, reject)=>{
-            Purchase.find({merchant: req.session.user})
+            Purchase.find({merchant: req.session.user},
+                {date: 1, ingredients: 1, _id: 0})
                 .then((purchases)=>{
                     resolve(purchases);
                 })

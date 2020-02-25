@@ -9,7 +9,6 @@ module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
     app.get("/inventory", renderer.displayInventory);
-    app.get("/recipes", renderer.displayRecipes);
     app.get("/information", renderer.displayLegal);
     app.get("/data", renderer.displayData);
 
