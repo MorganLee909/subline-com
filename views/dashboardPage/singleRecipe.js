@@ -11,6 +11,7 @@ window.singleRecipeObj = {
 
         document.querySelector("#recipeName").innerText = recipe.name;
         document.querySelector("#addButton").onclick = ()=>{this.displayAdd(recipe)};
+        document.querySelector("#removeButton").onclick = ()=>{this.removeRecipe(recipe)};
 
         for(let ingredient of recipe.ingredients){
             let row = document.createElement("tr");
@@ -259,4 +260,26 @@ window.singleRecipeObj = {
             td.innerText = `${originalQuantity} ${ingredient.ingredient.unit}`;
         }
     },
+
+    removeRecipe(recipe){
+        axios.post("/merchant/recipes/remove", {id: recipe._id})
+            .then((response)=>{
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    for(let i = 0; i < merchant.recipes.length; i++){
+                        if(merchant.recipes[i]._id === recipe._id){
+                            merchant.recipes.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    window.recipesObj.isPopulated = false;
+                    window.recipesObj.display();
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Warning:  Something went wrong, try refreshing the page");
+            });
+    }
 }

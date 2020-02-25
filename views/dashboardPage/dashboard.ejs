@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
-        <link rel="stylesheet" href="/inventoryPage/inventory.css">
+        <link rel="stylesheet" href="/dashboardPage/dashboard.css">
         <link rel="stylesheet" href="/shared/shared.css">
     </head>
     <body>
@@ -213,8 +213,11 @@
         <div id="singleRecipeAction" class="action">
             <h2 id="recipeName"></h2>
 
-            <div class="buttonsDiv">
+            <div class="buttonBox">
                 <button class="button" id="addButton">Add Ingredient</button>
+                <% if(merchant.pos === "none"){ %>
+                    <button class="button" id="removeButton">Remove</button>
+                <% } %>
             </div>
 
             <table>
@@ -241,13 +244,13 @@
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="../shared/validation.js"></script>
-        <script src="/inventoryPage/inventory.js"></script>
-        <script src="/inventoryPage/recipes.js"></script>
-        <script src="/inventoryPage/account.js"></script>
-        <script src="/inventoryPage/addIngredient.js"></script>
-        <script src="/inventoryPage/enterTransactions.js"></script>
-        <script src="/inventoryPage/enterPurchase.js"></script>
-        <script src="/inventoryPage/singleRecipe.js"></script>
+        <script src="/dashboardPage//inventory.js"></script>
+        <script src="/dashboardPage//recipes.js"></script>
+        <script src="/dashboardPage//account.js"></script>
+        <script src="/dashboardPage//addIngredient.js"></script>
+        <script src="/dashboardPage//enterTransactions.js"></script>
+        <script src="/dashboardPage//enterPurchase.js"></script>
+        <script src="/dashboardPage//singleRecipe.js"></script>
         <script src="/shared/controller.js"></script>
     </body>
 </html>
