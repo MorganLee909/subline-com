@@ -8,14 +8,12 @@ window.addIngredientObj = {
         document.querySelector("#addIngredientAction").style.display = "flex";
 
         if(!this.isPopulated){
-            this.filter();
+            this.populate();
             this.isPopulated = true;
         }
     },
 
-    filter: function(){
-        this.rows = [];
-        
+    populate: function(){        
         axios.get("/ingredients")
             .then((response)=>{
                 if(typeof(response.data) === "string"){
@@ -67,7 +65,7 @@ window.addIngredientObj = {
                         }
                     }
 
-                    this.displayIngredients();
+                    this.filterAndDisplay();
                 }
             })
             .catch((err)=>{
@@ -76,7 +74,8 @@ window.addIngredientObj = {
             });
     },
 
-    displayIngredients: function(){
+    filterAndDisplay: function(){
+        let queryStr = document.querySelector("#addFilter").value;
         let tbody = document.querySelector("#addIngredientAction tbody");
 
         while(tbody.children.length > 0){
@@ -84,7 +83,9 @@ window.addIngredientObj = {
         }
 
         for(let row of this.rows){
-            tbody.appendChild(row);
+            if(row.children[1].innerText.includes(queryStr)){
+                tbody.appendChild(row);
+            }
         }
     },
 
@@ -97,7 +98,7 @@ window.addIngredientObj = {
             this.currentSort = child;
         }
 
-        this.displayIngredients();
+        this.filterAndDisplay();
     },
 
     submitAdd: function(){
