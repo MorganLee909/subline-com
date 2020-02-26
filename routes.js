@@ -8,7 +8,7 @@ const recipeData = require("./controllers/recipeData");
 module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
-    app.get("/inventory", renderer.displayInventory);
+    app.get("/dashboard", renderer.displayDashboard);
     app.get("/information", renderer.displayLegal);
     app.get("/data", renderer.displayData);
 

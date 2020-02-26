@@ -13,7 +13,7 @@ module.exports = {
     //  req.body.email: registration email
     //  req.body.password: password
     //  req.body.confirmPassword: confirmation password
-    //Redirects to /inventory
+    //Redirects to /dashboard
     createMerchantNone: function(req, res){
         if(req.body.password === req.body.confirmPassword){
             var salt = bcrypt.genSaltSync(10);
@@ -35,7 +35,7 @@ module.exports = {
                 .then((merchant)=>{
                     req.session.user = merchant._id;
 
-                    return res.redirect("/inventory");
+                    return res.redirect("/dashboard");
                 })
                 .catch((err)=>{
                     req.session.error = "Error: Unable to create account at this time";
@@ -52,13 +52,14 @@ module.exports = {
     //POST - Creates a Clover merchant from all entered data
     //Inputs:
     //  req.body.data: All data from frontend in form of merchant model
-    //Redirect to "/inventory"
+    //Redirect to /dashboard
     createMerchantClover: async function(req, res){
         axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
             .then((response)=>{
                 let merchant = new Merchant({
                     name: response.data.name,
                     pos: "clover",
+                    posId: req.session.merchantId,
                     posAccessToken: req.session.accessToken,
                     lastUpdatedTime: Date.now(),
                     createdAt: Date.now(),
@@ -70,7 +71,7 @@ module.exports = {
                     .then((newMerchant)=>{
                         req.session.user = newMerchant._id;
 
-                        return res.redirect("/inventory");
+                        return res.redirect("/dashboard");
                     })
                     .catch((err)=>{
                         req.session.error = "Error: unable to save data from Clover";

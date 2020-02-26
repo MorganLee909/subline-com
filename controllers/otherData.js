@@ -45,7 +45,7 @@ module.exports = {
     //Inputs:
     //  req.body.email
     //  req.body.password
-    //Redirects to "/inventory" on success
+    //Redirects to "/dashboard" on success
     login: function(req, res){
         Merchant.findOne({email: req.body.email.toLowerCase()})
             .then((merchant)=>{
@@ -53,7 +53,7 @@ module.exports = {
                     bcrypt.compare(req.body.password, merchant.password, (err, result)=>{
                         if(result){
                             req.session.user = merchant._id;
-                            return res.redirect("/inventory");
+                            return res.redirect("/dashboard");
                         }else{
                             req.session.error = "Invalid email or password";
                             return res.redirect("/");
@@ -108,23 +108,39 @@ module.exports = {
     cloverAuth: function(req, res){
         let dataArr = req.url.slice(req.url.indexOf("?") + 1).split("&");
         let authorizationCode = "";
+        let merchantId = "";
 
         for(let str of dataArr){
             if(str.slice(0, str.indexOf("=")) === "merchant_id"){
-                req.session.merchantId = str.slice(str.indexOf("=") + 1);
+                merchantId = str.slice(str.indexOf("=") + 1);
             }else if(str.slice(0, str.indexOf("=")) === "code"){
                 authorizationCode = str.slice(str.indexOf("=") + 1);
             }
         }
-        
+
         axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
             .then((response)=>{
-                req.session.accessToken = response.data.access_token;
-                return res.redirect("/merchant/create/clover");
+                Merchant.findOne({posId: merchantId})
+                    .then((merchant)=>{
+                        if(merchant){
+                            req.session.user = merchant._id;
+                            return res.redirect("/dashboard");
+                        }else{
+                            req.session.merchantId = merchantId;
+                            req.session.accessToken = response.data.access_token;
+                            return res.redirect("/merchant/create/clover");
+                        }
+                    })
+                    .catch((err)=>{
+                        req.session.error = "Error: there was a oopsies";
+                    });
+                
             })
             .catch((err)=>{
+                console.log("catch");
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
             });
+        
     }
 }

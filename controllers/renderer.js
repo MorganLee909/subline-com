@@ -27,7 +27,7 @@ module.exports = {
     //Returns:
     //  merchant: the logged in merchant
     //Renders inventoryPage
-    displayInventory: function(req, res){
+    displayDashboard: function(req, res){
         if(!req.session.user){
             req.session.error = "You must be logged in to view that page";
             return res.redirect("/");
