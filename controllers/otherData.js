@@ -79,26 +79,6 @@ module.exports = {
         return res.redirect("/");
     },
 
-    clover: async function(req, res){
-        if(req.url.includes("?")){
-            let urlArgs = req.url.slice(req.url.indexOf("?") + 1).split("&");
-            for(let str of urlArgs){
-                if(str.slice(0, str.indexOf("=")) === "merchant_id"){
-                    let mId = str.slice(str.indexOf("=") + 1);
-                    let merchant = await Merchant.findOne({posId: mId});
-                    if(merchant){
-                        req.session.isLoggedIn = true;
-                        return res.redirect("/");
-                    }else{
-                        return res.redirect("/cloverlogin");
-                    }
-                }
-            }
-        }
-
-        return res.redirect("/");
-    },
-
     //GET - Redirects user to Clover OAuth page
     cloverRedirect: function(req, res){
         return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=${process.env.SUBLINE_CLOVER_URI}`);
