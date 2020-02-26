@@ -123,8 +123,17 @@ module.exports = {
                 Merchant.findOne({posId: merchantId})
                     .then((merchant)=>{
                         if(merchant){
-                            req.session.user = merchant._id;
-                            return res.redirect("/dashboard");
+                            merchant.posAccessToken = response.data.access_token;
+
+                            merchant.save()
+                                .then((updatedMerchant)=>{
+                                    req.session.user = updatedMerchant._id;
+                                    return res.redirect("/dashboard");
+                                })
+                                .catch((err)=>{
+                                    req.session.error("Error: unable to save critical data.  Try again.");
+                                    return res.redirect("/")
+                                });
                         }else{
                             req.session.merchantId = merchantId;
                             req.session.accessToken = response.data.access_token;
@@ -132,12 +141,11 @@ module.exports = {
                         }
                     })
                     .catch((err)=>{
-                        req.session.error = "Error: there was a oopsies";
+                        req.session.error = "Error: there was an oopsies";
                     });
                 
             })
             .catch((err)=>{
-                console.log("catch");
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
             });
