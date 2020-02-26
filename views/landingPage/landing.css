@@ -82,6 +82,7 @@
 /* Login Strand */
 #loginStrand{
     display: none;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background-image: url("/shared/images/backgroundImg01.jpg");
