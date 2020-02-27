@@ -90,8 +90,8 @@ module.exports = {
                                 }
 
                                 transactions.push(newTransaction);
+                                merchant.lastUpdatedTime = Date.now();
                             }
-                            merchant.lastUpdatedTime = Date.now();
 
                             merchant.save()
                                 .then((updatedMerchant)=>{
