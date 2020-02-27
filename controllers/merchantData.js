@@ -84,9 +84,6 @@ module.exports = {
                         }
 
                         Recipe.create(recipes)
-                            .then((recipes)=>{
-                                console.log("recipes supposedly created");
-                            })
                             .catch((err)=>{
                                 req.session.error = "Error: unable to create your recipes from Clover.  Try using updating your recipes on the recipe page."
                             })
@@ -131,8 +128,10 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .populate("recipes")
             .then((merchant)=>{
-                axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/items?access_token=${token}`)
+                console.log("merchanted");
+                axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/items?access_token=${merchant.posAccessToken}`)
                     .then((result)=>{
+                        console.log(result);
                         let deletedRecipes = merchant.recipes.slice();
                         for(let i = 0; i < result.data.elements.length; i++){
                             for(let j = 0; j < deletedRecipes.length; j++){
