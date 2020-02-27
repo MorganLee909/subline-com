@@ -67,17 +67,49 @@ module.exports = {
                     recipes: []
                 });
 
-                merchant.save()
-                    .then((newMerchant)=>{
-                        req.session.user = newMerchant._id;
+                axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
+                    .then((response)=>{
+                        let recipes = [];
+                        for(let item of response.data.elements){
+                            let recipe = new Recipe({
+                                posId: item.id,
+                                merchant: merchant,
+                                name: item.name,
+                                price: item.price,
+                                ingredients: []
+                            });
 
-                        return res.redirect("/dashboard");
+                            recipes.push(recipe);
+                            merchant.recipes.push(recipe);                                
+                        }
+
+                        Recipe.create(recipes)
+                            .then((recipes)=>{
+                                console.log("recipes supposedly created");
+                            })
+                            .catch((err)=>{
+                                req.session.error = "Error: unable to create your recipes from Clover.  Try using updating your recipes on the recipe page."
+                            })
+
+                        merchant.save()
+                            .then((newMerchant)=>{
+                                req.session.accessToken = undefined;
+                                req.session.user = newMerchant._id;
+
+                                return res.redirect("/dashboard");
+                            })
+                            .catch((err)=>{
+                                req.session.error = "Error: unable to save data from Clover";
+
+                                return res.redirect("/");
+                            });
                     })
                     .catch((err)=>{
-                        req.session.error = "Error: unable to save data from Clover";
-
+                        req.session.error = "Error: unable to retrieve necessary data from Clover";
                         return res.redirect("/");
-                    });
+                    })
+
+                
             })
             .catch((err)=>{
                 req.session.error = "Error: Unable to retrieve data from Clover";
