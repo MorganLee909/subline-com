@@ -128,10 +128,8 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .populate("recipes")
             .then((merchant)=>{
-                console.log("merchanted");
                 axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/items?access_token=${merchant.posAccessToken}`)
                     .then((result)=>{
-                        console.log(result);
                         let deletedRecipes = merchant.recipes.slice();
                         for(let i = 0; i < result.data.elements.length; i++){
                             for(let j = 0; j < deletedRecipes.length; j++){
