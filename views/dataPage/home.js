@@ -1,6 +1,8 @@
 window.homeObj = {
     recipeTotal: 0,
     revenueTotal: 0,
+    dateFrom: "",
+    dateTo: "",
 
     display: function(){
         clearScreen();
@@ -10,10 +12,15 @@ window.homeObj = {
         let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         document.querySelector("#month").innerText = `Month of ${months[new Date().getMonth()]}`;
 
-        this.populate();
+        document.querySelector("#to").valueAsDate = new Date();
+
+        this.populate(data.transactions);
     },
 
-    populate: function(){
+    populate: function(transactions){
+        this.recipeTotal = 0;
+        this.revenueTotal = 0;
+        
         //Create object to store number of recipes sold
         let recipes = [];
         for(let recipe of data.merchant.recipes){
@@ -50,7 +57,7 @@ window.homeObj = {
         }
         
         //Populate number of recipes sold
-        for(let transaction of data.transactions){
+        for(let transaction of transactions){
             for(let recipe of transaction.recipes){
                 for(let newRecipe of recipes){
                     if(recipe.recipe === newRecipe.id){
@@ -89,6 +96,10 @@ window.homeObj = {
 
         //Populate Ingredients table
         let ingredientsBody = document.querySelector("#ingredientsData tbody");
+
+        while(ingredientsBody.children.length > 0){
+            ingredientsBody.removeChild(ingredientsBody.firstChild);
+        }
         
         for(let ingredient of soldIngredients){
             let row = document.createElement("tr");
@@ -110,6 +121,10 @@ window.homeObj = {
         //Populate recipes table
         let recipesBody = document.querySelector("#recipesData tbody");
 
+        while(recipesBody.children.length > 0){
+            recipesBody.removeChild(recipesBody.firstChild);
+        }
+
         for(let recipe of recipes){
             let row = document.createElement("tr");
             recipesBody.appendChild(row);
@@ -129,6 +144,10 @@ window.homeObj = {
 
         //Populate purchases table
         let purchasesBody = document.querySelector("#purchasesData tbody");
+
+        while(purchasesBody.children.length > 0){
+            purchasesBody.removeChild(purchasesBody.firstChild);
+        }
         
         for(let ingredient of purchaseIngredients){
             let row = document.createElement("tr");
@@ -146,5 +165,39 @@ window.homeObj = {
         //Populate totals
         document.querySelector("#revenueTotal").innerText = `$${this.revenueTotal.toFixed(2)}`;
         document.querySelector("#soldTotal").innerText = this.recipeTotal;
+    },
+
+    newDates: function(){
+        let from = document.querySelector("#from").value;
+        let to = new Date(document.querySelector("#to").value);
+
+        if(from === "" || to === ""){
+            banner.createError("Invalid date");
+            return;
+        }else{
+            from = new Date(from);
+            to = new Date(to);
+        }
+
+        if(validator.transaction.date(from, to)){
+            let startIndex = 0;
+            let endIndex = 0;
+
+            for(let i = 0; i < data.transactions.length; i++){
+                if(from < new Date(data.transactions[i].date)){
+                    startIndex = i;
+                    break;
+                }
+            }
+
+            for(let i = 0; i < data.transactions.length; i++){
+                if(to < new Date(data.transactions[i].date)){
+                    endIndex = i;
+                    break;
+                }
+            }
+
+            this.populate(data.transactions.slice(startIndex, endIndex));
+        }
     }
 }

@@ -20,6 +20,18 @@
             <h2 id="month"></h2>
 
             <div class="buttonBox">
+                <p>From: </p>
+
+                <input id="from" type="date">
+
+                <p>To: </p>
+
+                <input id="to" type="date">
+
+                <button id="dateSort" class="buttonDisabled">Submit</button>
+            </div>
+
+            <div class="buttonBox">
                 <a class="button" href="/dashboard">Display Inventory</a>
             </div>
             
@@ -78,7 +90,10 @@
         </div>
 
         <script>let data = <%- JSON.stringify(data); %></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="/shared/validation.js"></script>
         <script src="/dataPage/home.js"></script>
+        <script src="/dataPage/fetchData.js"></script>
         <script src="/shared/controller.js"></script>
     </body>
 </html>

@@ -110,6 +110,33 @@ let validator = {
         }
     },
 
+    transaction: {
+        date: function(from, to = new Date(), createBanner = true){
+            let errors = [];
+            let today = new Date();
+
+            if(from > to){
+                errors.push("Starting date must be before ending date");
+            }
+
+            if(from > today || to > today){
+                errors.push("Cannot choose a date in the future");
+            }
+
+            if(errors.length > 0){
+                if(createBanner){
+                    for(let error of errors){
+                        banner.createError(error);
+                    }
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    },
+
     isSanitary: function(str){
         let disallowed = ["\\", "<", ">", "$"];
 

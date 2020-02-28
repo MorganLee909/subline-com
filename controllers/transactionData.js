@@ -3,6 +3,12 @@ const Purchase = require("../models/purchase");
 const Merchant = require("../models/merchant");
 
 module.exports = {
+    //POST - returns all transactions for a merchant between given dates
+    //Inputs:
+    //  req.body.from: start date
+    //  req.body.to: end date
+    //Returns:
+    //  List of transactions
     getTransactions: function(req, res){
         if(!req.session.user){
             req.session.error = "You must be logged in to view that page";
@@ -10,10 +16,19 @@ module.exports = {
         }
 
         let date = new Date();
-        let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-        let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        let firstDay, lastDay;
 
-        Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
+        if(req.body.from && req.body.to){
+            firstDay = new Date(req.body.from);
+            lastDay = new Date(req.body.to);
+        }else{
+            firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        }
+
+        Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
+            {_id: 0, date: 1, recipes: 1},
+            {sort: {date: 1}})
             .then((transactions)=>{
                 return res.json(transactions);
             })

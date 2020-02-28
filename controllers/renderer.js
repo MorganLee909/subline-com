@@ -153,7 +153,8 @@ module.exports = {
                     let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
                     Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
-                        {date: 1, recipes: 1, _id: 0})
+                        {date: 1, recipes: 1, _id: 0},
+                        {sort: {date: 1}})
                         .then((transactions)=>{
                             resolve({merchant: merchant, transactions: transactions});
                         })
