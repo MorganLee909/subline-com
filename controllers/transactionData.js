@@ -91,4 +91,60 @@ module.exports = {
             })
             .catch((err)=>{});
     },
+
+    populate: function(req, res){
+        if(!req.session.user){
+            res.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        function randomDate() {
+            let start = new Date(2020, 0, 1);
+            let end = new Date(2020, 11, 31);
+            return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                let newTransactions = [];
+
+                for(let i = 0; i < 25000; i++){
+                    let newTransaction = new Transaction({
+                        merchant: merchant._id,
+                        date: randomDate(),
+                        recipes: []
+                    });
+
+                    let numberOfRecipes = Math.floor((Math.random() * 5) + 1);
+
+                    for(let j = 0; j < numberOfRecipes; j++){
+                        let recipeNumber = Math.floor(Math.random() * merchant.recipes.length);
+                        let randQuantity = Math.floor((Math.random() * 3) + 1);
+
+                        newTransaction.recipes.push({
+                            recipe: merchant.recipes[recipeNumber],
+                            quantity: randQuantity
+                        });
+                    }
+
+                    newTransactions.push(newTransaction);
+                }
+
+                Transaction.create(newTransactions)
+                    .then((transactions)=>{
+                        console.log("completed");
+                        return;
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return;
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return;
+            });
+        
+        
+    }
 }
