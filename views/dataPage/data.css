@@ -26,3 +26,18 @@
         flex-direction: column;
         align-items: center;
     }
+
+/* Graph Action */
+#graphAction{
+    flex-direction: column;
+    align-items: center;
+}
+
+    #graphAction > *{
+        margin: 10px;
+    }
+
+    canvas{
+        height: 60vh;
+        width: 98vw;
+    }

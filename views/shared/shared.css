@@ -41,6 +41,18 @@ table{
         background: rgb(240, 252, 255);
     }
 
+    .clickableRow{
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .clickableRow:hover{
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 25px black;
+            border-radius: 50px;
+        }
+
 form{
     display: flex;
     flex-direction: column;

@@ -103,6 +103,8 @@ window.homeObj = {
         
         for(let ingredient of soldIngredients){
             let row = document.createElement("tr");
+            row.classList = "clickableRow";
+            row.onclick = ()=>{window.graphObj.display("ingredient", ingredient)};
             ingredientsBody.appendChild(row);
 
             let name = document.createElement("td");

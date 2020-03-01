@@ -89,11 +89,19 @@
             </div>
         </div>
 
+        <div id="graphAction" class="action">
+            <h1>something</h1>
+
+            <canvas></canvas>
+        </div>
+
         <script>let data = <%- JSON.stringify(data); %></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/shared/validation.js"></script>
         <script src="/dataPage/home.js"></script>
-        <script src="/dataPage/fetchData.js"></script>
+        <script src="dataPage/graph.js"></script>
         <script src="/shared/controller.js"></script>
+        <script src="/shared/graphs.js"></script>
+        <script src="/dataPage/fetchData.js"></script>
     </body>
 </html>
