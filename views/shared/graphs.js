@@ -29,16 +29,6 @@ let graph = {
         context.lineTo(right, bottom);
         context.stroke();
 
-        context.beginPath();
-        context.moveTo(right, bottom);
-        context.lineTo(right, top);
-        context.stroke();
-
-        context.beginPath();
-        context.moveTo(left, top);
-        context.lineTo(right, top);
-        context.stroke();
-
         for(let i = 0; i < data.length - 1; i++){
             context.beginPath();
             context.moveTo(left + (horizontalMultiplier * i), bottom - (verticalMultiplier * data[i]));

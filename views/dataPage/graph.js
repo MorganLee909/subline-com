@@ -19,7 +19,9 @@ window.graphObj = {
                         for(let merchRecipe of data.merchant.recipes){
                             if(merchRecipe._id === recipe.recipe){
                                 for(let ingredient of merchRecipe.ingredients){
-                                    dataList[Math.abs(diff)] += ingredient.quantity;
+                                    if(ingredient.ingredient === id){
+                                        dataList[Math.abs(diff)] += ingredient.quantity;
+                                    }
                                 }
                                 break;
                             }

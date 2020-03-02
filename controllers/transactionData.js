@@ -114,9 +114,11 @@ module.exports = {
         }
 
         function randomDate() {
-            let start = new Date(2020, 0, 1);
-            let end = new Date(2020, 11, 31);
-            return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+            let now = new Date();
+            let start = new Date();
+            start.setFullYear(now.getFullYear() - 1);
+            // let end = new Date(2020, 11, 31);
+            return new Date(start.getTime() + Math.random() * (now.getTime() - start.getTime()));
         }
 
         Merchant.findOne({_id: req.session.user})
@@ -148,7 +150,7 @@ module.exports = {
                 Transaction.create(newTransactions)
                     .then((transactions)=>{
                         console.log("completed");
-                        return;
+                        return res.redirect("/data");
                     })
                     .catch((err)=>{
                         console.log(err);
