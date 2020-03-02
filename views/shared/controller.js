@@ -17,6 +17,14 @@ class StrandSelector extends HTMLElement{
                 this.appendChild(selector);
             }
 
+            for(let button of this.querySelectorAll("button")){
+                button.onclick = ()=>{
+                    this.setAttribute("strand", button.strandName.slice(0, button.strandName.indexOf("Strand")));
+
+                    window[`${button.strandName.slice(0, button.strandName.indexOf("Strand"))}Obj`].display();
+                }
+            }
+
             strands[0].style.display = "flex";
         })
     }
@@ -36,11 +44,6 @@ class StrandSelector extends HTMLElement{
                 }else{
                     button.style.borderBottom = "none";
                     button.style.cursor = "pointer";
-                    button.onclick = ()=>{
-                        this.setAttribute("strand", button.strandName.slice(0, button.strandName.indexOf("Strand")));
-
-                        window[`${button.strandName.slice(0, button.strandName.indexOf("Strand"))}Obj`].display();
-                    }
                 }
             }
         })
