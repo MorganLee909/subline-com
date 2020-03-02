@@ -1,10 +1,13 @@
-window.graphObj = {
+window.ingredientObj = {
     display: function(type, ingredient){
         clearScreen();
-        document.querySelector("#graphAction").style.display = "flex";
-        document.querySelector("#graphAction h1").innerText = `${ingredient.name} (${ingredient.unit})`;
+        document.querySelector("#ingredientStrand").style.display = "flex";
+        document.querySelector("strand-selector").setAttribute("strand", "ingredient");
 
-        graph.line(document.querySelector("#graphAction canvas"), this.formatData(type, ingredient.id));
+        if(ingredient){
+            document.querySelector("#ingredientStrand h1").innerText = `${ingredient.name} (${ingredient.unit})`;
+            graph.line(document.querySelector("#ingredientStrand canvas"), this.formatData(type, ingredient.id));
+        }
     },
 
     formatData: function(type, id){

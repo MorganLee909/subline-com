@@ -28,12 +28,12 @@
     }
 
 /* Graph Action */
-#graphAction{
+#ingredientStrand{
     flex-direction: column;
     align-items: center;
 }
 
-    #graphAction > *{
+    #ingredientStrand > *{
         margin: 10px;
     }
 
