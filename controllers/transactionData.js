@@ -117,7 +117,6 @@ module.exports = {
             let now = new Date();
             let start = new Date();
             start.setFullYear(now.getFullYear() - 1);
-            // let end = new Date(2020, 11, 31);
             return new Date(start.getTime() + Math.random() * (now.getTime() - start.getTime()));
         }
 
@@ -125,7 +124,7 @@ module.exports = {
             .then((merchant)=>{
                 let newTransactions = [];
 
-                for(let i = 0; i < 25000; i++){
+                for(let i = 0; i < 5000; i++){
                     let newTransaction = new Transaction({
                         merchant: merchant._id,
                         date: randomDate(),
