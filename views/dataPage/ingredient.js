@@ -9,7 +9,7 @@ window.ingredientObj = {
             let startDate = new Date();
             startDate.setFullYear(new Date().getFullYear() - 1);
 
-            lineGraph.drawLineGraph(
+            let ingredientGraph = new LineGraph(
                 document.querySelector("#ingredientStrand canvas"),
                 this.formatData(type, ingredient.id),
                 "Quantity",
