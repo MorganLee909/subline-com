@@ -1,4 +1,5 @@
 window.homeObj = {
+    isPopulated: false,
     recipeTotal: 0,
     revenueTotal: 0,
     dateFrom: "",
@@ -14,7 +15,10 @@ window.homeObj = {
 
         document.querySelector("#to").valueAsDate = new Date();
 
-        this.populate(data.transactions);
+        if(!this.isPopulated){
+            this.populate(data.transactions);
+            this.isPopulated = true;
+        }
     },
 
     populate: function(transactions){
@@ -103,9 +107,13 @@ window.homeObj = {
         
         for(let ingredient of soldIngredients){
             let row = document.createElement("tr");
-            row.classList = "clickableRow";
-            row.onclick = ()=>{window.ingredientObj.display("ingredient", ingredient)};
             ingredientsBody.appendChild(row);
+            if(window.dataLoaded){
+                row.classList = "clickableRow";
+                row.onclick = ()=>{window.ingredientObj.display("ingredient", ingredient)};
+            }else{
+                row.ingredient = ingredient;
+            }
 
             let name = document.createElement("td");
             name.innerText = `${ingredient.name} (${ingredient.unit})`;
@@ -170,7 +178,7 @@ window.homeObj = {
     },
 
     newDates: function(){
-        let from = document.querySelector("#from").value;
+        let from = new Date(document.querySelector("#from").value);
         let to = new Date(document.querySelector("#to").value);
 
         if(from === "" || to === ""){
@@ -183,7 +191,7 @@ window.homeObj = {
 
         if(validator.transaction.date(from, to)){
             let startIndex = 0;
-            let endIndex = 0;
+            let endIndex = data.transactions.length;
 
             for(let i = 0; i < data.transactions.length; i++){
                 if(from < new Date(data.transactions[i].date)){
