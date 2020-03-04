@@ -55,8 +55,6 @@ class LineGraph{
 
         if(xData.type = "date"){
             let diff = Math.abs(Math.floor((Date.UTC(xData.start.getFullYear(), xData.start.getMonth(), xData.start.getDate()) - Date.UTC(xData.end.getFullYear(), xData.end.getMonth(), xData.end.getDate())) / (1000 * 60 * 60 * 24)));
-            // let horizontalIncrement = (this.right - this.left) /10
-            // let horizontalOffset = 0
             let showDate = xData.start;
 
             for(let i = 0; i < xData.dataLength; i += Math.floor(xData.dataLength / 10)){
@@ -70,19 +68,6 @@ class LineGraph{
 
                 showDate.setDate(showDate.getDate() + Math.abs(diff / 10));
             }
-
-            // do{
-            //     this.context.fillText(showDate.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "2-digit"}), this.left + horizontalOffset - 20, this.bottom + 10);
-
-            //     this.context.beginPath();
-            //     this.context.moveTo(this.left + horizontalOffset, this.bottom);
-            //     this.context.lineTo(this.left + horizontalOffset, this.top);
-            //     this.context.strokeStyle = "#a5a5a5";
-            //     this.context.stroke();
-
-            //     showDate.setDate(showDate.getDate() + (Math.abs(diff / 10)));
-            //     horizontalOffset += horizontalIncrement;
-            // }while(horizontalOffset < (this.right - this.left));
         }
 
         this.context.strokeStyle = "black";
