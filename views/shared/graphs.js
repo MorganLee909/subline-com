@@ -17,8 +17,6 @@ class LineGraph{
         this.verticalMultiplier = (this.bottom - this.top) / max;
         this.horizontalMultiplier = (this.right - this.left) / data.length;
 
-        console.log(data);
-
         xData.dataLength = data.length;
 
         this.drawYAxis(yName, max);
@@ -71,8 +69,6 @@ class LineGraph{
                 this.context.stroke();
 
                 showDate.setDate(showDate.getDate() + Math.abs(diff / 10));
-
-                console.log(i);
             }
 
             // do{
