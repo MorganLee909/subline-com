@@ -1,17 +1,37 @@
 window.ingredientObj = {
+    isPopulated: false,
+    graph: {},
+
     display: function(type, ingredient){
         clearScreen();
         document.querySelector("#ingredientStrand").style.display = "flex";
         document.querySelector("strand-selector").setAttribute("strand", "ingredient");
 
-        if(ingredient){
-            document.querySelector("#ingredientStrand h1").innerText = ingredient.name;
+        if(!this.isPopulated){
+            let ingredientsDiv = document.querySelector("#ingredientOptions");
+
+            for(let item of data.merchant.inventory){
+                let label = document.createElement("label");
+                label.innerText = item.ingredient.name;
+                ingredientsDiv.appendChild(label);
+                
+                let checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.onchange = ()=>{
+                    if(checkbox.checked){
+                        this.graph.addData(this.formatData("ingredient", item.ingredient._id));
+                    }else{
+                        this.graph.removeData(item.ingredient._id);
+                    }
+                };
+                label.appendChild(checkbox);
+            }
+
             let startDate = new Date();
             startDate.setFullYear(new Date().getFullYear() - 1);
 
-            let ingredientGraph = new LineGraph(
+            this.graph = new LineGraph(
                 document.querySelector("#ingredientStrand canvas"),
-                this.formatData(type, ingredient.id),
                 "Quantity",
                 "Date",
                 {
@@ -20,6 +40,12 @@ window.ingredientObj = {
                     end: new Date()
                 }
             );
+
+            this.isPopulated = true;
+        }
+
+        if(ingredient){
+            this.graph.addData(this.formatData("ingredient", ingredient.id));
         }
     },
 
@@ -50,7 +76,7 @@ window.ingredientObj = {
                 }
             }
 
-            return dataList;
+            return {id: id, set: dataList};
         }
     }
 }

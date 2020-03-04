@@ -27,10 +27,9 @@
         align-items: center;
     }
 
-/* Graph Action */
+/* Ingredient Strand */
 #ingredientStrand{
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
 }
 
     #ingredientStrand > *{
@@ -38,6 +37,13 @@
     }
 
     canvas{
-        height: 60vh;
-        width: 98vw;
+        flex-grow: 10;
+        max-height: 60vh;
+        max-width: 90vw;
+    }
+
+    #ingredientOptions{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
     }
