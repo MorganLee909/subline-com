@@ -14,12 +14,6 @@
 
         <div id="publicStrand">
             <div class="main-background">
-                <div class="public-buttons">
-                    <button class="button" onclick="loginObj.display()">Log In</button>
-
-                    <button class="button" onclick="registerObj.display()">Join</button>
-                </div>
-
                 <div class="logo-text">
                     <img src="/shared/images/logoWithText.png" alt="Subline">
 
@@ -50,28 +44,9 @@
         </div>
 
         <div id="loginStrand">
-            <form action="/login" method="post">
-                <h3>Log In</h3>
-                
-                <label>Email:
-                    <input name="email" type="email" required>
-                </label>
-
-                <label>Password:
-                    <input name="password" type="password" required>
-                </label>
-                
-                <div>
-                    <input class="button" type="submit" value="Log In">
-
-                    <button class="button" onclick="loginObj.cancel()">Cancel</button>
-                </div>
-            </form>
-
-            <a class="button" href="/cloverlogin">Log in with Clover</a>
-        </div>
-
+            <% include ../shared/form %></div>
         <div id="registerStrand">
+
             <form action="/merchant/create/none" method="post" onsubmit="registerObj.submit()">
                 <label>Restaurant Name:
                     <input id="restName" name="name" type="text" required>

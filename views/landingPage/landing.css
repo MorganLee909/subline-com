@@ -91,7 +91,7 @@
     height: 91.5vh;
 }
 
-    #loginStrand form{
+    /* #loginStrand form{
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -105,7 +105,7 @@
 
         #loginStrand form > *{
             margin: 10px 0;
-        }
+        } */
 
 /* Register Strand */
 #registerStrand{
@@ -140,7 +140,7 @@
     }
 }
 
-#posChoiceStrand{
+/* #posChoiceStrand{
     display: none;
     flex-direction: column;
     align-items: center;
@@ -188,4 +188,4 @@
 
         .cards img{
             margin: auto 10px;
-        }
+        } */
