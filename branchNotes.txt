@@ -1,0 +1,15 @@
+1.  Move the register form to the "register strand"
+2.  Add a login form for the "login strand"
+3.  header.ejs line 11: Change this from <a> to <button>,  give it onclick="registerObj.display()"
+4.  shared.css line 13: You added a black background color.  This applies to all pages and makes everything unusable.
+    If you want to change just that page, then go to views/landingPage/landing.css to create style for just that page.
+5.  shared.css lines 325 - 323: You create a .form-background style, but it is not used
+6.  form.ejs line 4:  This should be a button because it shows a different part of the same page.
+    Give it onclick="loginObj.display()"
+    Then add style to it to make it look like a link if you want that.
+
+Note:  You made all of your css changes in the shared.css.  This file applies to every single page on the site.  Any changes that you made will also apply to other pages.  Edit this file only when truly necessary.  At the moment, I cannot check if those changes are ok because I cannot log in.  I need a log in form.
+
+I have merged all new changes into this branch so that you can see anything that is different
+
+Also, looks really great, love the style and looking forward to getting it into the development branch)
