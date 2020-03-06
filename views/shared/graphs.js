@@ -16,16 +16,6 @@ class LineGraph{
         this.xData = xData;
     }
 
-    drawGraph(){
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawYAxis();
-        this.drawXAxis();
-
-        for(let dataSet of this.data){
-            this.drawData(dataSet.set);
-        }
-    }
-
     addData(data){
         this.data.push(data);
 
@@ -42,7 +32,6 @@ class LineGraph{
             this.horizontalMultiplier = (this.right - this.left) / data.set.length;
             
             this.xData.dataLength = data.set.length;
-
             this.drawGraph();
         }else{
             this.drawData(data.set);
@@ -60,6 +49,22 @@ class LineGraph{
         this.drawGraph();
     }
 
+    clear(){
+        this.max = 0;
+        this.data = [];
+    }
+
+    drawGraph(){
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.drawYAxis();
+        this.drawXAxis();
+
+        for(let dataSet of this.data){
+            this.drawData(dataSet.set);
+        }
+    }
+
     drawData(dataSet){
         let redRand = Math.floor(Math.random() * 200);
         let greenRand = Math.floor(Math.random() * 200);
@@ -69,10 +74,11 @@ class LineGraph{
             this.context.beginPath();
             this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom - (this.verticalMultiplier * dataSet[i]));
             this.context.lineTo(this.left + (this.horizontalMultiplier * (i + 1)), this.bottom - (this.verticalMultiplier * dataSet[i + 1]));
-            this.context.lineWidth = 1;
             this.context.strokeStyle = `rgb(${redRand}, ${greenRand}, ${blueRand})`;
             this.context.stroke();
         }
+
+        this.context.strokeStyle = "black";
     }
 
     drawXAxis(){
@@ -96,11 +102,13 @@ class LineGraph{
             for(let i = 0; i < this.xData.dataLength; i += Math.floor(this.xData.dataLength / 10)){
                 this.context.fillText(showDate.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "2-digit"}), this.left + (this.horizontalMultiplier * i) - 20, this.bottom + 15);
 
-                this.context.beginPath()
-                this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom);
-                this.context.lineTo(this.left + (this.horizontalMultiplier * i), this.top);
-                this.context.strokeStyle = "#a5a5a5";
-                this.context.stroke();
+                if(i !== 0){
+                    this.context.beginPath()
+                    this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom);
+                    this.context.lineTo(this.left + (this.horizontalMultiplier * i), this.top);
+                    this.context.strokeStyle = "#a5a5a5";
+                    this.context.stroke();
+                }
 
                 showDate.setDate(showDate.getDate() + Math.abs(diff / 10));
             }

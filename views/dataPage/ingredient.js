@@ -45,8 +45,7 @@ window.ingredientObj = {
         }
 
         if(ingredient){
-            this.graph.data = [];
-            this.graph.drawGraph();
+            this.graph.clear();
             this.graph.addData(this.formatData(type, ingredient.id));
 
             for(let label of document.querySelector("#ingredientOptions").children){
