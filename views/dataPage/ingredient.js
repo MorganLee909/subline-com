@@ -45,7 +45,17 @@ window.ingredientObj = {
         }
 
         if(ingredient){
-            this.graph.addData(this.formatData("ingredient", ingredient.id));
+            this.graph.data = [];
+            this.graph.drawGraph();
+            this.graph.addData(this.formatData(type, ingredient.id));
+
+            for(let label of document.querySelector("#ingredientOptions").children){
+                if(label.innerText === ingredient.name){
+                    label.children[0].checked = true;
+                }else{
+                    label.children[0].checked = false;
+                }
+            }
         }
     },
 
