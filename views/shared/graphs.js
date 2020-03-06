@@ -14,9 +14,21 @@ class LineGraph{
         this.xName = xName;
         this.yName = yName;
         this.xData = xData;
+        this.colors = [];
+        this.colorIndex = 0
+
+        for(let i = 0; i < 100; i++){
+            let redRand = Math.floor(Math.random() * 200);
+            let greenRand = Math.floor(Math.random() * 200);
+            let blueRand = Math.floor(Math.random() * 200);
+
+            this.colors.push(`rgb(${redRand}, ${greenRand}, ${blueRand})`);
+        }
     }
 
     addData(data){
+        data.colorIndex = this.colorIndex;
+        this.colorIndex++;
         this.data.push(data);
 
         let isNewMax = false;
@@ -34,7 +46,7 @@ class LineGraph{
             this.xData.dataLength = data.set.length;
             this.drawGraph();
         }else{
-            this.drawData(data.set);
+            this.drawData(data);
         }
     }
 
@@ -61,20 +73,16 @@ class LineGraph{
         this.drawXAxis();
 
         for(let dataSet of this.data){
-            this.drawData(dataSet.set);
+            this.drawData(dataSet);
         }
     }
 
-    drawData(dataSet){
-        let redRand = Math.floor(Math.random() * 200);
-        let greenRand = Math.floor(Math.random() * 200);
-        let blueRand = Math.floor(Math.random() * 200);
-
-        for(let i = 0; i < dataSet.length - 1; i++){
+    drawData(data){
+        for(let i = 0; i < data.set.length - 1; i++){
             this.context.beginPath();
-            this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom - (this.verticalMultiplier * dataSet[i]));
-            this.context.lineTo(this.left + (this.horizontalMultiplier * (i + 1)), this.bottom - (this.verticalMultiplier * dataSet[i + 1]));
-            this.context.strokeStyle = `rgb(${redRand}, ${greenRand}, ${blueRand})`;
+            this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom - (this.verticalMultiplier * data.set[i]));
+            this.context.lineTo(this.left + (this.horizontalMultiplier * (i + 1)), this.bottom - (this.verticalMultiplier * data.set[i + 1]));
+            this.context.strokeStyle = this.colors[data.colorIndex];
             this.context.stroke();
         }
 
