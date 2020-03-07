@@ -1,10 +1,10 @@
 1.  Move the register form to the "register strand"
 2.  Add a login form for the "login strand"
-3.  header.ejs line 11: Change this from <a> to <button>,  give it onclick="registerObj.display()"
-4.  shared.css line 13: You added a black background color.  This applies to all pages and makes everything unusable.
+v 3.  header.ejs line 11: Change this from <a> to <button>,  give it onclick="registerObj.display()" 
+v 4.  shared.css line 13: You added a black background color.  This applies to all pages and makes everything unusable.
     If you want to change just that page, then go to views/landingPage/landing.css to create style for just that page.
-5.  shared.css lines 325 - 323: You create a .form-background style, but it is not used
-6.  form.ejs line 4:  This should be a button because it shows a different part of the same page.
+v5.  shared.css lines 325 - 323: You create a .form-background style, but it is not used
+v6.  form.ejs line 4:  This should be a button because it shows a different part of the same page.
     Give it onclick="loginObj.display()"
     Then add style to it to make it look like a link if you want that.
 

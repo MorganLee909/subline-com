@@ -44,40 +44,11 @@
         </div>
 
         <div id="loginStrand">
-            <% include ../shared/form %>
+            <% include ../shared/loginform %>
         </div>
         
         <div id="registerStrand">
-
-            <form action="/merchant/create/none" method="post" onsubmit="registerObj.submit()">
-                <label>Restaurant Name:
-                    <input id="restName" name="name" type="text" required>
-                </label>
-
-                <label>Email:
-                    <input name="email" type="email" required>
-                </label>
-
-                <label>Password:
-                    <input name="password" type="password" required>
-                </label>
-
-                <label>Confirm Password:
-                    <input name="confirmPassword" type="password" required>
-                </label>
-
-                <div id="agreement">
-                    <input id="checkAgree" type="checkbox" onchange="registerObj.agreement()">
-
-                    <p>I agree to the <a href="/information">Privacy Policy</a> and the <a href="/information">Terms and Conditions</a></p>
-                </div>
-
-                <input id="regButton" class="buttonDisabled" type="submit" value="Register">
-            </form>
-
-            <a class="button" href="/cloverlogin">Register with Clover</a>
-
-            <button class="button" onclick="publicObj.display()">Cancel</button>
+            <% include ../shared/registerform %>
         </div>
         
 

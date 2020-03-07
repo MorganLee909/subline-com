@@ -80,6 +80,7 @@
         }
 
 /* Login Strand */
+
 #loginStrand{
     display: none;
     flex-direction: column;
@@ -91,23 +92,16 @@
     height: 91.5vh;
 }
 
-    /* #loginStrand form{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        border: 2px solid rgb(201, 201, 201);
-        background: rgb(240, 252, 255);
-        color: rgb(255, 99, 107);
-        padding: 25px;
-        border-radius: 10px;
-    }
-
-        #loginStrand form > *{
-            margin: 10px 0;
-        } */
-
 /* Register Strand */
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
 #registerStrand{
     display: none;
     flex-direction: column;
@@ -120,6 +114,15 @@
 
     #agreement{
         display: flex;
+        margin-top: 10px;
+    }
+    
+    #checkAgree{
+        width: 24px;
+        height: 24px;
+        margin-right: 17px;
+        margin-bottom: 3px;
+        padding-top: 0px
     }
 
 @media screen and (max-width: 600px){
@@ -139,53 +142,3 @@
         right: 25vw;
     }
 }
-
-/* #posChoiceStrand{
-    display: none;
-    flex-direction: column;
-    align-items: center;
-}
-
-    .cards{
-        display: flex;
-        justify-content: space-around;
-    }
-
-        .cards > *{
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            text-align: center;
-            width: 300px;
-            height: 200px;
-            border-radius: 25px;
-            border: 2px solid black;
-            padding: 50px;
-            cursor: pointer;
-            margin: 25px;
-            box-shadow: 0 0 20px black;
-            text-decoration: none;
-        }
-
-            .cards > * img{
-                max-height: 75%;
-            }
-
-            .cards > *:hover{
-                box-shadow: 0 0 25px #ff636b;
-            }
-
-            .cards > *:active{
-                box-shadow: 0 0 10px #ff636b;
-            }
-
-            .cards p{
-                margin-top: 25px;
-                font-size: 25px;
-                font-weight: bold;
-                color: black;
-            }
-
-        .cards img{
-            margin: auto 10px;
-        } */
