@@ -1,15 +1,17 @@
-1.  Move the register form to the "register strand"
-2.  Add a login form for the "login strand"
-v 3.  header.ejs line 11: Change this from <a> to <button>,  give it onclick="registerObj.display()" 
-v 4.  shared.css line 13: You added a black background color.  This applies to all pages and makes everything unusable.
-    If you want to change just that page, then go to views/landingPage/landing.css to create style for just that page.
-v5.  shared.css lines 325 - 323: You create a .form-background style, but it is not used
-v6.  form.ejs line 4:  This should be a button because it shows a different part of the same page.
-    Give it onclick="loginObj.display()"
-    Then add style to it to make it look like a link if you want that.
+1.  The login and register forms should not be partials because they are only used in one place.  
+    Only use partials if they are going to be used in multiple places
+    In the future we can easily turn them into partials if we need to reuse it.
+    This also means that their css should be in the landing.css and not their own css file
 
-Note:  You made all of your css changes in the shared.css.  This file applies to every single page on the site.  Any changes that you made will also apply to other pages.  Edit this file only when truly necessary.  At the moment, I cannot check if those changes are ok because I cannot log in.  I need a log in form.
+2.  You have css in landing.css that applies to partials, this should never be.
+    However, this will be solved once you fix #1, so you can ignore this problem
 
-I have merged all new changes into this branch so that you can see anything that is different
+3.  The register strand does show the background picture, but the login strand does
 
-Also, looks really great, love the style and looking forward to getting it into the development branch)
+5.  In shared.css, move .button-join class to the "header partial" section further down.  
+    The button-join class is only found in the header
+
+6.  The "link" class that you created in shared.css is under the "banner partial" section.
+    It is not part of the banner partial.  It needs to be moved to an appropriate place.  Probaby landing.css
+
+7.  In shared.css.  You create style for h1, h3 and label.  This belongs near the top with all of the other general, site-wide style.
