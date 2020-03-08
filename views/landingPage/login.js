@@ -8,5 +8,5 @@ let loginObj = {
         event.preventDefault();
         
         publicObj.display();
-    }
+    },
 }
