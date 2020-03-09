@@ -111,10 +111,11 @@ let validator = {
     },
 
     isSanitary: function(str){
-        let disallowed = ["\\", "<", ">", "$"];
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
 
         for(let char of disallowed){
             if(str.includes(char)){
+                banner.createError("Your string contains illegal characters");
                 return false;
             }
         }
