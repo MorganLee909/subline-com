@@ -306,6 +306,12 @@ strand-selector{
         text-decoration: none;
     }
 
+    .button-join {
+        font-size: medium;
+        color:white;
+        text-decoration: blink;
+    }
+
 /* Banner partial */
 .banner{
     width: 100%;
