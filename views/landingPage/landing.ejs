@@ -43,15 +43,58 @@
             </div>
         </div>
 
-        <div id="loginStrand">
-            <% include ../shared/loginform %>
-        </div>
-        
         <div id="registerStrand">
-            <% include ../shared/registerform %>
-        </div>
+            <form onsubmit="basicInfoObj.submit()">
+                <h1> Please Sign Up </h1>
+                <h3 class="link" onclick="loginObj.display()"> Or Register with Clover </h3>
+                <label id="nameLabel">Restaurant Name
+                    <input class="input" id="regName" type="text">
+                </label>
         
+                <label>Email
+                    <input type="text" id="regEmail" type="email" required>
+                </label>
+        
+                <label>Password
+                    <input type="password" id="regPass" type="password" required>
+                </label>
+        
+                <label>Confirm Password
+                    <input type="password" id="regConfirmPass" type="password" required>
+                </label>
+        
+                <!-- <input type="submit" value="Continue"> -->
+                <div id="agreement">
+                    <label class="container">
+                        <input type="checkbox">
+                        <span class="checkmark"></span>
+        
+                        <p style="padding-top: 5px; padding-left: 7px;">I agree to the 
+                            <a class="link" href="/information">Privacy Policy</a> and the 
+                            <a class="link" href="/information">Terms and Conditions</a></p>
+                    </label>   
+                </div> 
+                    <input id="regButton" class="buttonDisabled" type="submit" value="Register">
+            </form>
+        </div>
 
+        <div id="loginStrand">
+            <form onsubmit="basicInfoObj.submit()">
+                <h1> Please Sign In </h1>
+                <h3 class="link" onclick="registerObj.display()"> New Here? Please Sign Up </h3>
+        
+                <label>Email
+                    <input type="text" id="regEmail" type="email" required>
+                </label>
+        
+                <label>Password
+                    <input type="password" id="regPass" type="password" required>
+                </label>
+        
+                <input id="signIn" class="buttonDisabled" type="submit" value="Sign In">
+            </form>
+        </div>
+    
         <div id="posChoiceStrand">
             <h1>Choose your POS System</h1>
 
