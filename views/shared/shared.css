@@ -13,6 +13,30 @@ body{
 }
 
 /* General style that should apply to all pages */
+h1 {
+    text-align: center;
+    padding-bottom: 13px;
+
+}
+
+h3 {
+    text-align: center;
+    font-weight: 500;
+    color: gray;
+}
+
+.link {
+    cursor: pointer;
+    color: gray;
+    text-decoration: none;
+}
+
+.link:hover {
+    color: #ff636b;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 table{
     border-spacing: 0;
 }
@@ -100,12 +124,6 @@ form{
 .button:hover{
     background: rgb(243, 77, 86);
     color: white;
-}
-
-.button-join {
-    font-size: medium;
-    color:white;
-    text-decoration: blink;
 }
 
 .button-small{
@@ -312,18 +330,6 @@ strand-selector{
         color: white;
     }
 
-    .link {
-        cursor: pointer;
-        color: gray;
-        text-decoration: none;
-    }
-    
-    .link:hover {
-        color: #ff636b;
-        text-decoration: underline;
-        cursor: pointer;
-    }
-
 /* Footer Partial */
 .spacer{
     flex: 1;
@@ -356,18 +362,6 @@ strand-selector{
         overflow: hidden;
         text-overflow: ellipsis;
     }
-}
-
-h1 {
-    text-align: center;
-    padding-bottom: 13px;
-
-}
-
-h3 {
-    text-align: center;
-    font-weight: 500;
-    color: gray;
 }
 
 label {
