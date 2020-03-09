@@ -44,30 +44,30 @@
         </div>
 
         <div id="registerStrand">
-            <form onsubmit="basicInfoObj.submit()">
+            <form onsubmit="registerObj.submit()">
                 <h1> Please Sign Up </h1>
 
                 <h3 class="link" onclick="loginObj.display()"> Or Register with Clover </h3>
 
                 <label id="nameLabel">Restaurant Name
-                    <input class="input" id="regName" type="text">
+                    <input class="input" id="regName" name="name" type="text" required>
                 </label>
         
                 <label>Email
-                    <input type="text" id="regEmail" type="email" required>
+                    <input type="text" id="regEmail" name="email" type="email" required>
                 </label>
         
                 <label>Password
-                    <input type="password" id="regPass" type="password" required>
+                    <input type="password" id="regPass" name="password" type="password" required>
                 </label>
         
                 <label>Confirm Password
-                    <input type="password" id="regConfirmPass" type="password" required>
+                    <input type="password" id="regConfirmPass" name="confirmPassword" type="password" required>
                 </label>
         
                 <div id="agreement">
                     <label class="container">
-                        <input type="checkbox">
+                        <input id="checkAgree" type="checkbox">
 
                         <span class="checkmark"></span>
         

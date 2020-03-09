@@ -1,17 +1,9 @@
-v 1.  The login and register forms should not be partials because they are only used in one place.  
-    Only use partials if they are going to be used in multiple places
-    In the future we can easily turn them into partials if we need to reuse it.
-    This also means that their css should be in the landing.css and not their own css file
+I have updated the login and registration so that you can create an account and then login with it.
 
-v 2.  You have css in landing.css that applies to partials, this should never be.
-    However, this will be solved once you fix #1, so you can ignore this problem
+1.  Create an account and check the rest of the website.
+    A lot of the work style that you changed affects every other page and breaks things.
+    This is why I told you you really should not add style to "shared.css" unless you are absolute certain that you want it to affect every single page.
+    You need to go through and get rid of all of these negative affects.
+    Maybe go through "shared.css" and move all that code to the more local "landing.css"
 
-v 3.  The register strand does show the background picture, but the login strand does
-
-v 5.  In shared.css, move .button-join class to the "header partial" section further down.  
-    The button-join class is only found in the header
-
-v6.  The "link" class that you created in shared.css is under the "banner partial" section.
-    It is not part of the banner partial.  It needs to be moved to an appropriate place.  Probaby landing.css - moved to main area of shared.css since this should be apply to all pages.
-
-7.  In shared.css.  You create style for h1, h3 and label.  This belongs near the top with all of the other general, site-wide style.
+Other than that, everything seems good to me.  Fix those side effects on the rest of the site and everything should be ready to go.
