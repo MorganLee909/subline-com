@@ -11,12 +11,13 @@ window.ingredientObj = {
             let ingredientsDiv = document.querySelector("#ingredientOptions");
 
             for(let item of data.merchant.inventory){
-                let label = document.createElement("label");
-                label.innerText = item.ingredient.name;
-                ingredientsDiv.appendChild(label);
-                
+                let checkDiv = document.createElement("div");
+                checkDiv.classList = "checkboxDiv";
+                ingredientsDiv.appendChild(checkDiv);
+
                 let checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
+                checkbox.id = `${item.ingredient.name}Checkbox`;
                 checkbox.onchange = ()=>{
                     if(checkbox.checked){
                         this.graph.addData(this.formatData("ingredient", item.ingredient._id));
@@ -24,7 +25,12 @@ window.ingredientObj = {
                         this.graph.removeData(item.ingredient._id);
                     }
                 };
-                label.appendChild(checkbox);
+                checkDiv.appendChild(checkbox);
+
+                let label = document.createElement("label");
+                label.innerText = item.ingredient.name;
+                label.setAttribute("for", `${item.ingredient.name}Checkbox`);
+                checkDiv.appendChild(label);
             }
 
             let startDate = new Date();

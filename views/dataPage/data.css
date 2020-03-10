@@ -5,6 +5,14 @@
     margin-top: 25px;
 }
 
+.checkboxDiv{
+    display: flex;
+}
+
+    .checkboxDiv > *{
+        margin: 2px;
+    }
+
 /* Home Strand */
 #homeStrand{
     flex-direction: column;
