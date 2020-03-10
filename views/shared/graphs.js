@@ -105,8 +105,8 @@ class LineGraph{
 
         if(this.xData.type = "date"){
             let diff = Math.abs(Math.floor((Date.UTC(this.xData.start.getFullYear(), this.xData.start.getMonth(), this.xData.start.getDate()) - Date.UTC(this.xData.end.getFullYear(), this.xData.end.getMonth(), this.xData.end.getDate())) / (1000 * 60 * 60 * 24)));
-            let showDate = this.xData.start;
-
+            let showDate = new Date(this.xData.start);
+            
             for(let i = 0; i < this.xData.dataLength; i += Math.floor(this.xData.dataLength / 10)){
                 this.context.fillText(showDate.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "2-digit"}), this.left + (this.horizontalMultiplier * i) - 20, this.bottom + 15);
 
@@ -120,6 +120,7 @@ class LineGraph{
 
                 showDate.setDate(showDate.getDate() + Math.abs(diff / 10));
             }
+            
         }
 
         this.context.strokeStyle = "black";
