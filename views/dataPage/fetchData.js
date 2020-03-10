@@ -1,31 +1,36 @@
-window.dataLoaded = false;
+window.fetchData = function(from, to){
+    retrieveDates = [];
 
-let date = new Date();
-let yearAgo = new Date(new Date().setFullYear(date.getFullYear() - 1));
+    //Compares dates to dates already stored and makes a list of those needed
+    for(let i = 0; i < data.dates.length; i+=2){
+        if(to <= new Date(data.dates[0]) || from >= new Date(data.dates[data.dates.length - 1])){
+            retrieveDates.push(from);
+            retrieveDates.push(to);
+            break;
+        }
 
-let onDataLoad = function(){
-    let dateSort = document.querySelector("#dateSort");
-    dateSort.onclick = ()=>{window.homeObj.newDates()};
-    dateSort.classList = "button";
+        let date0 = new Date(data.dates[i]);
+        let date1 = new Date(data.dates[i+1]);
 
-    let ingredientsBody = document.querySelector("#ingredientsData tbody");
-    for(let row of ingredientsBody.children){
-        row.classList = "clickableRow";
-        row.onclick = ()=>{window.ingredientObj.display("ingredient", row.ingredient)};
+        if(from < date0){
+            retrieveDates.push(from);
+            retrieveDates.push(date0);
+            from = date1;
+        }else if(from > date0 && from < date1){
+            from = date1;
+        }
     }
 
-    window.dataLoaded = true;
-}
+    axios.post("/getData", {dates: retrieveDates})
+        .then((response)=>{
+            if(typeof(response.data) === "string"){
+                banner.createError(response.data);
+            }else{
+                console.log(response.data);
+                //Append data
 
-axios.post("/transactions", {from: yearAgo, to: date})
-    .then((response)=>{
-        if(typeof(response.data) === "string"){
-            banner.createError(response.data);
-        }else{
-            data.transactions = response.data;
-            onDataLoad();
-        }
-    })
-    .catch((err)=>{
-        console.log(err);
-    });
+                //change to/from in date list
+            }
+        })
+        .catch((err)=>{});
+}

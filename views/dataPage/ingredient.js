@@ -52,7 +52,9 @@ window.ingredientObj = {
 
         if(ingredient){
             this.graph.clear();
-            this.graph.addData(this.formatData(type, ingredient.id));
+            let d = new Date();
+            d.setDate(d.getDate() - 20);
+            this.graph.addData(this.formatData(type, ingredient.id, d, new Date()));
 
             for(let label of document.querySelector("#ingredientOptions").children){
                 if(label.innerText === ingredient.name){
@@ -64,17 +66,17 @@ window.ingredientObj = {
         }
     },
 
-    formatData: function(type, id){
-        dataList = new Array(365).fill(0);
-        let today = new Date();
+    formatData: function(type, id, startDate, endDate){
+        let dataList;
         
         if(type === "ingredient"){
-            let dataLastDate = new Date(data.transactions[0].date);
-            let dateRange = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - Date.UTC(dataLastDate.getFullYear(), dataLastDate.getMonth(), dataLastDate.getDate())) / (1000 * 60 * 60 * 24));
+            let dateRange = Math.floor((Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) / (1000 * 60 * 60 * 24));
+            dataList = new Array(Math.abs(dateRange)).fill(0);
 
             for(let transaction of data.transactions){
                 let transDate = new Date(transaction.date);
-                let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())) / (1000 * 60 * 60 * 24));
+                let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())) / (1000 * 60 * 60 * 24));
+
                 if(diff <= 0){
                     for(let recipe of transaction.recipes){
                         for(let merchRecipe of data.merchant.recipes){
