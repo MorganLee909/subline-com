@@ -45,9 +45,9 @@
 
         <div id="registerStrand">
             <form onsubmit="registerObj.submit()">
-                <h1> Clover User? Let's Start </h1>
+                <h1> Join Subline </h1>
 
-                <h3 class="link" onclick="loginObj.display()"> Or Register from Scratch </h3>
+                <button class="button buttonWithBorder" onclick="registerObj.display()"> Sign Up with Clover </button>
 
                 <label id="nameLabel">Restaurant Name
                     <input class="input" id="regName" name="name" type="text" required>
@@ -78,15 +78,18 @@
                     </label>   
                 </div>
 
-                <input id="regButton" class="buttonDisabled" type="submit" value="Register">
+                <input id="regButton" class="buttonDisabled" type="submit" value="Sign Up with Email">
+
+                <h3 class="link" style="margin-top: 30px;" onclick="loginObj.display()"> Already have an account? Please Sign In </h3>
+
             </form>
         </div>
 
         <div id="loginStrand">
             <form action="/login" method="post">
-                <h1> Please Sign In </h1>
+                <h1> Welcome Back </h1>
 
-                <h3 class="link" onclick="registerObj.display()"> New Here? Please Sign Up </h3>
+                <button class="button buttonWithBorder" onclick="loginObj.display()"> Sign In with Clover </button>
         
                 <label>Email
                     <input type="text" name="email" type="email" required>
@@ -96,7 +99,9 @@
                     <input type="password" name="password" required>
                 </label>
         
-                <input id="signIn" type="submit" value="Sign In">
+                <input id="signIn" type="submit" value="Sign In with Email">
+
+                <h3 class="link" style="margin-top: 30px;" onclick="registerObj.display()"> New Here? Please Sign Up </h3>
             </form>
         </div>
 
