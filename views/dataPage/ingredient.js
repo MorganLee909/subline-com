@@ -7,6 +7,10 @@ window.ingredientObj = {
         document.querySelector("#ingredientStrand").style.display = "flex";
         document.querySelector("strand-selector").setAttribute("strand", "ingredient");
 
+        //A grabastic bag of bullshit to get rid of
+        let d = new Date();
+        d.setDate(d.getDate() - 20);
+
         if(!this.isPopulated){
             let ingredientsDiv = document.querySelector("#ingredientOptions");
 
@@ -42,7 +46,7 @@ window.ingredientObj = {
                 "Date",
                 {
                     type: "date",
-                    start: startDate,
+                    start: d,
                     end: new Date()
                 }
             );
@@ -52,9 +56,8 @@ window.ingredientObj = {
 
         if(ingredient){
             this.graph.clear();
-            let d = new Date();
-            d.setDate(d.getDate() - 20);
-            this.graph.addData(this.formatData(type, ingredient.id, d, new Date()));
+            
+            this.graph.addData(this.formatData(ingredient.id, d, new Date()));
 
             for(let label of document.querySelector("#ingredientOptions").children){
                 if(label.innerText === ingredient.name){
@@ -66,34 +69,32 @@ window.ingredientObj = {
         }
     },
 
-    formatData: function(type, id, startDate, endDate){
+    formatData: function(id, startDate, endDate){
         let dataList;
-        
-        if(type === "ingredient"){
-            let dateRange = Math.floor((Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) / (1000 * 60 * 60 * 24));
-            dataList = new Array(Math.abs(dateRange)).fill(0);
+    
+        let dateRange = Math.floor((Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) / (1000 * 60 * 60 * 24));
+        dataList = new Array(Math.abs(dateRange)).fill(0);
 
-            for(let transaction of data.transactions){
-                let transDate = new Date(transaction.date);
-                let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())) / (1000 * 60 * 60 * 24));
+        for(let transaction of data.transactions){
+            let transDate = new Date(transaction.date);
+            let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())) / (1000 * 60 * 60 * 24));
 
-                if(diff <= 0){
-                    for(let recipe of transaction.recipes){
-                        for(let merchRecipe of data.merchant.recipes){
-                            if(merchRecipe._id === recipe.recipe){
-                                for(let ingredient of merchRecipe.ingredients){
-                                    if(ingredient.ingredient === id){
-                                        dataList[dateRange - Math.abs(diff)] += ingredient.quantity;
-                                    }
+            if(diff <= 0){
+                for(let recipe of transaction.recipes){
+                    for(let merchRecipe of data.merchant.recipes){
+                        if(merchRecipe._id === recipe.recipe){
+                            for(let ingredient of merchRecipe.ingredients){
+                                if(ingredient.ingredient === id){
+                                    dataList[dateRange - Math.abs(diff)] += ingredient.quantity;
                                 }
-                                break;
                             }
+                            break;
                         }
                     }
                 }
             }
-
-            return {id: id, set: dataList};
         }
+
+        return {id: id, set: dataList};
     }
 }

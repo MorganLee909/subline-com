@@ -108,12 +108,9 @@ window.homeObj = {
         for(let ingredient of soldIngredients){
             let row = document.createElement("tr");
             ingredientsBody.appendChild(row);
-            if(window.dataLoaded){
-                row.classList = "clickableRow";
-                row.onclick = ()=>{window.ingredientObj.display("ingredient", ingredient)};
-            }else{
-                row.ingredient = ingredient;
-            }
+            row.classList = "clickableRow";
+            row.onclick = ()=>{window.ingredientObj.display("ingredient", ingredient)};
+            
 
             let name = document.createElement("td");
             name.innerText = `${ingredient.name} (${ingredient.unit})`;
