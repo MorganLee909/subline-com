@@ -3,15 +3,14 @@
         <img src="/shared/images/logo.png" alt="Subline">
         <div class='header-logo'> SUBLINE </div>
     </a>
-
-    <div class="public-buttons">
-        <button class="button" onclick="loginObj.display()"> Log In </button>
-
-        <a class="button-join link" onclick="registerObj.display()"> Or Join </a>
-    </div>
     
-    <% if(locals.merchant){ %>
+    <% if(locals.merchant || locals.data){ %>
         <a class="logout" href="/logout">Log out</a>
+    <% }else{ %>
+        <div class="public-buttons">
+            <button class="button" onclick="loginObj.display()"> Log In </button>
+    
+            <a class="button-join link" onclick="registerObj.display()"> Or Join </a>
+        </div>
     <% } %>
-
 </div>
