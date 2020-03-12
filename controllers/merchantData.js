@@ -16,8 +16,8 @@ module.exports = {
     //Redirects to /dashboard
     createMerchantNone: function(req, res){
         if(req.body.password === req.body.confirmPassword){
-            var salt = bcrypt.genSaltSync(10);
-            var hash = bcrypt.hashSync(req.body.password, salt);
+            let salt = bcrypt.genSaltSync(10);
+            let hash = bcrypt.hashSync(req.body.password, salt);
 
             let merchant = new Merchant({
                 name: req.body.name,

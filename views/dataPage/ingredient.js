@@ -2,14 +2,14 @@ window.ingredientObj = {
     isPopulated: false,
     graph: {},
 
-    display: function(type, ingredient){
+    display: function(ingredient){
         clearScreen();
         document.querySelector("#ingredientStrand").style.display = "flex";
         document.querySelector("strand-selector").setAttribute("strand", "ingredient");
 
         //A grabastic bag of bullshit to get rid of
-        let d = new Date();
-        d.setDate(d.getDate() - 20);
+        let date = new Date();
+        let d = new Date(date.getFullYear(), date.getMonth(), 1);
 
         if(!this.isPopulated){
             let ingredientsDiv = document.querySelector("#ingredientOptions");
@@ -24,7 +24,7 @@ window.ingredientObj = {
                 checkbox.id = `${item.ingredient.name}Checkbox`;
                 checkbox.onchange = ()=>{
                     if(checkbox.checked){
-                        this.graph.addData(this.formatData("ingredient", item.ingredient._id));
+                        this.graph.addData(this.formatData(item.ingredient._id, d, new Date()), [d, new Date()], item.ingredient._id);
                     }else{
                         this.graph.removeData(item.ingredient._id);
                     }
@@ -44,20 +44,15 @@ window.ingredientObj = {
                 document.querySelector("#ingredientStrand canvas"),
                 "Quantity",
                 "Date",
-                {
-                    type: "date",
-                    start: d,
-                    end: new Date()
-                }
             );
 
             this.isPopulated = true;
         }
 
         if(ingredient){
-            this.graph.clear();
+            this.graph.clearData();
             
-            this.graph.addData(this.formatData(ingredient.id, d, new Date()));
+            this.graph.addData(this.formatData(ingredient.id, d, new Date()), [d, new Date()], ingredient.id);
 
             for(let label of document.querySelector("#ingredientOptions").children){
                 if(label.innerText === ingredient.name){
@@ -70,10 +65,8 @@ window.ingredientObj = {
     },
 
     formatData: function(id, startDate, endDate){
-        let dataList;
-    
         let dateRange = Math.floor((Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) / (1000 * 60 * 60 * 24));
-        dataList = new Array(Math.abs(dateRange)).fill(0);
+        let dataList = new Array(Math.abs(dateRange)).fill(0);
 
         for(let transaction of data.transactions){
             let transDate = new Date(transaction.date);
@@ -95,6 +88,6 @@ window.ingredientObj = {
             }
         }
 
-        return {id: id, set: dataList};
+        return dataList;
     }
 }

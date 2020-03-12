@@ -109,7 +109,7 @@ window.homeObj = {
             let row = document.createElement("tr");
             ingredientsBody.appendChild(row);
             row.classList = "clickableRow";
-            row.onclick = ()=>{window.ingredientObj.display("ingredient", ingredient)};
+            row.onclick = ()=>{window.ingredientObj.display(ingredient)};
             
 
             let name = document.createElement("td");

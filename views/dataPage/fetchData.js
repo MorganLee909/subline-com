@@ -36,32 +36,19 @@ window.fetchData = function(from, to){
                         let oldDateOne = new Date(data.dates[oldIndex]);
                         let oldDateTwo = new Date(data.dates[oldIndex+1]);
                         if(oldDateOne < retrieveDates[newIndex] || newIndex >= retrieveDates.length){
-                            console.log("thing doing one");
                             if(mergedDates.length > 0 && oldDateOne.getTime() === mergedDates[mergedDates.length-1].getTime()){
                                 mergedDates[mergedDates.length-1] = oldDateTwo;
-                                console.log("one");
-                                console.log(mergedDates);
-                                console.log();
                             }else{
                                 mergedDates.push(oldDateOne);
                                 mergedDates.push(oldDateTwo);
-                                console.log("two");
-                                console.log(mergedDates);
-                                console.log();
                             }
                             oldIndex += 2;
                         }else{
                             if(mergedDates.length > 0 && retrieveDates[newIndex].getTime() === mergedDates[mergedDates.length-1].getTime()){
                                 mergedDates[mergedDates.length-1] = retrieveDates[newIndex+1];
-                                console.log("three");
-                                console.log(mergedDates);
-                                console.log();
                             }else{
                                 mergedDates.push(retrieveDates[newIndex]);
                                 mergedDates.push(retrieveDates[newIndex+1]);
-                                console.log("four");
-                                console.log(mergedDates);
-                                console.log();
                             }
                             newIndex += 2;
                         }
@@ -70,9 +57,6 @@ window.fetchData = function(from, to){
                             break;
                         }
                     }
-
-                    console.log(mergedDates);
-
                     //change to/from in date list
                 }
             })

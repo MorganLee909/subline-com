@@ -1,5 +1,11 @@
+//Creates a line graph within a canvas
+//Will expand or shrink to the size of the canvas
+//Inputs:
+//  canvas = the canvas that you would like to draw on
+//  yName = a string for the name of the Y axis
+//  xName = a string for the name of the X axis
 class LineGraph{
-    constructor(canvas, yName, xName, xData){
+    constructor(canvas, yName, xName){
         canvas.height = canvas.clientHeight;
         canvas.width = canvas.clientWidth;
 
@@ -13,9 +19,9 @@ class LineGraph{
         this.max = 0;
         this.xName = xName;
         this.yName = yName;
-        this.xData = xData;
+        this.xRange = [];
         this.colors = [];
-        this.colorIndex = 0
+        this.colorIndex = 0;
 
         for(let i = 0; i < 100; i++){
             let redRand = Math.floor(Math.random() * 200);
@@ -26,30 +32,55 @@ class LineGraph{
         }
     }
 
-    addData(data){
-        data.colorIndex = this.colorIndex;
+    //Add a dataset to the graph to draw
+    //Inputs:
+    //  data = array containing list of numbers as the data points for the graph
+    //      data[0] will be on the left.  data[data.length-1] will be on the right.
+    //  xRange = array containing two elements, start and end for x axis data (currently only dates)
+    //  identifier = any string, int, etc. to identify this data set.  Used for removal
+    addData(data, xRange, identifier){
+        data = {
+            set: data,
+            colorIndex: this.colorIndex,
+            id: identifier
+        }
         this.colorIndex++;
         this.data.push(data);
 
-        let isNewMax = false;
+        let isChange = false;
         for(let point of data.set){
             if(point > this.max){
                 this.max = point;
-                isNewMax = true;
+                this.verticalMultiplier = (this.bottom - this.top) / this.max;
+                this.horizontalMultiplier = (this.right - this.left) / data.set.length;
+                isChange = true;
             }
         }
 
-        if(isNewMax){
-            this.verticalMultiplier = (this.bottom - this.top) / this.max;
-            this.horizontalMultiplier = (this.right - this.left) / data.set.length;
-            
-            this.xData.dataLength = data.set.length;
+        if(this.xRange.length === 0){
+            this.xRange = xRange;
+            isChange = true;
+        }else{
+            if(xRange[0] < this.xRange[0]){
+                this.xRange[0] = xRange[0];
+                isChange = true;
+            }
+            if(xRange[1] > this.xRange[1]){
+                this.xRange[1] = xRange[1];
+                isChange = true;
+            }
+        }
+
+        if(isChange){
             this.drawGraph();
         }else{
-            this.drawData(data);
+            this.drawLine(data);
         }
     }
 
+    //Removes a single data set from the graph and its line
+    //Inputs:
+    //  id = the unique identifier of the data set that was passed in with addData function
     removeData(id){
         for(let i = 0; i < this.data.length; i++){
             if(this.data[i].id === id){
@@ -61,11 +92,16 @@ class LineGraph{
         this.drawGraph();
     }
 
-    clear(){
+    //Completely clears all data
+    //Does not delete the current graph displaying
+    clearData(){
         this.max = 0;
         this.data = [];
     }
 
+    /**********
+    *********PRIVATE*********
+    **********/
     drawGraph(){
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -73,16 +109,17 @@ class LineGraph{
         this.drawXAxis();
 
         for(let dataSet of this.data){
-            this.drawData(dataSet);
+            this.drawLine(dataSet);
         }
     }
 
-    drawData(data){
+    drawLine(data){
         for(let i = 0; i < data.set.length - 1; i++){
             this.context.beginPath();
             this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom - (this.verticalMultiplier * data.set[i]));
             this.context.lineTo(this.left + (this.horizontalMultiplier * (i + 1)), this.bottom - (this.verticalMultiplier * data.set[i + 1]));
             this.context.strokeStyle = this.colors[data.colorIndex];
+            this.context.lineWidth = 3;
             this.context.stroke();
         }
 
@@ -93,7 +130,7 @@ class LineGraph{
         this.context.beginPath();
         this.context.moveTo(this.left, this.bottom);
         this.context.lineTo(this.right, this.bottom);
-        this.context.lineWidth = 2;
+        this.context.lineWidth = 4;
         this.context.stroke();
 
         this.context.font = "25px Arial";
@@ -103,11 +140,11 @@ class LineGraph{
         this.context.font = "10px Arial";
         this.context.lineWidth = 1;
 
-        if(this.xData.type = "date"){
-            let diff = Math.abs(Math.floor((Date.UTC(this.xData.start.getFullYear(), this.xData.start.getMonth(), this.xData.start.getDate()) - Date.UTC(this.xData.end.getFullYear(), this.xData.end.getMonth(), this.xData.end.getDate())) / (1000 * 60 * 60 * 24)));
-            let showDate = new Date(this.xData.start);
+        if(Object.prototype.toString.call(this.xRange[0]) === '[object Date]'){
+            let diff = Math.abs(Math.floor((Date.UTC(this.xRange[0].getFullYear(), this.xRange[0].getMonth(), this.xRange[0].getDate()) - Date.UTC(this.xRange[1].getFullYear(), this.xRange[1].getMonth(), this.xRange[1].getDate())) / (1000 * 60 * 60 * 24)));
+            let showDate = new Date(this.xRange[0]);
             
-            for(let i = 0; i < this.xData.dataLength; i += Math.floor(this.xData.dataLength / 10)){
+            for(let i = 0; i < diff; i += Math.floor(diff / 10)){
                 this.context.fillText(showDate.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "2-digit"}), this.left + (this.horizontalMultiplier * i) - 20, this.bottom + 15);
 
                 if(i !== 0){
