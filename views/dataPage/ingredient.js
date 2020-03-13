@@ -65,7 +65,7 @@ window.ingredientObj = {
     },
 
     formatData: function(id, startDate, endDate){
-        let dateRange = Math.floor((Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) / (1000 * 60 * 60 * 24));
+        let dateRange = Math.floor((Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) / (1000 * 60 * 60 * 24)) + 1;
         let dataList = new Array(Math.abs(dateRange)).fill(0);
 
         for(let transaction of data.transactions){
@@ -78,7 +78,7 @@ window.ingredientObj = {
                         if(merchRecipe._id === recipe.recipe){
                             for(let ingredient of merchRecipe.ingredients){
                                 if(ingredient.ingredient === id){
-                                    dataList[dateRange - Math.abs(diff)] += ingredient.quantity;
+                                    dataList[dateRange - Math.abs(diff) - 1] += ingredient.quantity * recipe.quantity;
                                 }
                             }
                             break;
