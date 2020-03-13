@@ -8,8 +8,8 @@ window.ingredientObj = {
         document.querySelector("strand-selector").setAttribute("strand", "ingredient");
 
         //A grabastic bag of bullshit to get rid of
-        let date = new Date();
-        let d = new Date(date.getFullYear(), date.getMonth(), 1);
+        let now = new Date();
+        let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         if(!this.isPopulated){
             let ingredientsDiv = document.querySelector("#ingredientOptions");
@@ -24,7 +24,7 @@ window.ingredientObj = {
                 checkbox.id = `${item.ingredient.name}Checkbox`;
                 checkbox.onchange = ()=>{
                     if(checkbox.checked){
-                        this.graph.addData(this.formatData(item.ingredient._id, d, new Date()), [d, new Date()], item.ingredient._id);
+                        this.graph.addData(this.formatData(item.ingredient._id, startOfMonth, new Date()), [startOfMonth, new Date()], item.ingredient._id);
                     }else{
                         this.graph.removeData(item.ingredient._id);
                     }
@@ -52,7 +52,7 @@ window.ingredientObj = {
         if(ingredient){
             this.graph.clearData();
             
-            this.graph.addData(this.formatData(ingredient.id, d, new Date()), [d, new Date()], ingredient.id);
+            this.graph.addData(this.formatData(ingredient.id, startOfMonth, new Date()), [startOfMonth, new Date()], ingredient.id);
 
             for(let label of document.querySelector("#ingredientOptions").children){
                 if(label.innerText === ingredient.name){

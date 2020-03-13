@@ -57,7 +57,34 @@ window.fetchData = function(from, to){
                             break;
                         }
                     }
-                    //change to/from in date list
+
+                    for(let set of response.data){
+                        if(set.transactions[0] < data.transactions[0]){
+                            data.transactions = set.transactions.concat(data.transactions);
+                        }else if(set.transactions[set.transactions.length-1] > data.transactions[data.transactions.length-1]){
+                            data.transactions = data.transactions.concat(set.transactions);
+                        }else{
+                            for(let i = 0; i < data.transactions.length; i++){
+                                if(set.transactions[0] > data.transactions[i].date){
+                                    data.transactions = data.transactions.slice(0, i).concat(set.transactions).concat(data.transactions.slice(i, data.transactions.length - 1));
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(set.purchases[0] < data.purchases[0]){
+                            data.purchases = set.purchases.concat(data.purchases);
+                        }else if(set.purchases[set.purchases.length-1] > data.purchases[data.purchases.length-1]){
+                            data.purchases = data.purchases.concat(set.purchases);
+                        }else{
+                            for(let i = 0; i < data.purchases.length; i++){
+                                if(set.purchases[0] > data.purchases[i].date){
+                                    data.purchases = data.purchases.slice(0, i).concat(set.purchases).concat(data.purchases.slice(i, data.purchases.length - 1));
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             })
             .catch((err)=>{});
