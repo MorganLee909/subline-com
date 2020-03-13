@@ -1,4 +1,4 @@
-window.fetchData = function(from, to){
+window.fetchData = function(from, to, callback){
     retrieveDates = [];
 
     //Compares dates to dates already stored and makes a list of those needed
@@ -52,11 +52,9 @@ window.fetchData = function(from, to){
                             }
                             newIndex += 2;
                         }
-
-                        if(newIndex > 100 || oldIndex > 100){
-                            break;
-                        }
                     }
+
+                    data.dates = mergedDates;
 
                     for(let set of response.data){
                         if(set.transactions[0] < data.transactions[0]){
@@ -85,8 +83,12 @@ window.fetchData = function(from, to){
                             }
                         }
                     }
+
+                    callback();
                 }
             })
             .catch((err)=>{});
+    }else{
+        callback();
     }
 }

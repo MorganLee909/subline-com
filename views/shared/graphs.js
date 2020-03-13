@@ -127,8 +127,6 @@ class LineGraph{
     }
 
     drawXAxis(){
-        console.log(this.data);
-
         this.context.beginPath();
         this.context.moveTo(this.left, this.bottom);
         this.context.lineTo(this.right, this.bottom);

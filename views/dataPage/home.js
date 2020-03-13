@@ -190,21 +190,23 @@ window.homeObj = {
             let startIndex = 0;
             let endIndex = data.transactions.length;
 
-            for(let i = 0; i < data.transactions.length; i++){
-                if(from < new Date(data.transactions[i].date)){
-                    startIndex = i;
-                    break;
+            window.fetchData(from, to, ()=>{
+                for(let i = 0; i < data.transactions.length; i++){
+                    if(from < new Date(data.transactions[i].date)){
+                        startIndex = i;
+                        break;
+                    }
                 }
-            }
-
-            for(let i = 0; i < data.transactions.length; i++){
-                if(to < new Date(data.transactions[i].date)){
-                    endIndex = i;
-                    break;
+    
+                for(let i = 0; i < data.transactions.length; i++){
+                    if(to < new Date(data.transactions[i].date)){
+                        endIndex = i;
+                        break;
+                    }
                 }
-            }
-
-            this.populate(data.transactions.slice(startIndex, endIndex));
+    
+                this.populate(data.transactions.slice(startIndex, endIndex));
+            });
         }
     }
 }
