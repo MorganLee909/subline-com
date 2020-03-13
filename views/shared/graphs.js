@@ -52,7 +52,7 @@ class LineGraph{
             if(point > this.max){
                 this.max = point;
                 this.verticalMultiplier = (this.bottom - this.top) / this.max;
-                this.horizontalMultiplier = (this.right - this.left) / data.set.length;
+                this.horizontalMultiplier = (this.right - this.left) / (data.set.length - 1);
                 isChange = true;
             }
         }
@@ -127,6 +127,8 @@ class LineGraph{
     }
 
     drawXAxis(){
+        console.log(this.data);
+
         this.context.beginPath();
         this.context.moveTo(this.left, this.bottom);
         this.context.lineTo(this.right, this.bottom);
@@ -141,7 +143,7 @@ class LineGraph{
         this.context.lineWidth = 1;
 
         if(Object.prototype.toString.call(this.xRange[0]) === '[object Date]'){
-            let diff = Math.abs(Math.floor((Date.UTC(this.xRange[0].getFullYear(), this.xRange[0].getMonth(), this.xRange[0].getDate()) - Date.UTC(this.xRange[1].getFullYear(), this.xRange[1].getMonth(), this.xRange[1].getDate())) / (1000 * 60 * 60 * 24)));
+            let diff = Math.abs(Math.floor((Date.UTC(this.xRange[0].getFullYear(), this.xRange[0].getMonth(), this.xRange[0].getDate()) - Date.UTC(this.xRange[1].getFullYear(), this.xRange[1].getMonth(), this.xRange[1].getDate())) / (1000 * 60 * 60 * 24))) + 1;
             let showDate = new Date(this.xRange[0]);
             
             for(let i = 0; i < diff; i += Math.floor(diff / 10)){
