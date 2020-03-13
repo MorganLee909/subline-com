@@ -15,8 +15,12 @@
 
 .dates{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
 }
+
+    .dates > *{
+        margin: 10px;
+    }
 
 /* Home Strand */
 #homeStrand{
