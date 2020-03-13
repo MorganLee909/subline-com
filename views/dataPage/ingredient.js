@@ -7,11 +7,10 @@ window.ingredientObj = {
         document.querySelector("#ingredientStrand").style.display = "flex";
         document.querySelector("strand-selector").setAttribute("strand", "ingredient");
 
-        //A grabastic bag of bullshit to get rid of
-        let now = new Date();
-        let startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
         if(!this.isPopulated){
+            document.querySelector("#ingredientFrom").valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            document.querySelector("#ingredientTo").valueAsDate = new Date();
+
             let ingredientsDiv = document.querySelector("#ingredientOptions");
 
             for(let item of data.merchant.inventory){
@@ -22,9 +21,14 @@ window.ingredientObj = {
                 let checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.id = `${item.ingredient.name}Checkbox`;
+                checkbox._id = item.ingredient._id;
                 checkbox.onchange = ()=>{
                     if(checkbox.checked){
-                        this.graph.addData(this.formatData(item.ingredient._id, startOfMonth, new Date()), [startOfMonth, new Date()], item.ingredient._id);
+                        let from = document.querySelector("#ingredientFrom").valueAsDate;
+                        let to = document.querySelector("#ingredientTo").valueAsDate;
+                        console.log(to);
+
+                        this.graph.addData(this.formatData(item.ingredient._id, from, to), [from, to], item.ingredient._id);
                     }else{
                         this.graph.removeData(item.ingredient._id);
                     }
@@ -37,9 +41,6 @@ window.ingredientObj = {
                 checkDiv.appendChild(label);
             }
 
-            let startDate = new Date();
-            startDate.setFullYear(new Date().getFullYear() - 1);
-
             this.graph = new LineGraph(
                 document.querySelector("#ingredientStrand canvas"),
                 "Quantity",
@@ -51,8 +52,11 @@ window.ingredientObj = {
 
         if(ingredient){
             this.graph.clearData();
+
+            let from = document.querySelector("#ingredientFrom").valueAsDate;
+            let to = document.querySelector("#ingredientTo").valueAsDate;
             
-            this.graph.addData(this.formatData(ingredient.id, startOfMonth, new Date()), [startOfMonth, new Date()], ingredient.id);
+            this.graph.addData(this.formatData(ingredient.id, from, to), [from, to], ingredient.id);
 
             for(let label of document.querySelector("#ingredientOptions").children){
                 if(label.innerText === ingredient.name){
@@ -89,5 +93,30 @@ window.ingredientObj = {
         }
 
         return dataList;
+    },
+
+    newDates: function(){
+        let from = new Date(document.querySelector("#ingredientFrom").value);
+        let to  = new Date(document.querySelector("#ingredientTo").value);
+
+        if(from === "" || to === ""){
+            banner.createError("Invalid date");
+            return;
+        }else{
+            from = new Date(from);
+            to = new Date(to);
+        }
+
+        window.fetchData(from, to, ()=>{
+            this.graph.clearData();
+
+            let ingredientsDiv = document.querySelector("#ingredientOptions");
+            for(let div of ingredientsDiv.children){
+                let checkbox = div.children[0];
+                if(checkbox.checked){
+                    this.graph.addData(this.formatData(checkbox._id, from, to), [from, to], checkbox._id);
+                }
+            }
+        });
     }
 }

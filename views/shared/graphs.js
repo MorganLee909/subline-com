@@ -119,7 +119,7 @@ class LineGraph{
             this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom - (this.verticalMultiplier * data.set[i]));
             this.context.lineTo(this.left + (this.horizontalMultiplier * (i + 1)), this.bottom - (this.verticalMultiplier * data.set[i + 1]));
             this.context.strokeStyle = this.colors[data.colorIndex];
-            this.context.lineWidth = 3;
+            this.context.lineWidth = 2;
             this.context.stroke();
         }
 

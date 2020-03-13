@@ -13,6 +13,11 @@
         margin: 2px;
     }
 
+.dates{
+    display: flex;
+    justify-content: space-around;
+}
+
 /* Home Strand */
 #homeStrand{
     flex-direction: column;
@@ -37,11 +42,19 @@
 
 /* Ingredient Strand */
 #ingredientStrand{
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: space-around;
 }
 
     #ingredientStrand > *{
         margin: 10px;
+    }
+
+    .canvasBox{
+        display: flex;
+        justify-content: space-between;
+        width: 100vw;
+        height: 100vh;
     }
 
     canvas{

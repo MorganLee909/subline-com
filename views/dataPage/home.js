@@ -8,15 +8,13 @@ window.homeObj = {
     display: function(){
         clearScreen();
         document.querySelector("#homeStrand").style.display = "flex";
-
-        //Fill in month
-        let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        document.querySelector("#month").innerText = `Month of ${months[new Date().getMonth()]}`;
-
-        document.querySelector("#to").valueAsDate = new Date();
-
+        
         if(!this.isPopulated){
             this.populate(data.transactions);
+
+            document.querySelector("#homeFrom").valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            document.querySelector("#homeTo").valueAsDate = new Date();
+
             this.isPopulated = true;
         }
     },
@@ -175,8 +173,8 @@ window.homeObj = {
     },
 
     newDates: function(){
-        let from = new Date(document.querySelector("#from").value);
-        let to = new Date(document.querySelector("#to").value);
+        let from = new Date(document.querySelector("#homeFrom").value);
+        let to = new Date(document.querySelector("#homeTo").value);
 
         if(from === "" || to === ""){
             banner.createError("Invalid date");
@@ -187,10 +185,10 @@ window.homeObj = {
         }
 
         if(validator.transaction.date(from, to)){
-            let startIndex = 0;
-            let endIndex = data.transactions.length;
-
             window.fetchData(from, to, ()=>{
+                let startIndex = 0;
+                let endIndex = data.transactions.length;
+
                 for(let i = 0; i < data.transactions.length; i++){
                     if(from < new Date(data.transactions[i].date)){
                         startIndex = i;

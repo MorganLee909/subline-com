@@ -19,16 +19,14 @@
         <div id="homeStrand" class="strand">
             <h2 id="month"></h2>
 
-            <div class="buttonBox">
-                <p>From: </p>
-
-                <input id="from" type="date">
-
-                <p>To: </p>
-
-                <input id="to" type="date">
-
-                <button id="dateSort" onclick="window.homeObj.newDates()" class="button">Submit</button>
+            <div class="dates">
+                <label>From:
+                    <input id="homeFrom" type="date" onchange="window.homeObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="homeTo" type="date" onchange="window.homeObj.newDates()">
+                </label>
             </div>
 
             <div class="buttonBox">
@@ -90,9 +88,21 @@
         </div>
 
         <div id="ingredientStrand" class="strand">
-            <div id="ingredientOptions"></div>
+            <div class="dates">
+                <label>From:
+                    <input id="ingredientFrom" type="date" onchange="window.ingredientObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="ingredientTo" type="date" onchange="window.ingredientObj.newDates()">
+                </label>
+            </div>
 
-            <canvas></canvas>
+            <div class="canvasBox">
+                <div id="ingredientOptions"></div>
+
+                <canvas></canvas>
+            </div>
         </div>
 
         <script>let data = <%- JSON.stringify(data); %></script>
