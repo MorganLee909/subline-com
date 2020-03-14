@@ -12,7 +12,7 @@ class LineGraph{
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
         this.left = canvas.clientWidth - (canvas.clientWidth * 0.9);
-        this.right = canvas.clientWidth * 0.9;
+        this.right = canvas.clientWidth * 0.8;
         this.top = canvas.clientHeight - (canvas.clientHeight * 0.9);
         this.bottom = canvas.clientHeight * 0.9;
         this.data = [];
@@ -37,12 +37,12 @@ class LineGraph{
     //  data = array containing list of numbers as the data points for the graph
     //      data[0] will be on the left.  data[data.length-1] will be on the right.
     //  xRange = array containing two elements, start and end for x axis data (currently only dates)
-    //  identifier = any string, int, etc. to identify this data set.  Used for removal
-    addData(data, xRange, identifier){
+    //  name = string name for the line.  Used for display and finding lines.  Each must be unique
+    addData(data, xRange, name){
         data = {
             set: data,
             colorIndex: this.colorIndex,
-            id: identifier
+            name: name
         }
         this.colorIndex++;
         this.data.push(data);
@@ -81,9 +81,9 @@ class LineGraph{
     //Removes a single data set from the graph and its line
     //Inputs:
     //  id = the unique identifier of the data set that was passed in with addData function
-    removeData(id){
+    removeData(name){
         for(let i = 0; i < this.data.length; i++){
-            if(this.data[i].id === id){
+            if(this.data[i].name === name){
                 this.data.splice(i, 1);
                 break;
             }
@@ -124,6 +124,8 @@ class LineGraph{
         }
 
         this.context.strokeStyle = "black";
+
+        this.drawLegend(data.colorIndex, data.name);
     }
 
     drawXAxis(){
@@ -196,5 +198,25 @@ class LineGraph{
 
         this.context.strokeStyle = "black";
         this.context.setLineDash([]);
+    }
+
+    drawLegend(colorIndex, name){
+        let verticalOffset;
+        for(let i = 0; i < this.data.length; i++){
+            if(this.data[i].name === name){
+                verticalOffset = i * 25;
+                break;
+            }
+        }
+
+        this.context.beginPath();
+        this.context.fillStyle = this.colors[colorIndex];
+        this.context.fillRect(this.right + 50, this.top + 50 + verticalOffset, 10, 10);
+        this.context.stroke();
+
+        this.context.font = "15px Arial";
+        this.context.fillText(name, this.right + 65, this.top + 60 + verticalOffset);
+
+        this.context.fillStyle = "black";
     }
 }

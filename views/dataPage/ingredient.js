@@ -22,15 +22,15 @@ window.ingredientObj = {
                 checkbox.type = "checkbox";
                 checkbox.id = `${item.ingredient.name}Checkbox`;
                 checkbox._id = item.ingredient._id;
+                checkbox.name = item.ingredient.name;
                 checkbox.onchange = ()=>{
                     if(checkbox.checked){
                         let from = document.querySelector("#ingredientFrom").valueAsDate;
                         let to = document.querySelector("#ingredientTo").valueAsDate;
-                        console.log(to);
 
-                        this.graph.addData(this.formatData(item.ingredient._id, from, to), [from, to], item.ingredient._id);
+                        this.graph.addData(this.formatData(item.ingredient._id, from, to), [from, to], item.ingredient.name);
                     }else{
-                        this.graph.removeData(item.ingredient._id);
+                        this.graph.removeData(item.ingredient.name);
                     }
                 };
                 checkDiv.appendChild(checkbox);
@@ -56,7 +56,7 @@ window.ingredientObj = {
             let from = document.querySelector("#ingredientFrom").valueAsDate;
             let to = document.querySelector("#ingredientTo").valueAsDate;
             
-            this.graph.addData(this.formatData(ingredient.id, from, to), [from, to], ingredient.id);
+            this.graph.addData(this.formatData(ingredient.id, from, to), [from, to], ingredient.name);
 
             for(let label of document.querySelector("#ingredientOptions").children){
                 if(label.innerText === ingredient.name){
@@ -114,7 +114,7 @@ window.ingredientObj = {
             for(let div of ingredientsDiv.children){
                 let checkbox = div.children[0];
                 if(checkbox.checked){
-                    this.graph.addData(this.formatData(checkbox._id, from, to), [from, to], checkbox._id);
+                    this.graph.addData(this.formatData(checkbox._id, from, to), [from, to], checkbox.name);
                 }
             }
         });
