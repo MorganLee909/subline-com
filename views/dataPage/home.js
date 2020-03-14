@@ -15,7 +15,7 @@ window.homeObj = {
             document.querySelector("#homeFrom").valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
             document.querySelector("#homeTo").valueAsDate = new Date();
 
-            this.isPopulated = true;
+            this.isPopulated = true;2
         }
     },
 

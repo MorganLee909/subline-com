@@ -107,16 +107,18 @@ window.ingredientObj = {
             to = new Date(to);
         }
 
-        window.fetchData(from, to, ()=>{
-            this.graph.clearData();
+        if(validator.transaction.date(from, to)){
+            window.fetchData(from, to, ()=>{
+                this.graph.clearData();
 
-            let ingredientsDiv = document.querySelector("#ingredientOptions");
-            for(let div of ingredientsDiv.children){
-                let checkbox = div.children[0];
-                if(checkbox.checked){
-                    this.graph.addData(this.formatData(checkbox._id, from, to), [from, to], checkbox.name);
+                let ingredientsDiv = document.querySelector("#ingredientOptions");
+                for(let div of ingredientsDiv.children){
+                    let checkbox = div.children[0];
+                    if(checkbox.checked){
+                        this.graph.addData(this.formatData(checkbox._id, from, to), [from, to], checkbox.name);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }

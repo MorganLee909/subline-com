@@ -13,7 +13,7 @@ class LineGraph{
         this.context = canvas.getContext("2d");
         this.left = canvas.clientWidth - (canvas.clientWidth * 0.9);
         this.right = canvas.clientWidth * 0.8;
-        this.top = canvas.clientHeight - (canvas.clientHeight * 0.9);
+        this.top = canvas.clientHeight - (canvas.clientHeight * 0.99);
         this.bottom = canvas.clientHeight * 0.9;
         this.data = [];
         this.max = 0;
@@ -97,6 +97,7 @@ class LineGraph{
     clearData(){
         this.max = 0;
         this.data = [];
+        this.xRange = [];
     }
 
     /**********
