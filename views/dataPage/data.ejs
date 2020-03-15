@@ -105,11 +105,30 @@
             </div>
         </div>
 
+        <div id="recipeStrand" class="strand">
+            <div class="dates">
+                <label>From:
+                    <input id="recipeFrom" type="date" onchange="window.ingredientObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="recipeTo" type="date" onchange="window.ingredientObj.newDates()">
+                </label>
+            </div>
+
+            <div class="canvasBox">
+                <div id="recipeOptions"></div>
+
+                <canvas></canvas>
+            </div>
+        </div>
+
         <script>let data = <%- JSON.stringify(data); %></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/shared/validation.js"></script>
         <script src="/dataPage/home.js"></script>
-        <script src="dataPage/ingredient.js"></script>
+        <script src="/dataPage/ingredient.js"></script>
+        <script src="/dataPage/recipe.js"></script>
         <script src="/shared/controller.js"></script>
         <script src="/shared/graphs.js"></script>
         <script src="/dataPage/fetchData.js"></script>

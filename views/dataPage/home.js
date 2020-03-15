@@ -15,11 +15,12 @@ window.homeObj = {
             document.querySelector("#homeFrom").valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
             document.querySelector("#homeTo").valueAsDate = new Date();
 
-            this.isPopulated = true;2
+            this.isPopulated = true;
         }
     },
 
     populate: function(transactions){
+        console.log(transactions);
         this.recipeTotal = 0;
         this.revenueTotal = 0;
         

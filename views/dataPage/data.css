@@ -28,6 +28,11 @@ body, html{
         margin: 10px;
     }
 
+canvas{
+    flex-grow: 9;
+    height: 64vh;
+}
+
 /* Home Strand */
 #homeStrand{
     flex-direction: column;
@@ -65,12 +70,28 @@ body, html{
         justify-content: space-between;
     }
 
-    canvas{
-        flex-grow: 9;
-        height: 64vh;
+    #ingredientOptions{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
     }
 
-    #ingredientOptions{
+/* Recipe Strand */
+#recipeStrand{
+    flex-direction: column;
+    align-items: space-between;
+}
+
+    #recipeStrand > *{
+        margin: 10px;
+    }
+
+    .canvasBox{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #recipeOptions{
         flex-grow: 1;
         display: flex;
         flex-direction: column;

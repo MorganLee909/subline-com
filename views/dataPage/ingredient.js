@@ -96,8 +96,8 @@ window.ingredientObj = {
     },
 
     newDates: function(){
-        let from = new Date(document.querySelector("#ingredientFrom").value);
-        let to  = new Date(document.querySelector("#ingredientTo").value);
+        let from = document.querySelector("#ingredientFrom").valueAsDate;
+        let to  = document.querySelector("#ingredientTo").valueAsDate;
 
         if(from === "" || to === ""){
             banner.createError("Invalid date");
