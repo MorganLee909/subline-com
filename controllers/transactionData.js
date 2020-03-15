@@ -3,6 +3,12 @@ const Purchase = require("../models/purchase");
 const Merchant = require("../models/merchant");
 
 module.exports = {
+    //POST - returns all transactions for a merchant between given dates
+    //Inputs:
+    //  req.body.from: start date
+    //  req.body.to: end date
+    //Returns:
+    //  List of transactions
     getTransactions: function(req, res){
         if(!req.session.user){
             req.session.error = "You must be logged in to view that page";
@@ -10,10 +16,19 @@ module.exports = {
         }
 
         let date = new Date();
-        let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-        let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        let firstDay, lastDay;
 
-        Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}})
+        if(req.body.from && req.body.to){
+            firstDay = new Date(req.body.from);
+            lastDay = new Date(req.body.to);
+        }else{
+            firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        }
+
+        Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
+            {_id: 0, date: 1, recipes: 1},
+            {sort: {date: 1}})
             .then((transactions)=>{
                 return res.json(transactions);
             })
@@ -91,4 +106,61 @@ module.exports = {
             })
             .catch((err)=>{});
     },
+
+    populate: function(req, res){
+        if(!req.session.user){
+            res.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        function randomDate() {
+            let now = new Date();
+            let start = new Date();
+            start.setFullYear(now.getFullYear() - 1);
+            return new Date(start.getTime() + Math.random() * (now.getTime() - start.getTime()));
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                let newTransactions = [];
+
+                for(let i = 0; i < 5000; i++){
+                    let newTransaction = new Transaction({
+                        merchant: merchant._id,
+                        date: randomDate(),
+                        recipes: []
+                    });
+
+                    let numberOfRecipes = Math.floor((Math.random() * 5) + 1);
+
+                    for(let j = 0; j < numberOfRecipes; j++){
+                        let recipeNumber = Math.floor(Math.random() * merchant.recipes.length);
+                        let randQuantity = Math.floor((Math.random() * 3) + 1);
+
+                        newTransaction.recipes.push({
+                            recipe: merchant.recipes[recipeNumber],
+                            quantity: randQuantity
+                        });
+                    }
+
+                    newTransactions.push(newTransaction);
+                }
+
+                Transaction.create(newTransactions)
+                    .then((transactions)=>{
+                        console.log("completed");
+                        return res.redirect("/data");
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        return;
+                    });
+            })
+            .catch((err)=>{
+                console.log(err);
+                return;
+            });
+        
+        
+    }
 }

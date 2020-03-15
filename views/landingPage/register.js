@@ -25,7 +25,9 @@ let registerObj = {
         let checkbox = document.querySelector("#checkAgree");
 
         if(checkbox.checked){
-            if(validator.isSanitary(document.querySelector("#restName").value)){
+            if(validator.isSanitary(document.querySelector("#regName").value)){
+                form.action = "merchant/create/none";
+                form.method = "post";
                 form.submit();
             }
         }else{

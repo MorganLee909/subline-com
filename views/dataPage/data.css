@@ -26,3 +26,24 @@
         flex-direction: column;
         align-items: center;
     }
+
+/* Ingredient Strand */
+#ingredientStrand{
+    justify-content: space-between;
+}
+
+    #ingredientStrand > *{
+        margin: 10px;
+    }
+
+    canvas{
+        flex-grow: 10;
+        max-height: 60vh;
+        max-width: 90vw;
+    }
+
+    #ingredientOptions{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }

@@ -1,10 +1,16 @@
 <div class="header">
     <a class="logo" href="http://www.thesubline.com" >
         <img src="/shared/images/logo.png" alt="Subline">
-        <h1>SUBLINE</h1>
+        <div class='header-logo'> SUBLINE </div>
     </a>
     
     <% if(locals.merchant || locals.data){ %>
         <a class="logout" href="/logout">Log out</a>
+    <% }else{ %>
+        <div class="public-buttons">
+            <button class="button" onclick="loginObj.display()"> Log In </button>
+    
+            <a class="button-join link" onclick="registerObj.display()"> Or Join </a>
+        </div>
     <% } %>
 </div>

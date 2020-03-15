@@ -1,0 +1,9 @@
+I have updated the login and registration so that you can create an account and then login with it.
+
+1.  Create an account and check the rest of the website.
+    A lot of the work style that you changed affects every other page and breaks things.
+    This is why I told you you really should not add style to "shared.css" unless you are absolute certain that you want it to affect every single page.
+    You need to go through and get rid of all of these negative affects.
+    Maybe go through "shared.css" and move all that code to the more local "landing.css"
+
+Other than that, everything seems good to me.  Fix those side effects on the rest of the site and everything should be ready to go.

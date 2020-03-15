@@ -14,12 +14,6 @@
 
         <div id="publicStrand">
             <div class="main-background">
-                <div class="public-buttons">
-                    <button class="button" onclick="loginObj.display()">Log In</button>
-
-                    <button class="button" onclick="registerObj.display()">Join</button>
-                </div>
-
                 <div class="logo-text">
                     <img src="/shared/images/logoWithText.png" alt="Subline">
 
@@ -49,74 +43,66 @@
             </div>
         </div>
 
+        <div id="registerStrand">
+            <form onsubmit="registerObj.submit()">
+                <h1> Join Subline </h1>
+
+                <a class="button buttonWithBorder" href="/cloverlogin"> Sign Up with Clover </a>
+
+                <label id="nameLabel">Restaurant Name
+                    <input class="input" id="regName" name="name" type="text" required>
+                </label>
+        
+                <label>Email
+                    <input type="text" id="regEmail" name="email" type="email" required>
+                </label>
+        
+                <label>Password
+                    <input type="password" id="regPass" name="password" type="password" required>
+                </label>
+        
+                <label>Confirm Password
+                    <input type="password" id="regConfirmPass" name="confirmPassword" type="password" required>
+                </label>
+        
+                <div id="agreement">
+                    <label class="container">
+                        <input id="checkAgree" type="checkbox">
+
+                        <span class="checkmark"></span>
+        
+                        <p style="padding-top: 5px; padding-left: 7px;">I agree to the 
+                            <a class="link" href="/information">Privacy Policy</a> and the 
+                            <a class="link" href="/information">Terms and Conditions</a>
+                        </p>
+                    </label>   
+                </div>
+
+                <input id="regButton" class="buttonDisabled" type="submit" value="Sign Up with Email">
+
+                <h3 class="link" style="margin-top: 30px;" onclick="loginObj.display()"> Already have an account? Please Sign In </h3>
+
+            </form>
+        </div>
+
         <div id="loginStrand">
             <form action="/login" method="post">
-                <h3>Log In</h3>
-                
-                <label>Email:
-                    <input name="email" type="email" required>
-                </label>
+                <h1> Welcome Back </h1>
 
-                <label>Password:
-                    <input name="password" type="password" required>
-                </label>
-                
-                <div>
-                    <input class="button" type="submit" value="Log In">
-
-                    <button class="button" onclick="loginObj.cancel()">Cancel</button>
-                </div>
-            </form>
-
-            <a class="button" href="/cloverlogin">Log in with Clover</a>
-        </div>
-
-        <div id="registerStrand">
-            <form action="/merchant/create/none" method="post" onsubmit="registerObj.submit()">
-                <label>Restaurant Name:
-                    <input id="restName" name="name" type="text" required>
-                </label>
-
-                <label>Email:
-                    <input name="email" type="email" required>
-                </label>
-
-                <label>Password:
-                    <input name="password" type="password" required>
-                </label>
-
-                <label>Confirm Password:
-                    <input name="confirmPassword" type="password" required>
-                </label>
-
-                <div id="agreement">
-                    <input id="checkAgree" type="checkbox" onchange="registerObj.agreement()">
-
-                    <p>I agree to the <a href="/information">Privacy Policy</a> and the <a href="/information">Terms and Conditions</a></p>
-                </div>
-
-                <input id="regButton" class="buttonDisabled" type="submit" value="Register">
-            </form>
-
-            <a class="button" href="/cloverlogin">Register with Clover</a>
-
-            <button class="button" onclick="publicObj.display()">Cancel</button>
-        </div>
+                <a class="button buttonWithBorder" href="/cloverlogin"> Sign In with Clover </a>
         
+                <label>Email
+                    <input type="text" name="email" type="email" required>
+                </label>
+        
+                <label>Password
+                    <input type="password" name="password" required>
+                </label>
+        
+                <input id="signIn" type="submit" value="Sign In with Email">
 
-        <div id="posChoiceStrand">
-            <h1>Choose your POS System</h1>
-
-            <div class="cards">
-                <a href="/cloverlogin">
-                    <img src="../shared/images/clover-logo.jpeg" alt="Clover">
-                </a>
-
-                <a href="/merchant/new/none">
-                    <img src="../shared/images/logo.png" alt="None">
-                    <p>None</p>
-                </a>
-            </div>
+                <h3 class="link" style="margin-top: 30px;" onclick="registerObj.display()"> New Here? Please Sign Up </h3>
+            </form>
         </div>
 
         <% include ../shared/footer %>
