@@ -1,33 +1,34 @@
-window.ingredientObj = {
+window.purchaseObj = {
     isPopulated: false,
     graph: {},
 
     display: function(ingredient){
         clearScreen();
-        document.querySelector("#ingredientStrand").style.display = "flex";
-        document.querySelector("strand-selector").setAttribute("strand", "ingredient");
+        document.querySelector("#purchaseStrand").style.display = "flex";
+        document.querySelector("strand-selector").setAttribute("strand", "purchase");
 
         if(!this.isPopulated){
             let date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-            document.querySelector("#ingredientFrom").valueAsDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
-            document.querySelector("#ingredientTo").valueAsDate = new Date();
+            document.querySelector("#purchaseFrom").valueAsDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
+            document.querySelector("#purchaseTo").valueAsDate = new Date();
 
-            let ingredientsDiv = document.querySelector("#ingredientOptions");
+            let purchasesDiv = document.querySelector("#purchaseOptions");
 
             for(let item of data.merchant.inventory){
+                console.log(item);
                 let checkDiv = document.createElement("div");
                 checkDiv.classList = "checkboxDiv";
-                ingredientsDiv.appendChild(checkDiv);
+                purchasesDiv.appendChild(checkDiv);
 
                 let checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
-                checkbox.id = `${item.ingredient.name}Checkbox`;
+                checkbox.id = `${item.ingredient.name}PurchaseCheckbox`;
                 checkbox._id = item.ingredient._id;
                 checkbox.name = item.ingredient.name;
                 checkbox.onchange = ()=>{
                     if(checkbox.checked){
                         let from, to;
-                        [from, to] = getInputDates("ingredient");
+                        [from, to] = getInputDates("purchase");
 
                         this.graph.addData(this.formatData(item.ingredient._id, from, to), [from, to], item.ingredient.name);
                     }else{
@@ -38,14 +39,14 @@ window.ingredientObj = {
 
                 let label = document.createElement("label");
                 label.innerText = item.ingredient.name;
-                label.setAttribute("for", `${item.ingredient.name}Checkbox`);
+                label.setAttribute("for", `${item.ingredient.name}PurchaseCheckbox`);
                 checkDiv.appendChild(label);
             }
 
             this.graph = new LineGraph(
-                document.querySelector("#ingredientStrand canvas"),
+                document.querySelector("#purchaseStrand canvas"),
                 "Quantity",
-                "Date",
+                "Date"
             );
 
             this.isPopulated = true;
@@ -55,11 +56,11 @@ window.ingredientObj = {
             this.graph.clearData();
 
             let from, to;
-            [from, to] = getInputDates("ingredient");
-            
+            [from, to] = getInputDates("purchase");
+
             this.graph.addData(this.formatData(ingredient.id, from, to), [from, to], ingredient.name);
 
-            for(let label of document.querySelector("#ingredientOptions").children){
+            for(let label of document.querySelector("#purchaseOptions").children){
                 if(label.innerText === ingredient.name){
                     label.children[0].checked = true;
                 }else{
@@ -70,25 +71,16 @@ window.ingredientObj = {
     },
 
     //TODO This can be made to be faster, no need to search full data list
-    formatData: function(id, startDate, endDate){
-        let dateRange = Math.floor((Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) - Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())) / (1000 * 60 * 60 * 24)) + 1;
+    formatData: function(id, from, to){
+        let dateRange = Math.floor((Date.UTC(to.getFullYear(), to.getMonth(), to.getDate()) - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / (1000 * 60 * 60 * 24)) + 1;
         let dataList = new Array(Math.abs(dateRange)).fill(0);
+        
+        for(let purchase of data.purchases){
+            let diff = Math.floor((Date.UTC(purchase.date.getFullYear(), purchase.date.getMonth(), purchase.date.getDate()) - Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())) / (1000 * 60 * 60 * 24));
 
-        for(let transaction of data.transactions){
-            let diff = Math.floor((Date.UTC(transaction.date.getFullYear(), transaction.date.getMonth(), transaction.date.getDate()) - Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())) / (1000 * 60 * 60 * 24));
-
-            if(transaction.date > startDate && diff <= 0){
-                for(let recipe of transaction.recipes){
-                    for(let merchRecipe of data.merchant.recipes){
-                        if(merchRecipe._id === recipe.recipe){
-                            for(let ingredient of merchRecipe.ingredients){
-                                if(ingredient.ingredient === id){
-                                    dataList[dateRange - Math.abs(diff) - 1] += ingredient.quantity * recipe.quantity;
-                                }
-                            }
-                            break;
-                        }
-                    }
+            for(let ingredient of purchase.ingredients){
+                if(purchase.date > from && diff <=0 && id === ingredient.ingredient){
+                    dataList[dateRange - Math.abs(diff) - 1] += ingredient.quantity;
                 }
             }
         }
@@ -98,14 +90,14 @@ window.ingredientObj = {
 
     newDates: function(){
         let from, to;
-        [from, to] = getInputDates("ingredient");
+        [from, to] = getInputDates("purchase");
 
         if(validator.transaction.date(from, to)){
             fetchData(from, to, ()=>{
                 this.graph.clearData();
 
-                let ingredientsDiv = document.querySelector("#ingredientOptions");
-                for(let div of ingredientsDiv.children){
+                let purchaseDiv = document.querySelector("#purchaseOptions");
+                for(let div of purchaseDiv.children){
                     let checkbox = div.children[0];
                     if(checkbox.checked){
                         this.graph.addData(this.formatData(checkbox._id, from, to), [from, to], checkbox.name);

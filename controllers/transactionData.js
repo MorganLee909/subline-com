@@ -116,6 +116,7 @@ module.exports = {
         function randomDate() {
             let now = new Date();
             let start = new Date();
+            // start.setDate(now.getDate() - 10);
             start.setFullYear(now.getFullYear() - 1);
             return new Date(start.getTime() + Math.random() * (now.getTime() - start.getTime()));
         }

@@ -3,6 +3,7 @@ const axios = require("axios");
 
 const Merchant = require("../models/merchant");
 const Purchase = require("../models/purchase");
+const Transaction = require("../models/transaction");
 
 module.exports = {
     //POST - Creates a new purchase for a merchant
@@ -129,6 +130,60 @@ module.exports = {
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
             });
-        
+    },
+
+    //POST - Gets transactions and purchases between 2 dates for a merchant
+    //Inputs:
+    //  req.body.from = start date
+    //  req.body.to = end date
+    //Returns:
+    //  transactions = list of transactions between the dates provided
+    //  purchases = list of purchases between the dates provided
+    getData: function(req, res){
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        let promiseList = [];
+
+        for(let i = 0; i < req.body.dates.length; i+=2){
+            promiseList.push(new Promise((resolve, reject)=>{
+                Transaction.find({merchant: req.session.user, date: {$gte: req.body.dates[i], $lt: req.body.dates[i+1]}},
+                    {date: 1, recipes: 1, _id: 0},
+                    {sort: {date: 1}})
+                    .then((transactions)=>{
+                        resolve(transactions);
+                    })
+                    .catch((err)=>{});
+            }));
+
+            promiseList.push(new Promise((resolve, reject)=>{
+                Purchase.find({merchant: req.session.user, date: {$gte: req.body.dates[i], $lt: req.body.dates[i+1]}},
+                    {date: 1, ingredients: 1, _id: 0},
+                    {sort: {date: 1}})
+                    .then((purchases)=>{
+                        resolve(purchases);
+                    })
+                    .catch((err)=>{})
+            }));
+        }
+
+        Promise.all(promiseList)
+            .then((response)=>{
+                let newList = [];
+
+                for(let i = 0; i < response.length; i+=2){
+                    newList.push({
+                        transactions: response[i],
+                        purchases: response[i+1]
+                    });
+                }
+
+                return res.json(newList);
+            })
+            .catch((err)=>{
+                return res.json("Error: unable to retrieve user data");
+            });
     }
 }

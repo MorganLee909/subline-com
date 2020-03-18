@@ -119,7 +119,7 @@ let validator = {
                 errors.push("Starting date must be before ending date");
             }
 
-            if(from > today || to > today){
+            if(from > today || to > today.setDate(today.getDate() + 1)){
                 errors.push("Cannot choose a date in the future");
             }
 

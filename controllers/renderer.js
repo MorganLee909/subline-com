@@ -142,16 +142,16 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let date = new Date();
+        let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        let lastDay = new Date();
+
         let merchTransPromise = new Promise((resolve, reject)=>{
             Merchant.findOne({_id: req.session.user}, 
                 {name: 1, inventory: 1, recipes: 1, _id: 0})
                 .populate("recipes")
                 .populate("inventory.ingredient")
                 .then((merchant)=>{
-                    let date = new Date();
-                    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-                    let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
                     Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
                         {date: 1, recipes: 1, _id: 0},
                         {sort: {date: 1}})
@@ -164,8 +164,9 @@ module.exports = {
         });
 
         let purchasePromise = new Promise((resolve, reject)=>{
-            Purchase.find({merchant: req.session.user},
-                {date: 1, ingredients: 1, _id: 0})
+            Purchase.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
+                {date: 1, ingredients: 1, _id: 0},
+                {sort: {date: 1}})
                 .then((purchases)=>{
                     resolve(purchases);
                 })
@@ -177,7 +178,8 @@ module.exports = {
                 let data = {
                     merchant: response[0].merchant,
                     transactions: response[0].transactions,
-                    purchases: response[1]
+                    purchases: response[1],
+                    dates: [firstDay, lastDay]
                 }
 
                 return res.render("dataPage/data", {data: data});

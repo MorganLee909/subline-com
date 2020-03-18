@@ -19,16 +19,14 @@
         <div id="homeStrand" class="strand">
             <h2 id="month"></h2>
 
-            <div class="buttonBox">
-                <p>From: </p>
-
-                <input id="from" type="date">
-
-                <p>To: </p>
-
-                <input id="to" type="date">
-
-                <button id="dateSort" class="buttonDisabled">Submit</button>
+            <div class="dates">
+                <label>From:
+                    <input id="homeFrom" type="date" onchange="window.homeObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="homeTo" type="date" onchange="window.homeObj.newDates()">
+                </label>
             </div>
 
             <div class="buttonBox">
@@ -90,16 +88,76 @@
         </div>
 
         <div id="ingredientStrand" class="strand">
-            <div id="ingredientOptions"></div>
+            <div class="dates">
+                <label>From:
+                    <input id="ingredientFrom" type="date" onchange="window.ingredientObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="ingredientTo" type="date" onchange="window.ingredientObj.newDates()">
+                </label>
+            </div>
 
-            <canvas></canvas>
+            <div class="canvasBox">
+                <div id="ingredientOptions"></div>
+
+                <canvas></canvas>
+            </div>
         </div>
 
-        <script>let data = <%- JSON.stringify(data); %></script>
+        <div id="recipeStrand" class="strand">
+            <div class="dates">
+                <label>From:
+                    <input id="recipeFrom" type="date" onchange="window.recipeObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="recipeTo" type="date" onchange="window.recipeObj.newDates()">
+                </label>
+            </div>
+
+            <div class="canvasBox">
+                <div id="recipeOptions"></div>
+
+                <canvas></canvas>
+            </div>
+        </div>
+
+        <div id="purchaseStrand" class="strand">
+            <div class="dates">
+                <label>From:
+                    <input id="purchaseFrom" type="date" onchange="window.purchaseObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="purchaseTo" type="date" onchange="window.purchaseObj.newDates()">
+                </label>
+            </div>
+
+            <div class="canvasBox">
+                <div id="purchaseOptions"></div>
+
+                <canvas></canvas>
+            </div>
+        </div>
+
+        <script>
+            let data = <%- JSON.stringify(data); %>;
+
+            for(let transaction of data.transactions){
+                transaction.date = new Date(transaction.date);
+            }
+
+            for(let purchase of data.purchases){
+                purchase.date = new Date(purchase.date);
+            }
+        </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/shared/validation.js"></script>
         <script src="/dataPage/home.js"></script>
-        <script src="dataPage/ingredient.js"></script>
+        <script src="/dataPage/ingredient.js"></script>
+        <script src="/dataPage/recipe.js"></script>
+        <script src="/dataPage/purchase.js"></script>
         <script src="/shared/controller.js"></script>
         <script src="/shared/graphs.js"></script>
         <script src="/dataPage/fetchData.js"></script>

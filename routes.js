@@ -40,9 +40,11 @@ module.exports = function(app){
     app.get("/cloverlogin", otherData.cloverRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
 
+    app.post("/getdata", otherData.getData);
+
     //Transactions
     app.post("/transactions", transactionData.getTransactions);
     app.get("/purchases", transactionData.getPurchases);
     app.post("/transactions/create", transactionData.createTransaction);  //Creates transaction for non-pos merchant
-    app.get("/populate", transactionData.populate);
+    app.get("/populatesometransactions", transactionData.populate);
 }

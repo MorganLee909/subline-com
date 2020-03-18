@@ -8,15 +8,14 @@ window.homeObj = {
     display: function(){
         clearScreen();
         document.querySelector("#homeStrand").style.display = "flex";
-
-        //Fill in month
-        let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        document.querySelector("#month").innerText = `Month of ${months[new Date().getMonth()]}`;
-
-        document.querySelector("#to").valueAsDate = new Date();
-
+        
         if(!this.isPopulated){
             this.populate(data.transactions);
+
+            let date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            document.querySelector("#homeFrom").valueAsDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
+            document.querySelector("#homeTo").valueAsDate = new Date();
+
             this.isPopulated = true;
         }
     },
@@ -61,6 +60,7 @@ window.homeObj = {
         }
         
         //Populate number of recipes sold
+        let i = 0;
         for(let transaction of transactions){
             for(let recipe of transaction.recipes){
                 for(let newRecipe of recipes){
@@ -108,12 +108,9 @@ window.homeObj = {
         for(let ingredient of soldIngredients){
             let row = document.createElement("tr");
             ingredientsBody.appendChild(row);
-            if(window.dataLoaded){
-                row.classList = "clickableRow";
-                row.onclick = ()=>{window.ingredientObj.display("ingredient", ingredient)};
-            }else{
-                row.ingredient = ingredient;
-            }
+            row.classList = "clickableRow";
+            row.onclick = ()=>{window.ingredientObj.display(ingredient)};
+            
 
             let name = document.createElement("td");
             name.innerText = `${ingredient.name} (${ingredient.unit})`;
@@ -137,6 +134,8 @@ window.homeObj = {
 
         for(let recipe of recipes){
             let row = document.createElement("tr");
+            row.classList = "clickableRow";
+            row.onclick = ()=>{window.recipeObj.display(recipe)};
             recipesBody.appendChild(row);
 
             let name = document.createElement("td");
@@ -161,6 +160,8 @@ window.homeObj = {
         
         for(let ingredient of purchaseIngredients){
             let row = document.createElement("tr");
+            row.classList = "clickableRow";
+            row.onclick = ()=>{window.purchaseObj.display(ingredient)};
             purchasesBody.appendChild(row);
             
             let name = document.createElement("td");
@@ -178,8 +179,8 @@ window.homeObj = {
     },
 
     newDates: function(){
-        let from = new Date(document.querySelector("#from").value);
-        let to = new Date(document.querySelector("#to").value);
+        let from = document.querySelector("#homeFrom").value;
+        let to = document.querySelector("#homeTo").value;
 
         if(from === "" || to === ""){
             banner.createError("Invalid date");
@@ -187,27 +188,33 @@ window.homeObj = {
         }else{
             from = new Date(from);
             to = new Date(to);
+
+            from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
+            to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
         }
 
         if(validator.transaction.date(from, to)){
-            let startIndex = 0;
-            let endIndex = data.transactions.length;
+            window.fetchData(from, to, ()=>{
+                let startIndex = 0;
+                let endIndex = data.transactions.length;
 
-            for(let i = 0; i < data.transactions.length; i++){
-                if(from < new Date(data.transactions[i].date)){
-                    startIndex = i;
-                    break;
+                for(let i = 0; i < data.transactions.length; i++){
+                    if(from < data.transactions[i].date){
+                        startIndex = i;
+                        break;
+                    }
                 }
-            }
-
-            for(let i = 0; i < data.transactions.length; i++){
-                if(to < new Date(data.transactions[i].date)){
-                    endIndex = i;
-                    break;
+    
+                for(let i = 0; i < data.transactions.length; i++){
+                    if(to < data.transactions[i].date){
+                        endIndex = i;
+                        break;
+                    }
                 }
-            }
-
-            this.populate(data.transactions.slice(startIndex, endIndex));
+    
+                let newData = data.transactions.slice(startIndex, endIndex);
+                this.populate(newData);
+            });
         }
     }
 }
