@@ -77,7 +77,7 @@ window.ingredientObj = {
             let transDate = new Date(transaction.date);
             let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())) / (1000 * 60 * 60 * 24));
 
-            if(diff <= 0){
+            if(transDate > from && diff <= 0){
                 for(let recipe of transaction.recipes){
                     for(let merchRecipe of data.merchant.recipes){
                         if(merchRecipe._id === recipe.recipe){

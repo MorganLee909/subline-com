@@ -77,7 +77,7 @@ window.recipeObj = {
             let transDate = new Date(transaction.date);
             let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())) / (1000 * 60 * 60 * 24));
 
-            if(diff <= 0){
+            if(transDate > from && diff <= 0){
                 for(let recipe of transaction.recipes){
                     if(recipe.recipe === id){
                         dataList[dateRange - Math.abs(diff) - 1] += recipe.quantity;
