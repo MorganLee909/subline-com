@@ -96,3 +96,24 @@ canvas{
         display: flex;
         flex-direction: column;
     }
+
+/* Purchase Strand */
+#purchaseStrand{
+    flex-direction: column;
+    align-items: space-between;
+}
+
+    #purchaseStrand > *{
+        margin: 10px;
+    }
+
+    .canvasBox{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #recipeOptions{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }

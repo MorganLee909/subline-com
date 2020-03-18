@@ -123,6 +123,24 @@
             </div>
         </div>
 
+        <div id="purchaseStrand" class="strand">
+            <div class="dates">
+                <label>From:
+                    <input id="purchaseFrom" type="date" onchange="window.purchaseObj.newDates()">
+                </label>
+                
+                <label>To:
+                    <input id="purchaseTo" type="date" onchange="window.purchaseObj.newDates()">
+                </label>
+            </div>
+
+            <div class="canvasBox">
+                <div id="purchaseOptions"></div>
+
+                <canvas></canvas>
+            </div>
+        </div>
+
         <script>
             let data = <%- JSON.stringify(data); %>;
 
@@ -139,6 +157,7 @@
         <script src="/dataPage/home.js"></script>
         <script src="/dataPage/ingredient.js"></script>
         <script src="/dataPage/recipe.js"></script>
+        <script src="/dataPage/purchase.js"></script>
         <script src="/shared/controller.js"></script>
         <script src="/shared/graphs.js"></script>
         <script src="/dataPage/fetchData.js"></script>

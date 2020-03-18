@@ -134,9 +134,9 @@ window.homeObj = {
 
         for(let recipe of recipes){
             let row = document.createElement("tr");
-            recipesBody.appendChild(row);
             row.classList = "clickableRow";
             row.onclick = ()=>{window.recipeObj.display(recipe)};
+            recipesBody.appendChild(row);
 
             let name = document.createElement("td");
             name.innerText = recipe.name;
@@ -160,6 +160,8 @@ window.homeObj = {
         
         for(let ingredient of purchaseIngredients){
             let row = document.createElement("tr");
+            row.classList = "clickableRow";
+            row.onclick = ()=>{window.purchaseObj.display(ingredient)};
             purchasesBody.appendChild(row);
             
             let name = document.createElement("td");

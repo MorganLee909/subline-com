@@ -26,8 +26,8 @@ window.recipeObj = {
                 checkbox.name = recipe.name;
                 checkbox.onchange = ()=>{
                     if(checkbox.checked){
-                        let from = document.querySelector("#recipeFrom").valueAsDate;
-                        let to = document.querySelector("#recipeTo").valueAsDate;
+                        let from, to;
+                        [from, to] = getInputDates("recipe");
 
                         this.graph.addData(this.formatData(recipe._id, from, to), [from, to], recipe.name);
                     }else{
@@ -69,15 +69,15 @@ window.recipeObj = {
         }
     },
 
+    //TODO This can be made to be faster, no need to search full data list
     formatData: function(id, from, to){
         let dateRange = Math.floor((Date.UTC(to.getFullYear(), to.getMonth(), to.getDate()) - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / (1000 * 60 * 60 * 24)) + 1;
         let dataList = new Array(Math.abs(dateRange)).fill(0);
 
         for(let transaction of data.transactions){
-            let transDate = transaction.date;
-            let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())) / (1000 * 60 * 60 * 24));
+            let diff = Math.floor((Date.UTC(transaction.date.getFullYear(), transaction.date.getMonth(), transaction.date.getDate()) - Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())) / (1000 * 60 * 60 * 24));
 
-            if(transDate > from && diff <= 0){
+            if(transaction.date > from && diff <= 0){
                 for(let recipe of transaction.recipes){
                     if(recipe.recipe === id){
                         dataList[dateRange - Math.abs(diff) - 1] += recipe.quantity;
