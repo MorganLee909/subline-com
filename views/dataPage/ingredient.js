@@ -8,7 +8,8 @@ window.ingredientObj = {
         document.querySelector("strand-selector").setAttribute("strand", "ingredient");
 
         if(!this.isPopulated){
-            document.querySelector("#ingredientFrom").valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            let date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            document.querySelector("#ingredientFrom").valueAsDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
             document.querySelector("#ingredientTo").valueAsDate = new Date();
 
             let ingredientsDiv = document.querySelector("#ingredientOptions");
@@ -96,8 +97,8 @@ window.ingredientObj = {
     },
 
     newDates: function(){
-        let from = document.querySelector("#ingredientFrom").valueAsDate;
-        let to  = document.querySelector("#ingredientTo").valueAsDate;
+        let from = document.querySelector("#ingredientFrom").value;
+        let to  = document.querySelector("#ingredientTo").value;
 
         if(from === "" || to === ""){
             banner.createError("Invalid date");
@@ -105,6 +106,9 @@ window.ingredientObj = {
         }else{
             from = new Date(from);
             to = new Date(to);
+
+            from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
+            to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
         }
 
         if(validator.transaction.date(from, to)){

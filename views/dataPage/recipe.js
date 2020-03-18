@@ -8,7 +8,8 @@ window.recipeObj = {
         document.querySelector("strand-selector").setAttribute("strand", "recipe");
 
         if(!this.isPopulated){
-            document.querySelector("#recipeFrom").valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            let date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            document.querySelector("#recipeFrom").valueAsDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
             document.querySelector("#recipeTo").valueAsDate = new Date();
 
             let recipesDiv = document.querySelector("#recipeOptions");
@@ -89,8 +90,8 @@ window.recipeObj = {
     },
 
     newDates: function(){
-        let from = document.querySelector("recipeFrom").valueAsDate;
-        let to = document.querySelector("recipeTo").valueAsDate;
+        let from = document.querySelector("#recipeFrom").value;
+        let to = document.querySelector("#recipeTo").value;
 
         if(from === "" || to === ""){
             banner.createError("Invalid date");
@@ -98,6 +99,9 @@ window.recipeObj = {
         }else{
             from = new Date(from);
             to = new Date(to);
+
+            from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
+            to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
         }
 
         if(validator.transaction.date(from, to)){

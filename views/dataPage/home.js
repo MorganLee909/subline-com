@@ -12,7 +12,8 @@ window.homeObj = {
         if(!this.isPopulated){
             this.populate(data.transactions);
 
-            document.querySelector("#homeFrom").valueAsDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            let date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            document.querySelector("#homeFrom").valueAsDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12);
             document.querySelector("#homeTo").valueAsDate = new Date();
 
             this.isPopulated = true;
@@ -20,7 +21,6 @@ window.homeObj = {
     },
 
     populate: function(transactions){
-        console.log(transactions);
         this.recipeTotal = 0;
         this.revenueTotal = 0;
         
@@ -60,7 +60,12 @@ window.homeObj = {
         }
         
         //Populate number of recipes sold
+        let i = 0;
         for(let transaction of transactions){
+            // if(i === 0){
+            //     console.log(transaction);
+            //     i++;
+            // }
             for(let recipe of transaction.recipes){
                 for(let newRecipe of recipes){
                     if(recipe.recipe === newRecipe.id){
@@ -183,6 +188,9 @@ window.homeObj = {
         }else{
             from = new Date(from);
             to = new Date(to);
+
+            from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
+            to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
         }
 
         if(validator.transaction.date(from, to)){
@@ -204,7 +212,8 @@ window.homeObj = {
                     }
                 }
     
-                this.populate(data.transactions.slice(startIndex, endIndex));
+                let newData = data.transactions.slice(startIndex, endIndex);
+                this.populate(newData);
             });
         }
     }
