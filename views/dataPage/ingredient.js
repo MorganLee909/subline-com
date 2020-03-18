@@ -54,8 +54,8 @@ window.ingredientObj = {
         if(ingredient){
             this.graph.clearData();
 
-            let from = document.querySelector("#ingredientFrom").valueAsDate;
-            let to = document.querySelector("#ingredientTo").valueAsDate;
+            let from, to;
+            [from, to] = getInputDates("ingredient");
             
             this.graph.addData(this.formatData(ingredient.id, from, to), [from, to], ingredient.name);
 
@@ -74,10 +74,10 @@ window.ingredientObj = {
         let dataList = new Array(Math.abs(dateRange)).fill(0);
 
         for(let transaction of data.transactions){
-            let transDate = new Date(transaction.date);
+            let transDate = transaction.date;
             let diff = Math.floor((Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate()) - Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())) / (1000 * 60 * 60 * 24));
 
-            if(transDate > from && diff <= 0){
+            if(transDate > startDate && diff <= 0){
                 for(let recipe of transaction.recipes){
                     for(let merchRecipe of data.merchant.recipes){
                         if(merchRecipe._id === recipe.recipe){
@@ -97,19 +97,8 @@ window.ingredientObj = {
     },
 
     newDates: function(){
-        let from = document.querySelector("#ingredientFrom").value;
-        let to  = document.querySelector("#ingredientTo").value;
-
-        if(from === "" || to === ""){
-            banner.createError("Invalid date");
-            return;
-        }else{
-            from = new Date(from);
-            to = new Date(to);
-
-            from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
-            to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
-        }
+        let from, to;
+        [from, to] = getInputDates("ingredient");
 
         if(validator.transaction.date(from, to)){
             window.fetchData(from, to, ()=>{

@@ -57,28 +57,42 @@ window.fetchData = function(from, to, callback){
                     data.dates = mergedDates;
 
                     for(let set of response.data){
-                        if(set.transactions[0] < data.transactions[0]){
+                        for(let transaction of set.transactions){
+                            transaction.date = new Date(transaction.date);
+                            transaction.date.setMinutes(transaction.date.getMinutes() + transaction.date.getTimezoneOffset());
+                        }
+
+                        if(set.transactions[0].date < data.transactions[0].date){
                             data.transactions = set.transactions.concat(data.transactions);
-                        }else if(set.transactions[set.transactions.length-1] > data.transactions[data.transactions.length-1]){
+                        }else if(set.transactions[set.transactions.length-1].date > data.transactions[data.transactions.length-1].date){
                             data.transactions = data.transactions.concat(set.transactions);
                         }else{
                             for(let i = 0; i < data.transactions.length; i++){
-                                if(set.transactions[0] > data.transactions[i].date){
+                                if(set.transactions[0].date > data.transactions[i].date){
                                     data.transactions = data.transactions.slice(0, i).concat(set.transactions).concat(data.transactions.slice(i, data.transactions.length - 1));
                                     break;
                                 }
                             }
                         }
 
-                        if(set.purchases[0] < data.purchases[0]){
-                            data.purchases = set.purchases.concat(data.purchases);
-                        }else if(set.purchases[set.purchases.length-1] > data.purchases[data.purchases.length-1]){
-                            data.purchases = data.purchases.concat(set.purchases);
-                        }else{
-                            for(let i = 0; i < data.purchases.length; i++){
-                                if(set.purchases[0] > data.purchases[i].date){
-                                    data.purchases = data.purchases.slice(0, i).concat(set.purchases).concat(data.purchases.slice(i, data.purchases.length - 1));
-                                    break;
+                        for(let purchase of set.purchases){
+                            purchase.date = new Date();
+                            purchase.date.setMinutes(purchase.date.getMinutes() + purchase.date.getTimezoneOffset());
+                        }
+
+                        if(set.purchases.length > 0){
+                            if(data.purchases.length === 0){
+                                data.purchases = set.purchases;
+                            }else if(set.purchases[0].date < data.purchases[0].date){
+                                data.purchases = set.purchases.concat(data.purchases);
+                            }else if(set.purchases[set.purchases.length-1].date > data.purchases[data.purchases.length-1].date){
+                                data.purchases = data.purchases.concat(set.purchases);
+                            }else{
+                                for(let i = 0; i < data.purchases.length; i++){
+                                    if(set.purchases[0].date > data.purchases[i].date){
+                                        data.purchases = data.purchases.slice(0, i).concat(set.purchases).concat(data.purchases.slice(i, data.purchases.length - 1));
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -89,6 +103,18 @@ window.fetchData = function(from, to, callback){
             })
             .catch((err)=>{});
     }else{
+
         callback();
     }
+}
+
+window.getInputDates = function(name){
+    let from = document.querySelector(`#${name}From`).valueAsDate;
+    let to = document.querySelector(`#${name}To`).valueAsDate;
+
+    from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
+    to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
+    to.setDate(to.getDate() + 1);
+
+    return [from, to];
 }

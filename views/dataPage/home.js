@@ -62,10 +62,6 @@ window.homeObj = {
         //Populate number of recipes sold
         let i = 0;
         for(let transaction of transactions){
-            // if(i === 0){
-            //     console.log(transaction);
-            //     i++;
-            // }
             for(let recipe of transaction.recipes){
                 for(let newRecipe of recipes){
                     if(recipe.recipe === newRecipe.id){
@@ -139,6 +135,8 @@ window.homeObj = {
         for(let recipe of recipes){
             let row = document.createElement("tr");
             recipesBody.appendChild(row);
+            row.classList = "clickableRow";
+            row.onclick = ()=>{window.recipeObj.display(recipe)};
 
             let name = document.createElement("td");
             name.innerText = recipe.name;
@@ -179,8 +177,8 @@ window.homeObj = {
     },
 
     newDates: function(){
-        let from = new Date(document.querySelector("#homeFrom").value);
-        let to = new Date(document.querySelector("#homeTo").value);
+        let from = document.querySelector("#homeFrom").value;
+        let to = document.querySelector("#homeTo").value;
 
         if(from === "" || to === ""){
             banner.createError("Invalid date");
@@ -199,14 +197,14 @@ window.homeObj = {
                 let endIndex = data.transactions.length;
 
                 for(let i = 0; i < data.transactions.length; i++){
-                    if(from < new Date(data.transactions[i].date)){
+                    if(from < data.transactions[i].date){
                         startIndex = i;
                         break;
                     }
                 }
     
                 for(let i = 0; i < data.transactions.length; i++){
-                    if(to < new Date(data.transactions[i].date)){
+                    if(to < data.transactions[i].date){
                         endIndex = i;
                         break;
                     }

@@ -123,7 +123,17 @@
             </div>
         </div>
 
-        <script>let data = <%- JSON.stringify(data); %></script>
+        <script>
+            let data = <%- JSON.stringify(data); %>;
+
+            for(let transaction of data.transactions){
+                transaction.date = new Date(transaction.date);
+            }
+
+            for(let purchase of data.purchases){
+                purchase.date = new Date(purchase.date);
+            }
+        </script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="/shared/validation.js"></script>
         <script src="/dataPage/home.js"></script>
