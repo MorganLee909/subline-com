@@ -1,8 +1,36 @@
+body, html{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 #title{
     font-size: 45px;
     color: rgb(255, 99, 107);
     text-align: center;
     margin-top: 25px;
+}
+
+.checkboxDiv{
+    display: flex;
+}
+
+    .checkboxDiv > *{
+        margin: 2px;
+    }
+
+.dates{
+    display: flex;
+    justify-content: center;
+}
+
+    .dates > *{
+        margin: 10px;
+    }
+
+canvas{
+    flex-grow: 9;
+    height: 64vh;
 }
 
 /* Home Strand */
@@ -29,20 +57,62 @@
 
 /* Ingredient Strand */
 #ingredientStrand{
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: space-between;
 }
 
     #ingredientStrand > *{
         margin: 10px;
     }
 
-    canvas{
-        flex-grow: 10;
-        max-height: 60vh;
-        max-width: 90vw;
+    .canvasBox{
+        display: flex;
+        justify-content: space-between;
     }
 
     #ingredientOptions{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+/* Recipe Strand */
+#recipeStrand{
+    flex-direction: column;
+    align-items: space-between;
+}
+
+    #recipeStrand > *{
+        margin: 10px;
+    }
+
+    .canvasBox{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #recipeOptions{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+/* Purchase Strand */
+#purchaseStrand{
+    flex-direction: column;
+    align-items: space-between;
+}
+
+    #purchaseStrand > *{
+        margin: 10px;
+    }
+
+    .canvasBox{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #recipeOptions{
         flex-grow: 1;
         display: flex;
         flex-direction: column;
