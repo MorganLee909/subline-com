@@ -11,6 +11,7 @@ module.exports = function(app){
     app.get("/dashboard", renderer.displayDashboard);
     app.get("/information", renderer.displayLegal);
     app.get("/data", renderer.displayData);
+    app.get("/resetpassword/*", renderer.displayPassReset);
 
     //Merchant
     app.post("/merchant/create/none", merchantData.createMerchantNone);
@@ -39,6 +40,7 @@ module.exports = function(app){
     app.get("/logout", otherData.logout);
     app.get("/cloverlogin", otherData.cloverRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
+    app.post("/resetpassword", otherData.resetPassword);
 
     app.post("/getdata", otherData.getData);
 

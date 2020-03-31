@@ -185,5 +185,9 @@ module.exports = {
             .catch((err)=>{
                 return res.json("Error: unable to retrieve user data");
             });
+    },
+
+    resetPassword: function(req, res){
+        console.log(req.body);
     }
-}
+} 

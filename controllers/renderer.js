@@ -189,5 +189,9 @@ module.exports = {
 
                 return res.redirect("/");
             });
+    },
+
+    displayPassReset: function(req, res){
+        return res.render("passResetPage/passReset");
     }
 }
