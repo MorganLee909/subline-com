@@ -188,6 +188,24 @@ module.exports = {
     },
 
     resetPassword: function(req, res){
-        console.log(req.body);
+        Merchant.findOne({password: req.body.hash})
+            .then((merchant)=>{
+                if(merchant){
+                    let salt = bcrypt.genSaltSync(10);
+                    let hash = bcrypt.hashSync(req.body.pass, salt);
+
+                    merchant.password = hash;
+
+                    return merchant.save();
+                }else{
+                    req.session.error = "Error: unable to retrieve merchant data";
+                    return res.redirect("/");
+                }
+            })
+            .then((merchant)=>{
+                req.session.error = "Password successfully reset.  Please log in";
+                return res.redirect("/");
+            })
+            .catch((err)=>{});
     }
 } 
