@@ -1,7 +1,6 @@
 const axios = require("axios");
 
 const Merchant = require("../models/merchant");
-const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
 const Purchase = require("../models/purchase");
 
