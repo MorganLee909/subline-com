@@ -4,12 +4,47 @@
         <meta charset="UTF-8">
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
-        <link rel="stylesheet" href="/dashboardPage/dashboard.css">
         <link rel="stylesheet" href="/shared/shared.css">
+        <link rel="stylesheet" href="/dashboardPage/dashboard.css">
     </head>
     <body>
-        <h1>Dashboard</h1>
+        <div class="menu">
+            <a class="menuHead" href="/">
+                <img src="/shared/images/logo.png">
+                <p>The Subline</p>
+            </a>
+
+            <button onclick="changeStrand('homeStrand')">Home</button>
+
+            <button onclick="changeStrand('ingredientsStrand')">Ingredients</button>
+
+            <button onclick="changeStrand('recipeBookStrand')">Recipe Book</button>
+
+            <button onclick="changeStrand('ordersStrand')">Orders</button>
+
+            <a class="logout" href="/logout">Logout</a>
+        </div>
+
+        <div class="content">
+            <div id="homeStrand" class="strand">
+                <h1>Home strand</h1>
+            </div>
+
+            <div id="ingredientsStrand" class="strand">
+                <h1>Ingredient strand</h1>
+            </div>
+
+            <div id="recipeBookStrand" class="strand">
+                <h1>Recipe book strand</h1>
+            </div>
+
+            <div id="ordersStrand" class="strand">
+                <h1>Orders Strand</h1>
+            </div>
+        </div>
 
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
+        <script src="../shared/controller.js"></script>
+        <script src="/dashboardPage/home.js"></script>
     </body>
 </html>

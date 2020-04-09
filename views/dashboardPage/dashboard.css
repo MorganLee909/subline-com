@@ -1,0 +1,78 @@
+body{
+    display: flex;
+    flex-direction: row;
+    font-family: 'Saira', sans-serif;
+}
+
+.menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 18vw;
+    background: rgb(0, 27, 45);
+    height: 100vh;
+}
+
+    .menuHead{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+        margin-top: 0;
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 100px;
+        text-decoration: none;
+    }
+
+    .menu button{
+        background: none;
+        border-style: none;
+        color: white;
+        font-size: 20px;
+        margin: 15px 0;
+        padding: 0 0 0 50px;
+        width: 100%;
+        height: 75px;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .menu button:hover{
+        background: rgb(201, 201, 201);
+        color: black;
+    }
+
+        .menuHead img{
+            max-width: 40%;
+            max-height: 40%;
+        }
+
+    .logout{
+        position: absolute;
+        bottom: 25px;
+        color: white;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+/* Home Strand */
+#homeStrand{
+    display: flex;
+}
+
+/* Ingredients Strand */
+#ingredientsStrand{
+    display: none;
+}
+
+/* Recipe Book Strand */
+#recipeBookStrand{
+    display: none;
+}
+
+/* Orders Strand */
+#ordersStrand{
+    display: none;
+}
