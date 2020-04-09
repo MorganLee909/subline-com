@@ -23,7 +23,6 @@
     "cookie-session": "^1.4.0",
     "ejs": "^2.7.1",
     "express": "^4.17.1",
-    "mongoose": "^5.7.4",
-    "sanitize": "^2.1.0"
+    "mongoose": "^5.7.4"
   }
 }
