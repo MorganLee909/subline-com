@@ -6,28 +6,14 @@
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
         <link rel="stylesheet" href="/shared/shared.css">
         <link rel="stylesheet" href="/dashboardPage/dashboard.css">
+        <link rel="stylesheet" href="/shared/menu.css">
     </head>
     <body>
-        <div class="menu">
-            <a class="menuHead" href="/">
-                <img src="/shared/images/logo.png">
-                <p>The Subline</p>
-            </a>
+        <% include ../shared/menu %>
 
-            <button onclick="changeStrand('homeStrand')">Home</button>
-
-            <button onclick="changeStrand('ingredientsStrand')">Ingredients</button>
-
-            <button onclick="changeStrand('recipeBookStrand')">Recipe Book</button>
-
-            <button onclick="changeStrand('ordersStrand')">Orders</button>
-
-            <a class="logout" href="/logout">Logout</a>
-        </div>
-
-        <div class="content">
+        <div class="contentBlock">
             <div id="homeStrand" class="strand">
-                <h1>Home strand</h1>
+                <h1>Dashboard</h1>
             </div>
 
             <div id="ingredientsStrand" class="strand">

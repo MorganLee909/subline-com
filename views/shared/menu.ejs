@@ -1,0 +1,58 @@
+<div class="menu">
+    <div class="menuHead">
+        <a href="/">
+            <img class="menuLogo" src="/shared/images/logo.png">
+            <p>The Subline</p>
+        </a>
+
+        <button onclick="changeMenu()">&#8801;</button>
+    </div>
+
+    <button id="homeBtn" class="active" onclick="changeStrand('homeStrand')">
+        <img src="/shared/images/homeIcon.png" alt="home">
+        <p>Home</p>
+    </button>
+
+    <button id="ingredientsBtn" onclick="changeStrand('ingredientsStrand')">Ingredients</button>
+
+    <button id="recipeBookBtn" onclick="changeStrand('recipeBookStrand')">Recipe Book</button>
+
+    <button id="ordersBtn" onclick="changeStrand('ordersStrand')">Orders</button>
+
+    <a class="logout" href="/logout">
+        <img src="/shared/images/profile.png" alt="logout">
+        <p>Logout</p>
+    </a>
+
+    <script>
+        let changeMenu = ()=>{
+            let menu = document.querySelector(".menu");
+            let buttons = document.querySelectorAll(".menu > button");
+            if(!menu.classList.contains("menuMinimized")){
+                menu.classList = "menu menuMinimized";
+
+                buttons[0].innerText = "H";
+                buttons[1].innerText = "I";
+                buttons[2].innerText = "R";
+                buttons[3].innerText = "O";
+
+                document.querySelector(".menuHead p").style.display = "none";
+                document.querySelector(".menuLogo").classList = "menuLogo menuLogoMin";
+                document.querySelector(".menuHead").classList = "menuHead menuHeadMin";
+                document.querySelector(".logout p").style.display = "none";
+            }else if(menu.classList.contains("menuMinimized")){
+                menu.classList = "menu";
+
+                buttons[0].innerText = "Home";
+                buttons[1].innerText = "Ingredients";
+                buttons[2].innerText = "Recipe Book";
+                buttons[3].innerText = "Orders";
+
+                document.querySelector(".menuHead p").style.display = "block";
+                document.querySelector(".menuLogo").classList = "menuLogo";
+                document.querySelector(".menuHead").classList = "menuHead";
+                document.querySelector(".logout p").style.display = "block";
+            }
+        }
+    </script>
+</div>
