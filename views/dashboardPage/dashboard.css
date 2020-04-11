@@ -4,21 +4,42 @@ body{
     font-family: 'Saira', sans-serif;
 }
 
-    .logout{
-        position: absolute;
-        bottom: 25px;
-        color: white;
-        text-decoration: none;
-        font-size: 20px;
-    }
-
 .contentBlock{
-    padding: 10px;
+    padding: 25px;
+    width: 100%;
 }
 
 /* Home Strand */
 #homeStrand{
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+    #homeStrand h1{
+        text-align: left;
+    }
+
+.flexRow{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.flexColumn{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card{
+    margin: 15px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    box-shadow: 0 2px gray;
+    padding: 25px;
 }
 
 /* Ingredients Strand */
