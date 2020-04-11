@@ -13,11 +13,20 @@
         <p>Home</p>
     </button>
 
-    <button id="ingredientsBtn" onclick="changeStrand('ingredientsStrand')">Ingredients</button>
+    <button id="ingredientsBtn" onclick="changeStrand('ingredientsStrand')">
+        <img src="/shared/images/recieptIcon.png" alt="ingredients">
+        <p>Ingredients</p>
+    </button>
 
-    <button id="recipeBookBtn" onclick="changeStrand('recipeBookStrand')">Recipe Book</button>
+    <button id="recipeBookBtn" onclick="changeStrand('recipeBookStrand')">
+        <img src="/shared/images/bookIcon.png" alt="recipe book">
+        <p>Recipe Book</p>
+    </button>
 
-    <button id="ordersBtn" onclick="changeStrand('ordersStrand')">Orders</button>
+    <button id="ordersBtn" onclick="changeStrand('ordersStrand')">
+        <img src="/shared/images/cartIcon.png" alt="orders">
+        <p>Orders</p>
+    </button>
 
     <a class="logout" href="/logout">
         <img src="/shared/images/profile.png" alt="logout">
@@ -31,27 +40,31 @@
             if(!menu.classList.contains("menuMinimized")){
                 menu.classList = "menu menuMinimized";
 
-                buttons[0].innerText = "H";
-                buttons[1].innerText = "I";
-                buttons[2].innerText = "R";
-                buttons[3].innerText = "O";
+                for(let button of buttons){
+                    button.children[1].style.display = "none";
+                }
 
                 document.querySelector(".menuHead p").style.display = "none";
-                document.querySelector(".menuLogo").classList = "menuLogo menuLogoMin";
                 document.querySelector(".menuHead").classList = "menuHead menuHeadMin";
                 document.querySelector(".logout p").style.display = "none";
+
+                setTimeout(()=>{
+                    document.querySelector(".menuLogo").classList = "menuLogo menuLogoMin";
+                }, 150);
             }else if(menu.classList.contains("menuMinimized")){
                 menu.classList = "menu";
 
-                buttons[0].innerText = "Home";
-                buttons[1].innerText = "Ingredients";
-                buttons[2].innerText = "Recipe Book";
-                buttons[3].innerText = "Orders";
+                for(let button of buttons){
+                    button.children[1].style.display = "block";
+                }
 
                 document.querySelector(".menuHead p").style.display = "block";
-                document.querySelector(".menuLogo").classList = "menuLogo";
                 document.querySelector(".menuHead").classList = "menuHead";
                 document.querySelector(".logout p").style.display = "block";
+
+                setTimeout(()=>{
+                    document.querySelector(".menuLogo").classList = "menuLogo";
+                });
             }
         }
     </script>
