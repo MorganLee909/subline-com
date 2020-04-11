@@ -1,4 +1,5 @@
 const axios = require("axios");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const Merchant = require("../models/merchant");
 const Transaction = require("../models/transaction");
@@ -95,15 +96,34 @@ module.exports = {
                             merchant.save()
                                 .then((updatedMerchant)=>{
                                     updatedMerchant.accessToken = undefined;
-                                    res.render("dashboardPage/dashboard", {merchant: updatedMerchant, error: undefined});
+                                    merchant = updatedMerchant;
+                                    
                                     Transaction.create(transactions);
-                                    return;
+
+                                    let date = new Date();
+                                    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+                                    return Transaction.aggregate([
+                                        {$match: {
+                                            merchant: new ObjectId(req.session.user),
+                                            date: {$gte: firstDay}
+                                        }},
+                                        {$sort: {date: 1}},
+                                        {$project: {
+                                            _id: 0,
+                                            date: 1,
+                                            recipes: 1
+                                        }}
+                                    ])
+                                })
+                                .then((transactions)=>{
+                                    res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions});
                                 })
                                 .catch((err)=>{
-                                    let errorMessage = "Error: unable to save user data";
+                                    let errorMessage = "Error: unable to update data";
                                     
                                     merchant.password = undefined;
-                                    return res.render("dashboardPage/dashboard", {merchant: updatedMerchant, error: errorMessage});
+                                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage});
                                 });
                         })
                         .catch((err)=>{
@@ -114,7 +134,29 @@ module.exports = {
                         });
                 }else if(merchant.pos === "none"){
                     merchant.password = undefined;
-                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: undefined});
+
+                    let date = new Date();
+                    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
+                    Transaction.aggregate([
+                        {$match: {
+                            merchant: new ObjectId(req.session.user),
+                            date: {$gte: firstDay},
+                        }},
+                        {$sort: {date: 1}},
+                        {$project: {
+                            _id: 0,
+                            date: 1,
+                            recipes: 1
+                        }}
+                    ])
+                        .then((transactions)=>{
+                            return res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions})
+                        })
+                        .catch((err)=>{
+                            console.log(err);
+                        });
+                        
                 }else{
                     req.session.error = "Error: WEBSITE PANIC";
                     
