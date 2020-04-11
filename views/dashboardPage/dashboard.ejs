@@ -19,16 +19,25 @@
                     <div class="flexColumn">
                         <div class="card">
                             <h4>Total Revenue (month)</h4>
+
                             <p id="revenue"></p>
+
+                            <div id="revenueChange">
+                                <img>
+
+                                <p></p>
+                            </div>
                         </div>
 
                         <div class="card">
-                            <p>Some Text</p>
-                            <p>Some more text</p>
+                            <p>Waste Score</p>
+                            <p>Да хрен его знает</p>
                         </div>
                     </div>
 
-                    <div>right-hand</div>
+                    <div id="graphCard" class="card">
+                        <canvas id="graphCanvas">
+                    </div>
                 </div>
 
                 <div>Row 2</div>
@@ -49,7 +58,7 @@
 
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
         <script>let transactions = <%- JSON.stringify(transactions) %>;</script>
-        <script src="../shared/controller.js"></script>
         <script src="/dashboardPage/home.js"></script>
+        <script src="/dashboardPage/controller.js"></script>
     </body>
 </html>

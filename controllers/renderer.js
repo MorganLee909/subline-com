@@ -101,7 +101,7 @@ module.exports = {
                                     Transaction.create(transactions);
 
                                     let date = new Date();
-                                    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                                    let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
                                     return Transaction.aggregate([
                                         {$match: {
@@ -110,7 +110,6 @@ module.exports = {
                                         }},
                                         {$sort: {date: 1}},
                                         {$project: {
-                                            _id: 0,
                                             date: 1,
                                             recipes: 1
                                         }}
@@ -136,7 +135,7 @@ module.exports = {
                     merchant.password = undefined;
 
                     let date = new Date();
-                    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                    let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
                     Transaction.aggregate([
                         {$match: {

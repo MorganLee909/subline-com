@@ -18,9 +18,9 @@ body{
     width: 100%;
 }
 
-    #homeStrand h1{
-        text-align: left;
-    }
+#homeStrand h1{
+    text-align: left;
+}
 
 .flexRow{
     display: flex;
@@ -36,12 +36,35 @@ body{
 
 .card{
     margin: 15px;
-    border: 1px solid gray;
-    border-radius: 5px;
-    box-shadow: 0 2px gray;
-    padding: 25px;
+    border: 1px solid rgba(183, 183, 183, 0.9);
+    border-radius: 7px;
+    box-shadow: 1px 2px gray;
+    padding: 35px;
 }
 
+.card > *{
+    margin: 10px;
+}
+
+#revenue{
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#revenueChange{
+    display: flex;
+}
+
+#revenueChange img{
+    height: 15px;
+    width: 15px;
+    margin-right: 10px;
+}
+
+#graphCard{
+    flex-grow: 1;
+}
 /* Ingredients Strand */
 #ingredientsStrand{
     display: none;
