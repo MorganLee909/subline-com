@@ -1,19 +1,42 @@
+html{
+    height: 100%;
+}
+
 body{
     display: flex;
     flex-direction: row;
     font-family: 'Saira', sans-serif;
+    height: 100%;
 }
 
 .contentBlock{
     padding: 25px;
     width: 100%;
+    height: 100%;
+}
+
+/* Cards */
+.card{
+    margin: 15px;
+    border: 1px solid rgba(183, 183, 183, 0.9);
+    border-radius: 7px;
+    box-shadow: 1px 2px gray;
+    padding: 25px;
+}
+
+.card > *{
+    margin: 10px;
+}
+
+.card p:first-of-type{
+    font-size: 14px;
+    font-weight: bold;
 }
 
 /* Home Strand */
 #homeStrand{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     height: 100%;
     width: 100%;
 }
@@ -34,37 +57,40 @@ body{
     justify-content: space-between;
 }
 
-.card{
-    margin: 15px;
-    border: 1px solid rgba(183, 183, 183, 0.9);
-    border-radius: 7px;
-    box-shadow: 1px 2px gray;
-    padding: 35px;
-}
-
-.card > *{
-    margin: 10px;
-}
-
 #revenue{
     text-align: center;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: bold;
 }
 
-#revenueChange{
-    display: flex;
-}
+    #revenueChange{
+        display: flex;
+    }
 
-#revenueChange img{
-    height: 15px;
-    width: 15px;
-    margin-right: 10px;
-}
+    #revenueChange > p{
+        font-weight: 100;
+    }
+
+    #revenueChange img{
+        height: 15px;
+        width: 15px;
+        margin-right: 10px;
+    }
 
 #graphCard{
     flex-grow: 1;
+    max-height: 50vh;
 }
+
+    #graphCard canvas{
+        height: 95%;
+        width: 100%;
+    }
+
+#inventoryCheckCard ul{
+    text-decoration: none;
+}
+
 /* Ingredients Strand */
 #ingredientsStrand{
     display: none;
