@@ -132,8 +132,6 @@ window.homeStrandObj = {
                         id: merchIngredient.ingredient._id,
                         quantityChange: change
                     });
-
-
                 }
             }else{
                 banner.createError("Cannot have negative ingredients");
@@ -151,7 +149,7 @@ window.homeStrandObj = {
             })
                 .then((response)=>{
                     banner.createError("Ingredients updated");
-                    
+                    1
                     if(typeof(response.data) === "string"){
                         console.log(err);
                     }else{
