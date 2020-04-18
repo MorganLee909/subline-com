@@ -40,11 +40,37 @@ window.homeStrandObj = {
                 "Revenue"
             );
 
-            let ul = document.querySelector("#inventoryCheckCard ul");
+            //Inventory Check
+            let rands = [];
             for(let i = 0; i < 5; i++){
+                let rand = Math.floor(Math.random() * merchant.inventory.length);
+
+                if(rands.includes(rand)){
+                    i--;
+                }else{
+                    rands[i] = rand;
+                }
+            }
+
+            let ul = document.querySelector("#inventoryCheckCard ul");
+            for(let rand of rands){
                 let li = document.createElement("li");
-                li.innerText = merchant.inventory[i].ingredient.name;
+                li.classList = "flexRow";
+                li.ingredientIndex = rand;
                 ul.appendChild(li);
+
+                let name = document.createElement("p");
+                name.innerText = merchant.inventory[rand].ingredient.name;
+                li.appendChild(name);
+
+                let input = document.createElement("input");
+                input.type = "number";
+                input.value = merchant.inventory[rand].quantity;
+                li.appendChild(input);
+
+                let label = document.createElement("p");
+                label.innerText = merchant.inventory[rand].ingredient.unit;
+                li.appendChild(label);
             }
 
             this.isPopulated = true;
@@ -88,5 +114,57 @@ window.homeStrandObj = {
         }
 
         return dataList;
+    },
+
+    updateInventory: function(){
+        let lis = document.querySelectorAll("#inventoryCheckCard ul li");
+
+        let changes = [];
+
+        for(let li of lis){
+            if(li.children[1].value >= 0){
+                let merchIngredient = merchant.inventory[li.ingredientIndex];
+
+                let change = li.children[1].value - merchIngredient.quantity;
+
+                if(change !== 0){
+                    changes.push({
+                        id: merchIngredient.ingredient._id,
+                        quantityChange: change
+                    });
+
+
+                }
+            }else{
+                banner.createError("Cannot have negative ingredients");
+                return;
+            }
+        }
+        
+        if(changes.length > 0){
+            fetch("/merchant/ingredients/update", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                body: JSON.stringify(changes)
+            })
+                .then((response)=>{
+                    banner.createError("Ingredients updated");
+                    
+                    if(typeof(response.data) === "string"){
+                        console.log(err);
+                    }else{
+                        for(let change of changes){
+                            merchant.inventory.find((item)=> item.ingredient._id === change.id).quantity += change.quantityChange;
+                        }
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
+
+            
+        }
     }
 }

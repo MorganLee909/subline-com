@@ -12,6 +12,8 @@
         <% include ../shared/menu %>
 
         <div class="contentBlock">
+            <% include ../shared/banner %>
+            
             <div id="homeStrand" class="strand">
                 <h1>Dashboard</h1>
 
@@ -40,12 +42,16 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="flexRow">
                     <div id="inventoryCheckCard" class="card">
                         <p>Inventory Check</p>
 
                         <ul></ul>
+
+                        <button class="button" onclick="homeStrandObj.updateInventory()">Update</button>
                     </div>
+
+                    <div id=popularIngredientsCard class="card"></div>
                 </div>
             </div>
 

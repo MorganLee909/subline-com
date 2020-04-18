@@ -15,7 +15,6 @@ window.purchaseObj = {
             let purchasesDiv = document.querySelector("#purchaseOptions");
 
             for(let item of data.merchant.inventory){
-                console.log(item);
                 let checkDiv = document.createElement("div");
                 checkDiv.classList = "checkboxDiv";
                 purchasesDiv.appendChild(checkDiv);
