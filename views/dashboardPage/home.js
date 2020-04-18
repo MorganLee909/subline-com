@@ -25,8 +25,12 @@ window.homeStrandObj = {
             document.querySelector("#revenueChange p").innerText = `${Math.abs(revenueChange).toFixed(2)}% vs last month`;
             document.querySelector("#revenueChange img").src = img;
 
+            let graphCanvas = document.querySelector("#graphCanvas");
+            graphCanvas.height = graphCanvas.parentElement.clientHeight;
+            graphCanvas.width = graphCanvas.parentElement.clientWidth;
+
             this.graph = new LineGraph(
-                document.querySelector("#graphCanvas"),
+                graphCanvas,
                 "$",
                 "Date"
             )
@@ -72,6 +76,22 @@ window.homeStrandObj = {
                 label.innerText = merchant.inventory[rand].ingredient.unit;
                 li.appendChild(label);
             }
+
+            //Most Popular ingredients
+            let dataArray = [];
+            for(let item of merchant.inventory){
+                dataArray.push({
+                    num: item.quantity,
+                    label: `${item.ingredient.name}: ${item.quantity} ${item.ingredient.unit}`
+                });
+            }
+
+            let thisCanvas = document.querySelector("#popularCanvas");
+            thisCanvas.width = thisCanvas.parentElement.clientWidth;
+            thisCanvas.height = thisCanvas.parentElement.clientHeight;
+
+            let popularGraph = new HorizontalBarGraph(document.querySelector("#popularCanvas"));
+            popularGraph.addData(dataArray);
 
             this.isPopulated = true;
         }
