@@ -322,7 +322,6 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 for(let ingredient of req.body){
-                    console.log(ingredient);
                     let updateIngredient = merchant.inventory.find(i => i.ingredient.toString() === ingredient.id);
                     updateIngredient.quantity = (updateIngredient.quantity + ingredient.quantityChange);
 
