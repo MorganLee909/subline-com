@@ -29,15 +29,13 @@ window.homeStrandObj = {
             graphCanvas.height = graphCanvas.parentElement.clientHeight;
             graphCanvas.width = graphCanvas.parentElement.clientWidth;
 
-            this.graph = new LineGraph(
-                graphCanvas,
-                "$",
-                "Date"
-            )
+            this.graph = new LineGraph(graphCanvas);
+            this.graph.addTitle("Revenue");
 
             let thirtyAgo = new Date(today);
             thirtyAgo.setDate(today.getDate() - 29);
 
+            console.log("data adding");
             this.graph.addData(
                 this.graphData(dateIndices(thirtyAgo)),
                 [thirtyAgo, new Date()],
