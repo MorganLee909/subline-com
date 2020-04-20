@@ -195,6 +195,14 @@ window.homeStrandObj = {
         }
     },
 
+    //Gets the quantity of each ingredient sold between two dates (dateRange)
+    //Inputs
+    //  dateRange: array containing a start date and an end date
+    //Output
+    //  List of objects
+    //      id: id of specific ingredient
+    //      quantity: quantity sold of that ingredient
+    //      name: name of the ingredient
     ingredientsSold: function(dateRange){
         let recipes = this.recipesSold(dateRange);
         let ingredientList = [];
@@ -223,14 +231,12 @@ window.homeStrandObj = {
             }
         }
 
-        console.log(ingredientList);
-
         return ingredientList;
     },
 
     //Gets the number of recipes sold between two dates (dateRange)
     //Inputs
-    //  dateRange: array containing a start date and an endDate
+    //  dateRange: array containing a start date and an end date
     //Output
     //  List of objects
     //      id: id of specific recipe
