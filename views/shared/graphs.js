@@ -115,7 +115,6 @@ class LineGraph{
         }
 
         if(this.title){
-            console.log(this.title);
             this.context.font = "25px Saira";
             let xLocation = ((this.right - this.left) / 2) - (this.context.measureText(this.title).width / 2);
             this.context.fillText(this.title, xLocation, this.top - 10);

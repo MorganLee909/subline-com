@@ -35,7 +35,6 @@ window.homeStrandObj = {
             let thirtyAgo = new Date(today);
             thirtyAgo.setDate(today.getDate() - 29);
 
-            console.log("data adding");
             this.graph.addData(
                 this.graphData(dateIndices(thirtyAgo)),
                 [thirtyAgo, new Date()],
@@ -77,11 +76,25 @@ window.homeStrandObj = {
 
             //Most Popular ingredients
             let dataArray = [];
-            for(let item of merchant.inventory){
+            let now = new Date();
+            let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            let ingredientList = this.ingredientsSold(this.getDateIndex(thisMonth));
+            for(let i = 0; i < 5; i++){
+                let max = ingredientList[0].quantity
+                let index = 0;
+                for(let j = 0; j < ingredientList.length; j++){
+                    if(ingredientList[j].quantity > max){
+                        max = ingredientList[j].quantity;
+                        index = j;
+                    }
+                }
+
                 dataArray.push({
-                    num: item.quantity,
-                    label: `${item.ingredient.name}: ${item.quantity} ${item.ingredient.unit}`
+                    num: max,
+                    label: `${ingredientList[index].name}: ${ingredientList[index].quantity} ${ingredientList[index].unit}`
                 });
+                ingredientList.splice(index, 1);
             }
 
             let thisCanvas = document.querySelector("#popularCanvas");
@@ -179,8 +192,94 @@ window.homeStrandObj = {
                 .catch((err)=>{
                     console.log(err);
                 });
-
-            
         }
+    },
+
+    ingredientsSold: function(dateRange){
+        let recipes = this.recipesSold(dateRange);
+        let ingredientList = [];
+
+        for(let recipe of recipes){
+            for(let merchRecipe of merchant.recipes){
+                for(let ingredient of merchRecipe.ingredients){
+                    let exists = false;
+                    for(let item of ingredientList){
+                        if(item.id === ingredient.ingredient._id){
+                            exists = true;
+                            item.quantity += ingredient.quantity * recipe.quantity;
+                            break;
+                        }
+                    }
+
+                    if(!exists){
+                        ingredientList.push({
+                            id: ingredient.ingredient._id,
+                            quantity: ingredient.quantity * recipe.quantity,
+                            name: ingredient.ingredient.name,
+                            unit: ingredient.ingredient.unit
+                        })
+                    }
+                }
+            }
+        }
+
+        console.log(ingredientList);
+
+        return ingredientList;
+    },
+
+    //Gets the number of recipes sold between two dates (dateRange)
+    //Inputs
+    //  dateRange: array containing a start date and an endDate
+    //Output
+    //  List of objects
+    //      id: id of specific recipe
+    //      quantity: quantity sold of that recipe
+    recipesSold: function(dateRange){
+        let recipeList = [];
+
+        for(let i = dateRange[0]; i <= dateRange[1]; i++){
+            for(let recipe of transactions[i].recipes){
+                let exists = false;
+                for(let item of recipeList){
+                    if(item.id === recipe.recipe){
+                        exists = true;
+                        item.quantity += recipe.quantity;
+                        break;
+                    }
+                }
+
+                if(!exists){
+                    recipeList.push({
+                        id: recipe.recipe,
+                        quantity: recipe.quantity
+                    })
+                }
+            }
+        }
+
+        return recipeList;
+    },
+
+    //Gives start and stop indices from transactions for a date range
+    //Inputs
+    //  from: datetime to start at
+    //  to: datetimie to end at
+    //Output
+    //  Array containing 2 elements, start index and stop index
+    getDateIndex: function(from, to = new Date()){
+        let indexRange = [0, transactions.length - 1];
+        for(let i = 0; i < transactions.length; i++){
+            if(from <= transactions[i].date && indexRange[0] === 0){
+                indexRange[0] = i;
+            }
+
+            if(to < transactions[i].date){
+                indexRange[1] = i - 1;
+                break;
+            }
+        }
+
+        return indexRange;
     }
 }
