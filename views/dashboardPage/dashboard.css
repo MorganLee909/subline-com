@@ -13,7 +13,18 @@ body{
     width: 100%;
     height: 100vh;
     box-sizing: border-box;
-    padding: 25px;
+    padding: 50px;
+}
+
+.strand{
+    flex-direction: column;
+    max-height: 100%;
+    width: 100%;
+}
+
+.strand > h1{
+    text-align: left;
+    margin: 15px;
 }
 
 /* Cards */
@@ -40,14 +51,6 @@ body{
 /* Home Strand */
 #homeStrand{
     display: flex;
-    flex-direction: column;
-    max-height: 100%;
-    width: 100%;
-}
-
-#homeStrand h1{
-    text-align: left;
-    margin: 15px;
 }
 
 .flexRow{
@@ -152,6 +155,61 @@ body{
 /* Ingredients Strand */
 #ingredientsStrand{
     display: none;
+    box-sizing: border-box;
+    padding-right: 100px;
+}
+
+#ingredientsStrand > h1{
+    margin-bottom: 100px;
+}
+
+.categoryDiv div:first-of-type{
+    display: flex;
+    margin-left: 15px;
+    width: 100%;
+}
+
+.categoryDiv div:first-of-type p{
+    display: flex;
+    align-items: center;
+    padding: 20px 0 20px 100px;
+    background: rgb(240, 252, 255);
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-right: 25px;
+    flex-grow: 1;
+}
+
+.categoryDiv div:first-of-type button{
+    padding: 10px;
+    background: rgb(240, 252, 255);
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 75px;
+    height: 75px;
+}
+
+.ingredient{
+    display: flex;
+    width: 40%;
+    padding: 15px;
+    margin-left: 150px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.ingredient:hover{
+    background: rgb(0, 27, 45);
+    color: white;
+}
+
+.ingredient > *{
+    width: 33%;
+    margin-right: 15px;
+}
+
+.ingredient > p:last-of-type{
+    text-align: right;
 }
 
 /* Recipe Book Strand */
