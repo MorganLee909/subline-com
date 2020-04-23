@@ -163,13 +163,13 @@ body{
     margin-bottom: 100px;
 }
 
-.categoryDiv div:first-of-type{
+.categoryDiv > div:first-of-type{
     display: flex;
     margin-left: 15px;
     width: 100%;
 }
 
-.categoryDiv div:first-of-type p{
+.categoryDiv > div:first-of-type p{
     display: flex;
     align-items: center;
     padding: 20px 0 20px 100px;
@@ -180,13 +180,18 @@ body{
     flex-grow: 1;
 }
 
-.categoryDiv div:first-of-type button{
+.categoryDiv > div:first-of-type button{
     padding: 10px;
     background: rgb(240, 252, 255);
     border: 1px solid black;
     border-radius: 5px;
     width: 75px;
     height: 75px;
+    cursor: pointer;
+}
+
+.ingredientsDiv{
+    flex-direction: column;
 }
 
 .ingredient{
