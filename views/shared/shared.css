@@ -25,6 +25,14 @@ h3 {
     color: gray;
 }
 
+button{
+    outline: 0;
+}
+
+button::-moz-focus-inner{
+    border: 0;
+}
+
 .link {
     cursor: pointer;
     color: gray;
