@@ -5,11 +5,11 @@ window.ingredientsStrandObj = {
         if(!this.isPopulated){
             let categories = this.categorizeIngredients();
 
-            let ingredientsStrand = document.querySelector("#ingredientsStrand");
+            let ingredientStrand = document.querySelector("#ingredientsStrand");
             for(let category of categories){
                 let categoryDiv = document.createElement("div");
                 categoryDiv.classList = "categoryDiv"
-                ingredientsStrand.appendChild(categoryDiv);
+                ingredientStrand.appendChild(categoryDiv);
 
                 let headerDiv = document.createElement("div");
                 categoryDiv.appendChild(headerDiv);
@@ -95,6 +95,16 @@ window.ingredientsStrandObj = {
         }else if(div.style.display === "flex"){
             button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
             div.style.display = "none";
+        }
+    },
+
+    toggleAddIngredient: function(){
+        let sidebar = document.querySelector("#addIngredient");
+
+        if(sidebar.classList.value === "sidebarHide"){
+            sidebar.classList = "sidebar";
+        }else{
+            sidebar.classList = "sidebarHide";
         }
     }
 }

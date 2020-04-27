@@ -1,5 +1,6 @@
 html{
     height: 100%;
+    max-width: 100%;
 }
 
 body{
@@ -7,11 +8,13 @@ body{
     flex-direction: row;
     font-family: 'Saira', sans-serif;
     height: 100%;
+    max-width: 100%;
 }
 
 .contentBlock{
     width: 100%;
     height: 100vh;
+    flex: 1;
     box-sizing: border-box;
     padding: 50px;
 }
@@ -22,7 +25,7 @@ body{
     width: 100%;
 }
 
-.strand > h1{
+.strand > *:first-of-type{
     text-align: left;
     margin: 15px;
 }
@@ -155,12 +158,29 @@ body{
 /* Ingredients Strand */
 #ingredientsStrand{
     display: none;
+    height: 100vh;
     box-sizing: border-box;
     padding-right: 100px;
 }
 
 #ingredientsStrand > h1{
     margin-bottom: 100px;
+}
+
+#ingredientHead{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+#ingredientHead button{
+    display: flex;
+    align-items: center;
+}
+
+#ingredientHead svg{
+    margin-right: 5px;
 }
 
 .categoryDiv > div:first-of-type{

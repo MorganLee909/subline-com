@@ -1,0 +1,32 @@
+.sidebar{
+    display: flex;
+    width: 18vw;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 25px;
+    transition: width 0.2s;
+    overflow: hidden;
+}
+
+.sidebarHide{
+    width: 0;
+    transition: width 0.2s;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+    .sidebarHide *{
+        width: 0;
+        transition: width 0.2s;
+    }
+
+    .sidebarHide input{
+        display: none;
+    }
+
+#addIngredient{
+    flex-direction: column;
+    background: rgb(0, 27, 45);
+    color: white;
+}
