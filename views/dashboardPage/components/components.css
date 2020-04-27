@@ -3,7 +3,7 @@
     width: 18vw;
     height: 100vh;
     box-sizing: border-box;
-    padding: 25px;
+    padding: 100px 25px;
     transition: width 0.2s;
     overflow: hidden;
     box-shadow: -1px 0px 10px gray;
@@ -38,6 +38,7 @@
     .lineBorder{
         width: 100%;
         border-bottom: 1px solid gray;
+        margin: 25px;
     }
 
     #ingredientDetails > p{
@@ -49,11 +50,12 @@
     }
 
     #ingredientDetails label{
-        font-size: 15px;
-        text-align: left;
+        font-size: 20px;
+        text-align: center;
     }
 
     #ingredientDetails label p{
-        font-size: 25px;
+        font-size: 30px;
         font-weight: bold;
+        padding: 10px;
     }

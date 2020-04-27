@@ -115,7 +115,7 @@ window.ingredientsStrandObj = {
         sidebar.classList = "sidebar";
 
         document.querySelector("#ingredientDetails p").innerText = category.name;
-        document.querySelector("#ingredientDetails h2").innerText = ingredient.name;
+        document.querySelector("#ingredientDetails h1").innerText = ingredient.name;
         document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.unit}`;
 
         let start = performance.now();
