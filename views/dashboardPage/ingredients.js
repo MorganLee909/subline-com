@@ -31,6 +31,7 @@ window.ingredientsStrandObj = {
                 for(let ingredient of category.ingredients){
                     let ingredientDiv = document.createElement("div");
                     ingredientDiv.classList = "ingredient";
+                    ingredientDiv.onclick = ()=>{this.displayIngredient(ingredient, category)};
                     ingredientsDiv.appendChild(ingredientDiv);
 
                     let ingredientName = document.createElement("p");
@@ -106,5 +107,35 @@ window.ingredientsStrandObj = {
         }else{
             sidebar.classList = "sidebarHide";
         }
+    },
+
+    displayIngredient: function(ingredient, category){
+        sidebar = document.querySelector("#ingredientDetails");
+
+        sidebar.classList = "sidebar";
+
+        document.querySelector("#ingredientDetails p").innerText = category.name;
+        document.querySelector("#ingredientDetails h2").innerText = ingredient.name;
+        document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.unit}`;
+
+        let start = performance.now();
+
+        let quantities = [];
+        let now = new Date();
+        for(let i = 1; i < 31; i++){
+            let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
+            let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
+            quantities.push(ingredientSold(dateIndices(startDay, endDay), ingredient.id));
+        }
+
+        let sum = 0;
+        for(let quantity of quantities){
+            sum += quantity;
+        }
+
+        let end = performance.now();
+        console.log(`${end-start} ms`);
+
+        document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.unit}`;
     }
 }

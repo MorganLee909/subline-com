@@ -29,3 +29,31 @@
 #addIngredient{
     flex-direction: column;
 }
+
+#ingredientDetails{
+    flex-direction: column;
+    align-items: center;
+}
+
+    .lineBorder{
+        width: 100%;
+        border-bottom: 1px solid gray;
+    }
+
+    #ingredientDetails > p{
+        border-radius: 10px;
+        background: gray;
+        color: white;
+        padding: 0 3px;
+        font-size: 14px;
+    }
+
+    #ingredientDetails label{
+        font-size: 15px;
+        text-align: left;
+    }
+
+    #ingredientDetails label p{
+        font-size: 25px;
+        font-weight: bold;
+    }
