@@ -6,6 +6,7 @@
     padding: 25px;
     transition: width 0.2s;
     overflow: hidden;
+    box-shadow: -1px 0px 10px gray;
 }
 
 .sidebarHide{
@@ -27,6 +28,4 @@
 
 #addIngredient{
     flex-direction: column;
-    background: rgb(0, 27, 45);
-    color: white;
 }
