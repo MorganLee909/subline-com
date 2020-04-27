@@ -99,7 +99,9 @@ window.ingredientsStrandObj = {
         }
     },
 
-    toggleAddIngredient: function(){
+    displayAddIngredient: function(){
+        this.closeSidebar();
+
         let sidebar = document.querySelector("#addIngredient");
 
         if(sidebar.classList.value === "sidebarHide"){
@@ -110,6 +112,8 @@ window.ingredientsStrandObj = {
     },
 
     displayIngredient: function(ingredient, category){
+        this.closeSidebar();
+        
         sidebar = document.querySelector("#ingredientDetails");
 
         sidebar.classList = "sidebar";
@@ -141,7 +145,9 @@ window.ingredientsStrandObj = {
 
     closeSidebar: function(){
         let sidebar = document.querySelector(".sidebar");
-
-        sidebar.classList = "sidebarHide";
+        
+        if(sidebar){
+            sidebar.classList = "sidebarHide";
+        }
     }
 }

@@ -9,22 +9,27 @@
     box-shadow: -1px 0px 10px gray;
 }
 
+    .sidebar button:first-of-type{
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 100px;
+        margin-right: auto;
+    }
+
 .sidebarHide{
     width: 0;
     transition: width 0.2s;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    visibility: hidden;
+    box-shadow: -1px 0px 10px gray;
 }
 
-    .sidebarHide *{
+    .sidebarHide > *{
         width: 0;
         transition: width 0.2s;
-    }
-
-    .sidebarHide input{
-        display: none;
+        visibility: hidden;
     }
 
 #addIngredient{
@@ -35,14 +40,6 @@
     flex-direction: column;
     align-items: center;
 }
-
-    #ingredientDetails button:first-of-type{
-        background: none;
-        border: none;
-        cursor: pointer;
-        margin-bottom: 100px;
-        margin-right: auto;
-    }
 
     .lineBorder{
         width: 100%;
