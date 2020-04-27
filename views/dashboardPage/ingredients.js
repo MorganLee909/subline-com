@@ -137,5 +137,11 @@ window.ingredientsStrandObj = {
         console.log(`${end-start} ms`);
 
         document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.unit}`;
+    },
+
+    closeSidebar: function(){
+        let sidebar = document.querySelector(".sidebar");
+
+        sidebar.classList = "sidebarHide";
     }
 }
