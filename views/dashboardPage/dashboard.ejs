@@ -60,14 +60,25 @@
                     <h1>Ingredient Inventory</h1>
 
                     <button class="button" onclick="ingredientsStrandObj.displayAddIngredient()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         add
                     </button>
                 </div>
             </div>
 
             <div id="recipeBookStrand" class="strand">
-                <h1>Recipe book strand</h1>
+                <div id="recipeHead">
+                    <h1>Recipe Book</h1>
+
+                    <% if(merchant.pos === "none"){ %>
+                        <button class="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            add
+                        </button>
+                    <% } %>
+                </div>
+
+                <div id="recipeList"></div>
             </div>
 
             <div id="ordersStrand" class="strand">
@@ -79,11 +90,14 @@
 
         <% include ./components/ingredientDetails %>
 
+        <% include ./components/recipeDetails %>
+
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
         <script>let transactions = <%- JSON.stringify(transactions) %>;</script>
         <script src="../shared/graphs.js"></script>
         <script src="/dashboardPage/home.js"></script>
         <script src="/dashboardPage/ingredients.js"></script>
+        <script src="/dashboardPage/recipeBook.js"></script>
         <script src="/dashboardPage/controller.js"></script>
     </body>
 </html>

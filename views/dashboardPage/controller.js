@@ -12,8 +12,18 @@ let changeStrand = (name)=>{
     activeButton.classList = "active";
     activeButton.onclick = undefined;
 
+    closeSidebar();
+
     document.querySelector(`#${name}`).style.display = "flex";
     window[`${name}Obj`].display();
+}
+
+let closeSidebar = ()=>{
+    let sidebar = document.querySelector(".sidebar");
+    
+    if(sidebar){
+        sidebar.classList = "sidebarHide";
+    }
 }
 
 //Gets the indices of two dates from transactions

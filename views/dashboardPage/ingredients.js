@@ -100,7 +100,7 @@ window.ingredientsStrandObj = {
     },
 
     displayAddIngredient: function(){
-        this.closeSidebar();
+        closeSidebar();
 
         let sidebar = document.querySelector("#addIngredient");
 
@@ -112,7 +112,7 @@ window.ingredientsStrandObj = {
     },
 
     displayIngredient: function(ingredient, category){
-        this.closeSidebar();
+        closeSidebar();
         
         sidebar = document.querySelector("#ingredientDetails");
 
@@ -121,8 +121,6 @@ window.ingredientsStrandObj = {
         document.querySelector("#ingredientDetails p").innerText = category.name;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.name;
         document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.unit}`;
-
-        let start = performance.now();
 
         let quantities = [];
         let now = new Date();
@@ -137,17 +135,8 @@ window.ingredientsStrandObj = {
             sum += quantity;
         }
 
-        let end = performance.now();
-        console.log(`${end-start} ms`);
-
         document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.unit}`;
     },
 
-    closeSidebar: function(){
-        let sidebar = document.querySelector(".sidebar");
-        
-        if(sidebar){
-            sidebar.classList = "sidebarHide";
-        }
-    }
+    
 }

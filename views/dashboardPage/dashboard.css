@@ -242,6 +242,39 @@ body{
     display: none;
 }
 
+    #recipeHead{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #recipeList{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recipeItem{
+        display: flex;
+        justify-content: space-between;
+        background: rgb(240, 252, 255);
+        box-shadow: 0 2px 5px gray;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 3px 3px 3px 100px;
+        width: 25vw;
+        border: 1px solid black;
+        cursor: pointer;
+    }
+
+    .recipeItem p:first-of-type{
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .recipeItem:hover{
+        background: rgb(0, 27, 45);
+        color: white;
+    }
+
 /* Orders Strand */
 #ordersStrand{
     display: none;
