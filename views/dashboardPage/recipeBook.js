@@ -58,8 +58,6 @@ window.recipeBookStrandObj = {
 
         document.querySelector("#addRecipe").classList = "sidebar";
 
-        document.querySelector("#ingredientCount").value = 1;
-
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
         let categories = categorizeIngredients();
         for(let category of categories){
@@ -86,9 +84,13 @@ window.recipeBookStrandObj = {
 
             for(let i = 0; i < newDivs; i++){
                 let newNode = ingredientsDiv.children[0].cloneNode(true);
-                newNode.children[1].children[0].value = "";
+                newNode.children[2].children[0].value = "";
 
                 ingredientsDiv.appendChild(newNode);
+            }
+
+            for(let i = 0; i < newCount; i++){
+                ingredientsDiv.children[i].children[0].innerText = `Ingredient ${i + 1}`;
             }
         }else if(newCount < oldCount){
             let newDivs = oldCount - newCount;

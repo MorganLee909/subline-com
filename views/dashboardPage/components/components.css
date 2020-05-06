@@ -124,16 +124,59 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 50px;
 }
 
     #addRecipe label{
         display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
     }
 
     #addRecipe input{
         width: 50%;
     }
 
-    #recipeInputIngredients div{
+    #addRecipe h2{
+        margin-top: 10px;
+    }
+
+    .recipeBasicInfo{
+        width: 75%;
         background: rgb(0, 27, 45);
+        padding: 15px;
+        border-radius: 5px;
+        color: white;
+    }
+
+    #recipeInputIngredients{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        margin: 0 0 25px 0;
+        width:75%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-shadow: 0 0 2px gray;
+        border-radius: 5px;
+    }
+
+    #recipeInputIngredients div{
+        width: 75%;
+        background: rgb(0, 27, 45);
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        margin: 10px 0;
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+    #recipeInputIngredients div h4{
+        color: rgb(255, 99, 107);
+    }
+
+    #addRecipe button:last-of-type{
+        margin-top: auto;
     }
