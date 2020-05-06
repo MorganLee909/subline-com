@@ -5,6 +5,10 @@ module.exports = {
     //POST - creates a single new recipe
     //Inputs:
     //  req.body.name: name of recipes
+    //  req.body.price: price of the recipe
+    //  req.body.ingredients: array of ingredients (object) in recipe
+    //      id: id of ingredient
+    //      quantity: quantity of ingredient in recipe
     //Returns the newly created recipe
     createRecipe: function(req, res){
         if(!req.session.user){
@@ -16,8 +20,9 @@ module.exports = {
             merchant: req.session.user,
             name: req.body.name,
             price: Math.round(req.body.price * 100),
-            ingredients: []
+            ingredients: req.body.ingredients
         });
+
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
@@ -33,9 +38,10 @@ module.exports = {
 
         recipe.save()
             .then((newRecipe)=>{
-                return res.json(newRecipe);
+                return res.json({});
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("Error: unable to save new ingredient");
             });
     }

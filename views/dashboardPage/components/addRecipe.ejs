@@ -10,11 +10,11 @@
 
     <div class="recipeBasicInfo">
         <label>Name:
-            <input id="name" type="text">
+            <input id="newRecipeName" type="text">
         </label>
 
         <label>Price:
-            <input id="price" type="number" step="0.01" min="0">
+            <input id="newRecipePrice" type="number" step="0.01" min="0">
         </label>
 
         <label># of Ingredients
@@ -38,5 +38,5 @@
         </div>
     </div>
     
-    <button class="button">Create</button>
+    <button class="button" onclick="recipeBookStrandObj.submitNewRecipe()">Create</button>
 </div>

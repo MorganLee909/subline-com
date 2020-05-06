@@ -18,9 +18,26 @@ window.recipeBookStrandObj = {
                 let recipePrice = document.createElement("p");
                 recipePrice.innerText = `$${(recipe.price / 100).toFixed(2)}`;
                 recipeDiv.appendChild(recipePrice);
-
-                this.isPopulated = true;
             }
+
+            let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
+            let categories = categorizeIngredients();
+            for(let category of categories){
+                let optgroup = document.createElement("optgroup");
+                optgroup.label = category.name;
+                ingredientsSelect.appendChild(optgroup);
+
+                for(let ingredient of category.ingredients){
+                    let option = document.createElement("option");
+                    option.value = ingredient.id;
+                    option.innerText = ingredient.name;
+                    optgroup.appendChild(option);
+                }
+            }
+
+            console.log("ranned");
+
+            this.isPopulated = true;
         }
     },
 
@@ -57,21 +74,6 @@ window.recipeBookStrandObj = {
         closeSidebar();
 
         document.querySelector("#addRecipe").classList = "sidebar";
-
-        let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
-        let categories = categorizeIngredients();
-        for(let category of categories){
-            let optgroup = document.createElement("optgroup");
-            optgroup.label = category.name;
-            ingredientsSelect.appendChild(optgroup);
-
-            for(let ingredient of category.ingredients){
-                let option = document.createElement("option");
-                option.value = ingredient.id;
-                option.innerText = ingredient.name;
-                optgroup.appendChild(option);
-            }
-        }
     },
 
     changeRecipeCount: function(){
@@ -99,5 +101,49 @@ window.recipeBookStrandObj = {
                 ingredientsDiv.removeChild(ingredientsDiv.children[ingredientsDiv.children.length-1]);
             }
         }
+    },
+
+    submitNewRecipe: function(){
+        let newRecipe = {
+            name: document.querySelector("#newRecipeName").value,
+            price: document.querySelector("#newRecipePrice").value,
+            ingredients: []
+        }
+
+        let inputs = document.querySelectorAll("#recipeInputIngredients > div");
+        let duplicateCheck = new Set();
+        for(let input of inputs){
+            let id = input.children[1].children[0].value;
+
+            newRecipe.ingredients.push({
+                ingredient: id,
+                quantity: input.children[2].children[0].value
+            });
+
+            duplicateCheck.add(id);
+            if(duplicateCheck.size !== newRecipe.ingredients.length){
+                banner.createError("You have duplicate ingredients in your recipe");
+                return;
+            }
+        }
+
+        fetch("/recipe/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(newRecipe)
+        })
+            .then((response)=>{
+                console.log(response.data)
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    banner.createNotification("New recipe successfully penised")
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Refresh page to update data");
+            });
     }
 }
