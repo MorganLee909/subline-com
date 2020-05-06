@@ -35,8 +35,6 @@ window.recipeBookStrandObj = {
                 }
             }
 
-            console.log("ranned");
-
             this.isPopulated = true;
         }
     },
@@ -111,20 +109,15 @@ window.recipeBookStrandObj = {
         }
 
         let inputs = document.querySelectorAll("#recipeInputIngredients > div");
-        let duplicateCheck = new Set();
         for(let input of inputs){
-            let id = input.children[1].children[0].value;
-
             newRecipe.ingredients.push({
-                ingredient: id,
+                ingredient: input.children[1].children[0].value,
                 quantity: input.children[2].children[0].value
             });
+        }
 
-            duplicateCheck.add(id);
-            if(duplicateCheck.size !== newRecipe.ingredients.length){
-                banner.createError("You have duplicate ingredients in your recipe");
-                return;
-            }
+        if(!validator.recipe(newRecipe)){
+            return;
         }
 
         fetch("/recipe/create", {
@@ -139,7 +132,7 @@ window.recipeBookStrandObj = {
                 if(typeof(response.data) === "string"){
                     banner.createError(response.data);
                 }else{
-                    banner.createNotification("New recipe successfully penised")
+                    banner.createNotification("New recipe successfully created")
                 }
             })
             .catch((err)=>{
