@@ -3,7 +3,7 @@ window.ingredientsStrandObj = {
 
     display: function(){
         if(!this.isPopulated){
-            let categories = this.categorizeIngredients();
+            let categories = categorizeIngredients();
 
             let ingredientStrand = document.querySelector("#ingredientsStrand");
             for(let category of categories){
@@ -52,41 +52,6 @@ window.ingredientsStrandObj = {
 
             this.isPopulated = true;
         }
-    },
-
-    categorizeIngredients: function(){
-        let ingredientsByCategory = [];
-
-        for(let item of merchant.inventory){
-            let categoryExists = false;
-            for(let category of ingredientsByCategory){
-                if(item.ingredient.category === category.name){
-                    category.ingredients.push({
-                        id: item.ingredient._id,
-                        name: item.ingredient.name,
-                        quantity: item.quantity,
-                        unit: item.ingredient.unit
-                    });
-
-                    categoryExists = true;
-                    break;
-                }
-            }
-
-            if(!categoryExists){
-                ingredientsByCategory.push({
-                    name: item.ingredient.category,
-                    ingredients: [{
-                        id: item.ingredient._id,
-                        name: item.ingredient.name,
-                        quantity: item.quantity,
-                        unit: item.ingredient.unit
-                    }]
-                });
-            }
-        }
-
-        return ingredientsByCategory;
     },
 
     toggleCategory: function(div, button){

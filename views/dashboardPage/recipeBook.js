@@ -51,5 +51,51 @@ window.recipeBookStrandObj = {
         }
 
         document.querySelector("#recipePrice p").innerText = `$${(recipe.price / 100).toFixed(2)}`;
+    },
+
+    displayAddRecipe: function(){
+        closeSidebar();
+
+        document.querySelector("#addRecipe").classList = "sidebar";
+
+        document.querySelector("#ingredientCount").value = 1;
+
+        let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
+        let categories = categorizeIngredients();
+        for(let category of categories){
+            let optgroup = document.createElement("optgroup");
+            optgroup.label = category.name;
+            ingredientsSelect.appendChild(optgroup);
+
+            for(let ingredient of category.ingredients){
+                let option = document.createElement("option");
+                option.value = ingredient.id;
+                option.innerText = ingredient.name;
+                optgroup.appendChild(option);
+            }
+        }
+    },
+
+    changeRecipeCount: function(){
+        let newCount = document.querySelector("#ingredientCount").value;
+        let ingredientsDiv = document.querySelector("#recipeInputIngredients");
+        let oldCount = ingredientsDiv.children.length;
+
+        if(newCount > oldCount){
+            let newDivs = newCount - oldCount;
+
+            for(let i = 0; i < newDivs; i++){
+                let newNode = ingredientsDiv.children[0].cloneNode(true);
+                newNode.children[1].children[0].value = "";
+
+                ingredientsDiv.appendChild(newNode);
+            }
+        }else if(newCount < oldCount){
+            let newDivs = oldCount - newCount;
+
+            for(let i = 0; i < newDivs; i++){
+                ingredientsDiv.removeChild(ingredientsDiv.children[ingredientsDiv.children.length-1]);
+            }
+        }
     }
 }

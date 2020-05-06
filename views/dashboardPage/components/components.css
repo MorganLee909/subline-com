@@ -1,6 +1,6 @@
 .sidebar{
     display: flex;
-    width: 18vw;
+    width: 25vw;
     height: 100vh;
     box-sizing: border-box;
     padding: 25px;
@@ -28,7 +28,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    margin-bottom: 100px;
     padding: 3px;
     border-radius: 5px;
     margin-right: auto;
@@ -119,4 +118,22 @@
     #recipePrice p{
         font-size: 25px;
         font-weight: bold;
+    }
+
+#addRecipe{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    #addRecipe label{
+        display: flex;
+    }
+
+    #addRecipe input{
+        width: 50%;
+    }
+
+    #recipeInputIngredients div{
+        background: rgb(0, 27, 45);
     }

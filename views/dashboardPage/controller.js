@@ -153,6 +153,41 @@ let recipesSold = (dateRange)=>{
     return recipeList;
 }
 
+let categorizeIngredients = ()=>{
+    let ingredientsByCategory = [];
+
+    for(let item of merchant.inventory){
+        let categoryExists = false;
+        for(let category of ingredientsByCategory){
+            if(item.ingredient.category === category.name){
+                category.ingredients.push({
+                    id: item.ingredient._id,
+                    name: item.ingredient.name,
+                    quantity: item.quantity,
+                    unit: item.ingredient.unit
+                });
+
+                categoryExists = true;
+                break;
+            }
+        }
+
+        if(!categoryExists){
+            ingredientsByCategory.push({
+                name: item.ingredient.category,
+                ingredients: [{
+                    id: item.ingredient._id,
+                    name: item.ingredient.name,
+                    quantity: item.quantity,
+                    unit: item.ingredient.unit
+                }]
+            });
+        }
+    }
+
+    return ingredientsByCategory;
+}
+
 for(let transaction of transactions){
     transaction.date = new Date(transaction.date);
 }
