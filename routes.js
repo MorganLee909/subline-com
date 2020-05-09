@@ -35,7 +35,7 @@ module.exports = function(app){
     app.post("/recipe/create", recipeData.createRecipe);
 
     //Other
-    app.post("/purchases/create", otherData.createPurchase);
+    app.post("/purchases/create", otherData.createOrder);
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
     app.get("/cloverlogin", otherData.cloverRedirect);
@@ -46,7 +46,7 @@ module.exports = function(app){
 
     //Transactions
     app.post("/transactions", transactionData.getTransactions);
-    app.get("/purchases", transactionData.getPurchases);
+    app.get("/purchases", transactionData.getOrders);
     app.post("/transactions/create", transactionData.createTransaction);  //Creates transaction for non-pos merchant
     app.get("/populatesometransactions", transactionData.populate);
 }

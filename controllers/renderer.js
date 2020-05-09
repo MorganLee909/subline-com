@@ -3,7 +3,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const Merchant = require("../models/merchant");
 const Transaction = require("../models/transaction");
-const Purchase = require("../models/purchase");
+const Order = require("../models/order");
 
 module.exports = {
     //GET - Shows the public landing page
@@ -203,22 +203,22 @@ module.exports = {
                 .catch((err)=>{});
         });
 
-        let purchasePromise = new Promise((resolve, reject)=>{
-            Purchase.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
+        let orderPromise = new Promise((resolve, reject)=>{
+            Order.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
                 {date: 1, ingredients: 1, _id: 0},
                 {sort: {date: 1}})
-                .then((purchases)=>{
-                    resolve(purchases);
+                .then((orders)=>{
+                    resolve(orders);
                 })
                 .catch((err)=>{});
         });
 
-        Promise.all([merchTransPromise, purchasePromise])
+        Promise.all([merchTransPromise, orderPromise])
             .then((response)=>{
                 let data = {
                     merchant: response[0].merchant,
                     transactions: response[0].transactions,
-                    purchases: response[1],
+                    orders: response[1],
                     dates: [firstDay, lastDay]
                 }
 

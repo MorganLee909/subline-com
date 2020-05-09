@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const PurchaseSchema = new mongoose.Schema({
+const OrderSchema = new mongoose.Schema({
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
@@ -25,4 +25,4 @@ const PurchaseSchema = new mongoose.Schema({
     }]
 });
 
-module.exports = mongoose.model("Purchase", PurchaseSchema);
+module.exports = mongoose.model("Order", OrderSchema);
