@@ -1,4 +1,6 @@
 let changeStrand = (name)=>{
+    closeSidebar();
+
     for(let strand of document.querySelectorAll(".strand")){
         strand.style.display = "none";
     }
@@ -12,18 +14,27 @@ let changeStrand = (name)=>{
     activeButton.classList = "active";
     activeButton.onclick = undefined;
 
-    closeSidebar();
-
     document.querySelector(`#${name}`).style.display = "flex";
     window[`${name}Obj`].display();
 }
 
 let closeSidebar = ()=>{
-    let sidebar = document.querySelector(".sidebar");
-    
-    if(sidebar){
-        sidebar.classList = "sidebarHide";
+    let sidebar = document.querySelector("#sidebarDiv");
+    for(let i = 0; i < sidebar.children.length; i++){
+        sidebar.children[i].style.display = "none";
     }
+    sidebar.classList = "sidebarHide";
+}
+
+let openSidebar = (sidebar)=>{
+    document.querySelector("#sidebarDiv").classList = "sidebar";
+
+    let sideBars = document.querySelector("#sidebarDiv").children;
+    for(let i = 0; i < sideBars.length; i++){
+        sideBars[i].style.display = "none";
+    }
+
+    sidebar.style.display = "flex";
 }
 
 //Gets the indices of two dates from transactions

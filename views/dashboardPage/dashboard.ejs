@@ -84,13 +84,15 @@
             </div>
         </div>
 
-        <% include ./components/addIngredient %>
+        <div id="sidebarDiv" class="sidebarHide">
+            <% include ./components/addIngredient %>
 
-        <% include ./components/ingredientDetails %>
+            <% include ./components/ingredientDetails %>
 
-        <% include ./components/recipeDetails %>
+            <% include ./components/recipeDetails %>
 
-        <% include ./components/addRecipe %>
+            <% include ./components/addRecipe %>
+        </div>
 
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
         <script>let transactions = <%- JSON.stringify(transactions) %>;</script>

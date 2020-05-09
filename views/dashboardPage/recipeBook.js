@@ -40,9 +40,7 @@ window.recipeBookStrandObj = {
     },
 
     displayRecipe: function(recipe){
-        closeSidebar();
-
-        document.querySelector("#recipeDetails").classList = "sidebar";
+        openSidebar(document.querySelector("#recipeDetails"));
 
         document.querySelector("#recipeDetails h1").innerText = recipe.name;
 
@@ -69,9 +67,7 @@ window.recipeBookStrandObj = {
     },
 
     displayAddRecipe: function(){
-        closeSidebar();
-
-        document.querySelector("#addRecipe").classList = "sidebar";
+        openSidebar(document.querySelector("#addRecipe"));
     },
 
     changeRecipeCount: function(){
@@ -128,7 +124,6 @@ window.recipeBookStrandObj = {
             body: JSON.stringify(newRecipe)
         })
             .then((response)=>{
-                console.log(response.data)
                 if(typeof(response.data) === "string"){
                     banner.createError(response.data);
                 }else{

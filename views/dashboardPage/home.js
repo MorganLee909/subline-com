@@ -26,7 +26,6 @@ window.homeStrandObj = {
             document.querySelector("#revenueChange img").src = img;
 
             let graphCanvas = document.querySelector("#graphCanvas");
-            console.log(graphCanvas.parentElement);
 
             graphCanvas.height = graphCanvas.parentElement.clientHeight;
             graphCanvas.width = graphCanvas.parentElement.clientWidth;

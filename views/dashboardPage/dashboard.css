@@ -156,7 +156,7 @@ body{
 /* Ingredients Strand */
 #ingredientsStrand{
     display: none;
-    height: 100vh;
+    height: 100%;
     box-sizing: border-box;
     padding-right: 100px;
 }

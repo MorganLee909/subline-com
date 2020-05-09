@@ -65,23 +65,19 @@ window.ingredientsStrandObj = {
     },
 
     displayAddIngredient: function(){
-        closeSidebar();
-
         let sidebar = document.querySelector("#addIngredient");
+        openSidebar(sidebar);
 
-        if(sidebar.classList.value === "sidebarHide"){
-            sidebar.classList = "sidebar";
-        }else{
-            sidebar.classList = "sidebarHide";
-        }
+        // if(sidebar.classList.value === "sidebarHide"){
+        //     sidebar.classList = "sidebar";
+        // }else{
+        //     sidebar.classList = "sidebarHide";
+        // }
     },
 
     displayIngredient: function(ingredient, category){
-        closeSidebar();
-        
         sidebar = document.querySelector("#ingredientDetails");
-
-        sidebar.classList = "sidebar";
+        openSidebar(sidebar);
 
         document.querySelector("#ingredientDetails p").innerText = category.name;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.name;
