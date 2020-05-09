@@ -16,20 +16,18 @@
             <% include ../shared/banner %>
             
             <div id="homeStrand" class="strand">
-                <h1>Dashboard</h1>
+                <h1 class="strandTitle">Dashboard</h1>
 
                 <div class="flexRow">
-                    <div class="flexColumn">
-                        <div id="revenueCard" class="card">
-                            <p>Total Revenue (month)</p>
+                    <div id="revenueCard" class="card">
+                        <p>Total Revenue (month)</p>
 
-                            <p id="revenue"></p>
+                        <p id="revenue"></p>
 
-                            <div id="revenueChange">
-                                <img alt="revenue">
+                        <div id="revenueChange">
+                            <img alt="revenue">
 
-                                <p></p>
-                            </div>
+                            <p></p>
                         </div>
                     </div>
 
@@ -48,7 +46,7 @@
                     </div>
 
                     <div id=popularIngredientsCard class="card">
-                        <p>Most Popular Ingredients</p>
+                        <p>Most Popular Ingredients (month)</p>
 
                         <canvas id="popularCanvas"></canvas>
                     </div>
@@ -57,7 +55,7 @@
 
             <div id="ingredientsStrand" class="strand">
                 <div id="ingredientHead">
-                    <h1>Ingredient Inventory</h1>
+                    <h1 class="strandTitle">Ingredient Inventory</h1>
 
                     <button class="button" onclick="ingredientsStrandObj.displayAddIngredient()">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -68,7 +66,7 @@
 
             <div id="recipeBookStrand" class="strand">
                 <div id="recipeHead">
-                    <h1>Recipe Book</h1>
+                    <h1 class="strandTitle">Recipe Book</h1>
 
                     <% if(merchant.pos === "none"){ %>
                         <button class="button" onclick="recipeBookStrandObj.displayAddRecipe()">
@@ -82,7 +80,7 @@
             </div>
 
             <div id="ordersStrand" class="strand">
-                <h1>Orders</h1>
+                <h1 class="strandTitle">Orders</h1>
             </div>
         </div>
 

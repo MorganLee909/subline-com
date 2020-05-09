@@ -26,6 +26,8 @@ window.homeStrandObj = {
             document.querySelector("#revenueChange img").src = img;
 
             let graphCanvas = document.querySelector("#graphCanvas");
+            console.log(graphCanvas.parentElement);
+
             graphCanvas.height = graphCanvas.parentElement.clientHeight;
             graphCanvas.width = graphCanvas.parentElement.clientWidth;
 
@@ -35,11 +37,21 @@ window.homeStrandObj = {
             let thirtyAgo = new Date(today);
             thirtyAgo.setDate(today.getDate() - 29);
 
-            this.graph.addData(
-                this.graphData(dateIndices(thirtyAgo)),
-                [thirtyAgo, new Date()],
-                "Revenue"
-            );
+            let data = this.graphData(dateIndices(thirtyAgo));
+            if(data){
+                this.graph.addData(
+                    data,
+                    [thirtyAgo, new Date()],
+                    "Revenue"
+                );
+            }else{
+                document.querySelector("#graphCanvas").style.display = "none";
+                
+                let notice = document.createElement("h1");
+                notice.innerText = "NO DATA YET";
+                notice.classList = "notice";
+                document.querySelector("#graphCard").appendChild(notice);
+            }
 
             //Inventory Check
             let rands = [];
@@ -80,29 +92,38 @@ window.homeStrandObj = {
             let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
             let ingredientList = ingredientsSold(dateIndices(thisMonth));
-            for(let i = 0; i < 5; i++){
-                let max = ingredientList[0].quantity
-                let index = 0;
-                for(let j = 0; j < ingredientList.length; j++){
-                    if(ingredientList[j].quantity > max){
-                        max = ingredientList[j].quantity;
-                        index = j;
+            if(ingredientList){
+                for(let i = 0; i < 5; i++){
+                    let max = ingredientList[0].quantity
+                    let index = 0;
+                    for(let j = 0; j < ingredientList.length; j++){
+                        if(ingredientList[j].quantity > max){
+                            max = ingredientList[j].quantity;
+                            index = j;
+                        }
                     }
+
+                    dataArray.push({
+                        num: max,
+                        label: `${ingredientList[index].name}: ${ingredientList[index].quantity} ${ingredientList[index].unit}`
+                    });
+                    ingredientList.splice(index, 1);
                 }
 
-                dataArray.push({
-                    num: max,
-                    label: `${ingredientList[index].name}: ${ingredientList[index].quantity} ${ingredientList[index].unit}`
-                });
-                ingredientList.splice(index, 1);
+                let thisCanvas = document.querySelector("#popularCanvas");
+                thisCanvas.width = thisCanvas.parentElement.clientWidth;
+                thisCanvas.height = thisCanvas.parentElement.clientHeight * 0.75;
+
+                let popularGraph = new HorizontalBarGraph(document.querySelector("#popularCanvas"));
+                popularGraph.addData(dataArray);
+            }else{
+                document.querySelector("#popularCanvas").style.display = "none";
+
+                let notice = document.createElement("p");
+                notice.innerText = "N/A";
+                notice.classList = "notice";
+                document.querySelector("#popularIngredientsCard").appendChild(notice);
             }
-
-            let thisCanvas = document.querySelector("#popularCanvas");
-            thisCanvas.width = thisCanvas.parentElement.clientWidth;
-            thisCanvas.height = thisCanvas.parentElement.clientHeight;
-
-            let popularGraph = new HorizontalBarGraph(document.querySelector("#popularCanvas"));
-            popularGraph.addData(dataArray);
 
             this.isPopulated = true;
         }
@@ -124,12 +145,16 @@ window.homeStrandObj = {
         return total / 100;
     },
 
-    graphData: function(indices){
+    graphData: function(dateRange){
+        if(!dateRange){
+            return false;
+        }
+
         let dataList = new Array(30).fill(0);
-        let currentDate = transactions[indices[0]].date;
+        let currentDate = transactions[dateRange[0]].date;
         let arrayIndex = 0;
 
-        for(let i = indices[0]; i <= indices[1]; i++){
+        for(let i = dateRange[0]; i <= dateRange[1]; i++){
             if(transactions[i].date.getDate() !== currentDate.getDate()){
                 currentDate = transactions[i].date;
                 arrayIndex++;

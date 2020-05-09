@@ -56,7 +56,6 @@
 
     .menu > button{
         display: flex;
-        justify-content: row;
         align-items: center;
         background: none;
         border-style: none;

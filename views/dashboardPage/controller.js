@@ -32,21 +32,26 @@ let closeSidebar = ()=>{
 //  to: ending date (default to now)
 //Output
 //  Array containing starting index and ending index
+//Note: Will return false if it cannot find both necessary dates
 let dateIndices = (from, to = new Date())=>{
     let indices = [];
 
     for(let i = 0; i < transactions.length; i++){
         if(transactions[i].date > from){
-            indices[0] = i;
+            indices.push(i);
             break;
         }
     }
 
     for(let i = transactions.length - 1; i >=0; i--){
         if(transactions[i].date < to){
-            indices[1] = i;
+            indices.push(i);
             break;
         }
+    }
+
+    if(indices.length < 2){
+        return false;
     }
 
     return indices;
@@ -61,6 +66,10 @@ let dateIndices = (from, to = new Date())=>{
 //      quantity: quantity sold of that ingredient
 //      name: name of the ingredient
 let ingredientsSold = (dateRange)=>{
+    if(!dateRange){
+        return false;
+    }
+    
     let recipes = recipesSold(dateRange);
     let ingredientList = [];
 
