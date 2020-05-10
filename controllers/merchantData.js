@@ -321,17 +321,23 @@ module.exports = {
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
-                for(let ingredient of req.body){
-                    let updateIngredient = merchant.inventory.find(i => i.ingredient.toString() === ingredient.id);
+                for(let i = 0; i < req.body.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(merchant.inventory[j].ingredient.toString() === req.body[i].id){
+                            updateIngredient = merchant.inventory[j];
+                            break;
+                        }
+                    }
+                    console.log(updateIngredient);
 
                     adjustments.push(new InventoryAdjustment({
                         date: Date.now(),
                         merchant: req.session.user,
-                        ingredient: ingredient.id,
-                        quantity: ingredient.quantity - updateIngredient.quantity
+                        ingredient: req.body[i].id,
+                        quantity: req.body[i].quantity - updateIngredient.quantity
                     }));
 
-                    updateIngredient.quantity = ingredient.quantity;
+                    updateIngredient.quantity = req.body[i].quantity;
                 }
 
                 merchant.save()

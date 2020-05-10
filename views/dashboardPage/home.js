@@ -196,8 +196,6 @@ window.homeStrandObj = {
                 return;
             }
         }
-
-        console.log(changes);
         
         if(changes.length > 0){
             fetch("/merchant/ingredients/update", {
