@@ -1,8 +1,16 @@
 <div class="menu">
-    <div class="menuHead">
+    <div id="max" class="menuHead">
         <a href="/">
-            <img class="menuLogo" src="/shared/images/logo.png">
+            <img class="menuLogo" src="/shared/images/logo.png" alt="The Subline">
             <p>The Subline</p>
+        </a>
+
+        <button onclick="changeMenu()">&#8801;</button>
+    </div>
+
+    <div id="min" class="menuHead menuHeadMin">
+        <a href="/">
+            <img class="menuLogoMin" src="/shared/images/logo.png" alt="The Subline">
         </a>
 
         <button onclick="changeMenu()">&#8801;</button>
@@ -28,7 +36,7 @@
         <p>Orders</p>
     </button>
 
-    <a class="logout" href="/logout">
+    <a class="logout" href="/logout">   
         <img src="/shared/images/profile.png" alt="logout">
         <p>Logout</p>
     </a>
@@ -44,13 +52,12 @@
                     button.children[1].style.display = "none";
                 }
 
-                document.querySelector(".menuHead p").style.display = "none";
-                document.querySelector(".menuHead").classList = "menuHead menuHeadMin";
-                document.querySelector(".logout p").style.display = "none";
+                document.querySelector("#max").style.display = "none";
+                document.querySelector("#min").style.display = "flex";
 
-                setTimeout(()=>{
-                    document.querySelector(".menuLogo").classList = "menuLogo menuLogoMin";
-                }, 150);
+                // setTimeout(()=>{
+                //     document.querySelector(".menuLogo").classList = "menuLogo menuLogoMin";
+                // }, 150);
             }else if(menu.classList.contains("menuMinimized")){
                 menu.classList = "menu";
 
@@ -58,13 +65,10 @@
                     button.children[1].style.display = "block";
                 }
 
-                document.querySelector(".menuHead p").style.display = "block";
-                document.querySelector(".menuHead").classList = "menuHead";
-                document.querySelector(".logout p").style.display = "block";
-
                 setTimeout(()=>{
-                    document.querySelector(".menuLogo").classList = "menuLogo";
-                });
+                    document.querySelector("#max").style.display = "flex";
+                    document.querySelector("#min").style.display = "none";
+                }, 150);
             }
         }
     </script>
