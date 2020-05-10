@@ -115,11 +115,22 @@
     color: white;
     text-decoration: none;
     font-size: 20px;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 .logout img{
     height: 25px;
     width: 25px;
+}
+
+.logout > *{
+    margin: 10px;
+}
+
+.logout:hover{
+    background: rgb(179, 191, 209);
+    color: black;
 }
 
 /* Minimized menu */
