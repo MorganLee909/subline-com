@@ -3,6 +3,7 @@ window.homeStrandObj = {
     graph: {},
 
     display: function(){
+        console.time("Load main");
         if(!this.isPopulated){
             let today = new Date();
             let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -68,23 +69,23 @@ window.homeStrandObj = {
             while(ul.children.length > 0){
                 ul.removeChild(ul.firstChild);
             }
-            for(let rand of rands){
+            for(let i = 0; i < rands.length; i++){
                 let li = document.createElement("li");
                 li.classList = "flexRow";
-                li.ingredientIndex = rand;
+                li.ingredientIndex = rands[i];
                 ul.appendChild(li);
 
                 let name = document.createElement("p");
-                name.innerText = merchant.inventory[rand].ingredient.name;
+                name.innerText = merchant.inventory[rands[i]].ingredient.name;
                 li.appendChild(name);
 
                 let input = document.createElement("input");
                 input.type = "number";
-                input.value = merchant.inventory[rand].quantity;
+                input.value = merchant.inventory[rands[i]].quantity;
                 li.appendChild(input);
 
                 let label = document.createElement("p");
-                label.innerText = merchant.inventory[rand].ingredient.unit;
+                label.innerText = merchant.inventory[rands[i]].ingredient.unit;
                 li.appendChild(label);
             }
 
@@ -129,16 +130,17 @@ window.homeStrandObj = {
 
             this.isPopulated = true;
         }
+        console.timeEnd("Load main");
     },
 
     calculateRevenue: function(indices){
         let total = 0;
 
         for(let i = indices[0]; i <= indices[1]; i++){
-            for(let recipe of transactions[i].recipes){
-                for(let merchRecipe of merchant.recipes){
-                    if(recipe.recipe === merchRecipe._id){
-                        total += recipe.quantity * merchRecipe.price;
+            for(let j = 0; j < transactions[i].recipes.length; j++){
+                for(let k = 0; k < merchant.recipes.length; k++){
+                    if(transactions[i].recipes[j].recipe === merchant.recipes[k]._id){
+                        total += transactions[i].recipes[j].quantity * merchant.recipes[k].price;
                     }
                 }
             }
@@ -161,10 +163,10 @@ window.homeStrandObj = {
                 currentDate = transactions[i].date;
                 arrayIndex++;
             }
-            for(let recipe of transactions[i].recipes){
+            for(let j = 0; j < transactions[i].recipes.length; j++){
                 for(let merchRecipe of merchant.recipes){
-                    if(recipe.recipe === merchRecipe._id){
-                        dataList[arrayIndex] = parseFloat((dataList[arrayIndex] + (recipe.quantity * merchRecipe.price) / 100).toFixed(2));
+                    if(transactions[i].recipes[j].recipe === merchRecipe._id){
+                        dataList[arrayIndex] = parseFloat((dataList[arrayIndex] + (transactions[i].recipes[j].quantity * merchRecipe.price) / 100).toFixed(2));
                         break;
                     }
                 }
@@ -179,11 +181,11 @@ window.homeStrandObj = {
 
         let changes = [];
 
-        for(let li of lis){
-            if(li.children[1].value >= 0){
-                let merchIngredient = merchant.inventory[li.ingredientIndex];
+        for(let i = 0; i < lis.length; i++){
+            if(lis[i].children[1].value >= 0){
+                let merchIngredient = merchant.inventory[lis[i].ingredientIndex];
 
-                let value = parseInt(li.children[1].value);
+                let value = parseInt(lis[i].children[1].value);
 
                 if(value !== merchIngredient.quantity){
                     changes.push({

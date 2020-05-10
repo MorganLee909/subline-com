@@ -84,24 +84,24 @@ let ingredientsSold = (dateRange)=>{
     let recipes = recipesSold(dateRange);
     let ingredientList = [];
 
-    for(let recipe of recipes){
-        for(let merchRecipe of merchant.recipes){
-            for(let ingredient of merchRecipe.ingredients){
+    for(let i = 0; i < recipes.length; i++){
+        for(let j = 0; j < merchant.recipes.length; j++){
+            for(let k = 0; k < merchant.recipes[j].ingredients.length; k++){
                 let exists = false;
-                for(let item of ingredientList){
-                    if(item.id === ingredient.ingredient._id){
+                for(let l = 0; l < ingredientList.length; l++){
+                    if(ingredientList[l].id === merchant.recipes[j].ingredients[k].ingredient._id){
                         exists = true;
-                        item.quantity += ingredient.quantity * recipe.quantity;
+                        ingredientList[l].quantity += merchant.recipes[j].ingredients[k].quantity * recipes[i].quantity;
                         break;
                     }
                 }
 
                 if(!exists){
                     ingredientList.push({
-                        id: ingredient.ingredient._id,
-                        quantity: ingredient.quantity * recipe.quantity,
-                        name: ingredient.ingredient.name,
-                        unit: ingredient.ingredient.unit
+                        id: merchant.recipes[j].ingredients[k].ingredient._id,
+                        quantity: merchant.recipes[j].ingredients[k].quantity * recipes[i].quantity,
+                        name: merchant.recipes[j].ingredients[k].ingredient.name,
+                        unit: merchant.recipes[j].ingredients[k].ingredient.unit
                     })
                 }
             }
@@ -118,20 +118,20 @@ let ingredientSold = (dateRange,  id)=>{
 
     let checkRecipes = [];
     let quantities = [];
-    for(let merchRecipe of merchant.recipes){
-        for(let merchIngredient of merchRecipe.ingredients){
-            if(merchIngredient.ingredient._id === id){
-                checkRecipes.push(merchRecipe._id);
-                quantities.push(merchIngredient.quantity);
+    for(let i = 0; i < merchant.recipes.length; i++){
+        for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
+            if(merchant.recipes[i].ingredients[j].ingredient._id === id){
+                checkRecipes.push(merchant.recipes[i]._id);
+                quantities.push(merchant.recipes[i].ingredients[j].quantity);
                 break;
             }
         }
     }
 
-    for(let recipe of recipes){
+    for(let i = 0; i < recipes.length; i++){
         for(let i = 0; i < checkRecipes.length; i++){
-            if(checkRecipes[i] === recipe.id){
-                total += recipe.quantity * quantities[i];
+            if(checkRecipes[i] === recipes[i].id){
+                total += recipes[i].quantity * quantities[i];
                 break;
             }
         }
@@ -151,20 +151,20 @@ let recipesSold = (dateRange)=>{
     let recipeList = [];
 
     for(let i = dateRange[0]; i <= dateRange[1]; i++){
-        for(let recipe of transactions[i].recipes){
+        for(let j = 0; j < transactions[i].recipes.length; j++){
             let exists = false;
-            for(let item of recipeList){
-                if(item.id === recipe.recipe){
+            for(let k = 0; k < recipeList.length; k++){
+                if(recipeList[k].id === transactions[i].recipes[j].recipe){
                     exists = true;
-                    item.quantity += recipe.quantity;
+                    recipeList[k].quantity += transactions[i].recipes[j].quantity;
                     break;
                 }
             }
 
             if(!exists){
                 recipeList.push({
-                    id: recipe.recipe,
-                    quantity: recipe.quantity
+                    id: transactions[i].recipes[j].recipe,
+                    quantity: transactions[i].recipes[j].quantity
                 })
             }
         }
@@ -176,15 +176,15 @@ let recipesSold = (dateRange)=>{
 let categorizeIngredients = ()=>{
     let ingredientsByCategory = [];
 
-    for(let item of merchant.inventory){
+    for(let i = 0; i < merchant.inventory.length; i++){
         let categoryExists = false;
-        for(let category of ingredientsByCategory){
-            if(item.ingredient.category === category.name){
-                category.ingredients.push({
-                    id: item.ingredient._id,
-                    name: item.ingredient.name,
-                    quantity: item.quantity,
-                    unit: item.ingredient.unit
+        for(let j = 0; j < ingredientsByCategory.length; j++){
+            if(merchant.inventory[i].ingredient.category === ingredientsByCategory[j].name){
+                ingredientsByCategory[j].ingredients.push({
+                    id: merchant.inventory[i].ingredient._id,
+                    name: merchant.inventory[i].ingredient.name,
+                    quantity: merchant.inventory[i].quantity,
+                    unit: merchant.inventory[i].ingredient.unit
                 });
 
                 categoryExists = true;
@@ -194,12 +194,12 @@ let categorizeIngredients = ()=>{
 
         if(!categoryExists){
             ingredientsByCategory.push({
-                name: item.ingredient.category,
+                name: merchant.inventory[i].ingredient.category,
                 ingredients: [{
-                    id: item.ingredient._id,
-                    name: item.ingredient.name,
-                    quantity: item.quantity,
-                    unit: item.ingredient.unit
+                    id: merchant.inventory[i].ingredient._id,
+                    name: merchant.inventory[i].ingredient.name,
+                    quantity: merchant.inventory[i].quantity,
+                    unit: merchant.inventory[i].ingredient.unit
                 }]
             });
         }
