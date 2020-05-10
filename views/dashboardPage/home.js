@@ -65,6 +65,9 @@ window.homeStrandObj = {
             }
 
             let ul = document.querySelector("#inventoryCheckCard ul");
+            while(ul.children.length > 0){
+                ul.removeChild(ul.firstChild);
+            }
             for(let rand of rands){
                 let li = document.createElement("li");
                 li.classList = "flexRow";
@@ -180,12 +183,12 @@ window.homeStrandObj = {
             if(li.children[1].value >= 0){
                 let merchIngredient = merchant.inventory[li.ingredientIndex];
 
-                let change = li.children[1].value - merchIngredient.quantity;
+                let value = parseInt(li.children[1].value);
 
-                if(change !== 0){
+                if(value !== merchIngredient.quantity){
                     changes.push({
                         id: merchIngredient.ingredient._id,
-                        quantityChange: change
+                        quantity: value
                     });
                 }
             }else{
@@ -193,10 +196,12 @@ window.homeStrandObj = {
                 return;
             }
         }
+
+        console.log(changes);
         
         if(changes.length > 0){
             fetch("/merchant/ingredients/update", {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"
                 },
@@ -209,7 +214,9 @@ window.homeStrandObj = {
                         console.log(err);
                     }else{
                         for(let change of changes){
-                            merchant.inventory.find((item)=> item.ingredient._id === change.id).quantity += change.quantityChange;
+                            merchant.inventory.find((item)=> item.ingredient._id === change.id).quantity = change.quantity;
+                            this.isPopulated = false;
+                            this.display();
                         }
                     }
                 })

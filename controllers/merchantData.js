@@ -309,7 +309,7 @@ module.exports = {
     //Inputs:
     //  req.body.ingredients: array of ingredient data
     //      id: id of ingredient to update
-    //      quantityChange: Amount to change ingredient (not the new value)
+    //      quantity: New value for the ingredient
     //Returns: Nothing
     updateMerchantIngredient: function(req, res){
         if(!req.session.user){
@@ -323,18 +323,23 @@ module.exports = {
             .then((merchant)=>{
                 for(let ingredient of req.body){
                     let updateIngredient = merchant.inventory.find(i => i.ingredient.toString() === ingredient.id);
-                    updateIngredient.quantity = (updateIngredient.quantity + ingredient.quantityChange);
 
                     adjustments.push(new InventoryAdjustment({
                         date: Date.now(),
                         merchant: req.session.user,
                         ingredient: ingredient.id,
-                        quantity: ingredient.quantityChange
+                        quantity: ingredient.quantity - updateIngredient.quantity
                     }));
+
+                    updateIngredient.quantity = ingredient.quantity;
                 }
+
                 merchant.save()
                     .then((newMerchant)=>{
                         res.json({});
+
+                        InventoryAdjustment.create(adjustments).catch(()=>{});
+                        return;
                     })
                     .catch((err)=>{
                         return res.json("Error: your data could not be saved");
@@ -342,9 +347,7 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("Error: your data could not be retrieved");
-            });
-
-        InventoryAdjustment.create(adjustments).catch(()=>{});
+            });        
     },
 
     //POST - Adds an ingredient to a recipe
