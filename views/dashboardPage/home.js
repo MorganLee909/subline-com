@@ -3,7 +3,6 @@ window.homeStrandObj = {
     graph: {},
 
     display: function(){
-        console.time("Load main");
         if(!this.isPopulated){
             let today = new Date();
             let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -130,7 +129,6 @@ window.homeStrandObj = {
 
             this.isPopulated = true;
         }
-        console.timeEnd("Load main");
     },
 
     calculateRevenue: function(indices){

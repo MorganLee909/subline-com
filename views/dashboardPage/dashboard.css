@@ -6,7 +6,6 @@ html{
 body{
     display: flex;
     flex-direction: row;
-    font-family: 'Saira', sans-serif;
     height: 100%;
     max-width: 100%;
 }
