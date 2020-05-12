@@ -234,6 +234,12 @@ body{
     text-align: right;
 }
 
+.ingredientSpacer{
+    border: none;
+    border-top: 1px dashed black;
+    margin: auto;
+}
+
 /* Recipe Book Strand */
 #recipeBookStrand{
     display: none;

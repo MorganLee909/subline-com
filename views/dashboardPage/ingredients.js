@@ -34,7 +34,7 @@ window.ingredientsStrandObj = {
             categoryDiv.appendChild(ingredientsDiv);
 
             let headerButton = document.createElement("button");
-            headerButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            headerButton.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
             headerButton.onclick = ()=>{this.toggleCategory(ingredientsDiv, headerButton)};
             headerDiv.appendChild(headerButton);
 
@@ -48,8 +48,8 @@ window.ingredientsStrandObj = {
                 ingredientName.innerText = ingredient.name;
                 ingredientDiv.appendChild(ingredientName);
 
-                let spacer = document.createElement("p");
-                spacer.innerText = "-".repeat(25);
+                let spacer = document.createElement("hr");
+                spacer.classList = "ingredientSpacer";
                 ingredientDiv.appendChild(spacer);
 
                 let ingredientData = document.createElement("p");

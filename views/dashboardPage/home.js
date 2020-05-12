@@ -4,7 +4,6 @@ window.homeStrandObj = {
 
     display: function(){
         if(!this.isPopulated){
-
             this.drawRevenueCard();
             this.drawRevenueGraph();
             this.drawInventoryCheckCard();
