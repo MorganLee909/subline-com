@@ -305,10 +305,10 @@
 
     .recipeBasicInfo{
         width: 75%;
-        background: rgb(0, 27, 45);
+        background: rgb(240, 252, 255);
         padding: 15px;
         border-radius: 5px;
-        color: white;
+        border: 1px solid black;
     }
 
     #recipeInputIngredients{
@@ -326,10 +326,10 @@
 
     #recipeInputIngredients div{
         width: 75%;
-        background: rgb(0, 27, 45);
+        background: rgb(240, 252, 255);
+        border: 1px solid black;
         padding: 10px;
         border-radius: 5px;
-        color: white;
         margin: 10px 0;
         padding: 10px 15px;
         text-align: center;
