@@ -109,7 +109,8 @@ form{
     }
 
 .button{
-    display: initial;
+    display: flex;
+    align-items: center;
     background: rgb(255, 99, 107);
     border: none;
     text-decoration: none;
