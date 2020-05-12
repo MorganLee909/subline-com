@@ -165,6 +165,12 @@ window.homeStrandObj = {
         return total / 100;
     },
 
+    /*
+    Create the data for the revenue graph
+    Input: 
+        dateRange: Array containing start and end indices for transactions
+    Return: List of revenue by day between the dates specified
+    */
     graphData: function(dateRange){
         if(!dateRange){
             return false;

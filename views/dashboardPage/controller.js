@@ -1,3 +1,8 @@
+/* 
+Changes to a different strand
+Input:
+ name: name of the strand.  Must end with "Strand"
+*/
 let changeStrand = (name)=>{
     closeSidebar();
 
@@ -18,16 +23,18 @@ let changeStrand = (name)=>{
     window[`${name}Obj`].display();
 }
 
-//Updates all specified item in the merchant's inventory and updates the page
-//If ingredient doesn't exist, add it
-//Inputs:
-//  Array of objects
-//      id: id of ingredient
-//      quantity: updated quantity (optional)
-//      name: name of ingredient (only for new ingredient)
-//      category: category of ingredient (only for new ingredient)
-//      unit: unit of measurement (only for new ingredient)
-//  remove: if true, remove ingredient from inventory
+/*
+Updates all specified item in the merchant's inventory and updates the page
+If ingredient doesn't exist, add it
+Inputs:
+ Array of objects
+     id: id of ingredient
+     quantity: updated quantity (optional)
+     name: name of ingredient (only for new ingredient)
+     category: category of ingredient (only for new ingredient)
+     unit: unit of measurement (only for new ingredient)
+ remove: if true, remove ingredient from inventory
+ */
 let updateInventory = (ingredients, remove = false)=>{
     for(let i = 0; i < ingredients.length; i++){
         let isNew = true;
@@ -53,6 +60,7 @@ let updateInventory = (ingredients, remove = false)=>{
     ingredientsStrandObj.populateIngredients();
 }
 
+//Close any open sidebar
 let closeSidebar = ()=>{
     let sidebar = document.querySelector("#sidebarDiv");
     for(let i = 0; i < sidebar.children.length; i++){
@@ -61,7 +69,13 @@ let closeSidebar = ()=>{
     sidebar.classList = "sidebarHide";
 }
 
+/*
+Open a specific sidebar
+Input:
+ sidebar: the outermost element of the sidebar (must contain class sidebar)
+*/
 let openSidebar = (sidebar)=>{
+    console.log(sidebar);
     document.querySelector("#sidebarDiv").classList = "sidebar";
 
     let sideBars = document.querySelector("#sidebarDiv").children;
@@ -72,13 +86,15 @@ let openSidebar = (sidebar)=>{
     sidebar.style.display = "flex";
 }
 
-//Gets the indices of two dates from transactions
-//Inputs
-//  from: starting date
-//  to: ending date (default to now)
-//Output
-//  Array containing starting index and ending index
-//Note: Will return false if it cannot find both necessary dates
+/*
+Gets the indices of two dates from transactions
+Inputs
+ from: starting date
+ to: ending date (default to now)
+Output
+ Array containing starting index and ending index
+Note: Will return false if it cannot find both necessary dates
+*/
 let dateIndices = (from, to = new Date())=>{
     let indices = [];
 
@@ -102,15 +118,16 @@ let dateIndices = (from, to = new Date())=>{
 
     return indices;
 }
-
-//Gets the quantity of each ingredient sold between two dates (dateRange)
-//Inputs
-//  dateRange: list containing a start date and an end date
-//Output
-//  List of objects
-//      id: id of specific ingredient
-//      quantity: quantity sold of that ingredient
-//      name: name of the ingredient
+/*
+Gets the quantity of each ingredient sold between two dates (dateRange)
+Inputs
+ dateRange: list containing a start date and an end date
+Output
+ List of objects
+     id: id of specific ingredient
+     quantity: quantity sold of that ingredient
+     name: name of the ingredient
+*/
 let ingredientsSold = (dateRange)=>{
     if(!dateRange){
         return false;
@@ -145,8 +162,13 @@ let ingredientsSold = (dateRange)=>{
 
     return ingredientList;
 }
-
-//Gets the quantity of a single ingredient sold between two dates (dateRange)
+/*
+Gets the quantity of a single ingredient sold between two dates (dateRange)
+Input:
+    dateRange: array containing two elements, start and end indices
+    id: id of the ingredient to calculate
+Return: (int) Quantity of recipes sold
+*/
 let ingredientSold = (dateRange,  id)=>{
     let recipes = recipesSold(dateRange);
     let total = 0;
@@ -174,14 +196,15 @@ let ingredientSold = (dateRange,  id)=>{
 
     return total;
 }
-
-//Gets the number of recipes sold between two dates (dateRange)
-//Inputs
-//  dateRange: array containing a start date and an end date
-//Output
-//  List of objects
-//      id: id of specific recipe
-//      quantity: quantity sold of that recipe
+/*
+Gets the number of recipes sold between two dates (dateRange)
+Inputs:
+    dateRange: array containing a start date and an end date
+Return:
+    List of objects
+        id: id of specific recipe
+        quantity: quantity sold of that recipe
+*/
 let recipesSold = (dateRange)=>{
     let recipeList = [];
 
@@ -208,6 +231,17 @@ let recipesSold = (dateRange)=>{
     return recipeList;
 }
 
+/*
+Groups all of the merchant's ingredients by their category
+Return:
+    Array of objects
+        ingredients: Array of objects
+            id: Id of ingredient
+            name: Name of ingredient
+            quantity:  Merchant's quantity of this ingredient
+            unit: Measurement unit
+        name: Category name
+*/
 let categorizeIngredients = ()=>{
     let ingredientsByCategory = [];
 
@@ -240,6 +274,7 @@ let categorizeIngredients = ()=>{
         }
     }
 
+    console.log(ingredientsByCategory);
     return ingredientsByCategory;
 }
 

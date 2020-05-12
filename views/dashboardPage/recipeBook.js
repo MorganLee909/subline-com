@@ -74,6 +74,7 @@ window.recipeBookStrandObj = {
         }
     },
 
+    //Updates the number of ingredient inputs displayed for new recipes
     changeRecipeCount: function(){
         let newCount = document.querySelector("#ingredientCount").value;
         let ingredientsDiv = document.querySelector("#recipeInputIngredients");
