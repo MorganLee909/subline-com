@@ -3,39 +3,28 @@ window.recipeBookStrandObj = {
 
     display: function(){
         if(!this.isPopulated){
-            let recipeList = document.querySelector("#recipeList");
-
-            for(let recipe of merchant.recipes){
-                let recipeDiv = document.createElement("div");
-                recipeDiv.classList = "recipeItem";
-                recipeDiv.onclick = ()=>{this.displayRecipe(recipe)};
-                recipeList.appendChild(recipeDiv);
-
-                let recipeName = document.createElement("p");
-                recipeName.innerText = recipe.name;
-                recipeDiv.appendChild(recipeName);
-
-                let recipePrice = document.createElement("p");
-                recipePrice.innerText = `$${(recipe.price / 100).toFixed(2)}`;
-                recipeDiv.appendChild(recipePrice);
-            }
-
-            let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
-            let categories = categorizeIngredients();
-            for(let category of categories){
-                let optgroup = document.createElement("optgroup");
-                optgroup.label = category.name;
-                ingredientsSelect.appendChild(optgroup);
-
-                for(let ingredient of category.ingredients){
-                    let option = document.createElement("option");
-                    option.value = ingredient.id;
-                    option.innerText = ingredient.name;
-                    optgroup.appendChild(option);
-                }
-            }
+            this.populateRecipes();
 
             this.isPopulated = true;
+        }
+    },
+
+    populateRecipes: function(){
+        let recipeList = document.querySelector("#recipeList");
+
+        for(let recipe of merchant.recipes){
+            let recipeDiv = document.createElement("div");
+            recipeDiv.classList = "recipeItem";
+            recipeDiv.onclick = ()=>{this.displayRecipe(recipe)};
+            recipeList.appendChild(recipeDiv);
+
+            let recipeName = document.createElement("p");
+            recipeName.innerText = recipe.name;
+            recipeDiv.appendChild(recipeName);
+
+            let recipePrice = document.createElement("p");
+            recipePrice.innerText = `$${(recipe.price / 100).toFixed(2)}`;
+            recipeDiv.appendChild(recipePrice);
         }
     },
 
@@ -68,6 +57,21 @@ window.recipeBookStrandObj = {
 
     displayAddRecipe: function(){
         openSidebar(document.querySelector("#addRecipe"));
+
+        let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
+        let categories = categorizeIngredients();
+        for(let category of categories){
+            let optgroup = document.createElement("optgroup");
+            optgroup.label = category.name;
+            ingredientsSelect.appendChild(optgroup);
+
+            for(let ingredient of category.ingredients){
+                let option = document.createElement("option");
+                option.value = ingredient.id;
+                option.innerText = ingredient.name;
+                optgroup.appendChild(option);
+            }
+        }
     },
 
     changeRecipeCount: function(){
