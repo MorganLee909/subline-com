@@ -75,7 +75,6 @@ Input:
  sidebar: the outermost element of the sidebar (must contain class sidebar)
 */
 let openSidebar = (sidebar)=>{
-    console.log(sidebar);
     document.querySelector("#sidebarDiv").classList = "sidebar";
 
     let sideBars = document.querySelector("#sidebarDiv").children;
@@ -274,7 +273,6 @@ let categorizeIngredients = ()=>{
         }
     }
 
-    console.log(ingredientsByCategory);
     return ingredientsByCategory;
 }
 
