@@ -1,5 +1,5 @@
 const Transaction = require("../models/transaction");
-const Purchase = require("../models/purchase");
+const Order = require("../models/order");
 const Merchant = require("../models/merchant");
 
 module.exports = {
@@ -37,18 +37,18 @@ module.exports = {
             });
     },
 
-    getPurchases: function(req, res){
+    getOrders: function(req, res){
         if(!req.session.user){
             req.session.error = "You must be logged in to view that page";
             return res.redirect("/");
         }
 
-        Purchase.find({merchant: req.session.user})
-            .then((purchases)=>{
-                return res.json(purchases);
+        Order.find({merchant: req.session.user})
+            .then((orders)=>{
+                return res.json(orders);
             })
             .catch((err)=>{
-                return res.json("Error: could not retrieve purchases data");
+                return res.json("Error: could not retrieve order data");
             })
     },
 
@@ -116,7 +116,6 @@ module.exports = {
         function randomDate() {
             let now = new Date();
             let start = new Date();
-            // start.setDate(now.getDate() - 10);
             start.setFullYear(now.getFullYear() - 1);
             return new Date(start.getTime() + Math.random() * (now.getTime() - start.getTime()));
         }

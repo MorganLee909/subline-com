@@ -137,6 +137,48 @@ let validator = {
         }
     },
 
+    recipe: function(newRecipe, createBanner = true){
+        let errors = [];
+
+        if(!validator.isSanitary(newRecipe.name)){
+            errors.push("Name contains invalid characters");
+        }
+
+        if(newRecipe.price < 0){
+            errors.push("Price must contain a non-negative number");
+        }
+
+        if(newRecipe.ingredients.length === 0){
+            errors.push("Must include at least one ingredient");
+        }
+
+        let checkSet = new Set();
+        for(let ingredient of newRecipe.ingredients){
+            if(ingredient.quantity < 0){
+                errors.push("Quantity must contain a non-negative number");
+                break;
+            }
+
+            checkSet.add(ingredient.ingredient);
+        }
+
+        if(checkSet.size !== newRecipe.ingredients.length){
+            errors.push("Recipe contains duplicate ingredients");
+        }
+
+        if(errors.length > 0){
+            if(createBanner){
+                for(let error of errors){
+                    banner.createError(error);
+                }
+
+                return false;
+            }
+        }
+
+        return true;
+    },
+
     isSanitary: function(str){
         let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
 

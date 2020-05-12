@@ -1,215 +1,297 @@
-#title{
-    font-size: 45px;
-    color: rgb(255, 99, 107);
-    text-align: center;
-    margin-top: 25px;
+html{
+    height: 100%;
+    max-width: 100%;
 }
 
-.cursor{
+body{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    max-width: 100%;
+}
+
+.contentBlock{
+    width: 100%;
+    height: 100vh;
+    flex: 1;
+    box-sizing: border-box;
+    padding: 50px;
+    padding-top: 0;
+}
+
+.strand{
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.strandTitle{
+    text-align: left;
+    margin: 15px;
+    padding: 0;
+}
+
+/* Cards */
+.card{
+    margin: 0 15px;
+    border: 1px solid rgba(183, 183, 183, 0.9);
+    border-radius: 7px;
+    box-shadow: 1px 2px gray;
+    flex-grow: 1;
+    height: 100%;
+}
+
+.card > *{
+    margin: 10px;
+}
+
+.card p:first-of-type{
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Home Strand */
+#homeStrand{
+    display: flex;
+}
+
+.flexRow{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    flex-basis: 100px;
+    flex-grow: 1;
+    margin: 15px 0;
+}
+
+#revenueCard{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+    #revenue{
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    #revenueChange{
+        display: flex;
+    }
+
+    #revenueChange > p{
+        font-weight: 100;
+    }
+
+    #revenueChange img{
+        height: 15px;
+        width: 15px;
+        margin-right: 10px;
+    }
+
+#graphCard{
+    flex-grow: 5;
+    display: flex;
+    justify-content: center;
+}
+
+#inventoryCheckCard{
+    display: flex;
+    flex-direction: column;;
+    justify-content: space-between;
+    flex-grow: 0.1;
+}
+
+    #inventoryCheckCard ul{
+        list-style: none;
+    }
+
+    #inventoryCheckCard li{
+        margin: 5px 0;
+    }
+
+    #inventoryCheckCard li > p{
+        font-weight: 300;
+        font-size: 15px;
+        margin-right: 25px;
+    }
+
+    #inventoryCheckCard li > p:nth-of-type(1){
+        width: 50%;
+    }
+
+    #inventoryCheckCard li input{
+        width: 75px;
+        margin-right: 25px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #inventoryCheckCard li p:nth-of-type(2){
+        width: 25%;
+        min-width: 75px;
+    }
+
+    #inventoryCheckCard button{
+        width: 150px;
+        text-align: center;
+        margin-left: auto;
+    }
+
+#popularIngredientsCard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .notice{
+        color: red;
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+/* Ingredients Strand */
+#ingredientsStrand{
+    display: none;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#ingredientsStrand > h1{
+    margin-bottom: 100px;
+}
+
+#ingredientHead{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    width: 100%;
+}
+
+#ingredientHead button{
+    display: flex;
+    align-items: center;
+}
+
+#ingredientHead svg{
+    margin-right: 5px;
+}
+
+#categoryList{
+    align-items:center;
+    overflow-y: auto;
+    width: 80%;
+}
+
+.categoryDiv > div:first-of-type{
+    display: flex;
+    margin: auto;
+    width: 95%;
+}
+
+.categoryDiv > div:first-of-type p{
+    display: flex;
+    align-items: center;
+    padding: 20px 0 20px 100px;
+    background: rgb(240, 252, 255);
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-right: 25px;
+    flex-grow: 1;
+}
+
+.categoryDiv > div:first-of-type button{
+    padding: 10px;
+    background: rgb(240, 252, 255);
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 75px;
+    height: 75px;
     cursor: pointer;
 }
 
-/* Inventory Strand */
-#inventoryStrand{
+.ingredientsDiv{
     flex-direction: column;
+}
+
+.ingredient{
+    display: flex;
+    width: 50%;
+    padding: 15px;
+    margin: auto;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.ingredient:hover{
+    background: rgb(0, 27, 45);
+    color: white;
+}
+
+.ingredient > *{
+    width: 33%;
+    margin-right: 15px;
+}
+
+.ingredient > p:last-of-type{
+    text-align: right;
+}
+
+.ingredientSpacer{
+    border: none;
+    border-top: 1px dashed black;
+    margin: auto;
+}
+
+/* Recipe Book Strand */
+#recipeBookStrand{
+    display: none;
     align-items: center;
 }
 
-    #inventoryStrand > *{
-        margin: 10px;
-    }
-
-    #inventoryStrand tbody{
-        text-transform: capitalize;
-    }
-
-    #filter{
-        max-height: 32px;
-    }
-
-/* Recipes Strand */
-#recipesStrand{
-    flex-direction: column;
-    align-items: center;
-}
-
-    #recipesStrand > *{
-        margin: 15px;
-    }
-
-    #recipeUpdate{
-        margin-bottom: 10px;
-    }
-
-    #newRecipe{
-        display: none;
-        justify-content: center;
-    }
-
-    #recipesContainer{
+    #recipeHead{
         display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        padding: 25px;
-    }
-
-        .recipe-card{
-            border: 2px solid rgb(255, 99, 107);
-            box-shadow: 2px 2px 2px rgb(0, 27, 45);
-            background: rgb(0, 27, 45);
-            color: rgb(255, 99, 107);
-            width: 20%;
-            min-width: 200px;
-            padding: 35px;
-            margin: 25px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-            .recipe-card:hover{
-                transform: translateY(-3px);
-            }
-
-            .empty-recipe{
-                background: rgb(255, 99, 107);
-                border: 2px solid rgb(0, 27, 45);
-                color: rgb(0, 27, 45);
-            }
-
-/* Account Strand */
-#accountStrand{
-    flex-direction: column;
-    align-items: center;
-}
-
-    #accountStrand > *{
-        margin: 15px;
-    }
-
-    #accountStrand label{
-        display: flex;
-    }
-
-    #accountEdit{
-        display: none;
-    }
-
-    #passwordEdit{
-        display: none;
-    }
-
-/* Add Ingredient Action */
-#addIngredientAction{
-    flex-direction: column;
-    align-items: center;
-}
-
-    #addIngredientAction > *{
-        margin: 25px;
-    }
-
-    .container{
-        display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
+        width: 100%;
         align-items: center;
     }
 
-        .container > *{
-            margin: 50px;
-        }
-
-        .container > div{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-            .container > div > *{
-                margin: 10px;
-            }
-
-/* Enter Transactions Action */
-#enterTransactionsAction{
-    flex-direction: column;
-    align-items: center;
-}
-    #enterTransactionsAction > *{
-        margin: 10px;
+    #recipeHead svg{
+        margin-right: 5px
     }
 
-/* Enter Purchase Action */
-#enterPurchaseAction{
-    flex-direction: column;
-    align-items: center;
-}
-
-    #enterPurchaseAction > *{
-        margin: 10px;
+    #recipeList{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 50%;
+        margin-top: 50px;
+        overflow-y: auto;
     }
 
-/* Single Recipe Action */
-#singleRecipeAction{
+    .recipeItem{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgb(240, 252, 255);
+        border-radius: 5px;
+        padding: 20px 20px;
+        width: 90%;
+        border: 1px solid gray;
+        cursor: pointer;
+    }
+
+    .recipeItem:hover{
+        background: rgb(0, 27, 45);
+        color: white;
+    }
+
+/* Orders Strand */
+#ordersStrand{
     display: none;
-    flex-direction: column;
-    margin: auto;
-    align-items: center;
-}
-
-    #singleRecipeAction > *{
-        margin: 15px;
-    }
-
-    #delRecipe{
-        display: "none"
-    }
-
-@media screen and (max-width: 1000px){
-    /* General use */
-    body{
-        text-align: center;
-    }
-
-    /* Single Recipe Action */
-    #singleRecipeAction .buttonsDiv{
-        font-size: 15px;
-    }
-
-    #singleRecipeAction input{
-        max-width: 100px;
-    }
-}
-
-@media screen and (max-width: 600px){
-    /* Inventory Strand */
-    #inventoryStrand h1{
-        font-size: 20px;
-        text-align: center;
-        margin: 5px;
-    }
-
-    .options{
-        flex-direction: column;
-    }
-
-    .options > *{
-        margin: 5px;
-    }
-
-    #inventoryStrand .button-small{
-        font-size: 12px;
-    }
-
-    #inventoryStrand td, #inventoryStrand th{
-        padding: 3px;
-        font-size: 12px;
-    }
-
-    /* addIngredientStrand */
-    .container{
-        flex-direction: column;
-    }
-
-    #addIngredientAction > *{
-        margin: 10px;
-    }
 }

@@ -1,9 +1,9 @@
 const axios = require("axios");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const Merchant = require("../models/merchant");
-const Ingredient = require("../models/ingredient");
 const Transaction = require("../models/transaction");
-const Purchase = require("../models/purchase");
+const Order = require("../models/order");
 
 module.exports = {
     //GET - Shows the public landing page
@@ -96,26 +96,68 @@ module.exports = {
                             merchant.save()
                                 .then((updatedMerchant)=>{
                                     updatedMerchant.accessToken = undefined;
-                                    res.render("dashboardPage/dashboard", {merchant: updatedMerchant, error: undefined});
+                                    merchant = updatedMerchant;
+                                    
                                     Transaction.create(transactions);
-                                    return;
+
+                                    let date = new Date();
+                                    let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+
+                                    return Transaction.aggregate([
+                                        {$match: {
+                                            merchant: new ObjectId(req.session.user),
+                                            date: {$gte: firstDay}
+                                        }},
+                                        {$sort: {date: 1}},
+                                        {$project: {
+                                            date: 1,
+                                            recipes: 1
+                                        }}
+                                    ])
+                                })
+                                .then((transactions)=>{
+                                    res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions});
                                 })
                                 .catch((err)=>{
-                                    let errorMessage = "Error: unable to save user data";
+                                    let errorMessage = "Error: unable to update data";
                                     
                                     merchant.password = undefined;
-                                    return res.render("dashboardPage/dashboard", {merchant: updatedMerchant, error: errorMessage});
+                                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
                                 });
                         })
                         .catch((err)=>{
+                            console.log("Fucking bitch error");
+                            console.log(err);
                             let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
 
                             merchant.password = undefined;
-                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage});
+                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
                         });
                 }else if(merchant.pos === "none"){
                     merchant.password = undefined;
-                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: undefined});
+
+                    let date = new Date();
+                    let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+
+                    Transaction.aggregate([
+                        {$match: {
+                            merchant: new ObjectId(req.session.user),
+                            date: {$gte: firstDay},
+                        }},
+                        {$sort: {date: 1}},
+                        {$project: {
+                            _id: 0,
+                            date: 1,
+                            recipes: 1
+                        }}
+                    ])
+                        .then((transactions)=>{
+                            return res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions})
+                        })
+                        .catch((err)=>{
+                            console.log(err);
+                        });
+                        
                 }else{
                     req.session.error = "Error: WEBSITE PANIC";
                     
@@ -163,22 +205,22 @@ module.exports = {
                 .catch((err)=>{});
         });
 
-        let purchasePromise = new Promise((resolve, reject)=>{
-            Purchase.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
+        let orderPromise = new Promise((resolve, reject)=>{
+            Order.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
                 {date: 1, ingredients: 1, _id: 0},
                 {sort: {date: 1}})
-                .then((purchases)=>{
-                    resolve(purchases);
+                .then((orders)=>{
+                    resolve(orders);
                 })
                 .catch((err)=>{});
         });
 
-        Promise.all([merchTransPromise, purchasePromise])
+        Promise.all([merchTransPromise, orderPromise])
             .then((response)=>{
                 let data = {
                     merchant: response[0].merchant,
                     transactions: response[0].transactions,
-                    purchases: response[1],
+                    orders: response[1],
                     dates: [firstDay, lastDay]
                 }
 
@@ -189,5 +231,9 @@ module.exports = {
 
                 return res.redirect("/");
             });
+    },
+
+    displayPassReset: function(req, res){
+        return res.render("passResetPage/passReset");
     }
 }

@@ -2,14 +2,14 @@ const bcrypt = require("bcryptjs");
 const axios = require("axios");
 
 const Merchant = require("../models/merchant");
-const Purchase = require("../models/purchase");
+const Order = require("../models/order");
 const Transaction = require("../models/transaction");
 
 module.exports = {
-    //POST - Creates a new purchase for a merchant
+    //POST - Creates a new order for a merchant
     //Inputs:
-    //  req.body: list of purchases (ingredient id and quantity)
-    createPurchase: function(req, res){
+    //  req.body: list of orders (ingredient id and quantity)
+    createOrder: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
             return res.redirect("/");
@@ -17,9 +17,9 @@ module.exports = {
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
-                for(let purchase of req.body){
-                    let merchantIngredient = merchant.inventory.find(i => i.ingredient._id.toString() === purchase.ingredient);
-                    merchantIngredient.quantity += Number(purchase.quantity);
+                for(let order of req.body){
+                    let merchantIngredient = merchant.inventory.find(i => i.ingredient._id.toString() === order.ingredient);
+                    merchantIngredient.quantity += Number(order.quantity);
                 }
                 
                 merchant.save()
@@ -34,12 +34,12 @@ module.exports = {
                 return res.json("Error: Unable to retrieve user data");
             });
 
-            let purchase = new Purchase({
+            let order = new Order({
                 merchant: req.session.user,
                 date: Date.now(),
                 ingredients: req.body
             });
-            purchase.save().catch((err)=>{});
+            order.save().catch((err)=>{});
     },
 
     //POST - logs the user in
@@ -132,13 +132,13 @@ module.exports = {
             });
     },
 
-    //POST - Gets transactions and purchases between 2 dates for a merchant
+    //POST - Gets transactions and orders between 2 dates for a merchant
     //Inputs:
     //  req.body.from = start date
     //  req.body.to = end date
     //Returns:
     //  transactions = list of transactions between the dates provided
-    //  purchases = list of purchases between the dates provided
+    //  orders = list of orders between the dates provided
     getData: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -159,11 +159,11 @@ module.exports = {
             }));
 
             promiseList.push(new Promise((resolve, reject)=>{
-                Purchase.find({merchant: req.session.user, date: {$gte: req.body.dates[i], $lt: req.body.dates[i+1]}},
+                Order.find({merchant: req.session.user, date: {$gte: req.body.dates[i], $lt: req.body.dates[i+1]}},
                     {date: 1, ingredients: 1, _id: 0},
                     {sort: {date: 1}})
-                    .then((purchases)=>{
-                        resolve(purchases);
+                    .then((orders)=>{
+                        resolve(orders);
                     })
                     .catch((err)=>{})
             }));
@@ -176,7 +176,7 @@ module.exports = {
                 for(let i = 0; i < response.length; i+=2){
                     newList.push({
                         transactions: response[i],
-                        purchases: response[i+1]
+                        orders: response[i+1]
                     });
                 }
 
@@ -185,5 +185,27 @@ module.exports = {
             .catch((err)=>{
                 return res.json("Error: unable to retrieve user data");
             });
+    },
+
+    resetPassword: function(req, res){
+        Merchant.findOne({password: req.body.hash})
+            .then((merchant)=>{
+                if(merchant){
+                    let salt = bcrypt.genSaltSync(10);
+                    let hash = bcrypt.hashSync(req.body.pass, salt);
+
+                    merchant.password = hash;
+
+                    return merchant.save();
+                }else{
+                    req.session.error = "Error: unable to retrieve merchant data";
+                    return res.redirect("/");
+                }
+            })
+            .then((merchant)=>{
+                req.session.error = "Password successfully reset.  Please log in";
+                return res.redirect("/");
+            })
+            .catch((err)=>{});
     }
-}
+} 

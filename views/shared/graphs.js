@@ -5,20 +5,15 @@
 //  yName = a string for the name of the Y axis
 //  xName = a string for the name of the X axis
 class LineGraph{
-    constructor(canvas, yName, xName){
-        canvas.height = canvas.clientHeight;
-        canvas.width = canvas.clientWidth;
-
+    constructor(canvas){
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
-        this.left = canvas.clientWidth - (canvas.clientWidth * 0.9);
-        this.right = canvas.clientWidth * 0.8;
-        this.top = canvas.clientHeight - (canvas.clientHeight * 0.99);
-        this.bottom = canvas.clientHeight * 0.9;
+        this.left = canvas.clientWidth - (canvas.clientWidth * 0.95);
+        this.right = canvas.clientWidth * 1;
+        this.top = canvas.clientHeight - (canvas.clientHeight * 1);
+        this.bottom = canvas.clientHeight * 0.85;
         this.data = [];
         this.max = 0;
-        this.xName = xName;
-        this.yName = yName;
         this.xRange = [];
         this.colors = [];
         this.colorIndex = 0;
@@ -39,7 +34,6 @@ class LineGraph{
     //  xRange = array containing two elements, start and end for x axis data (currently only dates)
     //  name = string name for the line.  Used for display and finding lines.  Each must be unique
     addData(data, xRange, name){
-        console.log(data);
         data = {
             set: data,
             colorIndex: this.colorIndex,
@@ -101,17 +95,29 @@ class LineGraph{
         this.xRange = [];
     }
 
+    addTitle(title){
+        this.top = this.canvas.clientHeight - (this.canvas.clientHeight * 0.9);
+        
+        this.title = title;
+    }
+
     /**********
     *********PRIVATE*********
     **********/
     drawGraph(){
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+        
         this.drawYAxis();
         this.drawXAxis();
 
         for(let dataSet of this.data){
             this.drawLine(dataSet);
+        }
+
+        if(this.title){
+            this.context.font = "25px Saira";
+            let xLocation = ((this.right - this.left) / 2) - (this.context.measureText(this.title).width / 2);
+            this.context.fillText(this.title, xLocation, this.top - 10);
         }
     }
 
@@ -127,7 +133,9 @@ class LineGraph{
 
         this.context.strokeStyle = "black";
 
-        this.drawLegend(data.colorIndex, data.name);
+        if(this.data.length > 1){
+            this.drawLegend(data.colorIndex, data.name);
+        }
     }
 
     drawXAxis(){
@@ -136,9 +144,6 @@ class LineGraph{
         this.context.lineTo(this.right, this.bottom);
         this.context.lineWidth = 4;
         this.context.stroke();
-
-        this.context.font = "25px Arial";
-        this.context.fillText(this.xName, this.right / 2, this.bottom + 50);
 
         this.context.setLineDash([5, 10]);
         this.context.font = "10px Arial";
@@ -174,9 +179,6 @@ class LineGraph{
         this.context.lineTo(this.left, this.bottom);
         this.context.lineWidth = 2;
         this.context.stroke();
-
-        this.context.font = "25px Arial";
-        this.context.fillText(this.yName, 0, this.bottom / 2);
 
         this.context.setLineDash([5, 10]);
         this.context.font = "10px Arial";
@@ -220,5 +222,64 @@ class LineGraph{
         this.context.fillText(name, this.right + 65, this.top + 60 + verticalOffset);
 
         this.context.fillStyle = "black";
+    }
+}
+
+class HorizontalBarGraph{
+    constructor(canvas){
+        this.canvas = canvas;
+        this.context = canvas.getContext("2d");
+        this.left = 0;
+        this.right = canvas.clientWidth;
+        this.top = canvas.clientHeight - (canvas.clientHeight * 0.99);
+        this.bottom = canvas.clientHeight;
+        this.data = [];
+        this.max = 0;
+    }
+
+    //Adds an array of data points to the chart
+    //All data is removed  and redrawn when called
+    //Must pass in all data points
+    //Inputs: 
+    //  dataArray: array of objects
+    //      num: number for the actual data
+    //      label: text to display on bar
+    addData(dataArray){
+        let data = [];
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for(let point of dataArray){
+            if(point.num > this.max){
+                this.max = point.num;
+            }
+
+            this.data.push(point);
+        }
+
+        this.drawGraph();
+    }
+
+    drawGraph(){
+        let barHeight = (this.bottom - this.top) / this.data.length;
+
+        for(let i = 0; i < this.data.length; i++){
+            let topLocation = this.top + (i * barHeight) + 5;
+            let width = (this.right - this.left) * (this.data[i].num / this.max);
+
+            if(this.data[i].num >= this.max){
+                this.context.fillStyle = "rgb(255, 99, 107)";
+            }else{
+                this.context.fillStyle = "rgb(179, 191, 209)";
+            }
+
+            this.context.beginPath();
+            this.context.fillRect(this.left, topLocation, width, barHeight - 5);
+            this.context.stroke();
+
+            let textLocation  = 15;
+            this.context.font = "12px Saira";
+            this.context.fillStyle = "black";
+            this.context.fillText(this.data[i].label, textLocation, (this.top) + (i * barHeight) + (barHeight / 1.5));
+        }
     }
 }

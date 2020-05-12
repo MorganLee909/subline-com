@@ -1,256 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
-        <link rel="stylesheet" href="/dashboardPage/dashboard.css">
         <link rel="stylesheet" href="/shared/shared.css">
+        <link rel="stylesheet" href="/dashboardPage/dashboard.css">
+        <link rel="stylesheet" href="/dashboardPage/components/components.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
     </head>
     <body>
-        <% include ../shared/header %>
+        <% include ./components/menu %>
 
-        <% include ../shared/banner %>
-
-        <h1 id="title"><%=merchant.name%></h1>
-
-        <strand-selector></strand-selector>
-
-        <div id="inventoryStrand" class="strand">
-            <div class="buttonBox">
-                <button class="button" onclick="addIngredientObj.display()">Add Ingredient</button>
-
-                <button class="button" onclick="enterPurchaseObj.display()">Enter Purchases</button>
-
-                <% if(merchant.pos === "none"){ %>
-                    <button class="button" onclick="enterTransactionsObj.display()">Enter Transactions</button>
-                <% } %>
-
-                <a class="button" href="/data">Analyze data</a>
-            </div>
-
-            <input id="filter" onkeyup="inventoryObj.filter()" type="text" placeholder="FILTER INGREDIENTS">
-
-            <table>
-                <thead>
-                    <tr>
-                        <th class="cursor" onclick="inventoryObj.sortIngredients('name')">Item</th>
-                        <th class="cursor" onclick="inventoryObj.sortIngredients('category')">Category</th>
-                        <th class="cursor" onclick="inventoryObj.sortIngredients('quantity')">Quantity</th>
-                        <th class="cursor" onclick="inventoryObj.sortIngredients('unit')">Unit</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tbody></tbody>
-                </thead>
-            </table>
-        </div>
-
-        <div id="recipesStrand" class="strand">
-            <div>
-                <% if(merchant.pos === "none"){ %>
-                    <button class="button" onclick="window.recipesObj.showInput()">Add a Recipe</button>
-                <% }else{%>
-                    <button class="button" id="recipeUpdate" onclick="recipesObj.updateRecipes()">Update Recipes</button>
-                <% } %>
-            </div>
-
-            <div id="newRecipe">
-                <label>Name:
-                    <input id="newName" type="text">
-                </label>
-
-                <label>Price:
-                    <input id="newPrice" type="number" step="0.01">
-                </label>
-
-                <button class="button-small" onclick="window.recipesObj.submitNew()">Create</button>
-
-                <button class="button-small" onclick="window.recipesObj.cancelAdd()">Cancel</button>
-            </div>
+        <div class="contentBlock">
+            <% include ../shared/banner %>
             
-            <div id="recipesContainer"></div>
-        </div>
+            <div id="homeStrand" class="strand">
+                <h1 class="strandTitle">Dashboard</h1>
 
-        <div id="accountStrand" class="strand">
-            <form id="accountDisplay" onsubmit="accountObj.editAccount()">
-                <label>Name:&nbsp;&nbsp;
-                    <p><%=merchant.name%></p>
-                </label>
+                <div class="flexRow">
+                    <div id="revenueCard" class="card">
+                        <p>Total Revenue (month)</p>
 
-                <label>Email:&nbsp;&nbsp;
-                    <p><%=merchant.email%></p>
-                </label>
+                        <p id="revenue"></p>
 
-                <button class="button" onclick="accountObj.editAccount()">Edit</button>
-            </form>
+                        <div id="revenueChange">
+                            <img alt="revenue">
 
-            <form id="accountEdit">
-                <label>Name:&nbsp;&nbsp;
-                    <input id="accountName" type="text" value="<%=merchant.name%>">
-                </label>
+                            <p></p>
+                        </div>
+                    </div>
 
-                <label>Email:&nbsp;&nbsp;
-                    <input id="accountEmail" type="email" value="<%=merchant.email%>">
-                </label>
-
-                <div class="buttonBox">
-                    <button class="button" onclick="accountObj.updateAccount()">Save</button>
-
-                    <button class="button" onclick="accountObj.editAccountCancel()">Cancel</button>
-                </div>
-            </form>
-
-            <form id="passwordEdit" onsubmit="accountObj.updatePassword()">
-                <label>Old password:
-                    <input id="oldPass" type="password" required>
-                </label>
-
-                <label>New password:
-                    <input id="newPass" type="password" required>
-                </label>
-
-                <label>Confirm new password:
-                    <input id="confirmNewPass" type="password" required>
-                </label>
-
-
-                <div class="buttonBox">
-                    <input class="button" type="submit" value="Submit">
-
-                    <button class="button" onclick="accountObj.editPasswordCancel()">Cancel</button>
-                </div>
-            </form>
-
-            <button class="button" onclick="accountObj.editPassword()">Change password</button>
-        </div>
-
-
-        <div id="addIngredientAction" class="action">
-            <div class="container">
-                <div>
-                    <h2>Choose Ingredients</h2>
-
-                    <input id="addFilter" type="text" placeholder="FILTER INGREDIENTS" onkeyup="window.addIngredientObj.filterAndDisplay()">
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Add</th>
-                                <th class="cursor" onclick="window.addIngredientObj.sort(1)">Ingredient</th>
-                                <th class="cursor" onclick="window.addIngredientObj.sort(2)">Category</th>
-                                <th class="cursor" onclick="window.addIngredientObj.sort(3)">Unit</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-
-                    <button class="button" onclick="addIngredientObj.submitAdd()">Submit</button>
+                    <div id="graphCard" class="card">
+                        <canvas id="graphCanvas">
+                    </div>
                 </div>
 
-                <h1>Or</h1>
+                <div class="flexRow">
+                    <div id="inventoryCheckCard" class="card">
+                        <p>Inventory Check</p>
 
-                <form id="createIngredientInput" onsubmit="addIngredientObj.submitNew()">
-                    <h2>Create New Ingredient</h2>
+                        <ul></ul>
 
-                    <label>Name
-                        <input id="newIngName" type="text" required>
-                    </label>
+                        <button class="button" onclick="homeStrandObj.submitInventoryCheck()">Update</button>
+                    </div>
 
-                    <label>Category
-                        <input id="newCategory" type="text" required>
-                    </label>
+                    <div id=popularIngredientsCard class="card">
+                        <p>Most Popular Ingredients (month)</p>
 
-                    <label>Unit
-                        <input id="newUnit" type="text" required>
-                    </label>
+                        <canvas id="popularCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
 
-                    <label>Quantity
-                        <input id="newQuantity" type="number" step="0.01" required>
-                    </label>
+            <div id="ingredientsStrand" class="strand">
+                <div id="ingredientHead">
+                    <h1 class="strandTitle">Ingredient Inventory</h1>
 
-                    <button class="button">Create Ingredient</button>
-                </form>
+                    <button class="button" onclick="ingredientsStrandObj.displayAddIngredient()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        add
+                    </button>
+                </div>
+
+                <div id="categoryList"></div>
+            </div>
+
+            <div id="recipeBookStrand" class="strand">
+                <div id="recipeHead">
+                    <h1 class="strandTitle">Recipe Book</h1>
+
+                    <% if(merchant.pos === "none"){ %>
+                        <button class="button" onclick="recipeBookStrandObj.displayAddRecipe()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            add
+                        </button>
+                    <% } %>
+                </div>
+
+                <div id="recipeList"></div>
+            </div>
+
+            <div id="ordersStrand" class="strand">
+                <h1 class="strandTitle">Orders</h1>
             </div>
         </div>
 
+        <div id="sidebarDiv" class="sidebarHide">
+            <% include ./components/addIngredient %>
 
-        <div id="enterTransactionsAction" class="action">
-            <h1>Enter all sales</h1>
-            <h3>Last updated: <span id="updated"></span></h3>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Recipe</th>
-                        <th>Number sold</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <% include ./components/ingredientDetails %>
 
-            <button class="button" onclick="enterTransactionsObj.submit()">Submit</button>
+            <% include ./components/recipeDetails %>
+
+            <% include ./components/addRecipe %>
         </div>
 
-
-        <div id="enterPurchaseAction" class="action">
-            <h1>Enter Purchases</h1>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ingredient</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-            <button class="button" onclick="enterPurchaseObj.submit()">Submit</button>
-        </div>
-
-
-        <div id="singleRecipeAction" class="action">
-            <h2 id="recipeName"></h2>
-
-            <div class="buttonBox">
-                <button class="button" id="addButton">Add Ingredient</button>
-                <% if(merchant.pos === "none"){ %>
-                    <button class="button" id="removeButton">Remove</button>
-                <% } %>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Quantity</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <%- include ../shared/footer %>
-
-        <script>
-                <% if(locals.error){ %>
-                    let error = <%- JSON.stringify(error) %>;
-                <% }else{ %>
-                    let error = undefined;
-                <% } %>
-        </script>
         <script>let merchant = <%- JSON.stringify(merchant) %>;</script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>let transactions = <%- JSON.stringify(transactions) %>;</script>
+        <script src="../shared/graphs.js"></script>
+        <script src="/dashboardPage/home.js"></script>
+        <script src="/dashboardPage/ingredients.js"></script>
+        <script src="/dashboardPage/recipeBook.js"></script>
+        <script src="/dashboardPage/controller.js"></script>
+        <script src="/dashboardPage/orders.js"></script>
         <script src="../shared/validation.js"></script>
-        <script src="/dashboardPage/inventory.js"></script>
-        <script src="/dashboardPage/recipes.js"></script>
-        <script src="/dashboardPage/account.js"></script>
-        <script src="/dashboardPage/addIngredient.js"></script>
-        <script src="/dashboardPage/enterTransactions.js"></script>
-        <script src="/dashboardPage/enterPurchase.js"></script>
-        <script src="/dashboardPage/singleRecipe.js"></script>
-        <script src="/shared/controller.js"></script>
+
+        <noscript>Please turn on javascript for this site to work properly</noscript>
     </body>
 </html>

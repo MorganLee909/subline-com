@@ -307,8 +307,9 @@ module.exports = {
 
     //POST - Update the quantity for a merchant inventory item
     //Inputs:
-    //  req.body.ingredientId: Id of ingredient to update
-    //  req.body.quantityChange: Amount to change ingredient (not the new value)
+    //  req.body.ingredients: array of ingredient data
+    //      id: id of ingredient to update
+    //      quantity: New value for the ingredient
     //Returns: Nothing
     updateMerchantIngredient: function(req, res){
         if(!req.session.user){
@@ -316,13 +317,34 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let adjustments = [];
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
-                let updateIngredient = merchant.inventory.find(i => i.ingredient.toString() === req.body.ingredientId);
-                updateIngredient.quantity = (updateIngredient.quantity + req.body.quantityChange).toFixed(2);
+                for(let i = 0; i < req.body.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(merchant.inventory[j].ingredient.toString() === req.body[i].id){
+                            updateIngredient = merchant.inventory[j];
+                            break;
+                        }
+                    }
+
+                    adjustments.push(new InventoryAdjustment({
+                        date: Date.now(),
+                        merchant: req.session.user,
+                        ingredient: req.body[i].id,
+                        quantity: req.body[i].quantity - updateIngredient.quantity
+                    }));
+
+                    updateIngredient.quantity = req.body[i].quantity;
+                }
+
                 merchant.save()
                     .then((newMerchant)=>{
                         res.json({});
+
+                        InventoryAdjustment.create(adjustments).catch(()=>{});
+                        return;
                     })
                     .catch((err)=>{
                         return res.json("Error: your data could not be saved");
@@ -330,16 +352,7 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("Error: your data could not be retrieved");
-            });
-
-        let invAdj = new InventoryAdjustment({
-            date: Date.now(),
-            merchant: req.session.user,
-            ingredient: req.body.ingredientId,
-            quantity: req.body.quantityChange
-        });
-
-        invAdj.save().catch((err)=>{});
+            });        
     },
 
     //POST - Adds an ingredient to a recipe

@@ -1,0 +1,344 @@
+/* Menu */
+.menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(0, 27, 45);
+    width: 18vw;
+    height: 100vh;
+    transition: width 0.3s;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+    .menuHead{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 0 20px;
+        margin-top: 10px;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 100px;
+        text-decoration: none;
+    }
+
+    .menuLogo{
+        width: 25%;
+        height: 25%;
+    }
+
+    .menuHead a{
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        width: 80%;
+    }
+
+    .menuHead p{
+        margin-left: 25px;
+    }
+
+    .menuHead button{
+        background: none;
+        border-style: none;
+        color: white;
+        font-size: 35px;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .menuHead button:hover{
+        color: rgb(201, 201, 201);
+    }
+
+    .menuHead > button::-moz-focus-inner{
+        border: 0;
+    }
+
+    .menu > button svg{
+        stroke: white;
+        margin-right: 25px;
+    }
+
+    .menu > button{
+        display: flex;
+        align-items: center;
+        background: none;
+        border-style: none;
+        color: white;
+        font-size: 20px;
+        margin: 15px 0;
+        padding-left: 50px;
+        width: 100%;
+        height: 75px;
+        cursor: pointer;
+        text-align: left;
+        border: 0;
+    }
+
+    .menu > button::-moz-focus-inner{
+        border: 0;
+    }  
+
+    .menu > button:hover{
+        background: rgb(201, 201, 201);
+        color: black;
+        fill: black;
+    }
+
+    .menu > button:hover svg{
+        stroke: black;
+    }
+
+.menu > .active{
+    background: rgb(179, 191, 209);
+    cursor: default;
+}
+
+.menu > .active:hover{
+    background: rgb(179, 191, 209);
+    color: white;
+}
+
+.menu > .active:hover svg{
+    stroke: white;
+}
+
+.logout{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 25px;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.logout img{
+    height: 25px;
+    width: 25px;
+}
+
+.logout > *{
+    margin: 10px;
+}
+
+.logout:hover{
+    background: rgb(179, 191, 209);
+    color: black;
+}
+
+/* Minimized menu */
+.menuMinimized{
+    width: 5vw;
+}
+
+.menuLogoMin{
+    width: 4vw;
+}
+
+.menuHeadMin{
+    display: none;
+    flex-direction: column;
+}
+
+.menuMinimized button{
+    justify-content: center;
+    padding: 0;
+}
+
+.menuMinimized button svg{
+    margin: 0;
+}
+
+.sidebar{
+    display: flex;
+    width: 25vw;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 25px;
+    transition: width 0.2s;
+    overflow: hidden;
+    box-shadow: -1px 0px 10px gray;
+}
+
+.sidebarHide{
+    width: 0;
+    transition: width 0.2s;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: -1px 0px 10px gray;
+}
+
+    .sidebarHide > *{
+        width: 0;
+        transition: width 0.2s;
+        visibility: hidden;
+    }
+
+.sidebar button:first-of-type{
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 5px;
+    margin-right: auto;
+}
+
+    .sidebar button:first-of-type:hover{
+        background: rgb(0, 27, 45);
+        color: white;
+    }
+
+.lineBorder{
+    width: 100%;
+    border-bottom: 1px solid gray;
+    margin: 25px;
+}
+
+#addIngredient{
+    flex-direction: column;
+    width: 100%;
+}
+
+#ingredientDetails{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #ingredientDetails > p{
+        border-radius: 10px;
+        background: gray;
+        color: white;
+        padding: 0 3px;
+        font-size: 14px;
+    }
+
+    #ingredientDetails label{
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #ingredientDetails label p{
+        font-size: 30px;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+#recipeDetails{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #recipeDetailsButtons{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 100px;
+    }
+
+    #recipeDetailsButtons button{
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin: 0;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+        #recipeDetailsButtons button:hover{
+            background: rgb(0, 27, 45);
+            color: white;
+        }
+
+    #recipeIngredients{
+        width: 100%;
+    }
+
+    .recipeIngredient{
+        display: flex;
+        justify-content: space-between;
+        margin: 25px;
+    }
+
+    #recipePrice{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #recipePrice p{
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+#addRecipe{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 50px;
+}
+
+    #addRecipe label{
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+    }
+
+    #addRecipe input{
+        width: 50%;
+    }
+
+    #addRecipe h2{
+        margin-top: 10px;
+    }
+
+    .recipeBasicInfo{
+        width: 75%;
+        background: rgb(240, 252, 255);
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid black;
+    }
+
+    #recipeInputIngredients{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        margin: 0 0 25px 0;
+        width:75%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-shadow: 0 0 2px gray;
+        border-radius: 5px;
+    }
+
+    #recipeInputIngredients div{
+        width: 75%;
+        background: rgb(240, 252, 255);
+        border: 1px solid black;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+    #recipeInputIngredients div h4{
+        color: rgb(255, 99, 107);
+    }
+
+    #addRecipe button:last-of-type{
+        margin-top: auto;
+    }
