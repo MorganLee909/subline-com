@@ -4,6 +4,7 @@ window.homeStrandObj = {
 
     display: function(){
         if(!this.isPopulated){
+
             this.drawRevenueCard();
             this.drawRevenueGraph();
             this.drawInventoryCheckCard();
@@ -67,8 +68,14 @@ window.homeStrandObj = {
     },
 
     drawInventoryCheckCard: function(){
+        let num;
+        if(merchant.inventory.length < 5){
+            num = merchant.inventory.length;
+        }else{
+            num = 5;
+        }
         let rands = [];
-            for(let i = 0; i < 5; i++){
+            for(let i = 0; i < num; i++){
                 let rand = Math.floor(Math.random() * merchant.inventory.length);
 
                 if(rands.includes(rand)){

@@ -122,14 +122,16 @@ module.exports = {
                                     let errorMessage = "Error: unable to update data";
                                     
                                     merchant.password = undefined;
-                                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage});
+                                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
                                 });
                         })
                         .catch((err)=>{
+                            console.log("Fucking bitch error");
+                            console.log(err);
                             let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
 
                             merchant.password = undefined;
-                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage});
+                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
                         });
                 }else if(merchant.pos === "none"){
                     merchant.password = undefined;

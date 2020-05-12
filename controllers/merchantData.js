@@ -328,7 +328,6 @@ module.exports = {
                             break;
                         }
                     }
-                    console.log(updateIngredient);
 
                     adjustments.push(new InventoryAdjustment({
                         date: Date.now(),
