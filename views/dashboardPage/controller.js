@@ -18,6 +18,41 @@ let changeStrand = (name)=>{
     window[`${name}Obj`].display();
 }
 
+//Updates all specified item in the merchant's inventory and updates the page
+//If ingredient doesn't exist, add it
+//Inputs:
+//  Array of objects
+//      id: id of ingredient
+//      quantity: updated quantity (optional)
+//      name: name of ingredient (only for new ingredient)
+//      category: category of ingredient (only for new ingredient)
+//      unit: unit of measurement (only for new ingredient)
+//  remove: if true, remove ingredient from inventory
+let updateInventory = (ingredients, remove = false)=>{
+    for(let i = 0; i < ingredients.length; i++){
+        let isNew = true;
+        for(let j = 0; j < merchant.inventory.length; j++){
+            if(merchant.inventory[j].ingredient._id === ingredients[i].id){
+                if(remove){
+                    merchant.inventory.splice(i, 1);
+                }else{
+                    merchant.inventory[j].quantity = ingredients[i].quantity;
+                }
+
+                isNew = false;
+                break;
+            }
+        }
+
+        if(isNew){
+            merchant.inventory.push(ingredients[i]);
+        }
+    }
+
+    homeStrandObj.drawInventoryCheckCard();
+    ingredientsStrandObj.populateIngredients();
+}
+
 let closeSidebar = ()=>{
     let sidebar = document.querySelector("#sidebarDiv");
     for(let i = 0; i < sidebar.children.length; i++){

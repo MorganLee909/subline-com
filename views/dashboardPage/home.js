@@ -4,56 +4,70 @@ window.homeStrandObj = {
 
     display: function(){
         if(!this.isPopulated){
-            let today = new Date();
-            let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
+            this.drawRevenueCard();
+            this.drawRevenueGraph();
+            this.drawInventoryCheckCard();
+            this.drawPopularCard();
 
-            let revenueThisMonth = this.calculateRevenue(dateIndices(firstOfMonth));
-            let revenueLastmonthToDay = this.calculateRevenue(dateIndices(firstOfLastMonth, lastMonthtoDay));
+            this.isPopulated = true;
+        }
+    },
 
-            document.querySelector("#revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
+    drawRevenueCard: function(){
+        let today = new Date();
+        let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-            let revenueChange = ((revenueThisMonth - revenueLastmonthToDay) / revenueLastmonthToDay) * 100;
+        let revenueThisMonth = this.calculateRevenue(dateIndices(firstOfMonth));
+        let revenueLastmonthToDay = this.calculateRevenue(dateIndices(firstOfLastMonth, lastMonthtoDay));
+
+        document.querySelector("#revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
+
+        let revenueChange = ((revenueThisMonth - revenueLastmonthToDay) / revenueLastmonthToDay) * 100;
+        
+        let img = "";
+        if(revenueChange >= 0){
+            img = "/shared/images/upArrow.png";
+        }else{
+            img = "/shared/images/downArrow.png";
+        }
+        document.querySelector("#revenueChange p").innerText = `${Math.abs(revenueChange).toFixed(2)}% vs last month`;
+        document.querySelector("#revenueChange img").src = img;
+    },
+
+    drawRevenueGraph: function(){
+        let graphCanvas = document.querySelector("#graphCanvas");
+        let today = new Date();
+
+        graphCanvas.height = graphCanvas.parentElement.clientHeight;
+        graphCanvas.width = graphCanvas.parentElement.clientWidth;
+
+        this.graph = new LineGraph(graphCanvas);
+        this.graph.addTitle("Revenue");
+
+        let thirtyAgo = new Date(today);
+        thirtyAgo.setDate(today.getDate() - 29);
+
+        let data = this.graphData(dateIndices(thirtyAgo));
+        if(data){
+            this.graph.addData(
+                data,
+                [thirtyAgo, new Date()],
+                "Revenue"
+            );
+        }else{
+            document.querySelector("#graphCanvas").style.display = "none";
             
-            let img = "";
-            if(revenueChange >= 0){
-                img = "/shared/images/upArrow.png";
-            }else{
-                img = "/shared/images/downArrow.png";
-            }
-            document.querySelector("#revenueChange p").innerText = `${Math.abs(revenueChange).toFixed(2)}% vs last month`;
-            document.querySelector("#revenueChange img").src = img;
+            let notice = document.createElement("h1");
+            notice.innerText = "NO DATA YET";
+            notice.classList = "notice";
+            document.querySelector("#graphCard").appendChild(notice);
+        }
+    },
 
-            let graphCanvas = document.querySelector("#graphCanvas");
-
-            graphCanvas.height = graphCanvas.parentElement.clientHeight;
-            graphCanvas.width = graphCanvas.parentElement.clientWidth;
-
-            this.graph = new LineGraph(graphCanvas);
-            this.graph.addTitle("Revenue");
-
-            let thirtyAgo = new Date(today);
-            thirtyAgo.setDate(today.getDate() - 29);
-
-            let data = this.graphData(dateIndices(thirtyAgo));
-            if(data){
-                this.graph.addData(
-                    data,
-                    [thirtyAgo, new Date()],
-                    "Revenue"
-                );
-            }else{
-                document.querySelector("#graphCanvas").style.display = "none";
-                
-                let notice = document.createElement("h1");
-                notice.innerText = "NO DATA YET";
-                notice.classList = "notice";
-                document.querySelector("#graphCard").appendChild(notice);
-            }
-
-            //Inventory Check
-            let rands = [];
+    drawInventoryCheckCard: function(){
+        let rands = [];
             for(let i = 0; i < 5; i++){
                 let rand = Math.floor(Math.random() * merchant.inventory.length);
 
@@ -87,47 +101,45 @@ window.homeStrandObj = {
                 label.innerText = merchant.inventory[rands[i]].ingredient.unit;
                 li.appendChild(label);
             }
+    },
 
-            //Most Popular ingredients
-            let dataArray = [];
-            let now = new Date();
-            let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    drawPopularCard: function(){
+        let dataArray = [];
+        let now = new Date();
+        let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-            let ingredientList = ingredientsSold(dateIndices(thisMonth));
-            if(ingredientList){
-                for(let i = 0; i < 5; i++){
-                    let max = ingredientList[0].quantity
-                    let index = 0;
-                    for(let j = 0; j < ingredientList.length; j++){
-                        if(ingredientList[j].quantity > max){
-                            max = ingredientList[j].quantity;
-                            index = j;
-                        }
+        let ingredientList = ingredientsSold(dateIndices(thisMonth));
+        if(ingredientList){
+            for(let i = 0; i < 5; i++){
+                let max = ingredientList[0].quantity
+                let index = 0;
+                for(let j = 0; j < ingredientList.length; j++){
+                    if(ingredientList[j].quantity > max){
+                        max = ingredientList[j].quantity;
+                        index = j;
                     }
-
-                    dataArray.push({
-                        num: max,
-                        label: `${ingredientList[index].name}: ${ingredientList[index].quantity} ${ingredientList[index].unit}`
-                    });
-                    ingredientList.splice(index, 1);
                 }
 
-                let thisCanvas = document.querySelector("#popularCanvas");
-                thisCanvas.width = thisCanvas.parentElement.clientWidth;
-                thisCanvas.height = thisCanvas.parentElement.clientHeight * 0.75;
-
-                let popularGraph = new HorizontalBarGraph(document.querySelector("#popularCanvas"));
-                popularGraph.addData(dataArray);
-            }else{
-                document.querySelector("#popularCanvas").style.display = "none";
-
-                let notice = document.createElement("p");
-                notice.innerText = "N/A";
-                notice.classList = "notice";
-                document.querySelector("#popularIngredientsCard").appendChild(notice);
+                dataArray.push({
+                    num: max,
+                    label: `${ingredientList[index].name}: ${ingredientList[index].quantity} ${ingredientList[index].unit}`
+                });
+                ingredientList.splice(index, 1);
             }
 
-            this.isPopulated = true;
+            let thisCanvas = document.querySelector("#popularCanvas");
+            thisCanvas.width = thisCanvas.parentElement.clientWidth;
+            thisCanvas.height = thisCanvas.parentElement.clientHeight * 0.75;
+
+            let popularGraph = new HorizontalBarGraph(document.querySelector("#popularCanvas"));
+            popularGraph.addData(dataArray);
+        }else{
+            document.querySelector("#popularCanvas").style.display = "none";
+
+            let notice = document.createElement("p");
+            notice.innerText = "N/A";
+            notice.classList = "notice";
+            document.querySelector("#popularIngredientsCard").appendChild(notice);
         }
     },
 
@@ -174,7 +186,7 @@ window.homeStrandObj = {
         return dataList;
     },
 
-    updateInventory: function(){
+    submitInventoryCheck: function(){
         let lis = document.querySelectorAll("#inventoryCheckCard ul li");
 
         let changes = [];
@@ -207,15 +219,10 @@ window.homeStrandObj = {
             })
                 .then((response)=>{
                     banner.createError("Ingredients updated");
-                    1
                     if(typeof(response.data) === "string"){
                         console.log(err);
                     }else{
-                        for(let change of changes){
-                            merchant.inventory.find((item)=> item.ingredient._id === change.id).quantity = change.quantity;
-                            this.isPopulated = false;
-                            this.display();
-                        }
+                        updateInventory(changes);
                     }
                 })
                 .catch((err)=>{
