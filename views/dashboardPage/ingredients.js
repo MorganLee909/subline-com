@@ -70,8 +70,8 @@ window.ingredientsStrandObj = {
         }
     },
 
-    displayAddIngredient: function(){
-        let sidebar = document.querySelector("#addIngredient");
+    displayAddIngredients: function(){
+        let sidebar = document.querySelector("#addIngredients");
         openSidebar(sidebar);
     },
 
