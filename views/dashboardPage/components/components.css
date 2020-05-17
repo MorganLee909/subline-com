@@ -183,7 +183,7 @@
         visibility: hidden;
     }
 
-.sidebar button:first-of-type{
+.sidebarIconButton{
     background: none;
     border: none;
     cursor: pointer;
@@ -192,7 +192,7 @@
     margin-right: auto;
 }
 
-    .sidebar button:first-of-type:hover{
+    .sidebarIconButton:hover{
         background: rgb(0, 27, 45);
         color: white;
     }
@@ -203,10 +203,24 @@
     margin: 25px;
 }
 
+/* Add Ingredients */
 #addIngredients{
     flex-direction: column;
     width: 100%;
 }
+
+    #addIngredientList{
+        overflow-y: auto;
+    }
+
+    .addIngredient{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background: rgb(240, 252, 255);
+        border: 1px solid black;
+        border-radius: 5px;
+    }
 
 #ingredientDetails{
     flex-direction: column;
@@ -233,6 +247,54 @@
         padding: 10px;
     }
 
+    .addIngredientsCategory{
+        width: 90%;
+    }
+
+        .categoryHeader{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            border: 1px solid black;
+            background: rgb(240, 252, 255);
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+            .categoryHeader > button{
+                display: flex;
+                align-items: center;
+                background: none;
+                border: none;
+                padding: 5px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .categoryHeader > button:hover{
+                background: rgb(0, 27, 45);
+                color: white;
+            }
+
+        .addIngredientsIngredients{
+            flex-direction: column;
+            padding: 0 20px;
+        }
+
+        .addIngredientsIngredient{
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            margin: 5px;
+        }
+
+        .addIngredientsIngredient input[type=number]{
+            width: 100px;
+            margin-left: auto;
+        }
+
+/* Recipe Details */
 #recipeDetails{
     flex-direction: column;
     align-items: center;

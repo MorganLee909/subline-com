@@ -62,17 +62,58 @@ window.ingredientsStrandObj = {
     //Open or close the list of ingredients for a category
     toggleCategory: function(div, button){
         if(div.style.display === "none"){
-            button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+            button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
             div.style.display = "flex";
         }else if(div.style.display === "flex"){
-            button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
             div.style.display = "none";
         }
     },
 
     displayAddIngredients: function(){
         let sidebar = document.querySelector("#addIngredients");
+        let addIngredientsDiv = document.getElementById("addIngredientList");
+        let categoryTemplate = document.getElementById("addIngredientsCategory");
+        let ingredientTemplate = document.getElementById("addIngredientsIngredient");
+
+        let categories = categorizeIngredients();
+        console.log(categories);
+
+        for(let i = 0; i < categories.length; i++){
+            let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
+            categoryDiv.children[0].children[0].innerText = categories[i].name;
+            categoryDiv.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(categoryDiv)};
+            categoryDiv.children[1].style.display = "none";
+            categoryDiv.children[0].children[1].children[1].style.display = "none";
+
+            addIngredientsDiv.appendChild(categoryDiv);
+            
+            for(let j = 0; j < categories[i].ingredients.length; j++){
+                let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
+                ingredientDiv.children[1].innerText = categories[i].ingredients[j].name;
+
+                categoryDiv.children[1].appendChild(ingredientDiv);
+            }
+        }
+
         openSidebar(sidebar);
+    },
+
+    toggleAddIngredient: function(categoryElement){
+        let button = categoryElement.children[0].children[1];
+        let ingredientDisplay = categoryElement.children[1];
+
+        if(ingredientDisplay.style.display === "none"){
+            ingredientDisplay.style.display = "flex";
+
+            button.children[0].style.display = "none";
+            button.children[1].style.display = "block";
+        }else{
+            ingredientDisplay.style.display = "none";
+
+            button.children[0].style.display = "block";
+            button.children[1].style.display = "none";
+        }
     },
 
     displayIngredient: function(ingredient, category){
