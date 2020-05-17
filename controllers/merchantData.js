@@ -230,9 +230,7 @@ module.exports = {
 
     //POST - Adds an ingredient to merchant's inventory
     //Inputs:
-    //  req.body: array of objects containing ingredient id and quantity
-    //Returns:
-    //  entire inventory of merchant
+    //  req.body: array of objects (each object is a full ingredient)
     addMerchantIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -243,13 +241,13 @@ module.exports = {
             .then((merchant)=>{
                 for(let ingredient of req.body){
                     for(let item of merchant.inventory){
-                        if(item.ingredient.toString() === ingredient.id){
+                        if(item.ingredient.toString() === ingredient.ingredient._id){
                             return res.json("Error: Duplicate ingredient detected");
                         }
                     }
                     
                     merchant.inventory.push({
-                        ingredient: ingredient.id,
+                        ingredient: ingredient.ingredient._id,
                         quantity: ingredient.quantity
                     });
                 }
@@ -260,7 +258,7 @@ module.exports = {
                             if(err){
                                 return res.json("Warning: refresh page to view updates");
                             }else{
-                                return res.json(newMerchant.inventory);
+                                return res.json({});
                             }
                         });
                     })

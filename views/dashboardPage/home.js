@@ -230,10 +230,10 @@ window.homeStrandObj = {
                 body: JSON.stringify(changes)
             })
                 .then((response)=>{
-                    banner.createError("Ingredients updated");
                     if(typeof(response.data) === "string"){
-                        console.log(err);
+                        banner.createError(response.data);
                     }else{
+                        banner.createNotification("Ingredients updated");
                         updateInventory(changes);
                     }
                 })

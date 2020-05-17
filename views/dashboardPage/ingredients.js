@@ -1,5 +1,6 @@
 window.ingredientsStrandObj = {
     isPopulated: false,
+    addIngredientsDiv: [],
 
     display: function(){
         if(!this.isPopulated){
@@ -10,7 +11,7 @@ window.ingredientsStrandObj = {
     },
 
     populateIngredients: function(){
-        let categories = categorizeIngredients();
+        let categories = categorizeIngredients(merchant.inventory);
 
         let ingredientStrand = document.querySelector("#categoryList");
         while(ingredientStrand.children.length > 0){
@@ -76,25 +77,42 @@ window.ingredientsStrandObj = {
         let categoryTemplate = document.getElementById("addIngredientsCategory");
         let ingredientTemplate = document.getElementById("addIngredientsIngredient");
 
-        let categories = categorizeIngredients();
-        console.log(categories);
+        fetch("/ingredients")
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    let categories = categorizeIngredientsFromDB(response);
 
-        for(let i = 0; i < categories.length; i++){
-            let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
-            categoryDiv.children[0].children[0].innerText = categories[i].name;
-            categoryDiv.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(categoryDiv)};
-            categoryDiv.children[1].style.display = "none";
-            categoryDiv.children[0].children[1].children[1].style.display = "none";
+                    this.addIngredientsDiv = [];
+                    for(let i = 0; i < categories.length; i++){
+                        let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
+                        categoryDiv.children[0].children[0].innerText = categories[i].name;
+                        categoryDiv.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(categoryDiv)};
+                        categoryDiv.children[1].style.display = "none";
+                        categoryDiv.children[0].children[1].children[1].style.display = "none";
 
-            addIngredientsDiv.appendChild(categoryDiv);
-            
-            for(let j = 0; j < categories[i].ingredients.length; j++){
-                let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
-                ingredientDiv.children[1].innerText = categories[i].ingredients[j].name;
+                        addIngredientsDiv.appendChild(categoryDiv);
+                        
+                        for(let j = 0; j < categories[i].ingredients.length; j++){
+                            let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
+                            ingredientDiv.children[1].innerText = categories[i].ingredients[j].name;
+                            ingredientDiv._id = categories[i].ingredients[j].id;
+                            ingredientDiv._name = categories[i].ingredients[j].name;
+                            ingredientDiv._unit = categories[i].ingredients[j].unit;
+                            ingredientDiv._category = categories[i].name;
 
-                categoryDiv.children[1].appendChild(ingredientDiv);
-            }
-        }
+                            categoryDiv.children[1].appendChild(ingredientDiv);
+
+                            this.addIngredientsDiv.push(ingredientDiv);
+                        }
+                    }
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Unable to retrieve data");
+            });
 
         openSidebar(sidebar);
     },
@@ -140,5 +158,47 @@ window.ingredientsStrandObj = {
         document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.unit}`;
     },
 
-    
+    submitAddIngredients: function(){
+        let addIngredients = [];
+
+        for(let i = 0; i < this.addIngredientsDiv.length; i++){
+            let ingredient = this.addIngredientsDiv[i];
+
+            if(ingredient.children[0].checked){
+                if(!validator.ingredient.quantity(ingredient.children[2].value)){
+                    return;
+                }
+
+                addIngredients.push({
+                    ingredient: {
+                        _id: ingredient._id,
+                        name: ingredient._name,
+                        category: ingredient._category,
+                        unit: ingredient._unit
+                    },
+                    quantity: ingredient.children[2].value,
+                });
+            }
+        }
+
+        fetch("/merchant/ingredients/add", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(addIngredients)
+        })
+            .then((response)=>{
+                if(typeof(response.data) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    banner.createNotification("Ingredients added");
+                    updateInventory(addIngredients);
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("Unable to update data.  Please refresh the page");
+            });
+    }
 }
