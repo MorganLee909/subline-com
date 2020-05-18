@@ -183,16 +183,24 @@
         visibility: hidden;
     }
 
-.sidebarIconButton{
+.sidebarIconButtons{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.sidebarIconButtons > button{
+    display: flex;
+    align-items: center;
     background: none;
     border: none;
     cursor: pointer;
     padding: 3px;
     border-radius: 5px;
-    margin-right: auto;
 }
 
-    .sidebarIconButton:hover{
+    .sidebarIconButtons > button:hover{
         background: rgb(0, 27, 45);
         color: white;
     }

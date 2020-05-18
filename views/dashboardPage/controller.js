@@ -41,7 +41,7 @@ let updateInventory = (ingredients, remove = false)=>{
         for(let j = 0; j < merchant.inventory.length; j++){
             if(merchant.inventory[j].ingredient._id === ingredients[i].id){
                 if(remove){
-                    merchant.inventory.splice(i, 1);
+                    merchant.inventory.splice(j, 1);
                 }else{
                     merchant.inventory[j].quantity = ingredients[i].quantity;
                 }

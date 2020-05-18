@@ -42,7 +42,7 @@ window.ingredientsStrandObj = {
             for(let ingredient of category.ingredients){
                 let ingredientDiv = document.createElement("div");
                 ingredientDiv.classList = "ingredient";
-                ingredientDiv.onclick = ()=>{this.displayIngredient(ingredient, category)};
+                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient, category)};
                 ingredientsDiv.appendChild(ingredientDiv);
 
                 let ingredientName = document.createElement("p");
@@ -69,31 +69,5 @@ window.ingredientsStrandObj = {
             button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
             div.style.display = "none";
         }
-    },
-
-    
-
-    displayIngredient: function(ingredient, category){
-        sidebar = document.querySelector("#ingredientDetails");
-        openSidebar(sidebar);
-
-        document.querySelector("#ingredientDetails p").innerText = category.name;
-        document.querySelector("#ingredientDetails h1").innerText = ingredient.name;
-        document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.unit}`;
-
-        let quantities = [];
-        let now = new Date();
-        for(let i = 1; i < 31; i++){
-            let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
-            let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
-            quantities.push(ingredientSold(dateIndices(startDay, endDay), ingredient.id));
-        }
-
-        let sum = 0;
-        for(let quantity of quantities){
-            sum += quantity;
-        }
-
-        document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.unit}`;
     }
 }

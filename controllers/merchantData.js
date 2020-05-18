@@ -272,9 +272,6 @@ module.exports = {
     },
 
     //POST - Removes an ingredient from the merchant's inventory
-    //Inputs: 
-    //  ingredientId: id of ingredient to remove
-    //Returns: Nothing
     removeMerchantIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -284,7 +281,7 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 for(let i = 0; i < merchant.inventory.length; i++){
-                    if(req.body.ingredientId === merchant.inventory[i].ingredient._id.toString()){
+                    if(req.params.id === merchant.inventory[i].ingredient._id.toString()){
                         merchant.inventory.splice(i, 1);
                         break;
                     }
@@ -292,7 +289,7 @@ module.exports = {
 
                 merchant.save()
                     .then((merchant)=>{
-                        return res.json(req.body);
+                        return res.json({});
                     })
                     .catch((err)=>{
                         return res.json("Error: unable to save user data");
