@@ -9,7 +9,6 @@ module.exports = {
     //  req.body.ingredients: array of ingredients (object) in recipe
     //      id: id of ingredient
     //      quantity: quantity of ingredient in recipe
-    //Returns the newly created recipe
     createRecipe: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";

@@ -31,7 +31,7 @@ module.exports = function(app){
     // app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
 
     //Recipes
-    // app.post("/recipe/create", recipeData.createRecipe);
+    app.post("/recipe/create", recipeData.createRecipe);
 
     //Orders
 
