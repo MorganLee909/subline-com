@@ -211,6 +211,7 @@
 
     #addIngredientList{
         overflow-y: auto;
+        margin-bottom: 15px;
     }
 
     .addIngredient{
@@ -220,6 +221,10 @@
         background: rgb(240, 252, 255);
         border: 1px solid black;
         border-radius: 5px;
+    }
+
+    .addIngredientsBtn{
+        margin-left: auto;
     }
 
 #ingredientDetails{
