@@ -58,6 +58,8 @@ let updateInventory = (ingredients, remove = false)=>{
 
     homeStrandObj.drawInventoryCheckCard();
     ingredientsStrandObj.populateIngredients();
+    addIngredientsComp.isPopulated = false;
+    closeSidebar();
 }
 
 //Close any open sidebar
