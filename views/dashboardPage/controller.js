@@ -58,6 +58,8 @@ let updateInventory = (ingredients, remove = false)=>{
 
     homeStrandObj.drawInventoryCheckCard();
     ingredientsStrandObj.populateIngredients();
+    addIngredientsComp.isPopulated = false;
+    closeSidebar();
 }
 
 //Close any open sidebar
@@ -241,18 +243,18 @@ Return:
             unit: Measurement unit
         name: Category name
 */
-let categorizeIngredients = ()=>{
+let categorizeIngredients = (ingredients)=>{
     let ingredientsByCategory = [];
 
-    for(let i = 0; i < merchant.inventory.length; i++){
+    for(let i = 0; i < ingredients.length; i++){
         let categoryExists = false;
         for(let j = 0; j < ingredientsByCategory.length; j++){
-            if(merchant.inventory[i].ingredient.category === ingredientsByCategory[j].name){
+            if(ingredients[i].ingredient.category === ingredientsByCategory[j].name){
                 ingredientsByCategory[j].ingredients.push({
-                    id: merchant.inventory[i].ingredient._id,
-                    name: merchant.inventory[i].ingredient.name,
-                    quantity: merchant.inventory[i].quantity,
-                    unit: merchant.inventory[i].ingredient.unit
+                    id: ingredients[i].ingredient._id,
+                    name: ingredients[i].ingredient.name,
+                    quantity: ingredients[i].quantity,
+                    unit: ingredients[i].ingredient.unit
                 });
 
                 categoryExists = true;
@@ -262,12 +264,45 @@ let categorizeIngredients = ()=>{
 
         if(!categoryExists){
             ingredientsByCategory.push({
-                name: merchant.inventory[i].ingredient.category,
+                name: ingredients[i].ingredient.category,
                 ingredients: [{
-                    id: merchant.inventory[i].ingredient._id,
-                    name: merchant.inventory[i].ingredient.name,
-                    quantity: merchant.inventory[i].quantity,
-                    unit: merchant.inventory[i].ingredient.unit
+                    id: ingredients[i].ingredient._id,
+                    name: ingredients[i].ingredient.name,
+                    quantity: ingredients[i].quantity,
+                    unit: ingredients[i].ingredient.unit
+                }]
+            });
+        }
+    }
+
+    return ingredientsByCategory;
+}
+
+let categorizeIngredientsFromDB = (ingredients)=>{
+    let ingredientsByCategory = [];
+
+    for(let i = 0; i < ingredients.length; i++){
+        let categoryExists = false;
+        for(let j = 0; j < ingredientsByCategory.length; j++){
+            if(ingredients[i].category === ingredientsByCategory[j].name){
+                ingredientsByCategory[j].ingredients.push({
+                    id: ingredients[i]._id,
+                    name: ingredients[i].name,
+                    unit: ingredients[i].unit
+                });
+
+                categoryExists = true;
+                break;
+            }
+        }
+
+        if(!categoryExists){
+            ingredientsByCategory.push({
+                name: ingredients[i].category,
+                ingredients: [{
+                    id: ingredients[i]._id,
+                    name: ingredients[i].name,
+                    unit: ingredients[i].unit
                 }]
             });
         }

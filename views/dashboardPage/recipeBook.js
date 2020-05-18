@@ -59,7 +59,7 @@ window.recipeBookStrandObj = {
         openSidebar(document.querySelector("#addRecipe"));
 
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
-        let categories = categorizeIngredients();
+        let categories = categorizeIngredients(merchant.inventory);
         for(let category of categories){
             let optgroup = document.createElement("optgroup");
             optgroup.label = category.name;

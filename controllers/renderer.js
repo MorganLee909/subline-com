@@ -126,8 +126,6 @@ module.exports = {
                                 });
                         })
                         .catch((err)=>{
-                            console.log("Fucking bitch error");
-                            console.log(err);
                             let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
 
                             merchant.password = undefined;
