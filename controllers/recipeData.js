@@ -9,6 +9,7 @@ module.exports = {
     //  req.body.ingredients: array of ingredients (object) in recipe
     //      id: id of ingredient
     //      quantity: quantity of ingredient in recipe
+    //Returns newly created ingredient
     createRecipe: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -37,7 +38,7 @@ module.exports = {
 
         recipe.save()
             .then((newRecipe)=>{
-                return res.json({});
+                return res.json(newRecipe);
             })
             .catch((err)=>{
                 console.log(err);

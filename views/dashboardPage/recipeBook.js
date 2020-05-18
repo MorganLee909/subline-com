@@ -12,6 +12,10 @@ window.recipeBookStrandObj = {
     populateRecipes: function(){
         let recipeList = document.querySelector("#recipeList");
 
+        while(recipeList.children.length > 0){
+            recipeList.removeChild(recipeList.firstChild);
+        }
+
         for(let recipe of merchant.recipes){
             let recipeDiv = document.createElement("div");
             recipeDiv.classList = "recipeItem";
@@ -128,11 +132,18 @@ window.recipeBookStrandObj = {
             },
             body: JSON.stringify(newRecipe)
         })
+            .then((response) => response.json())
             .then((response)=>{
-                if(typeof(response.data) === "string"){
-                    banner.createError(response.data);
+                if(typeof(response) === "string"){
+                    banner.createError(response);
                 }else{
-                    banner.createNotification("New recipe successfully created")
+                    newRecipe._id = response._id;
+                    newRecipe.price = Math.round(newRecipe.price * 100);
+                    for(let i = 0; i < newRecipe.ingredients.length; i++){
+                        newRecipe.ingredients[i].quantity = parseFloat(newRecipe.ingredients[i].quantity);
+                    }
+                    updateRecipes(newRecipe);
+                    banner.createNotification("New recipe successfully created");
                 }
             })
             .catch((err)=>{

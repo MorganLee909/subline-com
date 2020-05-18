@@ -62,6 +62,54 @@ let updateInventory = (ingredients, remove = false)=>{
     closeSidebar();
 }
 
+/*
+Updates a recipe in the merchants list of recipes
+Can create, edit or remove
+Inputs:
+    recipe: object
+        _id: id of recipe
+        name: name of recipe
+        price: price of recipe
+        ingredients: list of ingredients
+            ingredient: id of ingredient
+            quantity: quantity of ingredient
+    remove: if true, remove ingredient from inventory
+*/
+let updateRecipes = (recipe, remove = false)=>{
+    let isNew = true;
+    let index = 0;
+    for(let i = 0; i < merchant.recipes.length; i++){
+        if(recipe.id === merchant.recipes[i]._id){
+            if(remove){
+                merchant.recipes.splice(i, 1);
+            }else{
+                merchant.recipes[i] = recipe;
+                index = i;
+            }
+
+            isNew = false;
+            break;
+        }
+    }
+
+    if(isNew){
+        merchant.recipes.push(recipe);
+        index = merchant.recipes.length - 1;
+    }
+
+    for(let i = 0; i < recipe.ingredients.length; i++){
+        for(let j = 0; j < merchant.inventory.length; j++){
+            if(merchant.inventory[j].ingredient._id === recipe.ingredients[i].ingredient){
+                recipe.ingredients[i].ingredient = merchant.inventory[j].ingredient;
+                break;
+            }
+        }
+    }
+
+    recipeBookStrandObj.populateRecipes();
+    closeSidebar();
+}
+
 //Close any open sidebar
 let closeSidebar = ()=>{
     let sidebar = document.querySelector("#sidebarDiv");
