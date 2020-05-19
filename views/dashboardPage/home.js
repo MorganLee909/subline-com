@@ -229,6 +229,7 @@ window.homeStrandObj = {
                 },
                 body: JSON.stringify(changes)
             })
+                .then((response) => response.json())
                 .then((response)=>{
                     if(typeof(response.data) === "string"){
                         banner.createError(response.data);

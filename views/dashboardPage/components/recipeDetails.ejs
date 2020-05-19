@@ -1,18 +1,27 @@
 <div id="recipeDetails">
-    <div id="recipeDetailsButtons">
-        <button class="sidebarIconButton" onclick="closeSidebar()">
+    <div class="sidebarIconButtons">
+        <button onclick="closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
         </button>
 
-        <button class="sidebarIconButton" onclick="recipeBookStrandObj.editRecipe()">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-            </svg>
-        </button>
+        <% if(merchant.pos === "none"){ %>
+            <button onclick="recipeDetailsComp.edit()">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+            </button>
+
+            <button onclick="recipeDetailsComp.remove()">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+            </button>
+        <% } %>
     </div>
 
     <h1></h1>
@@ -26,4 +35,56 @@
         
         <p></p>
     </div>
+
+    <script>
+        let recipeDetailsComp = {
+            recipe: {},
+
+            display: function(recipe){
+                this.recipe = recipe;
+                openSidebar(document.querySelector("#recipeDetails"));
+
+                document.querySelector("#recipeDetails h1").innerText = recipe.name;
+
+                let ingredientList = document.querySelector("#recipeIngredients");
+                while(ingredientList.children.length > 0){
+                    ingredientList.removeChild(ingredientList.firstChild);
+                }
+
+                for(let ingredient of recipe.ingredients){
+                    let ingredientDiv = document.createElement("div");
+                    ingredientDiv.classList = "recipeIngredient";
+                    ingredientList.appendChild(ingredientDiv);
+
+                    let ingredientName = document.createElement("p");
+                    ingredientName.innerText = ingredient.ingredient.name;
+                    ingredientDiv.appendChild(ingredientName);
+
+                    let ingredientQuantity = document.createElement("p");
+                    ingredientQuantity.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+                    ingredientDiv.appendChild(ingredientQuantity);
+                }
+
+                document.querySelector("#recipePrice p").innerText = `$${(recipe.price / 100).toFixed(2)}`;
+            },
+
+            remove: function(){
+                fetch(`/merchant/recipes/remove/${this.recipe._id}`, {
+                    method: "DELETE"
+                })
+                    .then((response) => response.json())
+                    .then((response)=>{
+                        if(typeof(response) === "string"){
+                            banner.createError(response);
+                        }else{
+                            updateRecipes(this.recipe, true);
+                            banner.createNotification("Recipe removed");
+                        }
+                    })
+                    .catch((err)=>{
+                        banner.createError("Something went wrong.  Try refreshing the page");
+                    });
+            }
+        }
+    </script>
 </div>

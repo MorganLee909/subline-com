@@ -314,27 +314,6 @@
     width: 100%;
 }
 
-    #recipeDetailsButtons{
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 100px;
-    }
-
-    #recipeDetailsButtons button{
-        background: none;
-        border: none;
-        cursor: pointer;
-        margin: 0;
-        padding: 3px;
-        border-radius: 5px;
-    }
-
-        #recipeDetailsButtons button:hover{
-            background: rgb(0, 27, 45);
-            color: white;
-        }
-
     #recipeIngredients{
         width: 100%;
     }

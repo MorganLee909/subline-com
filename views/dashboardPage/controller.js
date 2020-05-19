@@ -79,7 +79,7 @@ let updateRecipes = (recipe, remove = false)=>{
     let isNew = true;
     let index = 0;
     for(let i = 0; i < merchant.recipes.length; i++){
-        if(recipe.id === merchant.recipes[i]._id){
+        if(recipe._id === merchant.recipes[i]._id){
             if(remove){
                 merchant.recipes.splice(i, 1);
             }else{

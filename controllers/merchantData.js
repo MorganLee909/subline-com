@@ -193,9 +193,7 @@ module.exports = {
             });
     },
 
-    //POST - removes a single recipe
-    //Inputs:
-    // req.body: the id of the recipe to be removed
+    //DELETE - removes a single recipe
     removeRecipe: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -209,7 +207,7 @@ module.exports = {
                 }
                 
                 for(let i = 0; i < merchant.recipes.length; i++){
-                    if(merchant.recipes[i].toString() === req.body.id){
+                    if(merchant.recipes[i].toString() === req.params.id){
                         merchant.recipes.splice(i, 1);
                         break;
                     }
