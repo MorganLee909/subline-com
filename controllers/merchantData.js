@@ -302,10 +302,9 @@ module.exports = {
 
     //POST - Update the quantity for a merchant inventory item
     //Inputs:
-    //  req.body.ingredients: array of ingredient data
+    //  req.body: array of ingredient data
     //      id: id of ingredient to update
     //      quantity: New value for the ingredient
-    //Returns: Nothing
     updateMerchantIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -346,6 +345,7 @@ module.exports = {
                     })
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("Error: your data could not be retrieved");
             });        
     },

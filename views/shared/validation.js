@@ -6,7 +6,7 @@ let validator = {
                 if(createBanner){
                     banner.createError("Your inputs contain illegal characters");
                 }
-                return false
+                return false;
             }
 
             //Check for length
