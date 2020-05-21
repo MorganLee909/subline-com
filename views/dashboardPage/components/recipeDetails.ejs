@@ -24,7 +24,8 @@
         <% } %>
     </div>
 
-    <h1></h1>
+    <h1 id="recipeName"></h1>
+    <input id="recipeNameIn" type="text" style="display: none;">
 
     <div id="recipeIngredientList"></div>
 
@@ -34,12 +35,16 @@
         <h3>Price</h3>
         
         <p></p>
+        <input type="number" min="0" step="0.01" style="display: none;">
     </div>
+
+    <button id="recipeUpdate" onclick="recipeDetailsComp.update()" class="button" style="display: none;">Update</button>
 
     <template id="recipeIngredient">
         <div class="recipeIngredient">
             <p></p>
             <p></p>
+            <input type="number" min="0" step="0.01" style="display: none;">
         </div>
     </template>
 
@@ -49,9 +54,10 @@
 
             display: function(recipe){
                 this.recipe = recipe;
-                console.log(recipe);
                 openSidebar(document.querySelector("#recipeDetails"));
 
+                document.querySelector("#recipeName").style.display = "block";
+                document.querySelector("#recipeNameIn").style.display = "none";
                 document.querySelector("#recipeDetails h1").innerText = recipe.name;
 
                 let ingredientList = document.querySelector("#recipeIngredientList");
@@ -69,11 +75,37 @@
                     ingredientList.appendChild(ingredientDiv);
                 }
 
+                let price = document.querySelector("#recipePrice");
+                price.children[1].style.display = "block";
+                price.children[2].style.display = "none";
                 document.querySelector("#recipePrice p").innerText = `$${(recipe.price / 100).toFixed(2)}`;
+
+                document.querySelector("#recipeUpdate").style.display = "none";
             },
 
             edit: function(){
-                console.log("edit recipe");
+                let ingredientDivs = document.querySelector("#recipeIngredientList");
+
+                let name = document.querySelector("#recipeName");
+                let nameIn = document.querySelector("#recipeNameIn");
+                name.style.display = "none";
+                nameIn.style.display = "block";
+                nameIn.placeholder = name.innerText;
+
+                for(let i = 0; i < ingredientDivs.children.length; i++){
+                    let div = ingredientDivs.children[i];
+
+                    div.children[1].style.display = "none";
+                    div.children[2].style.display = "block";
+                    div.children[2].placeholder = div.children[1].innerText;
+                }
+
+                let price = document.querySelector("#recipePrice");
+                price.children[1].style.display = "none";
+                price.children[2].style.display = "block";
+                price.children[2].placeholder = price.children[1].innerText;
+
+                document.querySelector("#recipeUpdate").style.display = "block";
             },
 
             remove: function(){

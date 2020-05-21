@@ -396,3 +396,7 @@
     #addRecipe button:last-of-type{
         margin-top: auto;
     }
+
+    #recipeUpdate{
+        margin: 25px 0 0 0;
+    }
