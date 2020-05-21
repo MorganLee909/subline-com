@@ -26,7 +26,7 @@
 
     <h1></h1>
 
-    <div id="recipeIngredients"></div>
+    <div id="recipeIngredientList"></div>
 
     <div class="lineBorder"></div>
 
@@ -36,36 +36,44 @@
         <p></p>
     </div>
 
+    <template id="recipeIngredient">
+        <div class="recipeIngredient">
+            <p></p>
+            <p></p>
+        </div>
+    </template>
+
     <script>
         let recipeDetailsComp = {
             recipe: {},
 
             display: function(recipe){
                 this.recipe = recipe;
+                console.log(recipe);
                 openSidebar(document.querySelector("#recipeDetails"));
 
                 document.querySelector("#recipeDetails h1").innerText = recipe.name;
 
-                let ingredientList = document.querySelector("#recipeIngredients");
+                let ingredientList = document.querySelector("#recipeIngredientList");
                 while(ingredientList.children.length > 0){
                     ingredientList.removeChild(ingredientList.firstChild);
                 }
 
-                for(let ingredient of recipe.ingredients){
-                    let ingredientDiv = document.createElement("div");
-                    ingredientDiv.classList = "recipeIngredient";
+                let template = document.querySelector("#recipeIngredient").content.children[0];
+                for(let i = 0; i < recipe.ingredients.length; i++){
+                    ingredientDiv = template.cloneNode(true);
+
+                    ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
+                    ingredientDiv.children[1].innerText = `${recipe.ingredients[i].quantity} ${recipe.ingredients[i].ingredient.unit}`;
+
                     ingredientList.appendChild(ingredientDiv);
-
-                    let ingredientName = document.createElement("p");
-                    ingredientName.innerText = ingredient.ingredient.name;
-                    ingredientDiv.appendChild(ingredientName);
-
-                    let ingredientQuantity = document.createElement("p");
-                    ingredientQuantity.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
-                    ingredientDiv.appendChild(ingredientQuantity);
                 }
 
                 document.querySelector("#recipePrice p").innerText = `$${(recipe.price / 100).toFixed(2)}`;
+            },
+
+            edit: function(){
+                console.log("edit recipe");
             },
 
             remove: function(){
