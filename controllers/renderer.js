@@ -152,9 +152,7 @@ module.exports = {
                         .then((transactions)=>{
                             return res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions})
                         })
-                        .catch((err)=>{
-                            console.log(err);
-                        });
+                        .catch((err)=>{});
                         
                 }else{
                     req.session.error = "Error: WEBSITE PANIC";

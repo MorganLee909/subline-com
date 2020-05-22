@@ -100,7 +100,6 @@ module.exports = {
                 return res.json({});
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("Error: unable to update your recipe");
             })
     }

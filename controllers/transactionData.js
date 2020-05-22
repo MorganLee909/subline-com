@@ -148,16 +148,13 @@ module.exports = {
 
                 Transaction.create(newTransactions)
                     .then((transactions)=>{
-                        console.log("completed");
                         return res.redirect("/data");
                     })
                     .catch((err)=>{
-                        console.log(err);
                         return;
                     });
             })
             .catch((err)=>{
-                console.log(err);
                 return;
             });
         

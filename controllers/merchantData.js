@@ -343,7 +343,6 @@ module.exports = {
                     })
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("Error: your data could not be retrieved");
             });        
     },
