@@ -190,7 +190,7 @@
     margin-bottom: 50px;
 }
 
-.sidebarIconButtons > button{
+.iconButton{
     display: flex;
     align-items: center;
     background: none;
@@ -200,7 +200,7 @@
     border-radius: 5px;
 }
 
-    .sidebarIconButtons > button:hover{
+    .iconButton:hover{
         background: rgb(0, 27, 45);
         color: white;
     }
