@@ -285,12 +285,12 @@ let recipesSold = (dateRange)=>{
 Groups all of the merchant's ingredients by their category
 Return:
     Array of objects
+        name: Category name
         ingredients: Array of objects
             id: Id of ingredient
             name: Name of ingredient
             quantity:  Merchant's quantity of this ingredient
             unit: Measurement unit
-        name: Category name
 */
 let categorizeIngredients = (ingredients)=>{
     let ingredientsByCategory = [];

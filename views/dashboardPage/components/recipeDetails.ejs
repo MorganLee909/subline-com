@@ -29,6 +29,14 @@
 
     <div id="recipeIngredientList"></div>
 
+    <button id="addRecIng" class="iconButton" onclick="recipeDetailsComp.displayAddIngredient()" style="display: none;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+    </button>
+
     <div class="lineBorder"></div>
 
     <div id="recipePrice">
@@ -50,6 +58,13 @@
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                 </svg>
             </button>
+        </div>
+    </template>
+
+    <template id="addRecIngredient">
+        <div class="addRecIngredient">
+            <select></select>
+            <input type="number" min="0" step="0.01">
         </div>
     </template>
 
@@ -82,6 +97,8 @@
                     ingredientList.appendChild(ingredientDiv);
                 }
 
+                document.querySelector("#addRecIng").style.display = "none";
+
                 let price = document.querySelector("#recipePrice");
                 price.children[1].style.display = "block";
                 price.children[2].style.display = "none";
@@ -109,12 +126,14 @@
                     div.children[3].onclick = ()=>{div.parentElement.removeChild(div)};
                 }
 
+                document.querySelector("#addRecIng").style.display = "flex";
+
                 let price = document.querySelector("#recipePrice");
                 price.children[1].style.display = "none";
                 price.children[2].style.display = "block";
                 price.children[2].placeholder = price.children[1].innerText;
 
-                document.querySelector("#recipeUpdate").style.display = "block";
+                document.querySelector("#recipeUpdate").style.display = "flex";
             },
 
             update: function(){
@@ -172,6 +191,26 @@
                     .catch((err)=>{
                         banner.createError("Something went wrong.  Try refreshing the page");
                     });
+            },
+
+            displayAddIngredient: function(){
+                let template = document.querySelector("#addRecIngredient").content.children[0].cloneNode(true);
+                document.querySelector("#recipeIngredientList").appendChild(template);
+
+                let categories = categorizeIngredients(merchant.inventory);
+
+                for(let i = 0; i < categories.length; i++){
+                    let optGroup = document.createElement("optgroup");
+                    optGroup.innerText = categories[i].name;
+                    template.children[0].appendChild(optGroup);
+
+                    for(let j = 0; j < categories[i].ingredients.length; j++){
+                        let option = document.createElement("option");
+                        option.innerText = `${categories[i].ingredients[j].name} (${categories[i].ingredients[j].unit})`;
+                        option.value = categories[i].ingredients[j].id;
+                        optGroup.appendChild(option);
+                    }
+                }
             }
         }
     </script>
