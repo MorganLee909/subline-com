@@ -238,9 +238,7 @@ window.homeStrandObj = {
                         updateInventory(changes);
                     }
                 })
-                .catch((err)=>{
-                    console.log(err);
-                });
+                .catch((err)=>{});
         }
     }
 }

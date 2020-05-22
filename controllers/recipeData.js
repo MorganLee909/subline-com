@@ -68,7 +68,7 @@ module.exports = {
                 for(let i = 0; i < req.body.ingredients.length; i++){
                     let isNew = true;
                     for(let j = 0; j < recipe.ingredients.length; j++){
-                        if(req.body.ingredients[i].ingredient === recipe.ingredients[j]._id.toString()){
+                        if(req.body.ingredients[i].ingredient === recipe.ingredients[j].ingredient._id.toString()){
                             isNew = false;
                             recipe.ingredients[j].quantity = req.body.ingredients[i].quantity;
                             break;
@@ -83,7 +83,7 @@ module.exports = {
                 for(let i = 0; i < recipe.ingredients.length; i++){
                     let doesntExist = true;
                     for(let j = 0; j < req.body.ingredients.length; j++){
-                        if(recipe.ingredients[i]._id === req.body.ingredients[j]._id){
+                        if(recipe.ingredients[i].ingredient._id.toString() === req.body.ingredients[j].ingredient){
                             doesntExist = false;
                             break;
                         }
@@ -93,8 +93,6 @@ module.exports = {
                         recipe.ingredients.splice(i, 1);
                     }
                 }
-
-                // console.log(recipe);
 
                 return recipe.save()
             })
