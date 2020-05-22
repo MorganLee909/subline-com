@@ -19,12 +19,14 @@ window.accountObj = {
             email: document.querySelector("#accountEmail").value
         }
 
-        if(validator.isSanitary(name)){
+        if(validator.isSanitary(data.name) && validator.isSanitary(data.email)){
             axios.post("/merchant/update", data)
                 .then((response)=>{
                     if(typeof(response.data) === "string"){
                         banner.createError(response.data);
                     }else{
+                        document.querySelector("#title").innerText = data.name;
+
                         merchant.name = data.name;
                         merchant.email = data.email;
 
