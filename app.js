@@ -8,6 +8,14 @@ mongoose.connect(process.env.SUBLINE_DB, {useNewUrlParser: true, useUnifiedTopol
 
 app.set("view engine", "ejs");
 
+function requireHTTPS(req, res, next) {
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https' && process.env.NODE_ENV !== "development") {
+      return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+}
+
+app.use(requireHTTPS);
 app.use(session({
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen",
     cookie: {secure: false},
