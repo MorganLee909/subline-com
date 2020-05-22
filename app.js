@@ -15,6 +15,7 @@ function requireHTTPS(req, res, next) {
     next();
 }
 
+console.log(process.env.NODE_ENV);
 app.use(requireHTTPS);
 app.use(session({
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen",
