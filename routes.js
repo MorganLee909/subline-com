@@ -32,6 +32,7 @@ module.exports = function(app){
 
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);
+    app.put("/recipe/update", recipeData.updateRecipe);
 
     //Orders
 

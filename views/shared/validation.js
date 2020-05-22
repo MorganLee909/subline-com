@@ -166,6 +166,10 @@ let validator = {
             errors.push("Recipe contains duplicate ingredients");
         }
 
+        if(isNaN(newRecipe.price) || newRecipe.price === "" || newRecipe.price< 0){
+            errors.push("Must enter a valid price");
+        }
+
         if(errors.length > 0){
             if(createBanner){
                 for(let error of errors){

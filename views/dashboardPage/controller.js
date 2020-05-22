@@ -78,6 +78,16 @@ Inputs:
 let updateRecipes = (recipe, remove = false)=>{
     let isNew = true;
     let index = 0;
+
+    for(let i = 0; i < recipe.ingredients.length; i++){
+        for(let j = 0; j < merchant.inventory.length; j++){
+            if(merchant.inventory[j].ingredient._id === recipe.ingredients[i].ingredient){
+                recipe.ingredients[i].ingredient = merchant.inventory[j].ingredient;
+                break;
+            }
+        }
+    }
+
     for(let i = 0; i < merchant.recipes.length; i++){
         if(recipe._id === merchant.recipes[i]._id){
             if(remove){
@@ -95,15 +105,6 @@ let updateRecipes = (recipe, remove = false)=>{
     if(isNew){
         merchant.recipes.push(recipe);
         index = merchant.recipes.length - 1;
-    }
-
-    for(let i = 0; i < recipe.ingredients.length; i++){
-        for(let j = 0; j < merchant.inventory.length; j++){
-            if(merchant.inventory[j].ingredient._id === recipe.ingredients[i].ingredient){
-                recipe.ingredients[i].ingredient = merchant.inventory[j].ingredient;
-                break;
-            }
-        }
     }
 
     recipeBookStrandObj.populateRecipes();

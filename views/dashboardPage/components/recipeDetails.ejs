@@ -33,7 +33,6 @@
 
     <div id="recipePrice">
         <h3>Price</h3>
-        
         <p></p>
         <input type="number" min="0" step="0.01" style="display: none;">
     </div>
@@ -43,8 +42,8 @@
     <template id="recipeIngredient">
         <div class="recipeIngredient">
             <p></p>
-            <p></p>
             <input type="number" min="0" step="0.01" style="display: none;">
+            <p></p>
         </div>
     </template>
 
@@ -70,7 +69,9 @@
                     ingredientDiv = template.cloneNode(true);
 
                     ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
-                    ingredientDiv.children[1].innerText = `${recipe.ingredients[i].quantity} ${recipe.ingredients[i].ingredient.unit}`;
+                    ingredientDiv.children[2].innerText = `${recipe.ingredients[i].quantity} ${recipe.ingredients[i].ingredient.unit}`;
+                    ingredientDiv._id = recipe.ingredients[i].ingredient._id;
+                    ingredientDiv.name = recipe.ingredients[i].ingredient.name;
 
                     ingredientList.appendChild(ingredientDiv);
                 }
@@ -78,7 +79,7 @@
                 let price = document.querySelector("#recipePrice");
                 price.children[1].style.display = "block";
                 price.children[2].style.display = "none";
-                document.querySelector("#recipePrice p").innerText = `$${(recipe.price / 100).toFixed(2)}`;
+                price.children[1].innerText = `$${(recipe.price / 100).toFixed(2)}`;
 
                 document.querySelector("#recipeUpdate").style.display = "none";
             },
@@ -95,9 +96,9 @@
                 for(let i = 0; i < ingredientDivs.children.length; i++){
                     let div = ingredientDivs.children[i];
 
-                    div.children[1].style.display = "none";
-                    div.children[2].style.display = "block";
-                    div.children[2].placeholder = div.children[1].innerText;
+                    div.children[2].innerText = this.recipe.ingredients[i].ingredient.unit;
+                    div.children[1].style.display = "block";
+                    div.children[1].placeholder = this.recipe.ingredients[i].quantity;
                 }
 
                 let price = document.querySelector("#recipePrice");
@@ -106,6 +107,45 @@
                 price.children[2].placeholder = price.children[1].innerText;
 
                 document.querySelector("#recipeUpdate").style.display = "block";
+            },
+
+            update: function(){
+                let updatedRecipe = {
+                    _id: this.recipe._id,
+                    name: document.querySelector("#recipeNameIn").value || this.recipe.name,
+                    price: Math.round((document.querySelector("#recipePrice").children[2].value * 100)) || this.recipe.price,
+                    ingredients: []
+                }
+
+                let divs = document.querySelector("#recipeIngredientList").children;
+                for(let i = 0; i < divs.length; i++){
+                    updatedRecipe.ingredients.push({
+                        ingredient: divs[i]._id,
+                        quantity: divs[i].children[1].value || divs[i].children[1].placeholder
+                    });
+                }
+
+                if(validator.recipe(updatedRecipe)){
+                    fetch("/recipe/update", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8"
+                        },
+                        body: JSON.stringify(updatedRecipe)
+                    })
+                        .then((response) => response.json())
+                        .then((response)=>{
+                            if(typeof(response) === "string"){
+                                banner.createError(response);
+                            }else{
+                                updateRecipes(updatedRecipe);
+                                banner.createNotification("Recipe successfully updated");
+                            }
+                        })
+                        .catch((err)=>{
+                            banner.createError("Something went wrong.  Please refresh the page");
+                        })
+                }
             },
 
             remove: function(){
