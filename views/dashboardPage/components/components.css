@@ -400,3 +400,15 @@
     #recipeUpdate{
         margin: 25px 0 0 0;
     }
+
+/* New Order */
+#newOrder{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #newOrderCategories{
+        width: 100%;
+    }

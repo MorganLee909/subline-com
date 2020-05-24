@@ -150,3 +150,38 @@ let recipeDetailsComp = {
         }
     }
 }
+
+let newOrderComp = {
+    display: function(){
+        openSidebar(document.querySelector("#newOrder"));
+
+        console.log(merchant.inventory);
+        let categories = categorizeIngredients(merchant.inventory);
+        let categoriesList = document.querySelector("#newOrderCategories");
+        let template = document.querySelector("#addIngredientsCategory").content.children[0];
+        let ingredientTemplate = document.querySelector("#addIngredientsIngredient").content.children[0];
+
+        for(let i = 0; i < categories.length; i++){
+            let category = template.cloneNode(true);
+
+            category.children[0].children[0].innerText = categories[i].name;
+            category.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(category)};
+            category.children[0].children[1].children[1].style.display = "none";
+            category.children[1].style.display = "none";
+            
+            categoriesList.appendChild(category);
+
+            for(let j = 0; j < categories[i].ingredients.length; j++){
+                let ingredientDiv = ingredientTemplate.cloneNode(true);
+
+                ingredientDiv.children[1].innerText = categories[i].ingredients[j].name;
+                ingredientDiv._id = categories[i].ingredients[j].id;
+                ingredientDiv._name = categories[i].ingredients[j].name;
+                ingredientDiv._unit = categories[i].ingredients[j].unit;
+                ingredientDiv._category = categories[i].name;
+
+                category.children[1].appendChild(ingredientDiv);
+            }
+        }
+    }
+}

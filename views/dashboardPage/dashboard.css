@@ -31,6 +31,13 @@ body{
     padding: 0;
 }
 
+.strandHead{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
 /* Cards */
 .card{
     margin: 0 15px;
@@ -165,14 +172,6 @@ body{
     margin-bottom: 100px;
 }
 
-#ingredientHead{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 50px;
-    width: 100%;
-}
-
 #ingredientHead button{
     display: flex;
     align-items: center;
@@ -186,6 +185,7 @@ body{
     align-items:center;
     overflow-y: auto;
     width: 80%;
+    margin-top: 50px;
 }
 
 .categoryDiv > div:first-of-type{
