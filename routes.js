@@ -4,6 +4,7 @@ const ingredientData = require("./controllers/ingredientData");
 const otherData = require("./controllers/otherData");
 const transactionData = require("./controllers/transactionData");
 const recipeData = require("./controllers/recipeData");
+const orderData = require("./controllers/orderData.js");
 
 module.exports = function(app){
     //Render page
@@ -35,6 +36,7 @@ module.exports = function(app){
     app.put("/recipe/update", recipeData.updateRecipe);
 
     //Orders
+    app.get("/order", orderData.getOrders);
 
     //Other
     // app.post("/purchases/create", otherData.createOrder);
