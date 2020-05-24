@@ -1,7 +1,7 @@
 const express = require("express");
 const session = require("cookie-session");
 const mongoose = require("mongoose");
-const compress = require("compression");
+const compression = require("compression");
 
 const app = express();
 
