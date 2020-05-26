@@ -6,6 +6,7 @@ const OrderSchema = new mongoose.Schema({
         ref: "Merchant",
         required: true
     },
+    orderId: String,
     date: {
         type: Date,
         default: Date.now,

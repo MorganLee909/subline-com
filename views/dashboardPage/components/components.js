@@ -152,36 +152,97 @@ let recipeDetailsComp = {
 }
 
 let newOrderComp = {
+    isPopulated: false,
+
     display: function(){
         openSidebar(document.querySelector("#newOrder"));
 
-        console.log(merchant.inventory);
-        let categories = categorizeIngredients(merchant.inventory);
+        if(!this.isPopulated){
+            let categories = categorizeIngredients(merchant.inventory);
+            let categoriesList = document.querySelector("#newOrderCategories");
+            let template = document.querySelector("#addIngredientsCategory").content.children[0];
+            let ingredientTemplate = document.querySelector("#addIngredientsIngredient").content.children[0];
+
+            for(let i = 0; i < categories.length; i++){
+                let category = template.cloneNode(true);
+
+                category.children[0].children[0].innerText = categories[i].name;
+                category.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(category)};
+                category.children[0].children[1].children[1].style.display = "none";
+                category.children[1].style.display = "none";
+                
+                categoriesList.appendChild(category);
+
+                for(let j = 0; j < categories[i].ingredients.length; j++){
+                    let ingredientDiv = ingredientTemplate.cloneNode(true);
+
+                    ingredientDiv.children[0].innerText = categories[i].ingredients[j].name;
+                    ingredientDiv.children[1].placeholder = categories[i].ingredients[j].unit;
+                    ingredientDiv._id = categories[i].ingredients[j].id;
+                    ingredientDiv._name = categories[i].ingredients[j].name;
+                    ingredientDiv._unit = categories[i].ingredients[j].unit;
+                    ingredientDiv._category = categories[i].name;
+                    
+                    let priceInput = document.createElement("input");
+                    priceInput.type = "number";
+                    priceInput.min = "0";
+                    priceInput.step = "0.01";
+                    priceInput.placeholder = "Total Cost";
+                    ingredientDiv.appendChild(priceInput);
+
+                    category.children[1].appendChild(ingredientDiv);
+                }
+            }
+
+            this.isPopulated = true;
+        }
+    },
+
+    submit: function(){
         let categoriesList = document.querySelector("#newOrderCategories");
-        let template = document.querySelector("#addIngredientsCategory").content.children[0];
-        let ingredientTemplate = document.querySelector("#addIngredientsIngredient").content.children[0];
 
-        for(let i = 0; i < categories.length; i++){
-            let category = template.cloneNode(true);
+        let newOrder = {
+            orderId: "none",
+            date: new Date(),
+            ingredients: []
+        }
 
-            category.children[0].children[0].innerText = categories[i].name;
-            category.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(category)};
-            category.children[0].children[1].children[1].style.display = "none";
-            category.children[1].style.display = "none";
-            
-            categoriesList.appendChild(category);
+        for(let i = 0; i < categoriesList.children.length; i++){
+            for(let j = 0; j < categoriesList.children[i].children[1].children.length; j++){
+                let ingredientDiv = categoriesList.children[i].children[1].children[j];
+                let quantity = ingredientDiv.children[1].value;
 
-            for(let j = 0; j < categories[i].ingredients.length; j++){
-                let ingredientDiv = ingredientTemplate.cloneNode(true);
+                if(quantity !== ""){
+                    let newIngredient = {
+                        ingredient: ingredientDiv._id,
+                        quantity: quantity,
+                        price: ingredientDiv.children[2].value
+                    }
 
-                ingredientDiv.children[1].innerText = categories[i].ingredients[j].name;
-                ingredientDiv._id = categories[i].ingredients[j].id;
-                ingredientDiv._name = categories[i].ingredients[j].name;
-                ingredientDiv._unit = categories[i].ingredients[j].unit;
-                ingredientDiv._category = categories[i].name;
-
-                category.children[1].appendChild(ingredientDiv);
+                    newOrder.ingredients.push(newIngredient);
+                }
             }
         }
+
+        fetch("/order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(newOrder)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    banner.createNotification("New order created");
+                    //update orders list
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("Something went wrong.  Try refreshing the page");
+            });
     }
 }

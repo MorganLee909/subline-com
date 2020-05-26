@@ -37,6 +37,7 @@ module.exports = function(app){
 
     //Orders
     app.get("/order", orderData.getOrders);
+    app.post("/order", orderData.createOrder);
 
     //Other
     // app.post("/purchases/create", otherData.createOrder);
