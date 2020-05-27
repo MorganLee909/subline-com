@@ -38,6 +38,23 @@ body{
     align-items: center;
 }
 
+.rowItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(240, 252, 255);
+    border-radius: 5px;
+    padding: 20px 20px;
+    width: 90%;
+    border: 1px solid gray;
+    cursor: pointer;
+}
+
+    .rowItem:hover{
+        background: rgb(0, 27, 45);
+        color: white;
+    }
+
 /* Cards */
 .card{
     margin: 0 15px;
@@ -274,24 +291,18 @@ body{
         overflow-y: auto;
     }
 
-    .recipeItem{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgb(240, 252, 255);
-        border-radius: 5px;
-        padding: 20px 20px;
-        width: 90%;
-        border: 1px solid gray;
-        cursor: pointer;
-    }
-
-    .recipeItem:hover{
-        background: rgb(0, 27, 45);
-        color: white;
-    }
-
 /* Orders Strand */
 #ordersStrand{
     display: none;
+    align-items: center;
 }
+
+    #orderList{
+        width: 50%;
+        margin-top: 50px;
+    }
+
+        #orderList p:first-of-type{
+            font-weight: bold;
+            font-size: 20px;
+        }

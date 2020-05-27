@@ -14,7 +14,7 @@ window.ordersStrandObj = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        let tbody = document.querySelector("#orderList tbody");
+                        let listDiv = document.querySelector("#orderList");
                         let template = document.querySelector("#order").content.children[0];
 
                         for(let i = 0; i < response.length; i++){
@@ -25,16 +25,20 @@ window.ordersStrandObj = {
                                 totalCost += response[i].ingredients[j].quantity * response[i].ingredients[j].price;
                             }
 
-                            row.children[0].innerText = response[i]._id;
-                            row.children[1].innerText = response[i].ingredients.length;
-                            row.children[2].innerText = response[i].date;
+                            row.children[0].innerText = response[i].orderId;
+                            row.children[1].innerText = `${response[i].ingredients.length} items`;
+                            row.children[2].innerText = new Date(response[i].date).toLocaleDateString("en-US");
                             row.children[3].innerText = totalCost;
+
+                            listDiv.appendChild(row);
                         }
                     }
                 })
                 .catch((err)=>{
                     banner.createError("Unable to retrieve your orders at the moment");
                 });
+
+            this.isPopulated = true;
         }
     }
 }

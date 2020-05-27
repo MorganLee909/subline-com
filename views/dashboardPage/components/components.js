@@ -187,7 +187,7 @@ let newOrderComp = {
                     priceInput.type = "number";
                     priceInput.min = "0";
                     priceInput.step = "0.01";
-                    priceInput.placeholder = "Total Cost";
+                    priceInput.placeholder = "Price Per Unit";
                     ingredientDiv.appendChild(priceInput);
 
                     category.children[1].appendChild(ingredientDiv);

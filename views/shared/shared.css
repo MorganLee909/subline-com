@@ -42,46 +42,6 @@ button::-moz-focus-inner{
     cursor: pointer;
 }
 
-table{
-    border-spacing: 0;
-}
-
-    th{
-        color: rgb(240, 252, 255);
-        padding: 20px;
-        background: rgb(0, 27, 45);
-        color: rgb(255, 99, 107);
-    }
-
-    tr{
-        color: rgb(0, 27, 45);
-        text-align: center;
-    }
-
-    tr, td{
-        padding: 5px 20px;
-    }
-
-    tr:nth-of-type(even){
-        background: rgb(201, 201, 201);
-    }
-
-    tr:nth-of-type(odd){
-        background: rgb(240, 252, 255);
-    }
-
-    .clickableRow{
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-        .clickableRow:hover{
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 0 25px black;
-            border-radius: 50px;
-        }
-
 form{
     display: flex;
     flex-direction: column;

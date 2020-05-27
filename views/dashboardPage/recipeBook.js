@@ -18,7 +18,7 @@ window.recipeBookStrandObj = {
 
         for(let recipe of merchant.recipes){
             let recipeDiv = document.createElement("div");
-            recipeDiv.classList = "recipeItem";
+            recipeDiv.classList = "rowItem";
             recipeDiv.onclick = ()=>{recipeDetailsComp.display(recipe)};
             recipeList.appendChild(recipeDiv);
 
