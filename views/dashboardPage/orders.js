@@ -1,8 +1,10 @@
 window.ordersStrandObj = {
     isPopulated: false,
 
-    display: function(){
+    display: async function(){
         if(!this.isPopulated){
+            window.orders = [];
+
             fetch("/orders", {
                 method: "GET",
                 headers: {
@@ -21,15 +23,18 @@ window.ordersStrandObj = {
                             let row = template.cloneNode(true);
                             let totalCost = 0;
                             
-                            for(let j = 0; j < response[i].ingredients; j++){
+                            for(let j = 0; j < response[i].ingredients.length; j++){
                                 totalCost += response[i].ingredients[j].quantity * response[i].ingredients[j].price;
                             }
 
                             row.children[0].innerText = response[i].orderId;
                             row.children[1].innerText = `${response[i].ingredients.length} items`;
                             row.children[2].innerText = new Date(response[i].date).toLocaleDateString("en-US");
-                            row.children[3].innerText = totalCost;
+                            row.children[3].innerText = (totalCost / 100).toFixed(2);
+                            row._date = row.children[2].innerText;
+                            row._id = response[i]._id;
 
+                            window.orders.push(row);
                             listDiv.appendChild(row);
                         }
                     }

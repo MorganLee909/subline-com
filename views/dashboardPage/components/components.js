@@ -202,8 +202,8 @@ let newOrderComp = {
         let categoriesList = document.querySelector("#newOrderCategories");
 
         let newOrder = {
-            orderId: "none",
-            date: new Date(),
+            orderId: document.querySelector("#orderName").value,
+            date: new Date(document.querySelector("#orderDate").value),
             ingredients: []
         }
 
@@ -211,38 +211,41 @@ let newOrderComp = {
             for(let j = 0; j < categoriesList.children[i].children[1].children.length; j++){
                 let ingredientDiv = categoriesList.children[i].children[1].children[j];
                 let quantity = ingredientDiv.children[1].value;
+                let price = ingredientDiv.children[2].value;
 
-                if(quantity !== ""){
+                if(quantity !== ""  || price !== ""){
                     let newIngredient = {
                         ingredient: ingredientDiv._id,
                         quantity: quantity,
-                        price: ingredientDiv.children[2].value
+                        price: parseInt(price * 100)
                     }
 
                     newOrder.ingredients.push(newIngredient);
                 }
             }
         }
-
-        fetch("/order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-            body: JSON.stringify(newOrder)
-        })
-            .then(response => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    banner.createError(response);
-                }else{
-                    banner.createNotification("New order created");
-                    //update orders list
-                }
+        
+        if(validator.order(newOrder)){
+            fetch("/order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                body: JSON.stringify(newOrder)
             })
-            .catch((err)=>{
-                console.log(err);
-                banner.createError("Something went wrong.  Try refreshing the page");
-            });
+                .then(response => response.json())
+                .then((response)=>{
+                    if(typeof(response) === "string"){
+                        banner.createError(response);
+                    }else{
+                        banner.createNotification("New order created");
+                        updateOrders(newOrder);
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                    banner.createError("Something went wrong.  Try refreshing the page");
+                });
+        }
     }
 }

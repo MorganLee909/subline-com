@@ -183,12 +183,55 @@ let validator = {
         return true;
     },
 
-    isSanitary: function(str){
+    order: function(order, createBanner = true){
+        let errors = [];
+
+        if(!validator.isSanitary(order.orderId, false)){
+            errors.push("Your string contains illegal characters");
+        }
+
+        let now = new Date()
+        if(order.date > now){
+            errors.push("Cannot have a date/time in the future");
+        }
+
+        for(let i = 0; i < order.ingredients.length; i++){
+            if(order.ingredients[i].quantity < 0){
+                errors.push("Quantity cannot be negative");
+                break;
+            }
+
+            if(order.ingredients[i].price < 0){
+                errors.push("Price cannot be negative");
+                break;
+            }
+
+            if(order.ingredients[i].price === "" || order.ingredients[i].quantity === ""){
+                errors.push("Incomplete information");
+            }
+        }
+
+        if(errors.length > 0){
+            if(createBanner){
+                for(let error of errors){
+                    banner.createError(error);
+                }
+            }
+
+            return false;
+        }
+
+        return true;
+    },
+
+    isSanitary: function(str, createBanner = true){
         let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
 
         for(let char of disallowed){
             if(str.includes(char)){
-                banner.createError("Your string contains illegal characters");
+                if(createBanner){
+                    banner.createError("Your string contains illegal characters");
+                }
                 return false;
             }
         }

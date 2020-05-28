@@ -13,7 +13,6 @@ module.exports = {
             {$sort: {date: -1}},
             {$limit: 25},
             {$project: {
-                _id: 0,
                 orderId: 1,
                 date: 1,
                 ingredients: 1
