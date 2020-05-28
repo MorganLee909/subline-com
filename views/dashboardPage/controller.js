@@ -1,5 +1,5 @@
 /* 
-Changes to a different strand
+Switches to a different strand
 Input:
  name: name of the strand.  Must end with "Strand"
 */
@@ -36,7 +36,6 @@ Inputs:
  remove: if true, remove ingredient from inventory
  */
 let updateInventory = (ingredients, remove = false)=>{
-    console.log(ingredients);
     for(let i = 0; i < ingredients.length; i++){
         let isNew = true;
         for(let j = 0; j < merchant.inventory.length; j++){
@@ -44,7 +43,7 @@ let updateInventory = (ingredients, remove = false)=>{
                 if(remove){
                     merchant.inventory.splice(j, 1);
                 }else{
-                    
+
                     merchant.inventory[j].quantity += ingredients[i].quantity;
                 }
 

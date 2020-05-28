@@ -300,6 +300,7 @@ body{
     #orderList{
         width: 50%;
         margin-top: 50px;
+        overflow: auto;
     }
 
         #orderList p:first-of-type{

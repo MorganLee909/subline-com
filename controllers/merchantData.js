@@ -329,7 +329,6 @@ module.exports = {
                         quantity: req.body[i].quantity
                     }));
 
-                    console.log(updateIngredient);
                     updateIngredient.quantity += req.body[i].quantity;
                 }
 
