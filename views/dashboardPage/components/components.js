@@ -215,8 +215,9 @@ let newOrderComp = {
 
                 if(quantity !== ""  || price !== ""){
                     let newIngredient = {
+                        id: ingredientDiv._id,
                         ingredient: ingredientDiv._id,
-                        quantity: quantity,
+                        quantity: parseFloat(quantity),
                         price: parseInt(price * 100)
                     }
 
@@ -240,10 +241,10 @@ let newOrderComp = {
                     }else{
                         banner.createNotification("New order created");
                         updateOrders(newOrder);
+                        updateInventory(newOrder.ingredients);
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("Something went wrong.  Try refreshing the page");
                 });
         }

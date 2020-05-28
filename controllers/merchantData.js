@@ -302,7 +302,7 @@ module.exports = {
     //Inputs:
     //  req.body: array of ingredient data
     //      id: id of ingredient to update
-    //      quantity: New value for the ingredient
+    //      quantity: Change in quantity
     updateMerchantIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -314,6 +314,7 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 for(let i = 0; i < req.body.length; i++){
+                    let updateIngredient;
                     for(let j = 0; j < merchant.inventory.length; j++){
                         if(merchant.inventory[j].ingredient.toString() === req.body[i].id){
                             updateIngredient = merchant.inventory[j];
@@ -325,10 +326,11 @@ module.exports = {
                         date: Date.now(),
                         merchant: req.session.user,
                         ingredient: req.body[i].id,
-                        quantity: req.body[i].quantity - updateIngredient.quantity
+                        quantity: req.body[i].quantity
                     }));
 
-                    updateIngredient.quantity = req.body[i].quantity;
+                    console.log(updateIngredient);
+                    updateIngredient.quantity += req.body[i].quantity;
                 }
 
                 merchant.save()

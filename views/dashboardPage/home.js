@@ -212,7 +212,7 @@ window.homeStrandObj = {
                 if(value !== merchIngredient.quantity){
                     changes.push({
                         id: merchIngredient.ingredient._id,
-                        quantity: value
+                        quantity: value - merchIngredient.quantity
                     });
                 }
             }else{

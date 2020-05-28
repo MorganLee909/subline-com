@@ -19,6 +19,10 @@ window.ordersStrandObj = {
                         let listDiv = document.querySelector("#orderList");
                         let template = document.querySelector("#order").content.children[0];
 
+                        while(listDiv.children.length > 0){
+                            listDiv.removeChild(listDiv.firstChild);
+                        }
+
                         for(let i = 0; i < response.length; i++){
                             let row = template.cloneNode(true);
                             let totalCost = 0;

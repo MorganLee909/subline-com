@@ -29,13 +29,14 @@ If ingredient doesn't exist, add it
 Inputs:
  Array of objects
      id: id of ingredient
-     quantity: updated quantity (optional)
+     quantityChange: change in quantity (optional)
      name: name of ingredient (only for new ingredient)
      category: category of ingredient (only for new ingredient)
      unit: unit of measurement (only for new ingredient)
  remove: if true, remove ingredient from inventory
  */
 let updateInventory = (ingredients, remove = false)=>{
+    console.log(ingredients);
     for(let i = 0; i < ingredients.length; i++){
         let isNew = true;
         for(let j = 0; j < merchant.inventory.length; j++){
@@ -43,7 +44,8 @@ let updateInventory = (ingredients, remove = false)=>{
                 if(remove){
                     merchant.inventory.splice(j, 1);
                 }else{
-                    merchant.inventory[j].quantity = ingredients[i].quantity;
+                    
+                    merchant.inventory[j].quantity += ingredients[i].quantity;
                 }
 
                 isNew = false;
