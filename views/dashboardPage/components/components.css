@@ -435,4 +435,26 @@
         padding: 10px;
     }
 
-    
+/* Order Details */
+#orderDetails{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #orderIngredients{
+        width: 90%;
+    }
+
+        .orderIngredient{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            box-sizing: border-box;
+            background: rgb(240, 252, 255);
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+        }

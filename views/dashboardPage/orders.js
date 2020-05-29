@@ -37,6 +37,7 @@ window.ordersStrandObj = {
                             row.children[3].innerText = (totalCost / 100).toFixed(2);
                             row._date = row.children[2].innerText;
                             row._id = response[i]._id;
+                            row.onclick = ()=>{orderDetailsComp.display(response[i])};
 
                             window.orders.push(row);
                             listDiv.appendChild(row);

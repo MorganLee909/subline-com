@@ -294,3 +294,34 @@ let newIngredientComp = {
         }
     }
 }
+
+let orderDetailsComp = {
+    display: function(order){
+        openSidebar(document.querySelector("#orderDetails"));
+
+        document.querySelector("#orderDetails h1").innerText = order.orderId || order._id;
+        document.querySelector("#orderDetails h3").innerText = new Date(order.date).toLocaleDateString("en-US");
+
+        let ingredientList = document.querySelector("#orderIngredients");
+        while(ingredientList.children.length > 0){
+            ingredientList.removeChild(ingredientList.firstChild);
+        }
+
+        let template = document.querySelector("#orderIngredient").content.children[0];
+        for(let i = 0; i < order.ingredients.length; i++){
+            let ingredient = template.cloneNode(true);
+
+            for(let j = 0; j < merchant.inventory.length; j++){
+                if(order.ingredients[i].ingredient === merchant.inventory[j].ingredient._id){
+                    ingredient.children[0].innerText = `${merchant.inventory[j].ingredient.name}: ${order.ingredients[i].quantity}`;
+                    break;
+                }
+            }
+
+            ingredient.children[1].innerText = `$${(order.ingredients[i].price / 100).toFixed(2)}`;
+            ingredient.children[2].innerText = ((order.ingredients[i].quantity * order.ingredients[i].price) / 100).toFixed(2);
+
+            ingredientList.appendChild(ingredient);
+        }
+    }
+}
