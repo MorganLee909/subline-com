@@ -415,3 +415,24 @@
         align-items: center;
         width: 100%;
     }
+
+/* New Ingredient */
+#newIngredient{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #newIngredient label{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        background: rgb(240, 252, 255);
+        border-radius: 5px;
+        border: 1px solid black;
+        padding: 10px;
+    }
+
+    

@@ -248,5 +248,31 @@ let newOrderComp = {
                     banner.createError("Something went wrong.  Try refreshing the page");
                 });
         }
+    },
+}
+
+let newIngredientComp = {
+    display: function(){
+        openSidebar(document.querySelector("#newIngredient"));
+
+        document.querySelector("#newIngName").value = "";
+        document.querySelector("#newIngCategory").value = "";
+        document.querySelector("#newIngQuantity").value = 0;
+        document.querySelector("#newIngUnit").value = ""
+    },
+
+    submit: function(){
+        let newIngredient = {
+            ingredient: {
+                name: document.querySelector("#newIngName").value,
+                category: document.querySelector("#newIngCategory").value,
+                unit: document.querySelector("#newIngUnit").value
+            },
+            quantity: document.querySelector("#newIngQuantity").value
+        }
+
+        if(validator.ingredient(newIngredient)){
+            console.log("all good");
+        }
     }
 }
