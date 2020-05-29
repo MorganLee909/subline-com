@@ -272,7 +272,25 @@ let newIngredientComp = {
         }
 
         if(validator.ingredient(newIngredient)){
-            console.log("all good");
+            fetch("/ingredients/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                body: JSON.stringify(newIngredient)
+            })
+                .then((response) => response.json())
+                .then((response)=>{
+                    if(typeof(response) === "string"){
+                        banner.createError(response);
+                    }else{
+                        updateInventory([response]);
+                        banner.createNotification("Ingredient successfully created");
+                    }
+                })
+                .catch((err)=>{
+                    banner.createError("Something went wrong.  Try refreshing the page");
+                });
         }
     }
 }

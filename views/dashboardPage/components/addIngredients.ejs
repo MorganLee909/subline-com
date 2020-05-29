@@ -133,7 +133,7 @@
                     let ingredient = this.addIngredientsDiv[i];
 
                     if(ingredient.children[0].checked){
-                        if(!validator.ingredient.quantity(ingredient.children[2].value)){
+                        if(!validator.ingredientQuantity(ingredient.children[2].value)){
                             return;
                         }
 

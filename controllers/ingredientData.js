@@ -15,43 +15,45 @@ module.exports = {
             });
     },
 
-    //TODO - Redirect to merchantData.js rather than adding here
-    //POST - create a single ingredient and then add to the merchant
-    //Inputs: 
-    //  req.body.ingredient: full ingredient to create (name, category, unit)
-    //  req.body.quantity: quantity of ingredient for merchant
-    //Returns:
-    //  item: ingredient and quantity
+    /*
+    POST - create a single ingredient and then add to the merchant
+    req.body = {
+        ingredient: {
+            name: name of ingredient,
+            category: category of ingredient,
+            unit: unit measurement of ingredient
+        },
+        quantity: quantity of ingredient for current merchant
+    }
+    Returns:
+        Same as above, with the _id
+    */
     createIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
             return res.redirect("/");
         }
-        
-        Ingredient.create(req.body.ingredient)
-            .then((ingredient)=>{
-                Merchant.findOne({_id: req.session.user})
-                    .then((merchant)=>{
-                        let item = {
-                            ingredient: ingredient,
-                            quantity: req.body.quantity
-                        }
 
-                        merchant.inventory.push(item);
-                        merchant.save()
-                            .then((merchant)=>{
-                                return res.json(item);
-                            })
-                            .catch((err)=>{
-                                return res.json("Error: ingredient could not be saved");
-                            });
-                    })
-                    .catch((err)=>{
-                        return res.json("Error: could not retrieve user data");
-                    });
+        let ingredientPromise = Ingredient.create((req.body.ingredient));
+        let merchantPromise = Merchant.findOne({_id: req.session.user});
+        let newIngredient;
+
+        Promise.all([ingredientPromise, merchantPromise])
+            .then((response)=>{
+                newIngredient = {
+                    ingredient: response[0],
+                    quantity: req.body.quantity
+                }
+
+                response[1].inventory.push(newIngredient);
+
+                return response[1].save();
+            })
+            .then((response)=>{
+                return res.json(newIngredient);
             })
             .catch((err)=>{
-                return res.json("Error: could not create new ingredient");
+                return res.json("Error: unable to create new ingredient");
             });
     }
 }

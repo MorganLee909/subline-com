@@ -29,7 +29,7 @@ module.exports = function(app){
 
     //Ingredients
     app.get("/ingredients", ingredientData.getIngredients);
-    // app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
+    app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
 
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);

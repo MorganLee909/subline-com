@@ -107,7 +107,7 @@
                     quantity: Number(document.querySelector("#ingredientInput").value)
                 }];
 
-                if(validator.ingredient.quantity(data[0].quantity)){
+                if(validator.ingredientQuantity(data[0].quantity)){
                     fetch("/merchant/ingredients/update", {
                         method: "PUT",
                         headers: {
