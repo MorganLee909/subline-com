@@ -6,10 +6,11 @@ const Transaction = require("../models/transaction");
 const Order = require("../models/order");
 
 module.exports = {
-    //GET - Shows the public landing page
-    //Returns: 
-    //  Error: a single error message (only if there is an error)
-    //Renders landingPage
+    /*
+    GET - Shows the public landing page
+    Return = a single error message (only if there is an error)
+    Renders landingPage
+    */
     landingPage: function(req, res){
         let error = {};
         let isLoggedIn = req.session.isLoggedIn || false;
@@ -23,10 +24,11 @@ module.exports = {
         return res.render("landingPage/landing", {error: error, isLoggedIn: isLoggedIn});
     },
 
-    //GET - Displays the main inventory page for merchants
-    //Returns:
-    //  merchant: the logged in merchant
-    //Renders inventoryPage
+    /*
+    GET - Displays the main inventory page for merchants
+    Returns = the logged in merchant and his/her data
+    Renders inventoryPage
+    */
     displayDashboard: function(req, res){
         if(!req.session.user){
             req.session.error = "You must be logged in to view that page";
@@ -172,63 +174,7 @@ module.exports = {
         return res.render("informationPage/information");
     },
 
-    //GET - Renders the data display page
-    //Returns data
-    displayData: function(req, res){
-        if(!req.session.user){
-            req.session.error = "You must be logged in to view that page";
-            return res.redirect("/");
-        }
-
-        let date = new Date();
-        let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-        let lastDay = new Date();
-
-        let merchTransPromise = new Promise((resolve, reject)=>{
-            Merchant.findOne({_id: req.session.user}, 
-                {name: 1, inventory: 1, recipes: 1, _id: 0})
-                .populate("recipes")
-                .populate("inventory.ingredient")
-                .then((merchant)=>{
-                    Transaction.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
-                        {date: 1, recipes: 1, _id: 0},
-                        {sort: {date: 1}})
-                        .then((transactions)=>{
-                            resolve({merchant: merchant, transactions: transactions});
-                        })
-                        .catch((err)=>{});
-                })
-                .catch((err)=>{});
-        });
-
-        let orderPromise = new Promise((resolve, reject)=>{
-            Order.find({merchant: req.session.user, date: {$gte: firstDay, $lt: lastDay}},
-                {date: 1, ingredients: 1, _id: 0},
-                {sort: {date: 1}})
-                .then((orders)=>{
-                    resolve(orders);
-                })
-                .catch((err)=>{});
-        });
-
-        Promise.all([merchTransPromise, orderPromise])
-            .then((response)=>{
-                let data = {
-                    merchant: response[0].merchant,
-                    transactions: response[0].transactions,
-                    orders: response[1],
-                    dates: [firstDay, lastDay]
-                }
-
-                return res.render("dataPage/data", {data: data});
-            })
-            .catch((err)=>{
-                req.session.error = "Error: unable to retrieve user data";
-
-                return res.redirect("/");
-            });
-    },
-
+    //GET - Renders the page to reset your password
     displayPassReset: function(req, res){
         return res.render("passResetPage/passReset");
     }
