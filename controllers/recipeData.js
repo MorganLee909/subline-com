@@ -2,14 +2,18 @@ const Recipe = require("../models/recipe");
 const Merchant = require("../models/merchant");
 
 module.exports = {
-    //POST - creates a single new recipe
-    //Inputs:
-    //  req.body.name: name of recipes
-    //  req.body.price: price of the recipe
-    //  req.body.ingredients: array of ingredients (object) in recipe
-    //      id: id of ingredient
-    //      quantity: quantity of ingredient in recipe
-    //Returns newly created ingredient
+    /*
+    POST - creates a single new recipe
+    req.body = {
+        name: name of recipe,
+        price: price of the recipe,
+        ingredients: [{
+            id: id of ingredient,
+            quantity: quantity of ingredient in recipe
+        }]
+    }
+    Return = newly created recipe in same form as above, with _id
+    */
     createRecipe: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -45,15 +49,18 @@ module.exports = {
             });
     },
 
-    //PUT - Update a single recipe
-    //Inputs:
-    //  req.body: An object representing a single recipe
-    //      _id: id of recipe
-    //      name: name of recipe
-    //      price: price of recipe
-    //      ingredients: list of objects representing ingredients
-    //          ingredient: id of ingredient
-    //          quantity: quantity of ingredient
+    /*
+    PUT - Update a single recipe
+    req.body = {
+        _id: id of recipe,
+        name: name of recipe,
+        price: price of recipe,
+        ingredients: [{
+            ingredient: id of ingredient,
+            quantity: quantity of ingredient in recipe
+        }]
+    }
+    */
     updateRecipe: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
