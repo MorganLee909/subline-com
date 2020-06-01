@@ -1,6 +1,6 @@
 window.ingredientsStrandObj = {
     isPopulated: false,
-    addIngredientsDiv: [],
+    ingredients: [],
 
     display: function(){
         if(!this.isPopulated){
@@ -17,7 +17,7 @@ window.ingredientsStrandObj = {
         while(ingredientStrand.children.length > 0){
             ingredientStrand.removeChild(ingredientStrand.firstChild);
         }
-        for(let category of categories){
+        for(let i = 0; i < categories.length; i++){
             let categoryDiv = document.createElement("div");
             categoryDiv.classList = "categoryDiv"
             ingredientStrand.appendChild(categoryDiv);
@@ -26,7 +26,7 @@ window.ingredientsStrandObj = {
             categoryDiv.appendChild(headerDiv);
             
             let headerTitle = document.createElement("p");
-            headerTitle.innerText = category.name;
+            headerTitle.innerText = categories[i].name;
             headerDiv.appendChild(headerTitle);
 
             let ingredientsDiv = document.createElement("div");
@@ -39,14 +39,16 @@ window.ingredientsStrandObj = {
             headerButton.onclick = ()=>{this.toggleCategory(ingredientsDiv, headerButton)};
             headerDiv.appendChild(headerButton);
 
-            for(let ingredient of category.ingredients){
+            for(let j = 0; j < categories[i].ingredients.length; j++){
                 let ingredientDiv = document.createElement("div");
                 ingredientDiv.classList = "ingredient";
-                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient, category)};
+                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(categories[i].ingredients[j], categories[i])};
                 ingredientsDiv.appendChild(ingredientDiv);
+                ingredientDiv._name = categories[i].ingredients[j].name.toLowerCase();
+                ingredientDiv._unit = categories[i].ingredients[j].unit.toLowerCase();
 
                 let ingredientName = document.createElement("p");
-                ingredientName.innerText = ingredient.name;
+                ingredientName.innerText = categories[i].ingredients[j].name;
                 ingredientDiv.appendChild(ingredientName);
 
                 let spacer = document.createElement("hr");
@@ -54,9 +56,22 @@ window.ingredientsStrandObj = {
                 ingredientDiv.appendChild(spacer);
 
                 let ingredientData = document.createElement("p");
-                ingredientData.innerText = `${ingredient.quantity} ${ingredient.unit}`;
+                ingredientData.innerText = `${categories[i].ingredients[j].quantity} ${categories[i].ingredients[j].unit}`;
                 ingredientDiv.appendChild(ingredientData);
+
+                this.ingredients.push(ingredientDiv);
             }
+        }
+    },
+
+    displayIngredientsOnly: function(ingredients){
+        let ingredientDiv = document.querySelector("#categoryList");
+
+        while(ingredientDiv.children.length > 0){
+            ingredientDiv.removeChild(ingredientDiv.firstChild);
+        }
+        for(let i = 0; i < ingredients.length; i++){
+            ingredientDiv.appendChild(ingredients[i]);
         }
     },
 
@@ -69,5 +84,22 @@ window.ingredientsStrandObj = {
             button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
             div.style.display = "none";
         }
+    },
+
+    search: function(){
+        let input = document.querySelector("#ingredientSearch").value.toLowerCase();
+        if(input === ""){
+            this.populateIngredients();
+            return;
+        }
+
+        let matchingIngredients = [];
+        for(let i = 0; i < this.ingredients.length; i++){
+            if(this.ingredients[i]._name.includes(input)){
+                matchingIngredients.push(this.ingredients[i]);
+            }
+        }
+
+        this.displayIngredientsOnly(matchingIngredients);
     }
 }
