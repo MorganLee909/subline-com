@@ -6,11 +6,14 @@ const Order = require("../models/order");
 const Transaction = require("../models/transaction");
 
 module.exports = {
-    //POST - logs the user in
-    //Inputs:
-    //  req.body.email
-    //  req.body.password
-    //Redirects to "/dashboard" on success
+    /*
+    POST - logs the user in
+    req.body = {
+        email: email of the user,
+        password: password of the user
+    }
+    Redirects to /dashboard
+    */
     login: function(req, res){
         Merchant.findOne({email: req.body.email.toLowerCase()})
             .then((merchant)=>{
@@ -36,8 +39,10 @@ module.exports = {
             });
     },
 
-    //GET - logs the user out
-    //Redirects to "/"
+    /*
+    GET - logs the user out
+    Redirects to /
+    */
     logout: function(req, res){
         req.session.user = undefined;
 
@@ -96,7 +101,11 @@ module.exports = {
             });
     },
 
+    /*
+    POST - Changes the users password
+    */
     resetPassword: function(req, res){
+        console.log(req.body);
         Merchant.findOne({password: req.body.hash})
             .then((merchant)=>{
                 if(merchant){

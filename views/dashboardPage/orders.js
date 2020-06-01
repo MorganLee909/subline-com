@@ -23,9 +23,7 @@ window.ordersStrandObj = {
                             listDiv.removeChild(listDiv.firstChild);
                         }
 
-                        console.log(response);
                         for(let i = 0; i < response.length; i++){
-                            console.log(response[i])
                             let row = template.cloneNode(true);
                             let totalCost = 0;
                             
