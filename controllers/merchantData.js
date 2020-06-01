@@ -57,10 +57,8 @@ module.exports = {
     Redirects to /dashboard
     */
     createMerchantClover: async function(req, res){
-        console.log("function ran")
         axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
             .then((response)=>{
-                console.log("axios 1 successful");
                 let merchant = new Merchant({
                     name: response.data.name,
                     pos: "clover",
@@ -74,7 +72,6 @@ module.exports = {
 
                 axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
                     .then((response)=>{
-                        console.log("axsios 2 successful");
                         let recipes = [];
                         for(let item of response.data.elements){
                             let recipe = new Recipe({
@@ -91,7 +88,6 @@ module.exports = {
 
                         Recipe.create(recipes)
                             .catch((err)=>{
-                                console.log(err);
                                 req.session.error = "Error: unable to create your recipes from Clover.  Try using updating your recipes on the recipe page."
                             })
 
@@ -103,14 +99,12 @@ module.exports = {
                                 return res.redirect("/dashboard");
                             })
                             .catch((err)=>{
-                                console.log(err);
                                 req.session.error = "Error: unable to save data from Clover";
 
                                 return res.redirect("/");
                             });
                     })
                     .catch((err)=>{
-                        console.log(err);
                         req.session.error = "Error: unable to retrieve necessary data from Clover";
                         return res.redirect("/");
                     })
@@ -118,7 +112,6 @@ module.exports = {
                 
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "Error: Unable to retrieve data from Clover";
 
                 return res.redirect("/");
