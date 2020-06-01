@@ -3,6 +3,9 @@ const Order = require("../models/order");
 const Merchant = require("../models/merchant");
 
 module.exports = {
+    /*
+    GET - Creates a 5000 transactions for logged in merchant for testing
+    */
     populate: function(req, res){
         if(!req.session.user){
             res.session.error = "Must be logged in to do that";
@@ -44,7 +47,7 @@ module.exports = {
 
                 Transaction.create(newTransactions)
                     .then((transactions)=>{
-                        return res.redirect("/data");
+                        return res.redirect("/dashboard");
                     })
                     .catch((err)=>{
                         return;
