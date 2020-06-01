@@ -103,12 +103,16 @@ module.exports = {
 
     /*
     POST - Changes the users password
+    req.body = {
+        pass: new password,
+        confirmPass: new password confirmation,
+        hash: hashed version of old password
+    }
     */
     resetPassword: function(req, res){
-        console.log(req.body);
         Merchant.findOne({password: req.body.hash})
             .then((merchant)=>{
-                if(merchant){
+                if(merchant && req.body.pass === req.body.confirmPass){
                     let salt = bcrypt.genSaltSync(10);
                     let hash = bcrypt.hashSync(req.body.pass, salt);
 

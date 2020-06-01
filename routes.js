@@ -20,7 +20,7 @@ module.exports = function(app){
     app.put("/merchant/ingredients/add", merchantData.addMerchantIngredient);
     app.delete("/merchant/ingredients/remove/:id", merchantData.removeMerchantIngredient);
     app.put("/merchant/ingredients/update", merchantData.updateMerchantIngredient);
-    // app.post("/merchant/password", merchantData.updatePassword);
+    app.post("/merchant/password", merchantData.updatePassword);
 
     //Ingredients
     app.get("/ingredients", ingredientData.getIngredients);
