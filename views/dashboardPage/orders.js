@@ -23,11 +23,14 @@ window.ordersStrandObj = {
                             listDiv.removeChild(listDiv.firstChild);
                         }
 
+                        console.log(response);
                         for(let i = 0; i < response.length; i++){
+                            console.log(response[i])
                             let row = template.cloneNode(true);
                             let totalCost = 0;
                             
                             for(let j = 0; j < response[i].ingredients.length; j++){
+                                
                                 totalCost += response[i].ingredients[j].quantity * response[i].ingredients[j].price;
                             }
 
