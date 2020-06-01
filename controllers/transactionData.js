@@ -4,7 +4,7 @@ const Merchant = require("../models/merchant");
 
 module.exports = {
     /*
-    GET - Creates a 5000 transactions for logged in merchant for testing
+    GET - Creates 5000 transactions for logged in merchant for testing
     */
     populate: function(req, res){
         if(!req.session.user){

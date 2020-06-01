@@ -7,13 +7,16 @@ const InventoryAdjustment = require("../models/inventoryAdjustment");
 const RecipeChange = require("../models/recipeChange");
 
 module.exports = {
-    //POST - Create a new merchant with no POS system
-    //Inputs:
-    //  req.body.name: restaurant name
-    //  req.body.email: registration email
-    //  req.body.password: password
-    //  req.body.confirmPassword: confirmation password
-    //Redirects to /dashboard
+    /*
+    POST - Create a new merchant with no POS system
+    req.body = {
+        name: retaurant name,
+        email: registration email,
+        password: password,
+        confirmPassword: confirmation password
+    }
+    Redirects to /dashboard
+    */
     createMerchantNone: function(req, res){
         if(req.body.password === req.body.confirmPassword){
             let salt = bcrypt.genSaltSync(10);
@@ -49,10 +52,13 @@ module.exports = {
         }
     },
 
-    //POST - Creates a Clover merchant from all entered data
-    //Inputs:
-    //  req.body.data: All data from frontend in form of merchant model
-    //Redirect to /dashboard
+    /*
+    POST - Creates a Clover merchant from all entered data
+    req.body = {
+        data: All data from frontend in the form of the merchant model
+    }
+    Redirects to /dashboard
+    */
     createMerchantClover: async function(req, res){
         axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
             .then((response)=>{
@@ -115,7 +121,7 @@ module.exports = {
             });
     },
 
-    //DELETE - removes a single recipe
+    //DELETE - removes a single recipe from the merchant
     removeRecipe: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -148,9 +154,10 @@ module.exports = {
             });
     },
 
+    /*
     //POST - Adds an ingredient to merchant's inventory
-    //Inputs:
-    //  req.body: array of objects (each object is a full ingredient)
+    req.body = [ingredient objects]
+    */
     addMerchantIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -220,11 +227,13 @@ module.exports = {
             });
     },
 
-    //POST - Update the quantity for a merchant inventory item
-    //Inputs:
-    //  req.body: array of ingredient data
-    //      id: id of ingredient to update
-    //      quantity: Change in quantity
+    /*
+    POST - Update the quantity for a merchant inventory item
+    req.body = [{
+        id: id of ingredient to update,
+        quantity: change in quantity
+    }]
+    */
     updateMerchantIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
@@ -270,11 +279,13 @@ module.exports = {
             });        
     },
 
+    /*
     //POST - Update merchant password
-    //Inputs:
-    //  req.body.oldPass:  current merchant password (supposedly)
-    //  req.body.newPass:  replacement password
-    //Returns: Nothing
+    req.body = {
+        oldPass: current merchant password (supposedly),
+        newPass: replacement password
+    }
+    */
     updatePassword: function(req, res){
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
