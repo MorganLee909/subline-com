@@ -5,7 +5,7 @@ window.ordersStrandObj = {
         if(!this.isPopulated){
             window.orders = [];
 
-            fetch("/orders", {
+            fetch("/order", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"

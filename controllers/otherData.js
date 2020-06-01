@@ -6,42 +6,6 @@ const Order = require("../models/order");
 const Transaction = require("../models/transaction");
 
 module.exports = {
-    //POST - Creates a new order for a merchant
-    //Inputs:
-    //  req.body: list of orders (ingredient id and quantity)
-    createOrder: function(req, res){
-        if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let order of req.body){
-                    let merchantIngredient = merchant.inventory.find(i => i.ingredient._id.toString() === order.ingredient);
-                    merchantIngredient.quantity += Number(order.quantity);
-                }
-                
-                merchant.save()
-                    .then((merchant)=>{
-                        res.json({});
-                    })
-                    .catch((err)=>{
-                        return res.json("Error: Unable to save data");
-                    });
-            })
-            .catch((err)=>{
-                return res.json("Error: Unable to retrieve user data");
-            });
-
-            let order = new Order({
-                merchant: req.session.user,
-                date: Date.now(),
-                ingredients: req.body
-            });
-            order.save().catch((err)=>{});
-    },
-
     //POST - logs the user in
     //Inputs:
     //  req.body.email
@@ -129,61 +93,6 @@ module.exports = {
             .catch((err)=>{
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
-            });
-    },
-
-    //POST - Gets transactions and orders between 2 dates for a merchant
-    //Inputs:
-    //  req.body.from = start date
-    //  req.body.to = end date
-    //Returns:
-    //  transactions = list of transactions between the dates provided
-    //  orders = list of orders between the dates provided
-    getData: function(req, res){
-        if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
-            return res.redirect("/");
-        }
-
-        let promiseList = [];
-
-        for(let i = 0; i < req.body.dates.length; i+=2){
-            promiseList.push(new Promise((resolve, reject)=>{
-                Transaction.find({merchant: req.session.user, date: {$gte: req.body.dates[i], $lt: req.body.dates[i+1]}},
-                    {date: 1, recipes: 1, _id: 0},
-                    {sort: {date: 1}})
-                    .then((transactions)=>{
-                        resolve(transactions);
-                    })
-                    .catch((err)=>{});
-            }));
-
-            promiseList.push(new Promise((resolve, reject)=>{
-                Order.find({merchant: req.session.user, date: {$gte: req.body.dates[i], $lt: req.body.dates[i+1]}},
-                    {date: 1, ingredients: 1, _id: 0},
-                    {sort: {date: 1}})
-                    .then((orders)=>{
-                        resolve(orders);
-                    })
-                    .catch((err)=>{})
-            }));
-        }
-
-        Promise.all(promiseList)
-            .then((response)=>{
-                let newList = [];
-
-                for(let i = 0; i < response.length; i+=2){
-                    newList.push({
-                        transactions: response[i],
-                        orders: response[i+1]
-                    });
-                }
-
-                return res.json(newList);
-            })
-            .catch((err)=>{
-                return res.json("Error: unable to retrieve user data");
             });
     },
 
