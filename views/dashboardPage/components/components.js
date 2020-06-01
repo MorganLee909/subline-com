@@ -39,11 +39,18 @@ let recipeDetailsComp = {
     edit: function(){
         let ingredientDivs = document.querySelector("#recipeIngredientList");
 
-        let name = document.querySelector("#recipeName");
-        let nameIn = document.querySelector("#recipeNameIn");
-        name.style.display = "none";
-        nameIn.style.display = "block";
-        nameIn.placeholder = name.innerText;
+        if(merchant.pos === "none"){
+            let name = document.querySelector("#recipeName");
+            let nameIn = document.querySelector("#recipeNameIn");
+            name.style.display = "none";
+            nameIn.style.display = "block";
+            nameIn.placeholder = name.innerText;
+
+            let price = document.querySelector("#recipePrice");
+            price.children[1].style.display = "none";
+            price.children[2].style.display = "block";
+            price.children[2].placeholder = price.children[1].innerText;
+        }
 
         for(let i = 0; i < ingredientDivs.children.length; i++){
             let div = ingredientDivs.children[i];
@@ -57,10 +64,7 @@ let recipeDetailsComp = {
 
         document.querySelector("#addRecIng").style.display = "flex";
 
-        let price = document.querySelector("#recipePrice");
-        price.children[1].style.display = "none";
-        price.children[2].style.display = "block";
-        price.children[2].placeholder = price.children[1].innerText;
+        
 
         document.querySelector("#recipeUpdate").style.display = "flex";
     },
