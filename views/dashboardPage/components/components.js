@@ -312,8 +312,11 @@ let orderDetailsComp = {
         }
 
         let template = document.querySelector("#orderIngredient").content.children[0];
+        let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredient = template.cloneNode(true);
+            let price = (order.ingredients[i].quantity * order.ingredients[i].price) / 100;
+            grandTotal += price;
 
             for(let j = 0; j < merchant.inventory.length; j++){
                 if(order.ingredients[i].ingredient === merchant.inventory[j].ingredient._id){
@@ -323,10 +326,12 @@ let orderDetailsComp = {
             }
 
             ingredient.children[1].innerText = `$${(order.ingredients[i].price / 100).toFixed(2)}`;
-            ingredient.children[2].innerText = ((order.ingredients[i].quantity * order.ingredients[i].price) / 100).toFixed(2);
+            ingredient.children[2].innerText = price.toFixed(2);
 
             ingredientList.appendChild(ingredient);
         }
+
+        document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
     }
 }
 
