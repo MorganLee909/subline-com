@@ -414,8 +414,8 @@ let addIngredientsComp = {
         for(let i = 0; i < this.addIngredientsDiv.length; i++){
             let ingredient = this.addIngredientsDiv[i];
 
-            if(ingredient.children[0].checked){
-                if(!validator.ingredientQuantity(ingredient.children[2].value)){
+            if(ingredient.children[1].value !== ""){
+                if(!validator.ingredientQuantity(ingredient.children[1].value)){
                     return;
                 }
 
@@ -426,7 +426,7 @@ let addIngredientsComp = {
                         category: ingredient._category,
                         unit: ingredient._unit
                     },
-                    quantity: ingredient.children[2].value,
+                    quantity: ingredient.children[1].value,
                 });
             }
         }
@@ -439,9 +439,10 @@ let addIngredientsComp = {
                 },
                 body: JSON.stringify(addIngredients)
             })
+                .then((response) => response.json())
                 .then((response)=>{
-                    if(typeof(response.data) === "string"){
-                        banner.createError(response.data);
+                    if(typeof(response) === "string"){
+                        banner.createError(response);
                     }else{
                         banner.createNotification("Ingredients added");
                         updateInventory(addIngredients);
