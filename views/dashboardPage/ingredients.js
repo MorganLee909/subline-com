@@ -4,14 +4,20 @@ window.ingredientsStrandObj = {
 
     display: function(){
         if(!this.isPopulated){
-            this.populateIngredients();
+            this.populateByProperty("category");
 
             this.isPopulated = true;
         }
     },
 
-    populateIngredients: function(){
-        let categories = categorizeIngredients(merchant.inventory);
+    populateByProperty: function(property){
+        let categories;
+        if(property === "category"){
+            categories = categorizeIngredients(merchant.inventory);
+        }else if(property === "unit"){
+            categories = unitizeIngredients(merchant.inventory);
+        }
+        
         let ingredientStrand = document.querySelector("#categoryList");
         let categoryTemplate = document.querySelector("#categoryDiv").content.children[0];
         let ingredientTemplate = document.querySelector("#ingredient").content.children[0];
@@ -55,7 +61,6 @@ window.ingredientsStrandObj = {
         }
     },
 
-    //Open or close the list of ingredients for a category
     toggleCategory: function(div, button){
         if(div.style.display === "none"){
             button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
@@ -69,7 +74,7 @@ window.ingredientsStrandObj = {
     search: function(){
         let input = document.querySelector("#ingredientSearch").value.toLowerCase();
         if(input === ""){
-            this.populateIngredients();
+            this.populateByProperty("category");
             return;
         }
 
@@ -91,7 +96,12 @@ window.ingredientsStrandObj = {
         document.querySelector("#ingredientSearch").value = "";
 
         if(sortType === "category"){
-            this.populateIngredients();
+            this.populateByProperty("category");
+            return;
+        }
+
+        if(sortType === "unit"){
+            this.populateByProperty("unit");
             return;
         }
 
