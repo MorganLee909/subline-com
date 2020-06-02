@@ -12,6 +12,7 @@ window.ingredientsStrandObj = {
 
     populateIngredients: function(){
         let categories = categorizeIngredients(merchant.inventory);
+        this.ingredients = [];
 
         let ingredientStrand = document.querySelector("#categoryList");
         while(ingredientStrand.children.length > 0){
