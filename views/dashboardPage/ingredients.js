@@ -73,8 +73,11 @@ window.ingredientsStrandObj = {
 
     search: function(){
         let input = document.querySelector("#ingredientSearch").value.toLowerCase();
+        document.querySelector("#ingredientSelect").selectedIndex = 0;
+
         if(input === ""){
             this.populateByProperty("category");
+            document.querySelector("#ingredientClearButton").style.display = "none";
             return;
         }
 
@@ -85,6 +88,7 @@ window.ingredientsStrandObj = {
             }
         }
 
+        document.querySelector("#ingredientClearButton").style.display = "inline";
         this.displayIngredientsOnly(matchingIngredients);
     },
 
@@ -105,7 +109,16 @@ window.ingredientsStrandObj = {
             return;
         }
 
+        document.querySelector("#ingredientClearButton").style.display = "inline";
         let sortedIngredients = this.ingredients.slice().sort((a, b)=> (a[sortType] > b[sortType]) ? 1 : -1);
         this.displayIngredientsOnly(sortedIngredients);
+    },
+
+    clearSorting: function(button){
+        document.querySelector("#ingredientSearch").value = "";
+        document.querySelector("#ingredientSelect").selectedIndex = 0;
+        document.querySelector("#ingredientClearButton").style.display = "none";
+
+        this.populateByProperty("category");
     }
 }

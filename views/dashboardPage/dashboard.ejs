@@ -63,15 +63,23 @@
                     </button>
                 </div>
 
-                <div>
-                    <input id="ingredientSearch" type="text" placeholder="filter" oninput="ingredientsStrandObj.search()">
+                <div class="searchBar">
+                    <input id="ingredientSearch" type="text" placeholder="FILTER" oninput="ingredientsStrandObj.search()">
 
-                    <select onchange="ingredientsStrandObj.sort(this.value)">Sort Bys:
+                    <select id="ingredientSelect" onchange="ingredientsStrandObj.sort(this.value)">Sort Bys:
                         <option value="">Sort By:</option>
                         <option value="_name">Ingredient</option>
                         <option value="category">Category</option>
                         <option value="unit">Unit of Measurement</option>
                     </select>
+
+                    <button id="ingredientClearButton" class="clearButton" onclick="ingredientsStrandObj.clearSorting()" style="display: none;">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </button>
                 </div>
 
                 <div id="categoryList"></div>

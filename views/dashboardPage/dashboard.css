@@ -55,6 +55,27 @@ body{
         color: white;
     }
 
+.searchBar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.clearButton{
+    background: none;
+    border: none;
+    color: red;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+}
+
+    .clearButton:hover{
+        background: rgb(0, 27, 45);
+    }
+
 /* Cards */
 .card{
     margin: 0 15px;
