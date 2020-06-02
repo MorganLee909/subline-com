@@ -12,54 +12,33 @@ window.ingredientsStrandObj = {
 
     populateIngredients: function(){
         let categories = categorizeIngredients(merchant.inventory);
+        let ingredientStrand = document.querySelector("#categoryList");
+        let categoryTemplate = document.querySelector("#categoryDiv").content.children[0];
+        let ingredientTemplate = document.querySelector("#ingredient").content.children[0];
         this.ingredients = [];
 
-        let ingredientStrand = document.querySelector("#categoryList");
         while(ingredientStrand.children.length > 0){
             ingredientStrand.removeChild(ingredientStrand.firstChild);
         }
+
         for(let i = 0; i < categories.length; i++){
-            let categoryDiv = document.createElement("div");
-            categoryDiv.classList = "categoryDiv"
+            let categoryDiv = categoryTemplate.cloneNode(true);
+            categoryDiv.children[0].children[0].innerText = categories[i].name;
+            categoryDiv.children[0].children[1].onclick = ()=>{this.toggleCategory(categoryDiv.children[1], categoryDiv.children[0].children[1])};
+            categoryDiv.children[1].style.display = "none";
             ingredientStrand.appendChild(categoryDiv);
 
-            let headerDiv = document.createElement("div");
-            categoryDiv.appendChild(headerDiv);
-            
-            let headerTitle = document.createElement("p");
-            headerTitle.innerText = categories[i].name;
-            headerDiv.appendChild(headerTitle);
-
-            let ingredientsDiv = document.createElement("div");
-            ingredientsDiv.classList = "ingredientsDiv";
-            ingredientsDiv.style.display = "none";
-            categoryDiv.appendChild(ingredientsDiv);
-
-            let headerButton = document.createElement("button");
-            headerButton.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
-            headerButton.onclick = ()=>{this.toggleCategory(ingredientsDiv, headerButton)};
-            headerDiv.appendChild(headerButton);
-
             for(let j = 0; j < categories[i].ingredients.length; j++){
-                let ingredientDiv = document.createElement("div");
-                ingredientDiv.classList = "ingredient";
-                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(categories[i].ingredients[j], categories[i])};
-                ingredientsDiv.appendChild(ingredientDiv);
-                ingredientDiv._name = categories[i].ingredients[j].name.toLowerCase();
-                ingredientDiv._unit = categories[i].ingredients[j].unit.toLowerCase();
+                let ingredient = categories[i].ingredients[j];
+                let ingredientDiv = ingredientTemplate.cloneNode(true);
 
-                let ingredientName = document.createElement("p");
-                ingredientName.innerText = categories[i].ingredients[j].name;
-                ingredientDiv.appendChild(ingredientName);
+                ingredientDiv.children[0].innerText = ingredient.name;
+                ingredientDiv.children[2].innerText = `${ingredient.quantity} ${ingredient.unit}`;
+                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient, categories[i])};
+                ingredientDiv._name = ingredient.name.toLowerCase();
+                ingredientDiv._unit = ingredient.unit.toLowerCase();
 
-                let spacer = document.createElement("hr");
-                spacer.classList = "ingredientSpacer";
-                ingredientDiv.appendChild(spacer);
-
-                let ingredientData = document.createElement("p");
-                ingredientData.innerText = `${categories[i].ingredients[j].quantity} ${categories[i].ingredients[j].unit}`;
-                ingredientDiv.appendChild(ingredientData);
-
+                categoryDiv.children[1].appendChild(ingredientDiv);
                 this.ingredients.push(ingredientDiv);
             }
         }

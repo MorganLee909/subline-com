@@ -66,7 +66,7 @@
                 <div>
                     <input id="ingredientSearch" type="text" placeholder="filter" oninput="ingredientsStrandObj.search()">
 
-                    <select onchange="ingredientsStrandObj.sort(this.value)">
+                    <select onchange="ingredientsStrandObj.sort(this.value)">Sort Bys:
                         <option value="">Sort By:</option>
                         <option value="_name">Ingredient</option>
                         <option value="category">Category</option>
@@ -75,6 +75,32 @@
                 </div>
 
                 <div id="categoryList"></div>
+
+                <template id="categoryDiv">
+                    <div class="categoryDiv">
+                        <div>
+                            <p></p>
+
+                            <button>
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="ingredientsDiv"></div>
+                    </div>
+                </template>
+
+                <template id="ingredient">
+                    <div class="ingredient">
+                        <p></p>
+
+                        <hr class="ingredientSpacer">
+
+                        <p></p>
+                    </div>
+                </template>
             </div>
 
             <div id="recipeBookStrand" class="strand">
