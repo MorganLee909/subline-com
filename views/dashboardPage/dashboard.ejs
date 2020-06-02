@@ -63,7 +63,16 @@
                     </button>
                 </div>
 
-                <input id="ingredientSearch" type="text" placeholder="filter" oninput="ingredientsStrandObj.search()">
+                <div>
+                    <input id="ingredientSearch" type="text" placeholder="filter" oninput="ingredientsStrandObj.search()">
+
+                    <select onchange="ingredientsStrandObj.sort(this.value)">
+                        <option value="">Sort By:</option>
+                        <option value="_name">Ingredient</option>
+                        <option value="category">Category</option>
+                        <option value="_unit">Unit of Measurement</option>
+                    </select>
+                </div>
 
                 <div id="categoryList"></div>
             </div>

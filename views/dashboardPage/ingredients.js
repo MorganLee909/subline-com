@@ -102,5 +102,21 @@ window.ingredientsStrandObj = {
         }
 
         this.displayIngredientsOnly(matchingIngredients);
+    },
+
+    sort: function(sortType){
+        if(sortType === ""){
+            return;
+        }
+
+        document.querySelector("#ingredientSearch").value = "";
+
+        if(sortType === "category"){
+            this.populateIngredients();
+            return;
+        }
+
+        let sortedIngredients = this.ingredients.slice().sort((a, b)=> (a[sortType] > b[sortType]) ? 1 : -1);
+        this.displayIngredientsOnly(sortedIngredients);
     }
 }
