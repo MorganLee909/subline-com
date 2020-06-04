@@ -29,7 +29,7 @@ If ingredient doesn't exist, add it
 Inputs:
  Array of objects
      id: id of ingredient
-     quantityChange: change in quantity (optional)
+     quantityChange: change in quantity (if not removing)
      name: name of ingredient (only for new ingredient)
      category: category of ingredient (only for new ingredient)
      unit: unit of measurement (only for new ingredient)
@@ -57,7 +57,9 @@ let updateInventory = (ingredients, remove = false)=>{
         }
     }
 
+    console.log("updating");
     homeStrandObj.drawInventoryCheckCard();
+    console.log("still updating?");
     ingredientsStrandObj.populateByProperty("category");
     addIngredientsComp.isPopulated = false;
     closeSidebar();

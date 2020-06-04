@@ -74,39 +74,34 @@ window.homeStrandObj = {
             num = 5;
         }
         let rands = [];
-            for(let i = 0; i < num; i++){
-                let rand = Math.floor(Math.random() * merchant.inventory.length);
+        for(let i = 0; i < num; i++){
+            let rand = Math.floor(Math.random() * merchant.inventory.length);
 
-                if(rands.includes(rand)){
-                    i--;
-                }else{
-                    rands[i] = rand;
-                }
+            if(rands.includes(rand)){
+                i--;
+            }else{
+                rands[i] = rand;
             }
+        }
 
-            let ul = document.querySelector("#inventoryCheckCard ul");
-            while(ul.children.length > 0){
-                ul.removeChild(ul.firstChild);
-            }
-            for(let i = 0; i < rands.length; i++){
-                let li = document.createElement("li");
-                li.classList = "flexRow";
-                li.ingredientIndex = rands[i];
-                ul.appendChild(li);
+        let ul = document.querySelector("#inventoryCheckCard ul");
+        let template = document.querySelector("#ingredientCheck").content.children[0];
+        while(ul.children.length > 0){
+            ul.removeChild(ul.firstChild);
+        }
+        for(let i = 0; i < rands.length; i++){
+            let ingredientCheck = template.cloneNode(true);
+            let input = ingredientCheck.children[1].children[1];
 
-                let name = document.createElement("p");
-                name.innerText = merchant.inventory[rands[i]].ingredient.name;
-                li.appendChild(name);
+            ingredientCheck.ingredientIndex = rands[i];
+            ingredientCheck.children[0].innerText = merchant.inventory[rands[i]].ingredient.name;
+            ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
+            input.value = merchant.inventory[rands[i]].quantity;
+            ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
+            ingredientCheck.children[2].innerText = merchant.inventory[rands[i]].ingredient.unit;
 
-                let input = document.createElement("input");
-                input.type = "number";
-                input.value = merchant.inventory[rands[i]].quantity;
-                li.appendChild(input);
-
-                let label = document.createElement("p");
-                label.innerText = merchant.inventory[rands[i]].ingredient.unit;
-                li.appendChild(label);
-            }
+            ul.appendChild(ingredientCheck);
+        }
     },
 
     drawPopularCard: function(){
@@ -199,15 +194,15 @@ window.homeStrandObj = {
     },
 
     submitInventoryCheck: function(){
-        let lis = document.querySelectorAll("#inventoryCheckCard ul li");
+        let lis = document.querySelectorAll("#inventoryCheckCard li");
 
         let changes = [];
 
         for(let i = 0; i < lis.length; i++){
-            if(lis[i].children[1].value >= 0){
+            if(lis[i].children[1].children[1].value >= 0){
                 let merchIngredient = merchant.inventory[lis[i].ingredientIndex];
 
-                let value = parseInt(lis[i].children[1].value);
+                let value = parseInt(lis[i].children[1].children[1].value);
 
                 if(value !== merchIngredient.quantity){
                     changes.push({

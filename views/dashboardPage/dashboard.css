@@ -116,7 +116,11 @@ body{
         cursor: pointer;
     }
 
-/* Cards */
+/* Home Strand */
+#homeStrand{
+    display: flex;
+}
+
 .card{
     margin: 0 15px;
     border: 1px solid rgba(183, 183, 183, 0.9);
@@ -134,11 +138,6 @@ body{
     font-size: 14px;
     font-weight: bold;
     text-align: center;
-}
-
-/* Home Strand */
-#homeStrand{
-    display: flex;
 }
 
 .flexRow{
@@ -187,7 +186,8 @@ body{
     display: flex;
     flex-direction: column;;
     justify-content: space-between;
-    flex-grow: 0.1;
+    flex-basis: 100px;
+    flex-grow: 1;
 }
 
     #inventoryCheckCard ul{
@@ -204,33 +204,77 @@ body{
         margin-right: 25px;
     }
 
-    #inventoryCheckCard li > p:nth-of-type(1){
-        width: 50%;
-    }
-
-    #inventoryCheckCard li input{
-        width: 75px;
-        margin-right: 25px;
-        font-size: 20px;
-        text-align: center;
-    }
-
     #inventoryCheckCard li p:nth-of-type(2){
         width: 25%;
         min-width: 75px;
     }
 
     #inventoryCheckCard button{
-        width: 150px;
-        text-align: center;
         margin-left: auto;
     }
+
+    .ingredientCheck p:first-of-type{
+        width: 33%;
+    }
+
+    .ingredientCheck p:last-of-type{
+        width: 33%
+    }
+
+    .numberInput{
+        display: flex;
+        justify-content: center;
+        width: 33%;
+        margin-right: 25px;
+    }
+
+        .numberInput button{
+            width: 30%;
+            font-size: 23px;
+            background: rgb(0, 27, 45);
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .numberInput button:first-of-type{
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
+        }
+
+        .numberInput button:last-of-type{
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .numberInput input{
+            width: 40%;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .numberInput input::-webkit-outer-spin-button,
+        .numberInput input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .numberInput input[type=number] {
+            -moz-appearance: textfield;
+        }
 
 #popularIngredientsCard{
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-basis: 100px;
+    flex-grow: 2.5;
+
 }
+    #popularCanvas{
+        margin: 0 35px;
+    }
 
     .notice{
         color: red;
