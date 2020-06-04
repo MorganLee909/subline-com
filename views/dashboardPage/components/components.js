@@ -463,3 +463,110 @@ let addIngredientsComp = {
         }
     }
 }
+
+let ingredientDetailsComp = {
+    ingredient: {},
+
+    display: function(ingredient, category){
+        this.ingredient = ingredient;
+
+        sidebar = document.querySelector("#ingredientDetails");
+        openSidebar(sidebar);
+
+        document.querySelector("#ingredientDetails p").innerText = category.name;
+        document.querySelector("#ingredientDetails h1").innerText = ingredient.name;
+        document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.unit}`;
+        document.querySelector("#ingredientInput").placeholder = `${ingredient.quantity} ${ingredient.unit}`;
+
+        let quantities = [];
+        let now = new Date();
+        for(let i = 1; i < 31; i++){
+            let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
+            let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
+            quantities.push(ingredientSold(dateIndices(startDay, endDay), ingredient.id));
+        }
+
+        let sum = 0;
+        for(let quantity of quantities){
+            sum += quantity;
+        }
+
+        document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.unit}`;
+
+        let ul = document.querySelector("#ingredientRecipeList");
+        let recipes = recipesForIngredient(ingredient.id);
+        while(ul.children.length > 0){
+            ul.removeChild(ul.firstChild);
+        }
+        for(let i = 0; i < recipes.length; i++){
+            let li = document.createElement("li");
+            console.log(recipes[i]);
+            li.innerText = recipes[i].name;
+            li.onclick = ()=>{
+                changeStrand("recipeBookStrand");
+                recipeDetailsComp.display(recipes[i]);
+            }
+            ul.appendChild(li);
+        }
+    },
+
+    remove: function(){
+        for(let i = 0; i < merchant.recipes.length; i++){
+            for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
+                if(this.ingredient.id === merchant.recipes[i].ingredients[j].ingredient._id){
+                    banner.createError("Must remove ingredient from all recipes before removing");
+                    return;
+                }
+            }
+        }
+
+        fetch(`/merchant/ingredients/remove/${this.ingredient.id}`, {
+            method: "DELETE",
+        })
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    banner.createNotification("Ingredient removed");
+                    updateInventory([this.ingredient], true);
+                }
+            })
+            .catch((err)=>{});
+    },
+
+    edit: function(){
+        document.querySelector("#ingredientStock").style.display = "none";
+        document.querySelector("#ingredientInput").style.display = "block";
+        document.querySelector("#editSubmitButton").style.display = "block";
+    },
+
+    editSubmit: function(){
+        let data = [{
+            id: this.ingredient.id,
+            quantity: Number(document.querySelector("#ingredientInput").value)
+        }];
+
+        if(validator.ingredientQuantity(data[0].quantity)){
+            fetch("/merchant/ingredients/update", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                body: JSON.stringify(data)
+            })
+                .then((response) => response.json())
+                .then((response)=>{
+                    if(typeof(response) === "string"){
+                        banner.createError(response);
+                    }else{
+                        updateInventory(data);
+                        banner.createNotification("Ingredient updated");
+                    }
+                })
+                .catch((err)=>{
+                    banner.createError("Something went wrong, try refreshing the page");
+                });
+        }
+    }
+}
