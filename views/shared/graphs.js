@@ -245,7 +245,6 @@ class HorizontalBarGraph{
     //      num: number for the actual data
     //      label: text to display on bar
     addData(dataArray){
-        let data = [];
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         for(let point of dataArray){
