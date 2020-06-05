@@ -85,5 +85,23 @@ module.exports = {
                 return;
             })
             .catch(()=>{});
+    },
+
+    /*
+    DELETE - Remove an order from the database
+    */
+    removeOrder: function(req, res){
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        Order.deleteOne({_id: req.params.id})
+            .then((response)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("Error: unable to delete the order");
+            });
     }
 }

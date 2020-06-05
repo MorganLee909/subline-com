@@ -33,6 +33,7 @@ module.exports = function(app){
     //Orders
     app.get("/order", orderData.getOrders);
     app.post("/order", orderData.createOrder);
+    app.delete("/order/:id", orderData.removeOrder);
 
     //Other
     app.post("/login", otherData.login);
