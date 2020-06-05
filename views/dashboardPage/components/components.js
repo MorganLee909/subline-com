@@ -303,6 +303,8 @@ let orderDetailsComp = {
     display: function(order){
         openSidebar(document.querySelector("#orderDetails"));
 
+        document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order._id)};
+
         document.querySelector("#orderDetails h1").innerText = order.orderId || order._id;
         document.querySelector("#orderDetails h3").innerText = new Date(order.date).toLocaleDateString("en-US");
 
@@ -332,6 +334,27 @@ let orderDetailsComp = {
         }
 
         document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
+    },
+
+    remove: function(id){
+        fetch(`/order/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            }
+        })
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    updateOrders({_id: id}, true);
+                    banner.createNotification("Order successfully removed");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Something went wrong, try refreshing the page");
+            });
     }
 }
 
@@ -500,7 +523,6 @@ let ingredientDetailsComp = {
         }
         for(let i = 0; i < recipes.length; i++){
             let li = document.createElement("li");
-            console.log(recipes[i]);
             li.innerText = recipes[i].name;
             li.onclick = ()=>{
                 changeStrand("recipeBookStrand");

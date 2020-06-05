@@ -115,15 +115,15 @@ let updateRecipes = (recipe, remove = false)=>{
 /*
 Updates an order in the front end
 Can create, edit or remove
-Inputs:
-    recipe: object
-        _id: id of recipe
-        name: name of recipe
-        price: price of recipe
-        ingredients: list of ingredients
-            ingredient: id of ingredient
-            quantity: quantity of ingredient
-    remove: if true, remove ingredient from inventory
+order = {
+    _id: id of recipe,
+    name: name of recipe,
+    price: price of recipe,
+    ingredients: [
+        ingredient: id of ingredient,
+        quantity: quantity of ingredient
+    ]
+}
 */
 let updateOrders = (order, remove = false)=>{
     let isNew = true;
@@ -146,6 +146,7 @@ let updateOrders = (order, remove = false)=>{
 
     ordersStrandObj.isPopulated = false;
     ordersStrandObj.display();
+    closeSidebar();
 }
 
 //Close any open sidebar
