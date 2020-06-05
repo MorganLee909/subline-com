@@ -195,75 +195,69 @@ body{
         list-style: none;
     }
 
-    #inventoryCheckCard li{
-        margin: 5px 0;
-    }
-
-    #inventoryCheckCard li > p{
-        font-weight: 300;
-        font-size: 15px;
-        margin-right: 25px;
-    }
-
-    #inventoryCheckCard li p:nth-of-type(2){
-        width: 25%;
-        min-width: 75px;
-    }
-
     #inventoryCheckCard button{
         margin-left: auto;
     }
 
-    .ingredientCheck p:first-of-type{
-        width: 33%;
-    }
-
-    .ingredientCheck p:last-of-type{
-        width: 33%
-    }
-
-    .numberInput{
+    .ingredientCheck{
         display: flex;
-        justify-content: center;
-        width: 33%;
-        margin-right: 25px;
+        align-items: center;
+        margin: 5px 0;
     }
 
-        .numberInput button{
-            width: 30%;
-            font-size: 23px;
-            background: rgb(0, 27, 45);
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
+        .ingredientCheck p:first-of-type{
+            width: 37%;
+            font-weight: 300;
+            font-size: 15px;
+            margin-right: 25px;
         }
 
-        .numberInput button:first-of-type{
-            border-bottom-left-radius: 5px;
-            border-top-left-radius: 5px;
+        .ingredientCheck p:last-of-type{
+            width: 25%
         }
 
-        .numberInput button:last-of-type{
-            border-bottom-right-radius: 5px;
-            border-top-right-radius: 5px;
+        .numberInput{
+            display: flex;
+            justify-content: center;
+            width: 37%;
+            margin-right: 25px;
         }
 
-        .numberInput input{
-            width: 40%;
-            font-size: 20px;
-            text-align: center;
-        }
+            .numberInput button{
+                width: 30%;
+                font-size: 23px;
+                background: rgb(0, 27, 45);
+                border: none;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
 
-        .numberInput input::-webkit-outer-spin-button,
-        .numberInput input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+            .numberInput button:first-of-type{
+                border-bottom-left-radius: 5px;
+                border-top-left-radius: 5px;
+            }
 
-        .numberInput input[type=number] {
-            -moz-appearance: textfield;
-        }
+            .numberInput button:last-of-type{
+                border-bottom-right-radius: 5px;
+                border-top-right-radius: 5px;
+            }
+
+            .numberInput input{
+                width: 40%;
+                font-size: 15px;
+                text-align: center;
+            }
+
+            .numberInput input::-webkit-outer-spin-button,
+            .numberInput input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            .numberInput input[type=number] {
+                -moz-appearance: textfield;
+            }
 
 #popularIngredientsCard{
     display: flex;

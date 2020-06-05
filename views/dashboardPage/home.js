@@ -202,7 +202,7 @@ window.homeStrandObj = {
             if(lis[i].children[1].children[1].value >= 0){
                 let merchIngredient = merchant.inventory[lis[i].ingredientIndex];
 
-                let value = parseInt(lis[i].children[1].children[1].value);
+                let value = parseFloat(lis[i].children[1].children[1].value);
 
                 if(value !== merchIngredient.quantity){
                     changes.push({
