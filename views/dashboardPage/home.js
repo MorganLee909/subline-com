@@ -98,7 +98,7 @@ window.homeStrandObj = {
             ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
             input.value = merchant.inventory[rands[i]].quantity;
             ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
-            ingredientCheck.children[2].innerText = merchant.inventory[rands[i]].ingredient.unit;
+            ingredientCheck.children[2].innerText = merchant.inventory[rands[i]].ingredient.unit.toUpperCase();
 
             ul.appendChild(ingredientCheck);
         }
