@@ -12,9 +12,11 @@
 
     <div id="addIngredientList"></div>
 
-    <button class="button addIngredientsBtn" onclick="addIngredientsComp.submitAddIngredients()">Add</button>
+    <div class="buttonBox">
+        <button class="button addIngredientsBtn" onclick="newIngredientComp.display()">Create New</button>
 
-    <button class="button addIngredientsBtn" onclick="newIngredientComp.display()">Create New</button>
+        <button class="button addIngredientsBtn" onclick="addIngredientsComp.submitAddIngredients()">Add</button>
+    </div>
 
     <template id="addIngredientsCategory">
         <div class="addIngredientsCategory">

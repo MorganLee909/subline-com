@@ -58,16 +58,6 @@ form{
     height: auto;
 }
 
-.buttonBox{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-    .buttonBox > *{
-        margin: 10px;
-    }
-
 .button{
     display: initial;
     background: rgb(255, 99, 107);
@@ -120,11 +110,6 @@ form{
     position: inherit;
     align-self: center;
     margin-right: 39px;
-}
-
-.buttonBox{
-    display: flex;
-    justify-content: space-around;
 }
 
     .button-small:hover{
