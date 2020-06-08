@@ -131,6 +131,7 @@ window.recipeBookStrandObj = {
     search: function(){
         let input = document.getElementById("recipeSearch").value.toLowerCase();
         let recipeList = document.getElementById("recipeList");
+        let clearButton = document.getElementById("recipeClearButton");
 
         let matchingRecipes = [];
         for(let i = 0; i < this.recipeDivList.length; i++){
@@ -145,5 +146,16 @@ window.recipeBookStrandObj = {
         for(let i = 0; i < matchingRecipes.length; i++){
             recipeList.appendChild(matchingRecipes[i]);
         }
+
+        if(input === ""){
+            clearButton.style.display = "none";
+        }else{
+            clearButton.style.display = "inline";
+        }
+    },
+
+    clearSorting: function(){
+        document.getElementById("recipeSearch").value = "";
+        this.search();
     }
 }
