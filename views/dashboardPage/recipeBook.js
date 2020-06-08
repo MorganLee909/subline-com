@@ -1,5 +1,6 @@
 window.recipeBookStrandObj = {
     isPopulated: false,
+    recipeDivList: [],
 
     display: function(){
         if(!this.isPopulated){
@@ -20,6 +21,7 @@ window.recipeBookStrandObj = {
             let recipeDiv = document.createElement("div");
             recipeDiv.classList = "rowItem";
             recipeDiv.onclick = ()=>{recipeDetailsComp.display(recipe)};
+            recipeDiv._name = recipe.name;
             recipeList.appendChild(recipeDiv);
 
             let recipeName = document.createElement("p");
@@ -29,6 +31,8 @@ window.recipeBookStrandObj = {
             let recipePrice = document.createElement("p");
             recipePrice.innerText = `$${(recipe.price / 100).toFixed(2)}`;
             recipeDiv.appendChild(recipePrice);
+
+            this.recipeDivList.push(recipeDiv);
         }
     },
 
@@ -122,5 +126,24 @@ window.recipeBookStrandObj = {
             .catch((err)=>{
                 banner.createError("Refresh page to update data");
             });
+    },
+
+    search: function(){
+        let input = document.getElementById("recipeSearch").value.toLowerCase();
+        let recipeList = document.getElementById("recipeList");
+
+        let matchingRecipes = [];
+        for(let i = 0; i < this.recipeDivList.length; i++){
+            if(this.recipeDivList[i]._name.toLowerCase().includes(input)){
+                matchingRecipes.push(this.recipeDivList[i]);
+            }
+        }
+
+        while(recipeList.children.length > 0){
+            recipeList.removeChild(recipeList.firstChild);
+        }
+        for(let i = 0; i < matchingRecipes.length; i++){
+            recipeList.appendChild(matchingRecipes[i]);
+        }
     }
 }

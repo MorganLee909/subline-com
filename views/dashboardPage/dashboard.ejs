@@ -146,6 +146,31 @@
                     <% } %>
                 </div>
 
+                <div class="searchBar">
+                    <div class="searchAndIcon">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input id="recipeSearch" type="text" placeholder="FILTER" oninput="recipeBookStrandObj.search()">
+                    </div>
+
+                    <button id="recipeClearButton" class="clearButton" onclick="ingredientsStrandObj.clearSorting()" style="display: none;">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </button>
+
+                    <select id="recipeSelect" onchange="ingredientsStrandObj.sort(this.value)">Sort Bys:
+                        <option value="" selected disabled>Sort By:</option>
+                        <option value="_name">Ingredient</option>
+                        <option value="category">Category</option>
+                        <option value="unit">Unit of Measurement</option>
+                    </select>
+                </div>
+
                 <div id="recipeList"></div>
             </div>
 

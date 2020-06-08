@@ -45,9 +45,10 @@ body{
     background: rgb(240, 252, 255);
     border-radius: 5px;
     padding: 20px 20px;
-    width: 90%;
+    width: 100%;
     border: 1px solid gray;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
     .rowItem:hover{
@@ -368,6 +369,18 @@ body{
     align-items: center;
 }
 
+    #recipeBookStrand .searchBar{
+        width: 50%;
+    }
+
+        #recipeSearch{
+            width: 50%;
+        }
+
+        #recipeSelect{
+            width: 25%;
+        }
+
     #recipeHead{
         display: flex;
         justify-content: space-between;
@@ -384,7 +397,6 @@ body{
         flex-direction: column;
         align-items: center;
         width: 50%;
-        margin-top: 50px;
         overflow-y: auto;
     }
 
