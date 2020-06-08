@@ -24,6 +24,18 @@ let registerObj = {
         let form = document.querySelector("#registerStrand form");
         let checkbox = document.querySelector("#checkAgree");
 
+        if(!checkbox.checked){
+            banner.createError("Please agree to the Privacy Policy and Terms and Conditions to continue");
+            return;
+        }
+
+        let pass = document.getElementById("regPass").value;
+        let confirmPass = document.getElementById("regConfirmPass").value;
+        if(pass !== confirmPass){
+            banner.createError("Your passwords do not match");
+            return;
+        }
+
         if(checkbox.checked){
             if(validator.isSanitary(document.querySelector("#regName").value)){
                 form.action = "merchant/create/none";

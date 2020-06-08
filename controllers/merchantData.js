@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
-const RecipeChange = require("../models/recipeChange");
 
 module.exports = {
     /*
@@ -17,7 +16,13 @@ module.exports = {
     }
     Redirects to /dashboard
     */
-    createMerchantNone: function(req, res){
+    createMerchantNone: async function(req, res){
+        let merchant = await Merchant.find({email: req.body.email.toLowerCase()});
+        if(merchant){
+            req.session.error = "That email address is already in use";
+            return res.redirect("/");
+        }
+
         if(req.body.password === req.body.confirmPassword){
             let salt = bcrypt.genSaltSync(10);
             let hash = bcrypt.hashSync(req.body.password, salt);
