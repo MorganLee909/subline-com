@@ -8,7 +8,7 @@
         </button>
     </div>
     
-    <h1>Add New Ingredients</h1>
+    <h2>Available Ingredients</h2>
 
     <div id="addIngredientList"></div>
 
@@ -22,11 +22,9 @@
         <div class="lineBorder"></div>
     </div>
 
-    <div class="buttonBox">
-        <button class="button addIngredientsBtn" onclick="newIngredientComp.display()">Create New</button>
+    <button id="addIngredientsBtn" class="button" onclick="addIngredientsComp.submit()">Finish</button>
 
-        <button class="button addIngredientsBtn" onclick="addIngredientsComp.submit()">Add</button>
-    </div>
+    <button class="button2Link" onclick="newIngredientComp.display()">Can't find what you're looking for?  Create it.</button>
 
     <template id="addIngredientsCategory">
         <div class="addIngredientsCategory">

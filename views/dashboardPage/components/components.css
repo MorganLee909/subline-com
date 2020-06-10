@@ -2,6 +2,16 @@
     margin-bottom: 0;
 }
 
+.button2Link{
+    background: none;
+    border: none;
+    color: blue;
+    text-decoration: underline;
+    font-size: 18px;
+    margin-top: auto;
+    cursor: pointer;
+}
+
 /* Menu */
 .menu{
     display: flex;
@@ -218,10 +228,19 @@
 /* Add Ingredients */
 #addIngredients{
     flex-direction: column;
+    align-items: center;
     width: 100%;
+    text-align: center;
 }
 
+    #addIngredients > *{
+        width: 100%;
+    }
+
     #addIngredientList{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         overflow-y: auto;
         margin-bottom: 15px;
         max-height: 35%;
@@ -279,9 +298,9 @@
                 color: white;
             }
 
-    .buttonBox{
-        display: flex;
-        justify-content: space-between;
+    #addIngredientsBtn{
+        width: 25%;
+        margin-left: auto;
     }
 
 /* Ingredient Details */
