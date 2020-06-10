@@ -17,7 +17,7 @@ module.exports = {
     Redirects to /dashboard
     */
     createMerchantNone: async function(req, res){
-        let merchant = await Merchant.find({email: req.body.email.toLowerCase()});
+        let merchant = await Merchant.findOne({email: req.body.email.toLowerCase()});
         if(merchant){
             req.session.error = "That email address is already in use";
             return res.redirect("/");
