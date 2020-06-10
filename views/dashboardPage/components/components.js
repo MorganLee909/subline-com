@@ -360,6 +360,7 @@ let orderDetailsComp = {
 
 let addIngredientsComp = {
     isPopulated: false,
+    ingredientsList: [],
 
     display: function(){
         let sidebar = document.querySelector("#addIngredients");
@@ -388,7 +389,7 @@ let addIngredientsComp = {
                         while(addIngredientsDiv.children.length > 0){
                             addIngredientsDiv.removeChild(addIngredientsDiv.firstChild);
                         }
-                        this.addIngredientsDiv = [];
+                        this.ingredientsList = [];
                         for(let i = 0; i < categories.length; i++){
                             let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
                             categoryDiv.children[0].children[0].innerText = categories[i].name;
@@ -408,7 +409,7 @@ let addIngredientsComp = {
 
                                 categoryDiv.children[1].appendChild(ingredientDiv);
 
-                                this.addIngredientsDiv.push(ingredientDiv);
+                                this.ingredientsList.push(ingredientDiv);
                             }
                         }
                     }
@@ -440,50 +441,77 @@ let addIngredientsComp = {
         }
     },
 
-    submitAddIngredients: function(){
-        let addIngredients = [];
+    // submitAddIngredients: function(){
+    //     let addIngredients = [];
 
-        for(let i = 0; i < this.addIngredientsDiv.length; i++){
-            let ingredient = this.addIngredientsDiv[i];
+    //     for(let i = 0; i < this.addIngredientsDiv.length; i++){
+    //         let ingredient = this.addIngredientsDiv[i];
 
-            if(ingredient.children[1].value !== ""){
-                if(!validator.ingredientQuantity(ingredient.children[1].value)){
-                    return;
-                }
+    //         if(ingredient.children[1].value !== ""){
+    //             if(!validator.ingredientQuantity(ingredient.children[1].value)){
+    //                 return;
+    //             }
 
-                addIngredients.push({
-                    ingredient: {
-                        _id: ingredient._id,
-                        name: ingredient._name,
-                        category: ingredient._category,
-                        unit: ingredient._unit
-                    },
-                    quantity: ingredient.children[1].value,
-                });
-            }
-        }
+    //             addIngredients.push({
+    //                 ingredient: {
+    //                     _id: ingredient._id,
+    //                     name: ingredient._name,
+    //                     category: ingredient._category,
+    //                     unit: ingredient._unit
+    //                 },
+    //                 quantity: ingredient.children[1].value,
+    //             });
+    //         }
+    //     }
 
-        if(addIngredients.length > 0){
-            fetch("/merchant/ingredients/add", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                body: JSON.stringify(addIngredients)
-            })
-                .then((response) => response.json())
-                .then((response)=>{
-                    if(typeof(response) === "string"){
-                        banner.createError(response);
-                    }else{
-                        banner.createNotification("Ingredients added");
-                        updateInventory(addIngredients);
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("Unable to update data.  Please refresh the page");
-                });
-        }
+    //     if(addIngredients.length > 0){
+    //         fetch("/merchant/ingredients/add", {
+    //             method: "PUT",
+    //             headers: {
+    //                 "Content-Type": "application/json;charset=utf-8"
+    //             },
+    //             body: JSON.stringify(addIngredients)
+    //         })
+    //             .then((response) => response.json())
+    //             .then((response)=>{
+    //                 if(typeof(response) === "string"){
+    //                     banner.createError(response);
+    //                 }else{
+    //                     banner.createNotification("Ingredients added");
+    //                     updateInventory(addIngredients);
+    //                 }
+    //             })
+    //             .catch((err)=>{
+    //                 banner.createError("Unable to update data.  Please refresh the page");
+    //             });
+    //     }
+    // },
+
+    addOne: function(element){
+        element.parentElement.removeChild(element);
+        document.getElementById("myIngredients").appendChild(element);
+        document.getElementById("myIngredientsDiv").style.display = "flex";
+
+        let input = document.createElement("input");
+        input.type = "number";
+        input.min = "0";
+        input.step = "0.01";
+        input.placeholder = element._unit;
+        element.insertBefore(input, element.children[1]);
+
+        element.children[2].innerText = "-";
+        element.children[2].onclick = ()=>{this.removeOne(element)};
+    },
+
+    removeOne: function(element){
+        element.parentElement.removeChild(element);
+        
+        //Add element back into other list
+
+        element.removeChild(element.children[1]);
+
+        element.children[1].innerText = "+";
+        element.children[1].onclick = ()=>{this.addOne(element)};
     }
 }
 

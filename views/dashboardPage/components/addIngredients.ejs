@@ -12,6 +12,16 @@
 
     <div id="addIngredientList"></div>
 
+    <div class="lineBorder"></div>
+
+    <div id="myIngredientsDiv">
+        <h2>My Ingredients</h2>
+
+        <div id="myIngredients"></div>
+
+        <div class="lineBorder"></div>
+    </div>
+
     <div class="buttonBox">
         <button class="button addIngredientsBtn" onclick="newIngredientComp.display()">Create New</button>
 
@@ -41,7 +51,7 @@
     <template id="addIngredientsIngredient">
         <div class="addIngredientsIngredient">
             <p></p>
-            <input type="number" min="0" step="0.01">
+            <button onclick="addIngredientsComp.addOne(this.parentElement)">+</button>
         </div>
     </template>
 </div>
