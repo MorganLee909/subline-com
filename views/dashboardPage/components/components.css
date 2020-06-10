@@ -226,15 +226,6 @@
         margin-bottom: 15px;
         max-height: 35%;
     }
-
-    /* .addIngredient{
-        display: flex;
-        justify-content: space-between;
-        padding: 10px;
-        background: rgb(240, 252, 255);
-        border: 1px solid black;
-        border-radius: 5px;
-    } */
     
     #myIngredientsDiv{
         display: none;

@@ -366,10 +366,6 @@ let addIngredientsComp = {
         let sidebar = document.querySelector("#addIngredients");
 
         if(!this.isPopulated){
-            let addIngredientsDiv = document.getElementById("addIngredientList");
-            let categoryTemplate = document.getElementById("addIngredientsCategory");
-            let ingredientTemplate = document.getElementById("addIngredientsIngredient");
-
             fetch("/ingredients")
                 .then((response) => response.json())
                 .then((response)=>{
@@ -384,34 +380,12 @@ let addIngredientsComp = {
                                 }
                             }
                         }
-                        let categories = categorizeIngredientsFromDB(response);
-
-                        while(addIngredientsDiv.children.length > 0){
-                            addIngredientsDiv.removeChild(addIngredientsDiv.firstChild);
+                        
+                        for(let i = 0; i < response.length; i++){
+                            this.ingredientsList.push(response[i]);
                         }
-                        this.ingredientsList = [];
-                        for(let i = 0; i < categories.length; i++){
-                            let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
-                            categoryDiv.children[0].children[0].innerText = categories[i].name;
-                            categoryDiv.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(categoryDiv)};
-                            categoryDiv.children[1].style.display = "none";
-                            categoryDiv.children[0].children[1].children[1].style.display = "none";
 
-                            addIngredientsDiv.appendChild(categoryDiv);
-                            
-                            for(let j = 0; j < categories[i].ingredients.length; j++){
-                                let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
-                                ingredientDiv.children[0].innerText = categories[i].ingredients[j].name;
-                                ingredientDiv._id = categories[i].ingredients[j].id;
-                                ingredientDiv._name = categories[i].ingredients[j].name;
-                                ingredientDiv._unit = categories[i].ingredients[j].unit;
-                                ingredientDiv._category = categories[i].name;
-
-                                categoryDiv.children[1].appendChild(ingredientDiv);
-
-                                this.ingredientsList.push(ingredientDiv);
-                            }
-                        }
+                        this.populateAddIngredients();
                     }
                 })
                 .catch((err)=>{
@@ -422,6 +396,38 @@ let addIngredientsComp = {
         }
 
         openSidebar(sidebar);
+    },
+
+    populateAddIngredients: function(ingredients){
+        let addIngredientsDiv = document.getElementById("addIngredientList");
+        let categoryTemplate = document.getElementById("addIngredientsCategory");
+        let ingredientTemplate = document.getElementById("addIngredientsIngredient");
+
+        let categories = categorizeIngredientsFromDB(this.ingredientsList);
+
+        while(addIngredientsDiv.children.length > 0){
+            addIngredientsDiv.removeChild(addIngredientsDiv.firstChild);
+        }
+        for(let i = 0; i < categories.length; i++){
+            let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
+            categoryDiv.children[0].children[0].innerText = categories[i].name;
+            categoryDiv.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(categoryDiv)};
+            categoryDiv.children[1].style.display = "none";
+            categoryDiv.children[0].children[1].children[1].style.display = "none";
+
+            addIngredientsDiv.appendChild(categoryDiv);
+            
+            for(let j = 0; j < categories[i].ingredients.length; j++){
+                let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
+                ingredientDiv.children[0].innerText = categories[i].ingredients[j].name;
+                ingredientDiv._id = categories[i].ingredients[j].id;
+                ingredientDiv._name = categories[i].ingredients[j].name;
+                ingredientDiv._unit = categories[i].ingredients[j].unit;
+                ingredientDiv._category = categories[i].name;
+
+                categoryDiv.children[1].appendChild(ingredientDiv);
+            }
+        }
     },
 
     toggleAddIngredient: function(categoryElement){
@@ -492,6 +498,13 @@ let addIngredientsComp = {
         document.getElementById("myIngredients").appendChild(element);
         document.getElementById("myIngredientsDiv").style.display = "flex";
 
+        for(let i = 0; i < this.ingredientsList.length; i++){
+            if(this.ingredientsList[i]._id === element._id){
+                this.ingredientsList.splice(i, 1);
+                break;
+            }
+        }
+
         let input = document.createElement("input");
         input.type = "number";
         input.min = "0";
@@ -505,13 +518,23 @@ let addIngredientsComp = {
 
     removeOne: function(element){
         element.parentElement.removeChild(element);
-        
-        //Add element back into other list
 
         element.removeChild(element.children[1]);
 
         element.children[1].innerText = "+";
         element.children[1].onclick = ()=>{this.addOne(element)};
+
+        if(document.getElementById("myIngredients").children.length === 0){
+            document.getElementById("myIngredientsDiv").style.display = "none";
+        }
+
+        this.ingredientsList.push({
+            _id: element._id,
+            category: element._category,
+            name: element._name,
+            unit: element._unit
+        });
+        this.populateAddIngredients();
     }
 }
 
