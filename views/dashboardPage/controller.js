@@ -53,7 +53,16 @@ let updateInventory = (ingredients, remove = false)=>{
         }
 
         if(isNew){
-            merchant.inventory.push(ingredients[i]);
+            merchant.inventory.push({
+
+                ingredient: {
+                    _id: ingredients[i].id,
+                    category: ingredients[i].category,
+                    name: ingredients[i].name,
+                    unit: ingredients[i].unit
+                },
+                quantity: parseFloat(ingredients[i].quantityChange)
+            });
         }
     }
 

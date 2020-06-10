@@ -447,52 +447,6 @@ let addIngredientsComp = {
         }
     },
 
-    // submitAddIngredients: function(){
-    //     let addIngredients = [];
-
-    //     for(let i = 0; i < this.addIngredientsDiv.length; i++){
-    //         let ingredient = this.addIngredientsDiv[i];
-
-    //         if(ingredient.children[1].value !== ""){
-    //             if(!validator.ingredientQuantity(ingredient.children[1].value)){
-    //                 return;
-    //             }
-
-    //             addIngredients.push({
-    //                 ingredient: {
-    //                     _id: ingredient._id,
-    //                     name: ingredient._name,
-    //                     category: ingredient._category,
-    //                     unit: ingredient._unit
-    //                 },
-    //                 quantity: ingredient.children[1].value,
-    //             });
-    //         }
-    //     }
-
-    //     if(addIngredients.length > 0){
-    //         fetch("/merchant/ingredients/add", {
-    //             method: "PUT",
-    //             headers: {
-    //                 "Content-Type": "application/json;charset=utf-8"
-    //             },
-    //             body: JSON.stringify(addIngredients)
-    //         })
-    //             .then((response) => response.json())
-    //             .then((response)=>{
-    //                 if(typeof(response) === "string"){
-    //                     banner.createError(response);
-    //                 }else{
-    //                     banner.createNotification("Ingredients added");
-    //                     updateInventory(addIngredients);
-    //                 }
-    //             })
-    //             .catch((err)=>{
-    //                 banner.createError("Unable to update data.  Please refresh the page");
-    //             });
-    //     }
-    // },
-
     addOne: function(element){
         element.parentElement.removeChild(element);
         document.getElementById("myIngredients").appendChild(element);
@@ -535,6 +489,53 @@ let addIngredientsComp = {
             unit: element._unit
         });
         this.populateAddIngredients();
+    },
+
+    submit: function(){
+        let ingredients = document.getElementById("myIngredients").children;
+        let added = [];
+
+        for(let i = 0; i < ingredients.length; i++){
+            if(ingredients[i].children[1].value === ""){
+                banner.createError("Please enter a quantity for each ingredient you want to add to your inventory");
+                return;
+            }
+
+            let ingredient = {
+                id: ingredients[i]._id,
+                quantity: ingredients[i].children[1].value,
+                quantityChange: ingredients[i].children[1].value,
+                name: ingredients[i]._name,
+                category: ingredients[i]._category,
+                unit: ingredients[i]._unit
+            }
+
+            if(validator.ingredientQuantity(ingredient.quantity)){
+                added.push(ingredient);
+            }else{
+                return;
+            }
+        }
+
+        fetch("/merchant/ingredients/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(added)
+        })
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    updateInventory(added);
+                    banner.createNotification("All ingredients added successfully");
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("Something went wrong.  Try refreshing the page");
+            });
     }
 }
 

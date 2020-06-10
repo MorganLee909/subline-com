@@ -158,7 +158,10 @@ module.exports = {
 
     /*
     //POST - Adds an ingredient to merchant's inventory
-    req.body = [ingredient objects]
+    req.body = [{
+        id: ingredient id,
+        quantity: quantity of ingredient for the merchant
+    }]
     */
     addMerchantIngredient: function(req, res){
         if(!req.session.user){
@@ -166,30 +169,25 @@ module.exports = {
             return res.redirect("/");
         }
 
+
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
-                for(let ingredient of req.body){
-                    for(let item of merchant.inventory){
-                        if(item.ingredient.toString() === ingredient.ingredient._id){
+                for(let i = 0; i < req.body.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(merchant.inventory[j].ingredient.toString() === req.body[i].id){
                             return res.json("Error: Duplicate ingredient detected");
                         }
                     }
                     
                     merchant.inventory.push({
-                        ingredient: ingredient.ingredient._id,
-                        quantity: ingredient.quantity
+                        ingredient: req.body[i].id,
+                        quantity: req.body[i].quantity
                     });
                 }
 
                 merchant.save()
                     .then((newMerchant)=>{
-                        newMerchant.populate("inventory.ingredient", (err)=>{
-                            if(err){
-                                return res.json("Warning: refresh page to view updates");
-                            }else{
-                                return res.json({});
-                            }
-                        });
+                        return res.json({});
                     })
                     .catch((err)=>{
                         return res.json("Error: unable to save new ingredient");
