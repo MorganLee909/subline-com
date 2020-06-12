@@ -19,8 +19,8 @@ window.homeStrandObj = {
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        let revenueThisMonth = merchant.calculateRevenue(merchant.dateIndices(firstOfMonth));
-        let revenueLastmonthToDay = merchant.calculateRevenue(merchant.dateIndices(firstOfLastMonth, lastMonthtoDay));
+        let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
+        let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
 
         document.querySelector("#revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
@@ -49,7 +49,7 @@ window.homeStrandObj = {
         let thirtyAgo = new Date(today);
         thirtyAgo.setDate(today.getDate() - 29);
 
-        let data = this.graphData(dateIndices(thirtyAgo));
+        let data = this.graphData(merchant.transactionIndices(thirtyAgo));
         if(data){
             this.graph.addData(
                 data,
@@ -68,14 +68,14 @@ window.homeStrandObj = {
 
     drawInventoryCheckCard: function(){
         let num;
-        if(merchant.inventory.length < 5){
+        if(merchant.ingredients.length < 5){
             num = merchant.inventory.length;
         }else{
             num = 5;
         }
         let rands = [];
         for(let i = 0; i < num; i++){
-            let rand = Math.floor(Math.random() * merchant.inventory.length);
+            let rand = Math.floor(Math.random() * merchant.ingredients.length);
 
             if(rands.includes(rand)){
                 i--;
@@ -94,11 +94,11 @@ window.homeStrandObj = {
             let input = ingredientCheck.children[1].children[1];
 
             ingredientCheck.ingredientIndex = rands[i];
-            ingredientCheck.children[0].innerText = merchant.inventory[rands[i]].name;
+            ingredientCheck.children[0].innerText = merchant.ingredients[rands[i]].name;
             ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
-            input.value = merchant.inventory[rands[i]].quantity;
+            input.value = merchant.ingredients[rands[i]].quantity;
             ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
-            ingredientCheck.children[2].innerText = merchant.inventory[rands[i]].unit.toUpperCase();
+            ingredientCheck.children[2].innerText = merchant.ingredients[rands[i]].unit.toUpperCase();
 
             ul.appendChild(ingredientCheck);
         }
@@ -109,8 +109,9 @@ window.homeStrandObj = {
         let now = new Date();
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-        let ingredientList = ingredientsSold(dateIndices(thisMonth));
-        console.log(ingredientList)
+        console.time("Ingredients Sold");
+        let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
+        console.timeEnd("Ingredients Sold");
         if(ingredientList){
             for(let i = 0; i < 5; i++){
                 let max = ingredientList[0].quantity
@@ -157,18 +158,18 @@ window.homeStrandObj = {
         }
 
         let dataList = new Array(30).fill(0);
-        let currentDate = transactions[dateRange[0]].date;
+        let currentDate = merchant.transactions[dateRange[0]].date;
         let arrayIndex = 0;
 
         for(let i = dateRange[0]; i <= dateRange[1]; i++){
-            if(transactions[i].date.getDate() !== currentDate.getDate()){
-                currentDate = transactions[i].date;
+            if(merchant.transactions[i].date.getDate() !== currentDate.getDate()){
+                currentDate = merchant.transactions[i].date;
                 arrayIndex++;
             }
-            for(let j = 0; j < transactions[i].recipes.length; j++){
+            for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
                 for(let merchRecipe of merchant.recipes){
-                    if(transactions[i].recipes[j].recipe === merchRecipe._id){
-                        dataList[arrayIndex] = parseFloat((dataList[arrayIndex] + (transactions[i].recipes[j].quantity * merchRecipe.price) / 100).toFixed(2));
+                    if(merchant.transactions[i].recipes[j].recipe === merchRecipe._id){
+                        dataList[arrayIndex] = parseFloat((dataList[arrayIndex] + (merchant.transactions[i].recipes[j].quantity * merchRecipe.price) / 100).toFixed(2));
                         break;
                     }
                 }

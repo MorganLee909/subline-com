@@ -182,50 +182,7 @@ let openSidebar = (sidebar)=>{
 
     sidebar.style.display = "flex";
 }
-/*
-Gets the quantity of each ingredient sold between two dates (dateRange)
-Inputs
- dateRange: list containing a start date and an end date
-Output
- List of objects
-     id: id of specific ingredient
-     quantity: quantity sold of that ingredient
-     name: name of the ingredient
-*/
-let ingredientsSold = (dateRange)=>{
-    if(!dateRange){
-        return false;
-    }
-    
-    let recipes = recipesSold(dateRange);
-    let ingredientList = [];
 
-    for(let i = 0; i < recipes.length; i++){
-        for(let j = 0; j < merchant.recipes.length; j++){
-            for(let k = 0; k < merchant.recipes[j].ingredients.length; k++){
-                let exists = false;
-                for(let l = 0; l < ingredientList.length; l++){
-                    if(ingredientList[l].id === merchant.recipes[j].ingredients[k].ingredient._id){
-                        exists = true;
-                        ingredientList[l].quantity += merchant.recipes[j].ingredients[k].quantity * recipes[i].quantity;
-                        break;
-                    }
-                }
-
-                if(!exists){
-                    ingredientList.push({
-                        id: merchant.recipes[j].ingredients[k].ingredient._id,
-                        quantity: merchant.recipes[j].ingredients[k].quantity * recipes[i].quantity,
-                        name: merchant.recipes[j].ingredients[k].ingredient.name,
-                        unit: merchant.recipes[j].ingredients[k].ingredient.unit
-                    })
-                }
-            }
-        }
-    }
-
-    return ingredientList;
-}
 /*
 Gets the quantity of a single ingredient sold between two dates (dateRange)
 Input:
@@ -259,40 +216,6 @@ let ingredientSold = (dateRange,  id)=>{
     }
 
     return total;
-}
-/*
-Gets the number of recipes sold between two dates (dateRange)
-Inputs:
-    dateRange: array containing a start date and an end date
-Return:
-    List of objects
-        id: id of specific recipe
-        quantity: quantity sold of that recipe
-*/
-let recipesSold = (dateRange)=>{
-    let recipeList = [];
-
-    for(let i = dateRange[0]; i <= dateRange[1]; i++){
-        for(let j = 0; j < transactions[i].recipes.length; j++){
-            let exists = false;
-            for(let k = 0; k < recipeList.length; k++){
-                if(recipeList[k].id === transactions[i].recipes[j].recipe){
-                    exists = true;
-                    recipeList[k].quantity += transactions[i].recipes[j].quantity;
-                    break;
-                }
-            }
-
-            if(!exists){
-                recipeList.push({
-                    id: transactions[i].recipes[j].recipe,
-                    quantity: transactions[i].recipes[j].quantity
-                })
-            }
-        }
-    }
-
-    return recipeList;
 }
 
 /*

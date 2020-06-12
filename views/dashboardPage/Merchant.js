@@ -1,94 +1,97 @@
 class Ingredient{
-    constructor(id, name, category, unit, quantity){
-        if(this.validate(name, category, unit, quantity)){
-            this.id = id;
-            this.name = name;
-            this.category = category;
-            this.unit = unit;
-            this.quantity = quantity
-        }
-    }
-
-    validate(name, category, unit, quantity, createBanner = true){
-        let errors = [];
-        if(!isSanitary(name) ||
-        !isSanitary(category) ||
-        !isSanitary(unit)){
-            errors.push("Contains illegal characters");
-        }
-
-        if(isNaN(quantity) || quantity === ""){
-            errors.push("Must enter a valid number");
-        }
-
-        if(quantity < 0){
-            banner.createError("Quantity cannot be a negative number");
-        }
-
-        if(errors.length > 0){
-            if(createBanner){
-                for(let i = 0; i < errors.length; i++){
-                    banner.createError(errors[i]);
-                }
-            }
-
-            return false;
-        }
-
-        return true;
+    constructor(id, name, category, unit){
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.unit = unit;
     }
 }
 
 class Recipe{
-    constructor(name, price, ingredients){
+    constructor(id, name, price, ingredients, parent){
+        this.id = id;
         this.name = name;
-        this.price = price
-        this.ingredients = ingredients;
+        this.price = price;
+        this.parent = parent;
+        this.ingredients = [];
+
+        for(let i = 0; i < ingredients.length; i++){
+            for(let j = 0; j < parent.ingredients.length; j++){
+                if(ingredients[i].ingredient === parent.ingredients[j].ingredient.id){
+                    this.ingredients.push({
+                        ingredient: parent.ingredients[j].ingredient,
+                        quantity: ingredients[i].quantity
+                    });
+                    break;
+                }
+            }
+        }
+    }
+}
+
+/*
+parent: merchant associated with,
+date: date created,
+recipes: [{
+    recipe: Recipe Object,
+    quantity: quantity of the recipe
+}
+*/
+class Transaction{
+    constructor(date, recipes, parent){
+        this.parent = parent;
+        this.date = new Date(date);
+        this.recipes = [];
+
+        for(let i = 0; i < recipes.length; i++){
+            for(let j = 0; j < parent.recipes.length; j++){
+                if(recipes[i].recipe === parent.recipes[j].id){
+                    this.recipes.push({
+                        recipe: parent.recipes[j],
+                        quantity: recipes[i].quantity
+                    });
+                    break;
+                }
+            }
+        }
     }
 }
 
 class Merchant{
     constructor(oldMerchant, transactions){
         this.name = oldMerchant.name;
-        this.inventory = [];
+        this.ingredients = [];
         this.recipes = [];
         this.transactions = [];
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
-            this.inventory.push(new Ingredient(
-                oldMerchant.inventory[i].ingredient._id,
-                oldMerchant.inventory[i].ingredient.name,
-                oldMerchant.inventory[i].ingredient.category,
-                oldMerchant.inventory[i].ingredient.unit,
-                oldMerchant.inventory[i].quantity
-            ));
+            this.ingredients.push({
+                ingredient: new Ingredient(
+                    oldMerchant.inventory[i].ingredient._id,
+                    oldMerchant.inventory[i].ingredient.name,
+                    oldMerchant.inventory[i].ingredient.category,
+                    oldMerchant.inventory[i].ingredient.unit,
+                ),
+                quantity: oldMerchant.inventory[i].quantity
+            });
         }
 
         for(let i = 0; i < oldMerchant.recipes.length; i++){
-            let newRecipe = {
-                name: oldMerchant.recipes[i].name,
-                price: oldMerchant.recipes[i].price,
-                ingredients: [],
-            }
-
-            for(let j = 0; j < oldMerchant.recipes[i].ingredients.length; j++){
-                for(let k = 0; k < this.inventory.length; k++){
-                    if(oldMerchant.recipes[i].ingredients[j].ingredient._id === this.inventory[k].id){
-                        newRecipe.ingredients.push({
-                            ingredient: this.inventory[k],
-                            quantity: oldMerchant.recipes[i].ingredients[j].quantity
-                        });
-
-                        break;
-                    }
-                }
-            }
+            this.recipes.push(new Recipe(
+                oldMerchant.recipes[i]._id,
+                oldMerchant.recipes[i].name,
+                oldMerchant.recipes[i].price,
+                oldMerchant.recipes[i].ingredients,
+                this
+            ));
         }
 
+        
         for(let i = 0; i < transactions.length; i++){
             this.transactions.push(new Transaction(
                 transactions[i].date,
-                transactions[i].recipes
+                transactions[i].recipes,
+                this
             ));
         }
     }
@@ -200,7 +203,7 @@ class Merchant{
     Array containing starting index and ending index
     Note: Will return false if it cannot find both necessary dates
     */
-    getTransactionIndices(from, to = new Date()){
+    transactionIndices(from, to = new Date()){
         let indices = [];
 
         for(let i = 0; i < this.transactions.length; i++){
@@ -224,7 +227,7 @@ class Merchant{
         return indices;
     }
 
-    calculateRevenue(indices){
+    revenue(indices){
         let total = 0;
 
         for(let i = indices[0]; i <= indices[1]; i++){
@@ -239,19 +242,100 @@ class Merchant{
 
         return total / 100;
     }
+
+    /*
+    Gets the quantity of each ingredient sold between two dates (dateRange)
+    Inputs
+    dateRange: list containing a start date and an end date
+    Output
+    List of objects
+        id: id of specific ingredient
+        quantity: quantity sold of that ingredient
+        name: name of the ingredient
+    */
+    ingredientsSold(dateRange){
+        if(!dateRange){
+            return false;
+        }
+        
+        let recipes = this.recipesSold(dateRange);
+        let ingredientList = [];
+
+        // for(let i = 0; i < recipes.length; i++){
+        //     for(let j = 0; j < this.recipes[i].ingredients.length; j++){
+
+        //     }
+        // }
+    
+        // for(let i = 0; i < recipes.length; i++){
+        //     for(let j = 0; j < this.recipes.length; j++){
+        //         for(let k = 0; k < this.recipes[j].ingredients.length; k++){
+        //             let exists = false;
+        //             for(let l = 0; l < ingredientList.length; l++){
+        //                 if(ingredientList[l].id === this.recipes[j].ingredients[k].ingredient._id){
+        //                     exists = true;
+        //                     ingredientList[l].quantity += this.recipes[j].ingredients[k].quantity * recipes[i].quantity;
+        //                     break;
+        //                 }
+        //             }
+    
+        //             if(!exists){
+        //                 ingredientList.push({
+        //                     id: this.recipes[j].ingredients[k].ingredient._id,
+        //                     quantity: this.recipes[j].ingredients[k].quantity * recipes[i].quantity,
+        //                     name: this.recipes[j].ingredients[k].ingredient.name,
+        //                     unit: this.recipes[j].ingredients[k].ingredient.unit
+        //                 })
+        //             }
+        //         }
+        //     }
+        // }
+    
+        return ingredientList;
+    }
+
+    /*
+    Gets the number of recipes sold between two dates (dateRange)
+    Inputs:
+        dateRange: array containing a start date and an end date
+    Return:
+        [{
+            name: a recipe object
+            quantity: quantity of the recipe sold
+        }]
+    */
+    recipesSold(dateRange){
+        let recipeList = [];
+
+        for(let i = dateRange[0]; i <= dateRange[1]; i++){
+            for(let j = 0; j < this.transactions[i].recipes.length; j++){
+                let exists = false;
+                for(let k = 0; k < recipeList.length; k++){
+                    if(recipeList[k] === this.transactions[i].recipes[j]){
+                        exists = true;
+                        recipeList[k].quantity += this.transactions[i].recipes[j].quantity;
+                        break;
+                    }
+                }
+
+                if(!exists){
+                    recipeList.push({
+                        recipe: this.transactions[i].recipes[j],
+                        quantity: this.transactions[i].recipes[j].quantity
+                    });
+                }
+            }
+        }
+
+        console.log(recipeList);
+        return recipeList;
+    }
 }
 
 class Order{
     constructor(date, ingredients){
         this.date = date;
         this.ingredients = ingredients;
-    }
-}
-
-class Transaction{
-    constructor(date, recipes){
-        this.date = new Date(date);
-        this.recipes = recipes;
     }
 }
 
