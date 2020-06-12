@@ -19,8 +19,8 @@ window.homeStrandObj = {
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        let revenueThisMonth = this.calculateRevenue(dateIndices(firstOfMonth));
-        let revenueLastmonthToDay = this.calculateRevenue(dateIndices(firstOfLastMonth, lastMonthtoDay));
+        let revenueThisMonth = merchant.calculateRevenue(merchant.dateIndices(firstOfMonth));
+        let revenueLastmonthToDay = merchant.calculateRevenue(merchant.dateIndices(firstOfLastMonth, lastMonthtoDay));
 
         document.querySelector("#revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
@@ -94,11 +94,11 @@ window.homeStrandObj = {
             let input = ingredientCheck.children[1].children[1];
 
             ingredientCheck.ingredientIndex = rands[i];
-            ingredientCheck.children[0].innerText = merchant.inventory[rands[i]].ingredient.name;
+            ingredientCheck.children[0].innerText = merchant.inventory[rands[i]].name;
             ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
             input.value = merchant.inventory[rands[i]].quantity;
             ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
-            ingredientCheck.children[2].innerText = merchant.inventory[rands[i]].ingredient.unit.toUpperCase();
+            ingredientCheck.children[2].innerText = merchant.inventory[rands[i]].unit.toUpperCase();
 
             ul.appendChild(ingredientCheck);
         }
@@ -110,6 +110,7 @@ window.homeStrandObj = {
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         let ingredientList = ingredientsSold(dateIndices(thisMonth));
+        console.log(ingredientList)
         if(ingredientList){
             for(let i = 0; i < 5; i++){
                 let max = ingredientList[0].quantity
@@ -142,22 +143,6 @@ window.homeStrandObj = {
             notice.classList = "notice";
             document.querySelector("#popularIngredientsCard").appendChild(notice);
         }
-    },
-
-    calculateRevenue: function(indices){
-        let total = 0;
-
-        for(let i = indices[0]; i <= indices[1]; i++){
-            for(let j = 0; j < transactions[i].recipes.length; j++){
-                for(let k = 0; k < merchant.recipes.length; k++){
-                    if(transactions[i].recipes[j].recipe === merchant.recipes[k]._id){
-                        total += transactions[i].recipes[j].quantity * merchant.recipes[k].price;
-                    }
-                }
-            }
-        }
-
-        return total / 100;
     },
 
     /*

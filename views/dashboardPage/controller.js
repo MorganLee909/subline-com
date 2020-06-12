@@ -182,39 +182,6 @@ let openSidebar = (sidebar)=>{
 
     sidebar.style.display = "flex";
 }
-
-/*
-Gets the indices of two dates from transactions
-Inputs
- from: starting date
- to: ending date (default to now)
-Output
- Array containing starting index and ending index
-Note: Will return false if it cannot find both necessary dates
-*/
-let dateIndices = (from, to = new Date())=>{
-    let indices = [];
-
-    for(let i = 0; i < transactions.length; i++){
-        if(transactions[i].date > from){
-            indices.push(i);
-            break;
-        }
-    }
-
-    for(let i = transactions.length - 1; i >=0; i--){
-        if(transactions[i].date < to){
-            indices.push(i);
-            break;
-        }
-    }
-
-    if(indices.length < 2){
-        return false;
-    }
-
-    return indices;
-}
 /*
 Gets the quantity of each ingredient sold between two dates (dateRange)
 Inputs
@@ -455,10 +422,6 @@ let recipesForIngredient = (ingredientId)=>{
     }
 
     return recipes;
-}
-
-for(let transaction of transactions){
-    transaction.date = new Date(transaction.date);
 }
 
 homeStrandObj.display();
