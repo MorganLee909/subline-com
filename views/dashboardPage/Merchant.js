@@ -247,11 +247,11 @@ class Merchant{
     Gets the quantity of each ingredient sold between two dates (dateRange)
     Inputs
     dateRange: list containing a start date and an end date
-    Output
-    List of objects
-        id: id of specific ingredient
-        quantity: quantity sold of that ingredient
-        name: name of the ingredient
+    Return:
+        [{
+            ingredient: Ingredient object,
+            quantity: quantity of ingredient sold
+        }]
     */
     ingredientsSold(dateRange){
         if(!dateRange){
@@ -261,35 +261,26 @@ class Merchant{
         let recipes = this.recipesSold(dateRange);
         let ingredientList = [];
 
-        // for(let i = 0; i < recipes.length; i++){
-        //     for(let j = 0; j < this.recipes[i].ingredients.length; j++){
+        for(let i = 0; i < recipes.length; i++){
+            for(let j = 0; j < recipes[i].recipe.ingredients.length; j++){
+                let exists = false;
 
-        //     }
-        // }
-    
-        // for(let i = 0; i < recipes.length; i++){
-        //     for(let j = 0; j < this.recipes.length; j++){
-        //         for(let k = 0; k < this.recipes[j].ingredients.length; k++){
-        //             let exists = false;
-        //             for(let l = 0; l < ingredientList.length; l++){
-        //                 if(ingredientList[l].id === this.recipes[j].ingredients[k].ingredient._id){
-        //                     exists = true;
-        //                     ingredientList[l].quantity += this.recipes[j].ingredients[k].quantity * recipes[i].quantity;
-        //                     break;
-        //                 }
-        //             }
-    
-        //             if(!exists){
-        //                 ingredientList.push({
-        //                     id: this.recipes[j].ingredients[k].ingredient._id,
-        //                     quantity: this.recipes[j].ingredients[k].quantity * recipes[i].quantity,
-        //                     name: this.recipes[j].ingredients[k].ingredient.name,
-        //                     unit: this.recipes[j].ingredients[k].ingredient.unit
-        //                 })
-        //             }
-        //         }
-        //     }
-        // }
+                for(let k = 0; k < ingredientList.length; k++){
+                    if(ingredientList[k].ingredient === recipes[i].recipe.ingredients[j].ingredient){
+                        exists = true;
+                        ingredientList[k].quantity += recipes[i].quantity * recipes[i].recipe.ingredients[j].quantity;
+                        break;
+                    }
+                }
+
+                if(!exists){
+                    ingredientList.push({
+                        ingredient: recipes[i].recipe.ingredients[j].ingredient,
+                        quantity: recipes[i].quantity * recipes[i].recipe.ingredients[j].quantity
+                    });
+                }
+            }
+        }
     
         return ingredientList;
     }
@@ -300,7 +291,7 @@ class Merchant{
         dateRange: array containing a start date and an end date
     Return:
         [{
-            name: a recipe object
+            recipe: a recipe object
             quantity: quantity of the recipe sold
         }]
     */
@@ -311,7 +302,7 @@ class Merchant{
             for(let j = 0; j < this.transactions[i].recipes.length; j++){
                 let exists = false;
                 for(let k = 0; k < recipeList.length; k++){
-                    if(recipeList[k] === this.transactions[i].recipes[j]){
+                    if(recipeList[k].recipe === this.transactions[i].recipes[j].recipe){
                         exists = true;
                         recipeList[k].quantity += this.transactions[i].recipes[j].quantity;
                         break;
@@ -320,14 +311,13 @@ class Merchant{
 
                 if(!exists){
                     recipeList.push({
-                        recipe: this.transactions[i].recipes[j],
+                        recipe: this.transactions[i].recipes[j].recipe,
                         quantity: this.transactions[i].recipes[j].quantity
                     });
                 }
             }
         }
 
-        console.log(recipeList);
         return recipeList;
     }
 }
