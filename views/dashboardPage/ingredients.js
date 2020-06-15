@@ -38,11 +38,11 @@ window.ingredientsStrandObj = {
                 let ingredient = categories[i].ingredients[j];
                 let ingredientDiv = ingredientTemplate.cloneNode(true);
 
-                ingredientDiv.children[0].innerText = ingredient.name;
-                ingredientDiv.children[2].innerText = `${ingredient.quantity} ${ingredient.unit}`;
+                ingredientDiv.children[0].innerText = ingredient.ingredient.name;
+                ingredientDiv.children[2].innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
                 ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient, categories[i])};
-                ingredientDiv._name = ingredient.name.toLowerCase();
-                ingredientDiv._unit = ingredient.unit.toLowerCase();
+                ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
+                ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
                 this.ingredients.push(ingredientDiv);

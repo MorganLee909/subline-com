@@ -285,6 +285,23 @@ class Merchant{
         return ingredientList;
     }
 
+    singleIngredientSold(dateRange, ingredient){
+        let total = 0;
+
+        for(let i = dateRange[0]; i < dateRange[1]; i++){
+            for(let j = 0; j < this.transactions[i].recipes.length; j++){
+                for(let k = 0; k < this.transactions[i].recipes[j].recipe.ingredients.length; k++){
+                    if(this.transactions[i].recipes[j].recipe.ingredients[k].ingredient === ingredient.ingredient){
+                        total += this.transactions[i].recipes[j].recipe.ingredients[k].quantity;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return total;
+    }
+
     /*
     Gets the number of recipes sold between two dates (dateRange)
     Inputs:
@@ -354,12 +371,7 @@ class Merchant{
     Groups all of the merchant's ingredients by their category
     Return: [{
         name: category name,
-        ingredients: [{
-            id: id of ingredient,
-            name: name of ingredient,
-            quantity: merchant's quantity of this ingredient,
-            unit: measurement unit
-        }]
+        ingredients: [Ingredient Object]
     }]
     */
     categorizeIngredients(){
@@ -369,12 +381,7 @@ class Merchant{
             let categoryExists = false;
             for(let j = 0; j < ingredientsByCategory.length; j++){
                 if(this.ingredients[i].ingredient.category === ingredientsByCategory[j].name){
-                    ingredientsByCategory[j].ingredients.push({
-                        id: this.ingredients[i].ingredient._id,
-                        name: this.ingredients[i].ingredient.name,
-                        quantity: this.ingredients[i].quantity,
-                        unit: this.ingredients[i].ingredient.unit
-                    });
+                    ingredientsByCategory[j].ingredients.push(this.ingredients[i]);
 
                     categoryExists = true;
                     break;
@@ -384,12 +391,7 @@ class Merchant{
             if(!categoryExists){
                 ingredientsByCategory.push({
                     name: this.ingredients[i].ingredient.category,
-                    ingredients: [{
-                        id: this.ingredients[i].ingredient._id,
-                        name: this.ingredients[i].ingredient.name,
-                        quantity: this.ingredients[i].quantity,
-                        unit: this.ingredients[i].ingredient.unit
-                    }]
+                    ingredients: [this.ingredients[i]]
                 });
             }
         }

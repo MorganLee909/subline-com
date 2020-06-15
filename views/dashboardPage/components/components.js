@@ -548,24 +548,32 @@ let ingredientDetailsComp = {
         openSidebar(sidebar);
 
         document.querySelector("#ingredientDetails p").innerText = category.name;
-        document.querySelector("#ingredientDetails h1").innerText = ingredient.name;
-        document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.unit}`;
-        document.querySelector("#ingredientInput").placeholder = `${ingredient.quantity} ${ingredient.unit}`;
+        document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
+        document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        document.querySelector("#ingredientInput").placeholder = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
 
         let quantities = [];
         let now = new Date();
+        console.time("Single Ingredient Sold");
         for(let i = 1; i < 31; i++){
             let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
             let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
-            quantities.push(merchant.ingredientsSold(merchant.transactionIndices(startDay, endDay), ingredient.id));
+            let indices = merchant.transactionIndices(startDay, endDay);
+
+            if(indices === false){
+                quantities.push(0);
+            }else{
+                quantities.push(merchant.singleIngredientSold(indices, ingredient));
+            }
         }
+        console.timeEnd("Single Ingredient Sold");
 
         let sum = 0;
         for(let quantity of quantities){
             sum += quantity;
         }
 
-        document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.unit}`;
+        document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.ingredient.unit}`;
 
         let ul = document.querySelector("#ingredientRecipeList");
         let recipes = recipesForIngredient(ingredient.id);
