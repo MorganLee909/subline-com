@@ -49,7 +49,7 @@ window.homeStrandObj = {
         let thirtyAgo = new Date(today);
         thirtyAgo.setDate(today.getDate() - 29);
 
-        let data = this.graphData(merchant.transactionIndices(thirtyAgo));
+        let data = merchant.graphDailyRevenue(merchant.transactionIndices(thirtyAgo));
         if(data){
             this.graph.addData(
                 data,
@@ -144,39 +144,6 @@ window.homeStrandObj = {
             notice.classList = "notice";
             document.querySelector("#popularIngredientsCard").appendChild(notice);
         }
-    },
-
-    /*
-    Create the data for the revenue graph
-    Input: 
-        dateRange: Array containing start and end indices for transactions
-    Return: List of revenue by day between the dates specified
-    */
-    graphData: function(dateRange){
-        if(!dateRange){
-            return false;
-        }
-
-        let dataList = new Array(30).fill(0);
-        let currentDate = merchant.transactions[dateRange[0]].date;
-        let arrayIndex = 0;
-
-        for(let i = dateRange[0]; i <= dateRange[1]; i++){
-            if(merchant.transactions[i].date.getDate() !== currentDate.getDate()){
-                currentDate = merchant.transactions[i].date;
-                arrayIndex++;
-            }
-            for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
-                for(let merchRecipe of merchant.recipes){
-                    if(merchant.transactions[i].recipes[j].recipe === merchRecipe._id){
-                        dataList[arrayIndex] = parseFloat((dataList[arrayIndex] + (merchant.transactions[i].recipes[j].quantity * merchRecipe.price) / 100).toFixed(2));
-                        break;
-                    }
-                }
-            }
-        }
-
-        return dataList;
     },
 
     submitInventoryCheck: function(){
