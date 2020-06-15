@@ -350,6 +350,52 @@ class Merchant{
 
         return dataList;
     }
+    /*
+    Groups all of the merchant's ingredients by their category
+    Return: [{
+        name: category name,
+        ingredients: [{
+            id: id of ingredient,
+            name: name of ingredient,
+            quantity: merchant's quantity of this ingredient,
+            unit: measurement unit
+        }]
+    }]
+    */
+    categorizeIngredients(){
+        let ingredientsByCategory = [];
+
+        for(let i = 0; i < this.ingredients.length; i++){
+            let categoryExists = false;
+            for(let j = 0; j < ingredientsByCategory.length; j++){
+                if(this.ingredients[i].ingredient.category === ingredientsByCategory[j].name){
+                    ingredientsByCategory[j].ingredients.push({
+                        id: this.ingredients[i].ingredient._id,
+                        name: this.ingredients[i].ingredient.name,
+                        quantity: this.ingredients[i].quantity,
+                        unit: this.ingredients[i].ingredient.unit
+                    });
+
+                    categoryExists = true;
+                    break;
+                }
+            }
+
+            if(!categoryExists){
+                ingredientsByCategory.push({
+                    name: this.ingredients[i].ingredient.category,
+                    ingredients: [{
+                        id: this.ingredients[i].ingredient._id,
+                        name: this.ingredients[i].ingredient.name,
+                        quantity: this.ingredients[i].quantity,
+                        unit: this.ingredients[i].ingredient.unit
+                    }]
+                });
+            }
+        }
+
+        return ingredientsByCategory;
+    }
 }
 
 class Order{

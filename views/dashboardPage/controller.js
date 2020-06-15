@@ -218,52 +218,6 @@ let ingredientSold = (dateRange,  id)=>{
     return total;
 }
 
-/*
-Groups all of the merchant's ingredients by their category
-Return:
-    Array of objects
-        name: Category name
-        ingredients: Array of objects
-            id: Id of ingredient
-            name: Name of ingredient
-            quantity:  Merchant's quantity of this ingredient
-            unit: Measurement unit
-*/
-let categorizeIngredients = (ingredients)=>{
-    let ingredientsByCategory = [];
-
-    for(let i = 0; i < ingredients.length; i++){
-        let categoryExists = false;
-        for(let j = 0; j < ingredientsByCategory.length; j++){
-            if(ingredients[i].ingredient.category === ingredientsByCategory[j].name){
-                ingredientsByCategory[j].ingredients.push({
-                    id: ingredients[i].ingredient._id,
-                    name: ingredients[i].ingredient.name,
-                    quantity: ingredients[i].quantity,
-                    unit: ingredients[i].ingredient.unit
-                });
-
-                categoryExists = true;
-                break;
-            }
-        }
-
-        if(!categoryExists){
-            ingredientsByCategory.push({
-                name: ingredients[i].ingredient.category,
-                ingredients: [{
-                    id: ingredients[i].ingredient._id,
-                    name: ingredients[i].ingredient.name,
-                    quantity: ingredients[i].quantity,
-                    unit: ingredients[i].ingredient.unit
-                }]
-            });
-        }
-    }
-
-    return ingredientsByCategory;
-}
-
 let unitizeIngredients = (ingredients)=>{
     let ingredientsByUnit = [];
 

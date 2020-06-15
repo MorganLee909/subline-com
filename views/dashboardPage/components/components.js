@@ -557,7 +557,7 @@ let ingredientDetailsComp = {
         for(let i = 1; i < 31; i++){
             let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
             let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
-            quantities.push(ingredientSold(dateIndices(startDay, endDay), ingredient.id));
+            quantities.push(merchant.ingredientsSold(merchant.transactionIndices(startDay, endDay), ingredient.id));
         }
 
         let sum = 0;

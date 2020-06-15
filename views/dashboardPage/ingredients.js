@@ -13,7 +13,7 @@ window.ingredientsStrandObj = {
     populateByProperty: function(property){
         let categories;
         if(property === "category"){
-            categories = categorizeIngredients(merchant.inventory);
+            categories = merchant.categorizeIngredients();
         }else if(property === "unit"){
             categories = unitizeIngredients(merchant.inventory);
         }
