@@ -545,7 +545,6 @@ let ingredientDetailsComp = {
         this.ingredient = ingredient;
 
         sidebar = document.querySelector("#ingredientDetails");
-        openSidebar(sidebar);
 
         document.querySelector("#ingredientDetails p").innerText = category.name;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
@@ -589,6 +588,8 @@ let ingredientDetailsComp = {
             }
             ul.appendChild(li);
         }
+
+        openSidebar(sidebar);
     },
 
     remove: function(){

@@ -233,7 +233,7 @@ class Merchant{
         for(let i = indices[0]; i <= indices[1]; i++){
             for(let j = 0; j < this.transactions[i].recipes.length; j++){
                 for(let k = 0; k < this.recipes.length; k++){
-                    if(this.transactions[i].recipes[j].recipe === this.recipes[k]._id){
+                    if(this.transactions[i].recipes[j].recipe === this.recipes[k]){
                         total += this.transactions[i].recipes[j].quantity * this.recipes[k].price;
                     }
                 }

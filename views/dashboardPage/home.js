@@ -125,7 +125,7 @@ window.homeStrandObj = {
 
                 dataArray.push({
                     num: max,
-                    label: `${ingredientList[index].name}: ${+ingredientList[index].quantity.toFixed(2)} ${ingredientList[index].unit}`
+                    label: `${ingredientList[index].ingredient.name}: ${+ingredientList[index].quantity.toFixed(2)} ${ingredientList[index].ingredient.unit}`
                 });
                 ingredientList.splice(index, 1);
             }
