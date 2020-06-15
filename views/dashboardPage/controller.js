@@ -286,19 +286,4 @@ let categorizeIngredientsFromDB = (ingredients)=>{
     return ingredientsByCategory;
 }
 
-let recipesForIngredient = (ingredientId)=>{
-    let recipes = [];
-
-    for(let i = 0; i < merchant.recipes.length; i++){
-        for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
-            if(merchant.recipes[i].ingredients[j].ingredient._id === ingredientId){
-                recipes.push(merchant.recipes[i]);
-                break;
-            }
-        }
-    }
-
-    return recipes;
-}
-
 homeStrandObj.display();

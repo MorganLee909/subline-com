@@ -398,6 +398,20 @@ class Merchant{
 
         return ingredientsByCategory;
     }
+
+    getRecipesForIngredient(ingredient){
+        let recipes = [];
+
+        for(let i = 0; i < this.recipes.length; i++){
+            for(let j = 0; j < this.recipes[i].ingredients.length; j++){
+                if(this.recipes[i].ingredients[j].ingredient === ingredient){
+                    recipes.push(this.recipes[i]);
+                }
+            }
+        }
+
+        return recipes;
+    }
 }
 
 class Order{

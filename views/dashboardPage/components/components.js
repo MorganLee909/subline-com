@@ -575,7 +575,9 @@ let ingredientDetailsComp = {
         document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.ingredient.unit}`;
 
         let ul = document.querySelector("#ingredientRecipeList");
-        let recipes = recipesForIngredient(ingredient.id);
+        console.log(ingredient);
+        let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
+        console.log(recipes);
         while(ul.children.length > 0){
             ul.removeChild(ul.firstChild);
         }
