@@ -344,7 +344,7 @@ class Merchant{
             }
 
             for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                dataList[arrayIndex] += this.transactions[i].recipes[j].recipe.price * this.transactions[i].recipes[j].quantity;
+                dataList[arrayIndex] += (this.transactions[i].recipes[j].recipe.price / 100) * this.transactions[i].recipes[j].quantity;
             }
         }
 
