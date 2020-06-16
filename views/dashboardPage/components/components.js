@@ -288,7 +288,16 @@ let newIngredientComp = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        updateInventory([response]);
+                        merchant.addIngredients([{
+                            ingredient: new Ingredient(
+                                response.ingredient._id,
+                                response.ingredient.name,
+                                response.ingredient.category,
+                                response.ingredient.unit
+                            ),
+                            quantity: response.quantity
+                        }]);
+
                         banner.createNotification("Ingredient successfully created");
                     }
                 })
@@ -539,7 +548,6 @@ let addIngredientsComp = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("Something went wrong.  Try refreshing the page");
             });
     }
@@ -654,7 +662,6 @@ let ingredientDetailsComp = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("Something went wrong, try refreshing the page");
                 });
         }

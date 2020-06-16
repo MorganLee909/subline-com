@@ -99,14 +99,11 @@ class Merchant{
     /*
     Updates all specified item in the merchant's inventory and updates the page
     If ingredient doesn't exist, add it
-    Inputs:
-    Array of objects
-        id: id of ingredient
-        quantity: change in quantity (if not removing)
-        name: name of ingredient (only for new ingredient)
-        category: category of ingredient (only for new ingredient)
-        unit: unit of measurement (only for new ingredient)
-    remove: if true, remove ingredient from inventory
+    ingredients = {
+        ingredient: Ingredient object,
+        quantity: change in quantity
+    }
+    remove = set true if removing
     */
     addIngredients(ingredients, remove = false){
         for(let i = 0; i < ingredients.length; i++){
@@ -132,6 +129,7 @@ class Merchant{
             }
         }
     
+        console.log("added");
         homeStrandObj.drawInventoryCheckCard();
         ingredientsStrandObj.populateByProperty("category");
         addIngredientsComp.isPopulated = false;
