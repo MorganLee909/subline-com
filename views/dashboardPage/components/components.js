@@ -20,7 +20,7 @@ let recipeDetailsComp = {
 
             ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
             ingredientDiv.children[2].innerText = `${recipe.ingredients[i].quantity} ${recipe.ingredients[i].ingredient.unit}`;
-            ingredientDiv._id = recipe.ingredients[i].ingredient._id;
+            ingredientDiv.ingredient = recipe.ingredients[i].ingredient;
             ingredientDiv.name = recipe.ingredients[i].ingredient.name;
 
             ingredientList.appendChild(ingredientDiv);
@@ -70,49 +70,59 @@ let recipeDetailsComp = {
     },
 
     update: function(){
-        let updatedRecipe = {
-            _id: this.recipe._id,
-            name: document.querySelector("#recipeNameIn").value || this.recipe.name,
-            price: Math.round((document.querySelector("#recipePrice").children[2].value * 100)) || this.recipe.price,
-            ingredients: []
-        }
+        this.recipe.name = document.querySelector("#recipeNameIn").value || this.recipe.name;
+        this.recipe.price = Math.round((document.querySelector("#recipePrice").children[2].value * 100)) || this.recipe.price;
+        this.recipe.ingredients = [];
 
         let divs = document.querySelector("#recipeIngredientList").children;
         for(let i = 0; i < divs.length; i++){
             if(divs[i].name === "new"){
-                updatedRecipe.ingredients.push({
-                    ingredient: divs[i].children[0].value,
+                let select = divs[i].children[0];
+                this.recipe.ingredients.push({
+                    ingredient: select.options[select.selectedIndex].ingredient,
                     quantity: divs[i].children[1].value
                 })
             }else{
-                updatedRecipe.ingredients.push({
-                    ingredient: divs[i]._id,
+                this.recipe.ingredients.push({
+                    ingredient: divs[i].ingredient,
                     quantity: divs[i].children[1].value || divs[i].children[1].placeholder
                 });
             }
         }
 
-        if(validator.recipe(updatedRecipe)){
-            fetch("/recipe/update", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                body: JSON.stringify(updatedRecipe)
-            })
-                .then((response) => response.json())
-                .then((response)=>{
-                    if(typeof(response) === "string"){
-                        banner.createError(response);
-                    }else{
-                        updateRecipes(updatedRecipe);
-                        banner.createNotification("Recipe successfully updated");
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("Something went wrong.  Please refresh the page");
-                })
+        let data = {
+            id: this.recipe.id,
+            name: this.recipe.name,
+            price: this.recipe.price,
+            ingredients: []
         }
+
+        for(let i = 0; i < this.recipe.ingredients.length; i++){
+            data.ingredients.push({
+                ingredient: this.recipe.ingredients[i].ingredient.id,
+                quantity: this.recipe.ingredients[i].quantity
+            });
+        }
+
+        fetch("/recipe/update", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    merchant.editRecipe(this.recipe);
+                    banner.createNotification("Recipe successfully updated");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Something went wrong.  Please refresh the page");
+            })
     },
 
     remove: function(){
@@ -148,7 +158,7 @@ let recipeDetailsComp = {
             for(let j = 0; j < categories[i].ingredients.length; j++){
                 let option = document.createElement("option");
                 option.innerText = `${categories[i].ingredients[j].ingredient.name} (${categories[i].ingredients[j].ingredient.unit})`;
-                option.value = categories[i].ingredients[j].id;
+                option.ingredient = categories[i].ingredients[j].ingredient;
                 optGroup.appendChild(option);
             }
         }

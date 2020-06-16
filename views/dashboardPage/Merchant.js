@@ -60,6 +60,7 @@ class Transaction{
 class Merchant{
     constructor(oldMerchant, transactions){
         this.name = oldMerchant.name;
+        this.pos = oldMerchant.pos;
         this.ingredients = [];
         this.recipes = [];
         this.transactions = [];

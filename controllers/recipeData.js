@@ -52,7 +52,7 @@ module.exports = {
     /*
     PUT - Update a single recipe
     req.body = {
-        _id: id of recipe,
+        id: id of recipe,
         name: name of recipe,
         price: price of recipe,
         ingredients: [{
@@ -67,39 +67,13 @@ module.exports = {
             return res.redirect("/");
         }
 
-        Recipe.findOne({_id: req.body._id})
+        console.log(req.body);
+
+        Recipe.findOne({_id: req.body.id})
             .then((recipe)=>{
                 recipe.name = req.body.name;
                 recipe.price = req.body.price;
-                
-                for(let i = 0; i < req.body.ingredients.length; i++){
-                    let isNew = true;
-                    for(let j = 0; j < recipe.ingredients.length; j++){
-                        if(req.body.ingredients[i].ingredient === recipe.ingredients[j].ingredient._id.toString()){
-                            isNew = false;
-                            recipe.ingredients[j].quantity = req.body.ingredients[i].quantity;
-                            break;
-                        }
-                    }
-
-                    if(isNew){
-                        recipe.ingredients.push(req.body.ingredients[i]);
-                    }
-                }
-
-                for(let i = 0; i < recipe.ingredients.length; i++){
-                    let doesntExist = true;
-                    for(let j = 0; j < req.body.ingredients.length; j++){
-                        if(recipe.ingredients[i].ingredient._id.toString() === req.body.ingredients[j].ingredient){
-                            doesntExist = false;
-                            break;
-                        }
-                    }
-
-                    if(doesntExist){
-                        recipe.ingredients.splice(i, 1);
-                    }
-                }
+                recipe.ingredients = req.body.ingredients;
 
                 return recipe.save()
             })
