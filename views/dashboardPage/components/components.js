@@ -116,7 +116,7 @@ let recipeDetailsComp = {
     },
 
     remove: function(){
-        fetch(`/merchant/recipes/remove/${this.recipe._id}`, {
+        fetch(`/merchant/recipes/remove/${this.recipe.id}`, {
             method: "DELETE"
         })
             .then((response) => response.json())
@@ -124,7 +124,7 @@ let recipeDetailsComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    updateRecipes(this.recipe, true);
+                    merchant.editRecipe(this.recipe, true);
                     banner.createNotification("Recipe removed");
                 }
             })
@@ -138,7 +138,7 @@ let recipeDetailsComp = {
         template.name = "new";
         document.querySelector("#recipeIngredientList").appendChild(template);
 
-        let categories = categorizeIngredients(merchant.inventory);
+        let categories = merchant.categorizeIngredients();
 
         for(let i = 0; i < categories.length; i++){
             let optGroup = document.createElement("optgroup");
@@ -147,7 +147,7 @@ let recipeDetailsComp = {
 
             for(let j = 0; j < categories[i].ingredients.length; j++){
                 let option = document.createElement("option");
-                option.innerText = `${categories[i].ingredients[j].name} (${categories[i].ingredients[j].unit})`;
+                option.innerText = `${categories[i].ingredients[j].ingredient.name} (${categories[i].ingredients[j].ingredient.unit})`;
                 option.value = categories[i].ingredients[j].id;
                 optGroup.appendChild(option);
             }
