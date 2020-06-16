@@ -106,6 +106,7 @@ class Merchant{
     remove = set true if removing
     */
     addIngredients(ingredients, remove = false){
+        console.log(ingredients);
         for(let i = 0; i < ingredients.length; i++){
             let isNew = true;
             for(let j = 0; j < merchant.ingredients.length; j++){
@@ -129,7 +130,6 @@ class Merchant{
             }
         }
     
-        console.log("added");
         homeStrandObj.drawInventoryCheckCard();
         ingredientsStrandObj.populateByProperty("category");
         addIngredientsComp.isPopulated = false;

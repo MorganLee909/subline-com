@@ -558,6 +558,7 @@ let ingredientDetailsComp = {
 
     display: function(ingredient, category){
         this.ingredient = ingredient;
+        console.log(ingredient);
 
         sidebar = document.querySelector("#ingredientDetails");
 
@@ -617,7 +618,7 @@ let ingredientDetailsComp = {
             }
         }
 
-        fetch(`/merchant/ingredients/remove/${this.ingredient.id}`, {
+        fetch(`/merchant/ingredients/remove/${this.ingredient.ingredient.id}`, {
             method: "DELETE",
         })
             .then((response) => response.json())
@@ -626,7 +627,7 @@ let ingredientDetailsComp = {
                     banner.createError(response);
                 }else{
                     banner.createNotification("Ingredient removed");
-                    updateInventory([this.ingredient], true);
+                    merchant.addIngredients([this.ingredient], true);
                 }
             })
             .catch((err)=>{});
