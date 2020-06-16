@@ -69,7 +69,7 @@ window.homeStrandObj = {
     drawInventoryCheckCard: function(){
         let num;
         if(merchant.ingredients.length < 5){
-            num = merchant.inventory.length;
+            num = merchant.ingredients.length;
         }else{
             num = 5;
         }

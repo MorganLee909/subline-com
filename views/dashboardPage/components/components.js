@@ -360,7 +360,8 @@ let orderDetailsComp = {
 
 let addIngredientsComp = {
     isPopulated: false,
-    ingredientsList: [],
+    fakeMerchant: {},
+    chosenIngredients: [],
 
     display: function(){
         let sidebar = document.querySelector("#addIngredients");
@@ -372,9 +373,9 @@ let addIngredientsComp = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        for(let i = 0; i < merchant.inventory.length; i++){
+                        for(let i = 0; i < merchant.ingredients.length; i++){
                             for(let j = 0; j < response.length; j++){
-                                if(merchant.inventory[i].ingredient._id === response[j]._id){
+                                if(merchant.ingredients[i].ingredient.id === response[j]._id){
                                     response.splice(j, 1);
                                     break;
                                 }
@@ -382,13 +383,22 @@ let addIngredientsComp = {
                         }
                         
                         for(let i = 0; i < response.length; i++){
-                            this.ingredientsList.push(response[i]);
+                            response[i] = {ingredient: response[i]}
                         }
+                        this.fakeMerchant = new Merchant(
+                            {
+                                name: "none",
+                                inventory: response,
+                                recipes: [],
+                            },
+                            []
+                        );
 
                         this.populateAddIngredients();
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("Unable to retrieve data");
                 });
 
@@ -398,12 +408,14 @@ let addIngredientsComp = {
         openSidebar(sidebar);
     },
 
-    populateAddIngredients: function(ingredients){
+    populateAddIngredients: function(){
         let addIngredientsDiv = document.getElementById("addIngredientList");
         let categoryTemplate = document.getElementById("addIngredientsCategory");
         let ingredientTemplate = document.getElementById("addIngredientsIngredient");
 
-        let categories = categorizeIngredientsFromDB(this.ingredientsList);
+        console.log(this.fakeMerchant);
+        let categories = this.fakeMerchant.categorizeIngredients();
+        console.log(categories);
 
         while(addIngredientsDiv.children.length > 0){
             addIngredientsDiv.removeChild(addIngredientsDiv.firstChild);
@@ -419,11 +431,8 @@ let addIngredientsComp = {
             
             for(let j = 0; j < categories[i].ingredients.length; j++){
                 let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
-                ingredientDiv.children[0].innerText = categories[i].ingredients[j].name;
-                ingredientDiv._id = categories[i].ingredients[j].id;
-                ingredientDiv._name = categories[i].ingredients[j].name;
-                ingredientDiv._unit = categories[i].ingredients[j].unit;
-                ingredientDiv._category = categories[i].name;
+                ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
+                ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
             }
@@ -452,9 +461,10 @@ let addIngredientsComp = {
         document.getElementById("myIngredients").appendChild(element);
         document.getElementById("myIngredientsDiv").style.display = "flex";
 
-        for(let i = 0; i < this.ingredientsList.length; i++){
-            if(this.ingredientsList[i]._id === element._id){
-                this.ingredientsList.splice(i, 1);
+        for(let i = 0; i < this.fakeMerchant.ingredients.length; i++){
+            if(this.fakeMerchant.ingredients[i].ingredient === element.ingredient){
+                this.fakeMerchant.ingredients.splice(i, 1);
+                this.chosenIngredients.push(element.ingredient);
                 break;
             }
         }
@@ -482,12 +492,15 @@ let addIngredientsComp = {
             document.getElementById("myIngredientsDiv").style.display = "none";
         }
 
-        this.ingredientsList.push({
-            _id: element._id,
-            category: element._category,
-            name: element._name,
-            unit: element._unit
-        });
+        for(let i = 0; i < this.chosenIngredients.length; i++){
+            if(this.chosenIngredients[i] === element.ingredient){
+                this.chosenIngredients.splice(i, 1);
+                this.fakeMerchant.ingredients.push({
+                    ingredient: element.ingredient
+                });
+                break;
+            }
+        }
         this.populateAddIngredients();
     },
 
