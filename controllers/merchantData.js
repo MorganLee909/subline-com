@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
+const { update } = require("../models/merchant");
 
 module.exports = {
     /*
@@ -257,10 +258,10 @@ module.exports = {
                         date: Date.now(),
                         merchant: req.session.user,
                         ingredient: req.body[i].id,
-                        quantity: req.body[i].quantity
+                        quantity: req.body[i].quantity - updateIngredient.quantity
                     }));
 
-                    updateIngredient.quantity += req.body[i].quantity;
+                    updateIngredient.quantity = req.body[i].quantity;
                 }
 
                 merchant.save()

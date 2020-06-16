@@ -558,7 +558,6 @@ let ingredientDetailsComp = {
 
     display: function(ingredient, category){
         this.ingredient = ingredient;
-        console.log(ingredient);
 
         sidebar = document.querySelector("#ingredientDetails");
 
@@ -640,9 +639,10 @@ let ingredientDetailsComp = {
     },
 
     editSubmit: function(){
+        this.ingredient.quantity = Number(document.getElementById("ingredientInput").value);
         let data = [{
-            id: this.ingredient.id,
-            quantity: Number(document.querySelector("#ingredientInput").value)
+            id: this.ingredient.ingredient.id,
+            quantity: this.ingredient.quantity
         }];
 
         if(validator.ingredientQuantity(data[0].quantity)){
@@ -658,7 +658,7 @@ let ingredientDetailsComp = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        updateInventory(data);
+                        merchant.editIngredients([this.ingredient]);
                         banner.createNotification("Ingredient updated");
                     }
                 })

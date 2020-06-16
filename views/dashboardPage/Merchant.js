@@ -101,12 +101,11 @@ class Merchant{
     If ingredient doesn't exist, add it
     ingredients = {
         ingredient: Ingredient object,
-        quantity: change in quantity
+        quantity: new quantity
     }
     remove = set true if removing
     */
     editIngredients(ingredients, remove = false){
-        console.log(ingredients);
         for(let i = 0; i < ingredients.length; i++){
             let isNew = true;
             for(let j = 0; j < merchant.ingredients.length; j++){
@@ -114,7 +113,7 @@ class Merchant{
                     if(remove){
                         merchant.ingredients.splice(j, 1);
                     }else{
-                        merchant.ingredients[j].quantity += ingredients[i].quantity;
+                        merchant.ingredients[j].quantity = ingredients[i].quantity;
                     }
     
                     isNew = false;
