@@ -102,7 +102,7 @@ class Merchant{
     Inputs:
     Array of objects
         id: id of ingredient
-        quantityChange: change in quantity (if not removing)
+        quantity: change in quantity (if not removing)
         name: name of ingredient (only for new ingredient)
         category: category of ingredient (only for new ingredient)
         unit: unit of measurement (only for new ingredient)
@@ -111,13 +111,12 @@ class Merchant{
     addIngredients(ingredients, remove = false){
         for(let i = 0; i < ingredients.length; i++){
             let isNew = true;
-            for(let j = 0; j < merchant.inventory.length; j++){
-                if(merchant.inventory[j].ingredient._id === ingredients[i].id){
+            for(let j = 0; j < merchant.ingredients.length; j++){
+                if(merchant.ingredients[j].ingredient === ingredients[i].ingredient){
                     if(remove){
-                        merchant.inventory.splice(j, 1);
+                        merchant.ingredients.splice(j, 1);
                     }else{
-    
-                        merchant.inventory[j].quantity += ingredients[i].quantity;
+                        merchant.ingredients[j].quantity += ingredients[i].quantity;
                     }
     
                     isNew = false;
@@ -126,15 +125,9 @@ class Merchant{
             }
     
             if(isNew){
-                merchant.inventory.push({
-    
-                    ingredient: {
-                        _id: ingredients[i].id,
-                        category: ingredients[i].category,
-                        name: ingredients[i].name,
-                        unit: ingredients[i].unit
-                    },
-                    quantity: parseFloat(ingredients[i].quantityChange)
+                merchant.ingredients.push({
+                    ingredient: ingredients[i].ingredient,
+                    quantity: parseFloat(ingredients[i].quantity)
                 });
             }
         }

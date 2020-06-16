@@ -11,8 +11,10 @@ window.ingredientsStrandObj = {
     },
 
     populateByProperty: function(property){
+        console.log("populate by property");
         let categories;
         if(property === "category"){
+            console.log("categorizing");
             categories = merchant.categorizeIngredients();
         }else if(property === "unit"){
             categories = unitizeIngredients(merchant.inventory);
@@ -48,6 +50,8 @@ window.ingredientsStrandObj = {
                 this.ingredients.push(ingredientDiv);
             }
         }
+
+        console.log("done");
     },
 
     displayIngredientsOnly: function(ingredients){

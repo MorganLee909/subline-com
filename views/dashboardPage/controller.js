@@ -24,55 +24,6 @@ let changeStrand = (name)=>{
 }
 
 /*
-Updates all specified item in the merchant's inventory and updates the page
-If ingredient doesn't exist, add it
-Inputs:
- Array of objects
-     id: id of ingredient
-     quantityChange: change in quantity (if not removing)
-     name: name of ingredient (only for new ingredient)
-     category: category of ingredient (only for new ingredient)
-     unit: unit of measurement (only for new ingredient)
- remove: if true, remove ingredient from inventory
- */
-let updateInventory = (ingredients, remove = false)=>{
-    for(let i = 0; i < ingredients.length; i++){
-        let isNew = true;
-        for(let j = 0; j < merchant.inventory.length; j++){
-            if(merchant.inventory[j].ingredient._id === ingredients[i].id){
-                if(remove){
-                    merchant.inventory.splice(j, 1);
-                }else{
-
-                    merchant.inventory[j].quantity += ingredients[i].quantity;
-                }
-
-                isNew = false;
-                break;
-            }
-        }
-
-        if(isNew){
-            merchant.inventory.push({
-
-                ingredient: {
-                    _id: ingredients[i].id,
-                    category: ingredients[i].category,
-                    name: ingredients[i].name,
-                    unit: ingredients[i].unit
-                },
-                quantity: parseFloat(ingredients[i].quantityChange)
-            });
-        }
-    }
-
-    homeStrandObj.drawInventoryCheckCard();
-    ingredientsStrandObj.populateByProperty("category");
-    addIngredientsComp.isPopulated = false;
-    closeSidebar();
-}
-
-/*
 Updates a recipe in the merchants list of recipes
 Can create, edit or remove
 Inputs:
@@ -183,41 +134,6 @@ let openSidebar = (sidebar)=>{
     sidebar.style.display = "flex";
 }
 
-/*
-Gets the quantity of a single ingredient sold between two dates (dateRange)
-Input:
-    dateRange: array containing two elements, start and end indices
-    id: id of the ingredient to calculate
-Return: (int) Quantity of recipes sold
-*/
-let ingredientSold = (dateRange,  id)=>{
-    let recipes = recipesSold(dateRange);
-    let total = 0;
-
-    let checkRecipes = [];
-    let quantities = [];
-    for(let i = 0; i < merchant.recipes.length; i++){
-        for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
-            if(merchant.recipes[i].ingredients[j].ingredient._id === id){
-                checkRecipes.push(merchant.recipes[i]._id);
-                quantities.push(merchant.recipes[i].ingredients[j].quantity);
-                break;
-            }
-        }
-    }
-
-    for(let i = 0; i < recipes.length; i++){
-        for(let i = 0; i < checkRecipes.length; i++){
-            if(checkRecipes[i] === recipes[i].id){
-                total += recipes[i].quantity * quantities[i];
-                break;
-            }
-        }
-    }
-
-    return total;
-}
-
 let unitizeIngredients = (ingredients)=>{
     let ingredientsByUnit = [];
 
@@ -251,39 +167,6 @@ let unitizeIngredients = (ingredients)=>{
     }
 
     return ingredientsByUnit;
-}
-
-let categorizeIngredientsFromDB = (ingredients)=>{
-    let ingredientsByCategory = [];
-
-    for(let i = 0; i < ingredients.length; i++){
-        let categoryExists = false;
-        for(let j = 0; j < ingredientsByCategory.length; j++){
-            if(ingredients[i].category === ingredientsByCategory[j].name){
-                ingredientsByCategory[j].ingredients.push({
-                    id: ingredients[i]._id,
-                    name: ingredients[i].name,
-                    unit: ingredients[i].unit
-                });
-
-                categoryExists = true;
-                break;
-            }
-        }
-
-        if(!categoryExists){
-            ingredientsByCategory.push({
-                name: ingredients[i].category,
-                ingredients: [{
-                    id: ingredients[i]._id,
-                    name: ingredients[i].name,
-                    unit: ingredients[i].unit
-                }]
-            });
-        }
-    }
-
-    return ingredientsByCategory;
 }
 
 homeStrandObj.display();

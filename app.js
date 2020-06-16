@@ -30,6 +30,4 @@ app.use(express.json());
 
 require("./routes")(app);
 
-app.listen(process.env.PORT, ()=>{
-    console.log(`Running on port ${process.env.PORT}`);
-});
+app.listen(process.env.PORT, ()=>{});

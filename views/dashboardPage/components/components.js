@@ -398,7 +398,6 @@ let addIngredientsComp = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("Unable to retrieve data");
                 });
 
@@ -413,9 +412,7 @@ let addIngredientsComp = {
         let categoryTemplate = document.getElementById("addIngredientsCategory");
         let ingredientTemplate = document.getElementById("addIngredientsIngredient");
 
-        console.log(this.fakeMerchant);
         let categories = this.fakeMerchant.categorizeIngredients();
-        console.log(categories);
 
         while(addIngredientsDiv.children.length > 0){
             addIngredientsDiv.removeChild(addIngredientsDiv.firstChild);
@@ -506,7 +503,8 @@ let addIngredientsComp = {
 
     submit: function(){
         let ingredients = document.getElementById("myIngredients").children;
-        let added = [];
+        let newIngredients = [];
+        let fetchable = [];
 
         for(let i = 0; i < ingredients.length; i++){
             if(ingredients[i].children[1].value === ""){
@@ -514,20 +512,15 @@ let addIngredientsComp = {
                 return;
             }
 
-            let ingredient = {
-                id: ingredients[i]._id,
-                quantity: ingredients[i].children[1].value,
-                quantityChange: ingredients[i].children[1].value,
-                name: ingredients[i]._name,
-                category: ingredients[i]._category,
-                unit: ingredients[i]._unit
-            }
+            newIngredients.push({
+                ingredient: ingredients[i].ingredient,
+                quantity: ingredients[i].children[1].value
+            });
 
-            if(validator.ingredientQuantity(ingredient.quantity)){
-                added.push(ingredient);
-            }else{
-                return;
-            }
+            fetchable.push({
+                id: ingredients[i].ingredient.id,
+                quantity: ingredients[i].children[1].value
+            });
         }
 
         fetch("/merchant/ingredients/add", {
@@ -535,17 +528,18 @@ let addIngredientsComp = {
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
             },
-            body: JSON.stringify(added)
+            body: JSON.stringify(fetchable)
         })
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    updateInventory(added);
+                    merchant.addIngredients(newIngredients);
                     banner.createNotification("All ingredients added successfully");
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("Something went wrong.  Try refreshing the page");
             });
     }
@@ -588,9 +582,7 @@ let ingredientDetailsComp = {
         document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.ingredient.unit}`;
 
         let ul = document.querySelector("#ingredientRecipeList");
-        console.log(ingredient);
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
-        console.log(recipes);
         while(ul.children.length > 0){
             ul.removeChild(ul.firstChild);
         }
@@ -662,6 +654,7 @@ let ingredientDetailsComp = {
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("Something went wrong, try refreshing the page");
                 });
         }
