@@ -172,7 +172,7 @@ let newOrderComp = {
         openSidebar(document.querySelector("#newOrder"));
 
         if(!this.isPopulated){
-            let categories = categorizeIngredients(merchant.inventory);
+            let categories = merchant.categorizeIngredients();
             let categoriesList = document.querySelector("#newOrderCategories");
             let template = document.querySelector("#addIngredientsCategory").content.children[0];
             let ingredientTemplate = document.querySelector("#addIngredientsIngredient").content.children[0];

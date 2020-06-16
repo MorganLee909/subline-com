@@ -16,6 +16,16 @@ window.ordersStrandObj = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
+                        let newOrders = [];
+                        for(let i = 0; i < response.length; i++){
+                            newOrders.push(new Order(
+                                response[i].name,
+                                new Date(response.date),
+                                response.ingredients,
+                                merchant
+                            ));
+                        }
+
                         let listDiv = document.querySelector("#orderList");
                         let template = document.querySelector("#order").content.children[0];
 
@@ -23,22 +33,21 @@ window.ordersStrandObj = {
                             listDiv.removeChild(listDiv.firstChild);
                         }
 
-                        for(let i = 0; i < response.length; i++){
+                        for(let i = 0; i < merchant.orders.length; i++){
                             let row = template.cloneNode(true);
                             let totalCost = 0;
                             
-                            for(let j = 0; j < response[i].ingredients.length; j++){
+                            for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
                                 
-                                totalCost += response[i].ingredients[j].quantity * response[i].ingredients[j].price;
+                                totalCost += merchant.orders[i].ingredients[j].quantity * merchant.orders[i].ingredients[j].price;
                             }
 
-                            row.children[0].innerText = response[i].orderId;
-                            row.children[1].innerText = `${response[i].ingredients.length} items`;
-                            row.children[2].innerText = new Date(response[i].date).toLocaleDateString("en-US");
+                            row.children[0].innerText = merchant.orders[i].name;
+                            row.children[1].innerText = `${merchant.orders[i].ingredients.length} items`;
+                            row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
                             row.children[3].innerText = (totalCost / 100).toFixed(2);
-                            row._date = row.children[2].innerText;
-                            row._id = response[i]._id;
-                            row.onclick = ()=>{orderDetailsComp.display(response[i])};
+                            row.order = merchant.orders[i];
+                            row.onclick = ()=>{orderDetailsComp.display(merchant.orders[i])};
 
                             window.orders.push(row);
                             listDiv.appendChild(row);

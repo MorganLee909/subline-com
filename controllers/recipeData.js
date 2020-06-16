@@ -67,8 +67,6 @@ module.exports = {
             return res.redirect("/");
         }
 
-        console.log(req.body);
-
         Recipe.findOne({_id: req.body.id})
             .then((recipe)=>{
                 recipe.name = req.body.name;

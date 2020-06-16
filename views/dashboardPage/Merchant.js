@@ -57,6 +57,29 @@ class Transaction{
     }
 }
 
+class Order{
+    constructor(name, date, ingredients, parent){        
+        this.name = name;
+        this.date = date;
+        this.ingredients = [];
+        this.parent = parent;
+
+        for(let i = 0; i < ingredients.length; i++){
+            for(let j = 0; j < parent.ingredients.length; j++){
+                if(ingredients[i].ingredient === parent.ingredients[j].ingredient.id){
+                    this.ingredients.push({
+                        ingredient: parent.ingredients[j].ingredient,
+                        quantity: ingredients[i].quantity,
+                        price: ingredients[i].price
+                    });
+                }
+            }
+        }
+
+        this.parent.orders.push(this);
+    }
+}
+
 class Merchant{
     constructor(oldMerchant, transactions){
         this.name = oldMerchant.name;
@@ -64,6 +87,7 @@ class Merchant{
         this.ingredients = [];
         this.recipes = [];
         this.transactions = [];
+        this.orders = [];
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
             this.ingredients.push({
@@ -383,13 +407,6 @@ class Merchant{
         }
 
         return recipes;
-    }
-}
-
-class Order{
-    constructor(date, ingredients){
-        this.date = date;
-        this.ingredients = ingredients;
     }
 }
 
