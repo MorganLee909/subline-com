@@ -105,7 +105,7 @@ class Merchant{
     }
     remove = set true if removing
     */
-    addIngredients(ingredients, remove = false){
+    editIngredients(ingredients, remove = false){
         console.log(ingredients);
         for(let i = 0; i < ingredients.length; i++){
             let isNew = true;

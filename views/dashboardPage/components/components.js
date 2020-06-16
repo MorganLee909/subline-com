@@ -288,7 +288,7 @@ let newIngredientComp = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        merchant.addIngredients([{
+                        merchant.editIngredients([{
                             ingredient: new Ingredient(
                                 response.ingredient._id,
                                 response.ingredient.name,
@@ -543,7 +543,7 @@ let addIngredientsComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.addIngredients(newIngredients);
+                    merchant.editIngredients(newIngredients);
                     banner.createNotification("All ingredients added successfully");
                 }
             })
@@ -627,7 +627,7 @@ let ingredientDetailsComp = {
                     banner.createError(response);
                 }else{
                     banner.createNotification("Ingredient removed");
-                    merchant.addIngredients([this.ingredient], true);
+                    merchant.editIngredients([this.ingredient], true);
                 }
             })
             .catch((err)=>{});
