@@ -23,43 +23,6 @@ let changeStrand = (name)=>{
     window[`${name}Obj`].display();
 }
 
-/*
-Updates an order in the front end
-Can create, edit or remove
-order = {
-    _id: id of recipe,
-    name: name of recipe,
-    price: price of recipe,
-    ingredients: [
-        ingredient: id of ingredient,
-        quantity: quantity of ingredient
-    ]
-}
-*/
-let updateOrders = (order, remove = false)=>{
-    let isNew = true;
-
-    for(let i = 0; i < orders.length; i++){
-        if(orders[i]._id === order._id){
-            if(remove){
-                orders.splice(i, 1);
-            }else{
-                orders[i] = order;
-            }
-
-            isNew = false;
-        }
-    }
-
-    if(isNew){
-        orders.push(order);
-    }
-
-    ordersStrandObj.isPopulated = false;
-    ordersStrandObj.display();
-    closeSidebar();
-}
-
 //Close any open sidebar
 let closeSidebar = ()=>{
     let sidebar = document.querySelector("#sidebarDiv");

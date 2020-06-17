@@ -365,8 +365,8 @@ let orderDetailsComp = {
 
         document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order._id)};
 
-        document.querySelector("#orderDetails h1").innerText = order.orderId || order._id;
-        document.querySelector("#orderDetails h3").innerText = new Date(order.date).toLocaleDateString("en-US");
+        document.querySelector("#orderDetails h1").innerText = order.name;
+        document.querySelector("#orderDetails h3").innerText = order.date.toLocaleDateString("en-US");
 
         let ingredientList = document.querySelector("#orderIngredients");
         while(ingredientList.children.length > 0){
@@ -380,13 +380,7 @@ let orderDetailsComp = {
             let price = (order.ingredients[i].quantity * order.ingredients[i].price) / 100;
             grandTotal += price;
 
-            for(let j = 0; j < merchant.inventory.length; j++){
-                if(order.ingredients[i].ingredient === merchant.inventory[j].ingredient._id){
-                    ingredient.children[0].innerText = `${merchant.inventory[j].ingredient.name}: ${order.ingredients[i].quantity}`;
-                    break;
-                }
-            }
-
+            ingredient.children[0].innerText = order.ingredients[i].ingredient.name;
             ingredient.children[1].innerText = `$${(order.ingredients[i].price / 100).toFixed(2)}`;
             ingredient.children[2].innerText = price.toFixed(2);
 
