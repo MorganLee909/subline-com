@@ -17,9 +17,9 @@ window.ordersStrandObj = {
                         banner.createError(response);
                     }else{
                         let newOrders = [];
-                        console.log(response);
                         for(let i = 0; i < response.length; i++){
                             newOrders.push(new Order(
+                                response[i]._id,
                                 response[i].orderId,
                                 response[i].date,
                                 response[i].ingredients,

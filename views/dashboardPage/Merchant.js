@@ -58,7 +58,8 @@ class Transaction{
 }
 
 class Order{
-    constructor(name, date, ingredients, parent){
+    constructor(id, name, date, ingredients, parent){
+        this.id = id;
         this.name = name;
         this.date = new Date(date);
         this.ingredients = [];

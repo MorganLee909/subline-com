@@ -262,25 +262,10 @@ let newOrderComp = {
             }
         }
 
-        let order = new Order(
-            document.getElementById("orderName").value,
-            document.getElementById("orderDate").value,
-            ingredients,
-            merchant
-        )
-
         let data = {
-            orderId: order.name,
-            date: order.date,
-            ingredients: []
-        }
-
-        for(let i = 0; i < order.ingredients.length; i++){
-            data.ingredients.push({
-                ingredient: order.ingredients[i].ingredient.id,
-                quantity: order.ingredients[i].quantity,
-                price: order.ingredients[i].price
-            });
+            orderId: document.getElementById("orderName").value,
+            date: document.getElementById("orderDate").value,
+            ingredients: ingredients
         }
         
         fetch("/order", {
@@ -295,6 +280,14 @@ let newOrderComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    let order = new Order(
+                       response._id,
+                       response.orderId,
+                       response.date,
+                       response.ingredients,
+                       merchant 
+                    )
+
                     merchant.editOrders([order]);
                     banner.createNotification("New order created");
                     // updateInventory(newOrder.ingredients);
@@ -363,7 +356,7 @@ let orderDetailsComp = {
     display: function(order){
         openSidebar(document.querySelector("#orderDetails"));
 
-        document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order._id)};
+        document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order)};
 
         document.querySelector("#orderDetails h1").innerText = order.name;
         document.querySelector("#orderDetails h3").innerText = order.date.toLocaleDateString("en-US");
@@ -390,8 +383,8 @@ let orderDetailsComp = {
         document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
     },
 
-    remove: function(id){
-        fetch(`/order/${id}`, {
+    remove: function(order){
+        fetch(`/order/${order.id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
@@ -402,11 +395,12 @@ let orderDetailsComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    updateOrders({_id: id}, true);
+                    merchant.editOrders([order], true);
                     banner.createNotification("Order successfully removed");
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("Something went wrong, try refreshing the page");
             });
     }

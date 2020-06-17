@@ -63,7 +63,7 @@ module.exports = {
         newOrder.merchant = req.session.user;
         newOrder.save()
             .then((response)=>{
-                res.json({});
+                res.json(response);
             })
             .catch((err)=>{
                 return res.json("Error: unable to save the new order");
