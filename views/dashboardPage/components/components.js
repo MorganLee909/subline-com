@@ -167,101 +167,142 @@ let recipeDetailsComp = {
 
 let newOrderComp = {
     isPopulated: false,
+    unused: [],
 
     display: function(){
-        openSidebar(document.querySelector("#newOrder"));
-
         if(!this.isPopulated){
             let categories = merchant.categorizeIngredients();
             let categoriesList = document.querySelector("#newOrderCategories");
             let template = document.querySelector("#addIngredientsCategory").content.children[0];
             let ingredientTemplate = document.querySelector("#addIngredientsIngredient").content.children[0];
-
+    
             for(let i = 0; i < categories.length; i++){
                 let category = template.cloneNode(true);
-
+    
                 category.children[0].children[0].innerText = categories[i].name;
                 category.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(category)};
                 category.children[0].children[1].children[1].style.display = "none";
                 category.children[1].style.display = "none";
                 
                 categoriesList.appendChild(category);
-
+    
                 for(let j = 0; j < categories[i].ingredients.length; j++){
                     let ingredientDiv = ingredientTemplate.cloneNode(true);
-
-                    ingredientDiv.children[0].innerText = categories[i].ingredients[j].name;
-                    ingredientDiv.children[1].placeholder = categories[i].ingredients[j].unit;
-                    ingredientDiv._id = categories[i].ingredients[j].id;
-                    ingredientDiv._name = categories[i].ingredients[j].name;
-                    ingredientDiv._unit = categories[i].ingredients[j].unit;
-                    ingredientDiv._category = categories[i].name;
-                    
-                    let priceInput = document.createElement("input");
-                    priceInput.type = "number";
-                    priceInput.min = "0";
-                    priceInput.step = "0.01";
-                    priceInput.placeholder = "Price Per Unit";
-                    ingredientDiv.appendChild(priceInput);
-
+    
+                    ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
+                    ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
+                    ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
+    
+                    this.unused.push(categories[i].ingredients[j]);
                     category.children[1].appendChild(ingredientDiv);
                 }
             }
 
             this.isPopulated = true;
         }
+
+        openSidebar(document.querySelector("#newOrder"));
+    },
+
+    addOne: function(ingredientDiv, container){
+        for(let i = 0; i < this.unused.length; i++){
+            if(this.unused[i] === ingredientDiv){
+                this.unused.splice(i, 1);
+                break;
+            }
+        }
+
+        let quantityInput = document.createElement("input");
+        quantityInput.type = "number";
+        quantityInput.placeholder = ingredientDiv.ingredient.unit;
+        quantityInput.min = "0";
+        quantityInput.step = "0.01";
+        ingredientDiv.insertBefore(quantityInput, ingredientDiv.children[1]);
+
+        let priceInput = document.createElement("input");
+        priceInput.type = "number";
+        priceInput.placeholder = "Price Per Unit";
+        priceInput.min = "0";
+        priceInput.step = "0.01";
+        ingredientDiv.insertBefore(priceInput, ingredientDiv.children[2]);
+
+        ingredientDiv.children[3].innerText = "-";
+        ingredientDiv.children[3].onclick = ()=>{this.removeOne(ingredientDiv, container)};
+
+        container.removeChild(ingredientDiv);
+        document.getElementById("newOrderAdded").appendChild(ingredientDiv);
+    },
+
+    removeOne: function(ingredientDiv, container){
+        this.unused.push(ingredientDiv.ingredient);
+
+        ingredientDiv.removeChild(ingredientDiv.children[1]);
+        ingredientDiv.removeChild(ingredientDiv.children[1]);
+        ingredientDiv.children[1].innerText = "+";
+        ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv, container)};
+        
+        ingredientDiv.parentElement.removeChild(ingredientDiv);
+        container.appendChild(ingredientDiv);
     },
 
     submit: function(){
-        let categoriesList = document.querySelector("#newOrderCategories");
+        let categoriesList = document.getElementById("newOrderAdded");
+        let ingredients = [];
 
-        let newOrder = {
-            orderId: document.querySelector("#orderName").value,
-            date: new Date(document.querySelector("#orderDate").value),
+        for(let i = 0; i < categoriesList.children.length; i++){
+            let quantity = categoriesList.children[i].children[1].value;
+            let price = categoriesList.children[i].children[2].value;
+
+            if(quantity !== ""  && price !== ""){
+                ingredients.push({
+                    ingredient: categoriesList.children[i].ingredient.id,
+                    quantity: parseFloat(quantity),
+                    price: parseInt(price * 100)
+                });
+            }
+        }
+
+        let order = new Order(
+            document.getElementById("orderName").value,
+            document.getElementById("orderDate").value,
+            ingredients,
+            merchant
+        )
+
+        let data = {
+            orderId: order.name,
+            date: order.date,
             ingredients: []
         }
 
-        for(let i = 0; i < categoriesList.children.length; i++){
-            for(let j = 0; j < categoriesList.children[i].children[1].children.length; j++){
-                let ingredientDiv = categoriesList.children[i].children[1].children[j];
-                let quantity = ingredientDiv.children[1].value;
-                let price = ingredientDiv.children[2].value;
-
-                if(quantity !== ""  || price !== ""){
-                    let newIngredient = {
-                        id: ingredientDiv._id,
-                        ingredient: ingredientDiv._id,
-                        quantity: parseFloat(quantity),
-                        price: parseInt(price * 100)
-                    }
-
-                    newOrder.ingredients.push(newIngredient);
-                }
-            }
+        for(let i = 0; i < order.ingredients.length; i++){
+            data.ingredients.push({
+                ingredient: order.ingredients[i].ingredient.id,
+                quantity: order.ingredients[i].quantity,
+                price: order.ingredients[i].price
+            });
         }
         
-        if(validator.order(newOrder)){
-            fetch("/order", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                body: JSON.stringify(newOrder)
+        fetch("/order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    merchant.editOrders([order]);
+                    banner.createNotification("New order created");
+                    // updateInventory(newOrder.ingredients);
+                }
             })
-                .then(response => response.json())
-                .then((response)=>{
-                    if(typeof(response) === "string"){
-                        banner.createError(response);
-                    }else{
-                        banner.createNotification("New order created");
-                        updateOrders(newOrder);
-                        updateInventory(newOrder.ingredients);
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("Something went wrong.  Try refreshing the page");
-                });
-        }
+            .catch((err)=>{
+                banner.createError("Something went wrong.  Try refreshing the page");
+            });
     },
 }
 
@@ -448,6 +489,7 @@ let addIngredientsComp = {
             for(let j = 0; j < categories[i].ingredients.length; j++){
                 let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
                 ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
+                ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv)};
                 ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
 
                 categoryDiv.children[1].appendChild(ingredientDiv);

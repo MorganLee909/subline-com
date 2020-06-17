@@ -60,7 +60,7 @@ class Transaction{
 class Order{
     constructor(name, date, ingredients, parent){        
         this.name = name;
-        this.date = date;
+        this.date = new Date(date);
         this.ingredients = [];
         this.parent = parent;
 
@@ -75,8 +75,6 @@ class Order{
                 }
             }
         }
-
-        this.parent.orders.push(this);
     }
 }
 
@@ -169,12 +167,12 @@ class Merchant{
     editRecipe(recipe, remove = false){
         let isNew = true;
 
-        for(let i = 0; i < merchant.recipes.length; i++){
-            if(recipe === merchant.recipes[i]){
+        for(let i = 0; i < this.recipes.length; i++){
+            if(recipe === this.recipes[i]){
                 if(remove){
-                    merchant.recipes.splice(i, 1);
+                    this.recipes.splice(i, 1);
                 }else{
-                    merchant.recipes[i] = recipe;
+                    this.recipes[i] = recipe;
                 }
 
                 isNew = false;
@@ -187,6 +185,37 @@ class Merchant{
         }
 
         recipeBookStrandObj.populateRecipes();
+        closeSidebar();
+    }
+
+    /*
+    Updates a list of orders in the merchants list of orders
+    Create/edit/remove
+    orders = [Order object]
+    remove = will remove order when true
+    */
+    editOrders(orders, remove = false){
+        for(let i = 0; i < orders.length; i++){
+            let isNew = true;
+            for(let j = 0; j < this.orders.length; j++){
+                if(orders[i] === this.orders[j]){
+                    if(remove){
+                        this.orders.splice(j, 1);
+                    }else{
+                        this.orders[j] = orders[i];
+                    }
+
+                    isNew = false;
+                    break;
+                }
+            }
+
+            if(isNew){
+                this.orders.push(orders[i]);
+            }
+        }
+
+        ordersStrandObj.populate();
         closeSidebar();
     }
 
