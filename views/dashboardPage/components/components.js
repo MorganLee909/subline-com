@@ -607,7 +607,6 @@ let ingredientDetailsComp = {
 
         let quantities = [];
         let now = new Date();
-        console.time("Single Ingredient Sold");
         for(let i = 1; i < 31; i++){
             let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
             let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
@@ -619,7 +618,6 @@ let ingredientDetailsComp = {
                 quantities.push(merchant.singleIngredientSold(indices, ingredient));
             }
         }
-        console.timeEnd("Single Ingredient Sold");
 
         let sum = 0;
         for(let quantity of quantities){

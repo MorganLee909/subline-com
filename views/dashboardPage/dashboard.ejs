@@ -212,12 +212,10 @@
 
         <script src="/dashboardPage/Merchant.js"></script>
         <script>
-            console.time("Classify");
             let merchant = new Merchant(
                 <%- JSON.stringify(merchant) %>,
                 <%- JSON.stringify(transactions) %>
             );
-            console.timeEnd("Classify");
         </script>
         <script src="../shared/graphs.js"></script>
         <script src="/dashboardPage/home.js"></script>

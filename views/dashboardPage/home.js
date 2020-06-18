@@ -109,9 +109,7 @@ window.homeStrandObj = {
         let now = new Date();
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-        console.time("Ingredients Sold");
         let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
-        console.timeEnd("Ingredients Sold");
         if(ingredientList){
             for(let i = 0; i < 5; i++){
                 let max = ingredientList[0].quantity

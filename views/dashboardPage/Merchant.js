@@ -396,6 +396,7 @@ class Merchant{
 
         return dataList;
     }
+    
     /*
     Groups all of the merchant's ingredients by their category
     Return: [{
@@ -466,19 +467,4 @@ class Merchant{
 
         return recipes;
     }
-}
-
-let isSanitary =  (str, createBanner = true)=>{
-    let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-    for(let char of disallowed){
-        if(str.includes(char)){
-            if(createBanner){
-                banner.createError("Your string contains illegal characters");
-            }
-            return false;
-        }
-    }
-
-    return true;
 }
