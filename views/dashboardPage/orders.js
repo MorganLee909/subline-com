@@ -28,11 +28,10 @@ window.ordersStrandObj = {
                         }
                         merchant.editOrders(newOrders);
 
-                        isFetched = true;
+                        this.isFetched = true;
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("Unable to retrieve your orders at the moment");
                 });
         }
@@ -58,7 +57,7 @@ window.ordersStrandObj = {
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} items`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            row.children[3].innerText = (totalCost / 100).toFixed(2);
+            row.children[3].innerText = `$${(totalCost / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{orderDetailsComp.display(merchant.orders[i])};
 

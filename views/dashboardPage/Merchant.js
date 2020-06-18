@@ -128,14 +128,17 @@ class Merchant{
         quantity: new quantity
     }
     remove = set true if removing
+    isOrder = set true if this is coming from an order
     */
-    editIngredients(ingredients, remove = false){
+    editIngredients(ingredients, remove = false, isOrder = false){
         for(let i = 0; i < ingredients.length; i++){
             let isNew = true;
             for(let j = 0; j < merchant.ingredients.length; j++){
                 if(merchant.ingredients[j].ingredient === ingredients[i].ingredient){
                     if(remove){
                         merchant.ingredients.splice(j, 1);
+                    }else if(!remove && isOrder){
+                        merchant.ingredients[j].quantity += ingredients[i].quantity;
                     }else{
                         merchant.ingredients[j].quantity = ingredients[i].quantity;
                     }

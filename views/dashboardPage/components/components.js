@@ -289,8 +289,8 @@ let newOrderComp = {
                     )
 
                     merchant.editOrders([order]);
+                    merchant.editIngredients(order.ingredients, false, true);
                     banner.createNotification("New order created");
-                    // updateInventory(newOrder.ingredients);
                 }
             })
             .catch((err)=>{
@@ -374,8 +374,8 @@ let orderDetailsComp = {
             grandTotal += price;
 
             ingredient.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredient.children[1].innerText = `$${(order.ingredients[i].price / 100).toFixed(2)}`;
-            ingredient.children[2].innerText = price.toFixed(2);
+            ingredient.children[1].innerText = `${order.ingredients[i].quantity} x $${(order.ingredients[i].price / 100).toFixed(2)}`;
+            ingredient.children[2].innerText = `$${price.toFixed(2)}`;
 
             ingredientList.appendChild(ingredient);
         }
@@ -400,7 +400,6 @@ let orderDetailsComp = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("Something went wrong, try refreshing the page");
             });
     }
