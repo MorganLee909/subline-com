@@ -596,7 +596,6 @@ let ingredientDetailsComp = {
     ingredient: {},
 
     display: function(ingredient){
-        console.log(ingredient);
         this.ingredient = ingredient;
 
         sidebar = document.querySelector("#ingredientDetails");

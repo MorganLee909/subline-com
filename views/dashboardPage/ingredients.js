@@ -16,7 +16,6 @@ window.ingredientsStrandObj = {
             categories = merchant.categorizeIngredients();
         }else if(property === "unit"){
             categories = merchant.unitizeIngredients();
-            console.log(categories);
         }
         
         let ingredientStrand = document.querySelector("#categoryList");

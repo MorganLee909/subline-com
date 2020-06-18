@@ -93,7 +93,7 @@ window.homeStrandObj = {
             let ingredientCheck = template.cloneNode(true);
             let input = ingredientCheck.children[1].children[1];
 
-            ingredientCheck.ingredientIndex = rands[i];
+            ingredientCheck.ingredient = merchant.ingredients[rands[i]];
             ingredientCheck.children[0].innerText = merchant.ingredients[rands[i]].ingredient.name;
             ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
             input.value = merchant.ingredients[rands[i]].quantity;
@@ -153,14 +153,15 @@ window.homeStrandObj = {
 
         for(let i = 0; i < lis.length; i++){
             if(lis[i].children[1].children[1].value >= 0){
-                let merchIngredient = merchant.inventory[lis[i].ingredientIndex];
+                let merchIngredient = lis[i].ingredient;
 
                 let value = parseFloat(lis[i].children[1].children[1].value);
 
                 if(value !== merchIngredient.quantity){
                     changes.push({
-                        id: merchIngredient.ingredient._id,
-                        quantity: value - merchIngredient.quantity
+                        id: merchIngredient.ingredient.id,
+                        ingredient: merchIngredient.ingredient,
+                        quantity: value
                     });
                 }
             }else{
@@ -182,8 +183,8 @@ window.homeStrandObj = {
                     if(typeof(response.data) === "string"){
                         banner.createError(response.data);
                     }else{
+                        merchant.editIngredients(changes);
                         banner.createNotification("Ingredients updated");
-                        updateInventory(changes);
                     }
                 })
                 .catch((err)=>{});
