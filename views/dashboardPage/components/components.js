@@ -595,12 +595,13 @@ let addIngredientsComp = {
 let ingredientDetailsComp = {
     ingredient: {},
 
-    display: function(ingredient, category){
+    display: function(ingredient){
+        console.log(ingredient);
         this.ingredient = ingredient;
 
         sidebar = document.querySelector("#ingredientDetails");
 
-        document.querySelector("#ingredientDetails p").innerText = category.name;
+        document.querySelector("#ingredientDetails p").innerText = ingredient.ingredient.category;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
         document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
         document.querySelector("#ingredientInput").placeholder = `${ingredient.quantity} ${ingredient.ingredient.unit}`;

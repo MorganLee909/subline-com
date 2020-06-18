@@ -15,7 +15,8 @@ window.ingredientsStrandObj = {
         if(property === "category"){
             categories = merchant.categorizeIngredients();
         }else if(property === "unit"){
-            categories = unitizeIngredients(merchant.inventory);
+            categories = merchant.unitizeIngredients();
+            console.log(categories);
         }
         
         let ingredientStrand = document.querySelector("#categoryList");
@@ -40,7 +41,7 @@ window.ingredientsStrandObj = {
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
                 ingredientDiv.children[2].innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
-                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient, categories[i])};
+                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient)};
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 

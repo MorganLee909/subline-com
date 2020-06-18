@@ -428,6 +428,31 @@ class Merchant{
         return ingredientsByCategory;
     }
 
+    unitizeIngredients(){
+        let ingredientsByUnit = [];
+
+        for(let i = 0; i < this.ingredients.length; i++){
+            let unitExists = false;
+            for(let j = 0; j < ingredientsByUnit.length; j++){
+                if(this.ingredients[i].ingredient.unit === ingredientsByUnit[j].name){
+                    ingredientsByUnit[j].ingredients.push(this.ingredients[i]);
+
+                    unitExists = true;
+                    break;
+                }
+            }
+
+            if(!unitExists){
+                ingredientsByUnit.push({
+                    name: this.ingredients[i].ingredient.unit,
+                    ingredients: [this.ingredients[i]]
+                });
+            }
+        }
+
+        return ingredientsByUnit;
+    }
+
     getRecipesForIngredient(ingredient){
         let recipes = [];
 

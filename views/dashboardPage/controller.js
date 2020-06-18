@@ -48,39 +48,4 @@ let openSidebar = (sidebar)=>{
     sidebar.style.display = "flex";
 }
 
-let unitizeIngredients = (ingredients)=>{
-    let ingredientsByUnit = [];
-
-    for(let i = 0; i < ingredients.length; i++){
-        let unitExists = false;
-        for(let j = 0; j < ingredientsByUnit.length; j++){
-            if(ingredients[i].ingredient.unit === ingredientsByUnit[j].name){
-                ingredientsByUnit[j].ingredients.push({
-                    id: ingredients[i].ingredient._id,
-                    name: ingredients[i].ingredient.name,
-                    quantity: ingredients[i].quantity,
-                    unit: ingredients[i].ingredient.unit
-                });
-
-                unitExists = true;
-                break;
-            }
-        }
-
-        if(!unitExists){
-            ingredientsByUnit.push({
-                name: ingredients[i].ingredient.unit,
-                ingredients: [{
-                    id: ingredients[i].ingredient._id,
-                    name: ingredients[i].ingredient.name,
-                    quantity: ingredients[i].quantity,
-                    unit: ingredients[i].ingredient.unit
-                }]
-            })
-        }
-    }
-
-    return ingredientsByUnit;
-}
-
 homeStrandObj.display();
