@@ -38,6 +38,7 @@ let registerObj = {
 
         if(checkbox.checked){
             if(validator.isSanitary(document.querySelector("#regName").value)){
+                document.getElementById("loaderContainer").style.display = "flex";
                 form.action = "merchant/create/none";
                 form.method = "post";
                 form.submit();

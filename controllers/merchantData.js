@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
-const { update } = require("../models/merchant");
+const Validator = require("./validator.js");
 
 module.exports = {
     /*
@@ -18,9 +18,10 @@ module.exports = {
     Redirects to /dashboard
     */
     createMerchantNone: async function(req, res){
-        let merchant = await Merchant.findOne({email: req.body.email.toLowerCase()});
-        if(merchant){
-            req.session.error = "That email address is already in use";
+        let validation =  await Validator.merchant(req.body);
+        if(validation !== true){
+            console.log(validation);
+            req.session.error = validation;
             return res.redirect("/");
         }
 
