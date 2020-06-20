@@ -116,7 +116,6 @@ let recipeDetailsComp = {
         })
             .then((response) => response.json())
             .then((response)=>{
-                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -127,6 +126,9 @@ let recipeDetailsComp = {
             .catch((err)=>{
                 banner.createError("Something went wrong.  Please refresh the page");
             })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     },
 
     remove: function(){
@@ -284,7 +286,6 @@ let newOrderComp = {
         })
             .then(response => response.json())
             .then((response)=>{
-                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -303,6 +304,9 @@ let newOrderComp = {
             })
             .catch((err)=>{
                 banner.createError("Something went wrong.  Try refreshing the page");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
             });
     },
 }
@@ -340,7 +344,6 @@ let newIngredientComp = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
-                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
@@ -360,6 +363,9 @@ let newIngredientComp = {
                 .catch((err)=>{
                     console.log(err);
                     banner.createError("Something went wrong.  Try refreshing the page");
+                })
+                .finally(()=>{
+                    loader.style.display = "none";
                 });
         // }
     }
@@ -408,7 +414,6 @@ let orderDetailsComp = {
         })
             .then((response) => response.json())
             .then((response)=>{
-                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -418,6 +423,9 @@ let orderDetailsComp = {
             })
             .catch((err)=>{
                 banner.createError("Something went wrong, try refreshing the page");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
             });
     }
 }
@@ -437,7 +445,6 @@ let addIngredientsComp = {
             fetch("/ingredients")
                 .then((response) => response.json())
                 .then((response)=>{
-                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
@@ -467,6 +474,9 @@ let addIngredientsComp = {
                 })
                 .catch((err)=>{
                     banner.createError("Unable to retrieve data");
+                })
+                .finally(()=>{
+                    loader.style.display = "none";
                 });
 
             this.isPopulated = true;
@@ -603,7 +613,6 @@ let addIngredientsComp = {
             body: JSON.stringify(fetchable)
         })
             .then((response)=>{
-                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -613,6 +622,9 @@ let addIngredientsComp = {
             })
             .catch((err)=>{
                 banner.createError("Something went wrong.  Try refreshing the page");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
             });
     }
 }
@@ -687,7 +699,6 @@ let ingredientDetailsComp = {
         })
             .then((response) => response.json())
             .then((response)=>{
-                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -695,7 +706,10 @@ let ingredientDetailsComp = {
                     merchant.editIngredients([this.ingredient], true);
                 }
             })
-            .catch((err)=>{});
+            .catch((err)=>{})
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     },
 
     edit: function(){
@@ -724,7 +738,6 @@ let ingredientDetailsComp = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
-                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
@@ -734,6 +747,9 @@ let ingredientDetailsComp = {
                 })
                 .catch((err)=>{
                     banner.createError("Something went wrong, try refreshing the page");
+                })
+                .finally(()=>{
+                    loader.style.display = "none";
                 });
         }
     }
@@ -818,7 +834,6 @@ let newRecipeComp = {
         })
             .then((response) => response.json())
             .then((response)=>{
-                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -836,6 +851,9 @@ let newRecipeComp = {
             })
             .catch((err)=>{
                 banner.createError("Refresh page to update data");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
             });
     },
 }

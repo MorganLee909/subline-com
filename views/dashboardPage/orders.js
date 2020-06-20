@@ -16,7 +16,6 @@ window.ordersStrandObj = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
-                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
@@ -37,6 +36,9 @@ window.ordersStrandObj = {
                 })
                 .catch((err)=>{
                     banner.createError("Unable to retrieve your orders at the moment");
+                })
+                .finally(()=>{
+                    loader.style.display = "none";
                 });
         }
     },

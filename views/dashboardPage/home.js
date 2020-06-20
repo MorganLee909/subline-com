@@ -168,7 +168,8 @@ window.homeStrandObj = {
             }
         }
 
-        document.getElementById("loaderContainer").style.display = "flex";
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
         
         if(changes.length > 0){
             fetch("/merchant/ingredients/update", {
@@ -180,16 +181,17 @@ window.homeStrandObj = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
-                    document.getElementById("loaderContainer").style.display = "none";
                     if(typeof(response.data) === "string"){
                         banner.createError(response.data);
                     }else{
-                        
                         merchant.editIngredients(changes);
                         banner.createNotification("Ingredients updated");
                     }
                 })
-                .catch((err)=>{});
+                .catch((err)=>{})
+                .finally(()=>{
+                    loader.style.display = "none";
+                });
         }
     }
 }
