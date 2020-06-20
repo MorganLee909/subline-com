@@ -1,6 +1,7 @@
 const Order = require("../models/order.js");
 const Merchant = require("../models/merchant.js");
 const ObjectId = require("mongoose").Types.ObjectId;
+const Validator = require("./validator.js");
 
 module.exports = {
     /*

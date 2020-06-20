@@ -611,11 +611,13 @@ let addIngredientsComp = {
             },
             body: JSON.stringify(fetchable)
         })
+            .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
                     merchant.editIngredients(newIngredients);
+                    this.isPopulated = false;
                     banner.createNotification("All ingredients added successfully");
                 }
             })

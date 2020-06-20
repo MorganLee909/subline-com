@@ -170,10 +170,14 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validate.quantity(req.body.quantity);
-        if(validation !== true){
-            return res.json(validation);
+        let validation;
+        for(let i = 0; i < req.body.length; i++){
+            validation = Validator.quantity(req.body[i].quantity);
+            if(validation !== true){
+                return res.json(validation);
+            }
         }
+        
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{

@@ -1,5 +1,6 @@
 const Recipe = require("../models/recipe");
 const Merchant = require("../models/merchant");
+const Validator = require("./validator.js");
 
 module.exports = {
     /*
@@ -20,7 +21,7 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator(req.body);
+        let validation = Validator.recipe(req.body);
         if(validation !== true){
             return res.json(validation);
         }
@@ -72,7 +73,7 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator(req.body);
+        let validation = Validator.recipe(req.body);
         if(validation !== true){
             return res.json(validation);
         }
