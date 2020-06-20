@@ -686,7 +686,6 @@ let ingredientDetailsComp = {
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
                 if(this.ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){
-                    console.log("something");
                     banner.createError("Must remove ingredient from all recipes before removing");
                     return;
                 }
