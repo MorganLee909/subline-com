@@ -38,7 +38,7 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("Error: unable to retrieve user data");
-            })
+            });
 
         recipe.save()
             .then((newRecipe)=>{

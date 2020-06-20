@@ -20,7 +20,6 @@ module.exports = {
     createMerchantNone: async function(req, res){
         let validation =  await Validator.merchant(req.body);
         if(validation !== true){
-            console.log(validation);
             req.session.error = validation;
             return res.redirect("/");
         }

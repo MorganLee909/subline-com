@@ -35,11 +35,13 @@ module.exports = {
             return res.redirect("/");
         }
 
-        if(!Validator.ingredient(req.body.ingredient)){
-            return res.json("Error:  ingredient contains illegal characters");
+        let validation = Validator.ingredient(req.body.ingredient);
+        if(validation !== true){
+            return res.json(validation);
         }
-        if(!Validator.quantity(req.body.quantity)){
-            return res.json("Error: inappropriate quantity");
+        validation = Validator.quantity(req.body.quantity);
+        if(validation !== true){
+            return res.json(validation);
         }
 
         let ingredientPromise = Ingredient.create((req.body.ingredient));
