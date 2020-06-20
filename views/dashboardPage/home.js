@@ -170,6 +170,8 @@ window.homeStrandObj = {
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
+
+        console.log(changes);
         
         if(changes.length > 0){
             fetch("/merchant/ingredients/update", {
@@ -181,8 +183,8 @@ window.homeStrandObj = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
-                    if(typeof(response.data) === "string"){
-                        banner.createError(response.data);
+                    if(typeof(response) === "string"){
+                        banner.createError(response);
                     }else{
                         merchant.editIngredients(changes);
                         banner.createNotification("Ingredients updated");

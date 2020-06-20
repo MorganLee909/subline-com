@@ -249,9 +249,11 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator.quantity(req.body.quantity);
-        if(validation !== true){
-            return res.json(validation);
+        for(let i = 0; i < req.body.length; i++){
+            let validation = Validator.quantity(req.body[i].quantity);
+            if(validation !== true){
+                return res.json(validation);
+            }
         }
 
         let adjustments = [];

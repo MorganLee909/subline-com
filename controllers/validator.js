@@ -37,7 +37,6 @@ module.exports = {
     },
 
     quantity: function(num){
-        console.log(num);
         if(isNaN(num) || num === ""){
             return "Quantity must be a number";
         }
