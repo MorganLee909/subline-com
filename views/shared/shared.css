@@ -8,11 +8,95 @@ body{
     min-height: 100vh;
 }
 
+/* Loader */
+#loaderContainer{
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 27, 45, 0.5);
+    z-index: 2;
+    position: fixed;
+}
+
+.loader{
+    margin-bottom: 200px;
+    margin-right: 100px;
+}
+
+.loader .outer{
+    border: 10px solid rgba(255, 255, 255, 0);
+    border-top: 10px solid rgba(255, 99, 107, 0.8);
+    border-bottom: 10px solid rgba(255, 99, 107, 0.8);
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    animation: spin1 2s infinite;
+    position: absolute;
+}
+
+.loader .mid{
+    border: 10px solid rgba(255, 255, 255, 0);
+    border-right: 10px solid rgba(0, 27, 45, 0.8);
+    border-left: 10px solid rgba(0, 27, 45, 0.8);
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    margin: 10px 0 0 10px;
+    animation: spin2 2s infinite;
+    position: absolute;
+}
+
+.loader .inner{
+    border: 10px solid rgba(255, 255, 255, 0);
+    border-top: 10px solid rgba(179, 191, 209, 0.8);
+    border-bottom: 10px solid rgba(179, 191, 209, 0.8);
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    margin: 20px 0 0 20px;
+    animation: spin3 2s infinite;
+    position: absolute;
+}
+
+.loader img{
+    margin: 10px 0 0 10px;
+    height: 70px;
+    width: 80px;
+    position: absolute;
+    z-index: -1;
+    animation: imgSpin 3s linear infinite;
+}
+
+@keyframes spin1{
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes spin2{
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(720deg); }
+}
+
+@keyframes spin3{
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(1080deg); }
+}
+
+@keyframes imgSpin{
+    0% { 
+        transform: rotateY(0deg);
+    }
+
+    100% { 
+        transform: rotateY(360deg);
+    }
+}
+
 /* General style that should apply to all pages */
 h1 {
     text-align: center;
     padding-bottom: 13px;
-
 }
 
 h3 {

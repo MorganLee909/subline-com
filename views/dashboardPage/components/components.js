@@ -104,6 +104,9 @@ let recipeDetailsComp = {
             });
         }
 
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         fetch("/recipe/update", {
             method: "PUT",
             headers: {
@@ -113,6 +116,7 @@ let recipeDetailsComp = {
         })
             .then((response) => response.json())
             .then((response)=>{
+                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -267,6 +271,9 @@ let newOrderComp = {
             date: document.getElementById("orderDate").value,
             ingredients: ingredients
         }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
         
         fetch("/order", {
             method: "POST",
@@ -277,6 +284,7 @@ let newOrderComp = {
         })
             .then(response => response.json())
             .then((response)=>{
+                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -319,6 +327,9 @@ let newIngredientComp = {
             quantity: document.querySelector("#newIngQuantity").value
         }
 
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         if(validator.ingredient(newIngredient)){
             fetch("/ingredients/create", {
                 method: "POST",
@@ -329,6 +340,7 @@ let newIngredientComp = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
+                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
@@ -384,6 +396,9 @@ let orderDetailsComp = {
     },
 
     remove: function(order){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         fetch(`/order/${order.id}`, {
             method: "DELETE",
             headers: {
@@ -392,6 +407,7 @@ let orderDetailsComp = {
         })
             .then((response) => response.json())
             .then((response)=>{
+                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -414,9 +430,13 @@ let addIngredientsComp = {
         let sidebar = document.querySelector("#addIngredients");
 
         if(!this.isPopulated){
+            let loader = document.getElementById("loaderContainer");
+            loader.style.display = "flex";
+
             fetch("/ingredients")
                 .then((response) => response.json())
                 .then((response)=>{
+                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
@@ -571,6 +591,9 @@ let addIngredientsComp = {
             });
         }
 
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         fetch("/merchant/ingredients/add", {
             method: "POST",
             headers: {
@@ -579,6 +602,7 @@ let addIngredientsComp = {
             body: JSON.stringify(fetchable)
         })
             .then((response)=>{
+                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -654,11 +678,15 @@ let ingredientDetailsComp = {
             }
         }
 
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         fetch(`/merchant/ingredients/remove/${this.ingredient.ingredient.id}`, {
             method: "DELETE",
         })
             .then((response) => response.json())
             .then((response)=>{
+                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
@@ -682,6 +710,9 @@ let ingredientDetailsComp = {
             quantity: this.ingredient.quantity
         }];
 
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         if(validator.ingredientQuantity(data[0].quantity)){
             fetch("/merchant/ingredients/update", {
                 method: "PUT",
@@ -692,6 +723,7 @@ let ingredientDetailsComp = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
+                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
@@ -773,6 +805,9 @@ let newRecipeComp = {
             return;
         }
 
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         fetch("/recipe/create", {
             method: "POST",
             headers: {
@@ -782,6 +817,7 @@ let newRecipeComp = {
         })
             .then((response) => response.json())
             .then((response)=>{
+                loader.style.display = "none";
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{

@@ -5,6 +5,9 @@ window.ordersStrandObj = {
         if(!this.isFetched){
             window.orders = [];
 
+            let loader = document.getElementById("loaderContainer");
+            loader.style.display = "flex";
+
             fetch("/order", {
                 method: "GET",
                 headers: {
@@ -13,6 +16,7 @@ window.ordersStrandObj = {
             })
                 .then((response) => response.json())
                 .then((response)=>{
+                    loader.style.display = "none";
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
