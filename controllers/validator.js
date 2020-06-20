@@ -48,6 +48,18 @@ module.exports = {
         return true;
     },
 
+    price: function(price){
+        if(price < 0){
+            return "Price cannot be a negative number";
+        }
+
+        if(isNaN(price) || price === ""){
+            return "Price must be a number";
+        }
+
+        return true;
+    },
+
     ingredient: function(ingredient){
         if(!this.isSanitary([ingredient.name, ingredient.category, ingredient.unit])){
             return "Ingredient contains illegal characters";
@@ -61,18 +73,39 @@ module.exports = {
             return "Ingredient contains illegal characters";
         }
 
-        if(isNaN(recipe.price) || recipe.price === ""){
-            return "Price must be a number";
-        }
-
-        if(recipe.price < 0){
-            return "Price cannot be a negative number";
+        let priceCheck = this.price(recipe.price);
+        if(priceCheck !== true){
+            return priceCheck;
         }
 
         for(let i = 0; i < recipe.ingredients.length; i++){
             let checkQuantity = this.quantity(recipe.ingredients[i].quantity);
             if(checkQuantity !== true){
                 return checkQuantity;
+            }
+        }
+
+        return true;
+    },
+
+    order: function(order){
+        if(!this.isSanitary([order.orderId])){
+            return "Order name contains illegal characters";
+        }
+
+        if(new Date(order.date) > new Date()){
+            return "Date cannot be in the future";
+        }
+
+        for(let i = 0; i < order.ingredients; i++){
+            let quantityCheck = this.quantity(order.ingredients[i].quantity);
+            if(quantityCheck !== true){
+                return quantityCheck;
+            }
+
+            let priceCheck = this.price(order.ingredients[i].price);
+            if(priceCheck !== true){
+                return priceCheck;
             }
         }
 

@@ -59,6 +59,11 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let validation = Validator.order(req.body);
+        if(validation !== true){
+            return res.json(validation);
+        }
+
         let newOrder = new Order(req.body);
         newOrder.merchant = req.session.user;
         newOrder.save()
