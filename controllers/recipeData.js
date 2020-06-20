@@ -20,6 +20,11 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let validation = Validator(req.body);
+        if(validation !== true){
+            return res.json(validation);
+        }
+
         let recipe = new Recipe({
             merchant: req.session.user,
             name: req.body.name,
@@ -65,6 +70,11 @@ module.exports = {
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
             return res.redirect("/");
+        }
+
+        let validation = Validator(req.body);
+        if(validation !== true){
+            return res.json(validation);
         }
 
         Recipe.findOne({_id: req.body.id})
