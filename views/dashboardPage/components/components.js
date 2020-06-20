@@ -361,7 +361,6 @@ let newIngredientComp = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("Something went wrong.  Try refreshing the page");
                 })
                 .finally(()=>{

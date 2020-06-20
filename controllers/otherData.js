@@ -2,8 +2,6 @@ const bcrypt = require("bcryptjs");
 const axios = require("axios");
 
 const Merchant = require("../models/merchant");
-const Order = require("../models/order");
-const Transaction = require("../models/transaction");
 
 module.exports = {
     /*
@@ -99,35 +97,5 @@ module.exports = {
                 req.session.error = "Error: Unable to retrieve data from Clover";
                 return res.redirect("/");
             });
-    },
-
-    /*
-    POST - Changes the users password
-    req.body = {
-        pass: new password,
-        confirmPass: new password confirmation,
-        hash: hashed version of old password
-    }
-    */
-    resetPassword: function(req, res){
-        Merchant.findOne({password: req.body.hash})
-            .then((merchant)=>{
-                if(merchant && req.body.pass === req.body.confirmPass){
-                    let salt = bcrypt.genSaltSync(10);
-                    let hash = bcrypt.hashSync(req.body.pass, salt);
-
-                    merchant.password = hash;
-
-                    return merchant.save();
-                }else{
-                    req.session.error = "Error: unable to retrieve merchant data";
-                    return res.redirect("/");
-                }
-            })
-            .then((merchant)=>{
-                req.session.error = "Password successfully reset.  Please log in";
-                return res.redirect("/");
-            })
-            .catch((err)=>{});
     }
 } 

@@ -3,7 +3,6 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const Merchant = require("../models/merchant");
 const Transaction = require("../models/transaction");
-const Order = require("../models/order");
 
 module.exports = {
     /*

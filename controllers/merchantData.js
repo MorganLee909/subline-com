@@ -171,6 +171,10 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let validation = Validate.quantity(req.body.quantity);
+        if(validation !== true){
+            return res.json(validation);
+        }
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
@@ -242,6 +246,11 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let validation = Validator.quantity(req.body.quantity);
+        if(validation !== true){
+            return res.json(validation);
+        }
+
         let adjustments = [];
 
         Merchant.findOne({_id: req.session.user})
@@ -282,40 +291,37 @@ module.exports = {
     },
 
     /*
-    //POST - Update merchant password
+    POST - Changes the users password
     req.body = {
-        oldPass: current merchant password (supposedly),
-        newPass: replacement password
+        pass: new password,
+        confirmPass: new password confirmation,
+        hash: hashed version of old password
     }
     */
     updatePassword: function(req, res){
-        if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
-            return res.redirect("/");
+        let validation = Validator.password(req.body.pass, req.body.confirmPass);
+        if(validation !== true){
+            return res.json(validation);
         }
 
-        Merchant.findOne({_id: req.session.user})
+        Merchant.findOne({password: req.body.hash})
             .then((merchant)=>{
-                bcrypt.compare(req.body.oldPass, merchant.password, (err, result)=>{
-                    if(result){
-                        let salt = bcrypt.genSaltSync(10);
-                        let hash = bcrypt.hashSync(req.body.newPass, salt);
+                if(merchant){
+                    let salt = bcrypt.genSaltSync(10);
+                    let hash = bcrypt.hashSync(req.body.pass, salt);
 
-                        merchant.password = hash;
-                        merchant.save()
-                            .then((updatedMerchant)=>{
-                                return res.json({});
-                            })
-                            .catch((err)=>{
-                                return res.json("Error: Unable to save new password");
-                            });
-                    }else{
-                        return res.json("Error: old password does not match current password");
-                    }
-                });
+                    merchant.password = hash;
+
+                    return merchant.save();
+                }else{
+                    req.session.error = "Error: unable to retrieve merchant data";
+                    return res.redirect("/");
+                }
             })
-            .catch((err)=>{
-                return res.json("Error: Unable to retrieve merchant data");
-            });
+            .then((merchant)=>{
+                req.session.error = "Password successfully reset.  Please log in";
+                return res.redirect("/");
+            })
+            .catch((err)=>{});
     }
 }

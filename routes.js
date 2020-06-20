@@ -40,7 +40,6 @@ module.exports = function(app){
     app.get("/logout", otherData.logout);
     app.get("/cloverlogin", otherData.cloverRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
-    app.post("/resetpassword", otherData.resetPassword);
 
     //Transactions
     app.get("/populatesometransactions", transactionData.populate);

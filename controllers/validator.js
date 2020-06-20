@@ -16,11 +16,20 @@ module.exports = {
             return "An account with that email address already exists";
         }
 
-        if(merchant.password.length < 10){
+        let checkPassword = this.password(merchant.password, merchant.confirmPassword);
+        if(this.password(checkPassword !== true)){
+            return checkPassword;
+        }
+
+        return true;
+    },
+
+    password: function(password, confirmPassword){
+        if(password.length < 10){
             return "Password must contain at least 10 characters";
         }
 
-        if(merchant.password !== merchant.confirmPassword){
+        if(password !== confirmPassword){
             return "Passwords do not match";
         }
 
