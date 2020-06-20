@@ -330,7 +330,7 @@ let newIngredientComp = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        if(validator.ingredient(newIngredient)){
+        // if(validator.ingredient(newIngredient)){
             fetch("/ingredients/create", {
                 method: "POST",
                 headers: {
@@ -358,9 +358,10 @@ let newIngredientComp = {
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("Something went wrong.  Try refreshing the page");
                 });
-        }
+        // }
     }
 }
 

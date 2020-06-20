@@ -1,5 +1,6 @@
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
+const Validator = require("./validator.js");
 
 module.exports = {
     //GET - gets a list of all database ingredients
@@ -32,6 +33,13 @@ module.exports = {
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
             return res.redirect("/");
+        }
+
+        if(!Validator.ingredient(req.body.ingredient)){
+            return res.json("Error:  ingredient contains illegal characters");
+        }
+        if(!Validator.quantity(req.body.quantity)){
+            return res.json("Error: inappropriate quantity");
         }
 
         let ingredientPromise = Ingredient.create((req.body.ingredient));
