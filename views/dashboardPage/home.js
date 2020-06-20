@@ -170,8 +170,6 @@ window.homeStrandObj = {
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
-
-        console.log(changes);
         
         if(changes.length > 0){
             fetch("/merchant/ingredients/update", {
