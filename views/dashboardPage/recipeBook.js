@@ -13,6 +13,7 @@ window.recipeBookStrandObj = {
     populateRecipes: function(){
         let recipeList = document.querySelector("#recipeList");
 
+        this.recipeDivList = [];
         while(recipeList.children.length > 0){
             recipeList.removeChild(recipeList.firstChild);
         }
