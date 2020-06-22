@@ -44,12 +44,12 @@ let recipeDetailsComp = {
             let nameIn = document.querySelector("#recipeNameIn");
             name.style.display = "none";
             nameIn.style.display = "block";
-            nameIn.placeholder = name.innerText;
+            nameIn.value = this.recipe.name;
 
             let price = document.querySelector("#recipePrice");
             price.children[1].style.display = "none";
             price.children[2].style.display = "block";
-            price.children[2].placeholder = price.children[1].innerText;
+            price.children[2].value = parseFloat((this.recipe.price / 100).toFixed(2));
         }
 
         for(let i = 0; i < ingredientDivs.children.length; i++){
@@ -57,7 +57,7 @@ let recipeDetailsComp = {
 
             div.children[2].innerText = this.recipe.ingredients[i].ingredient.unit;
             div.children[1].style.display = "block";
-            div.children[1].placeholder = this.recipe.ingredients[i].quantity;
+            div.children[1].value = parseFloat(this.recipe.ingredients[i].quantity);
             div.children[3].style.display = "block";
             div.children[3].onclick = ()=>{div.parentElement.removeChild(div)};
         }
@@ -85,7 +85,7 @@ let recipeDetailsComp = {
             }else{
                 this.recipe.ingredients.push({
                     ingredient: divs[i].ingredient,
-                    quantity: divs[i].children[1].value || divs[i].children[1].placeholder
+                    quantity: divs[i].children[1].value
                 });
             }
         }
