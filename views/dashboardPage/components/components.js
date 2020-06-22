@@ -269,7 +269,7 @@ let newOrderComp = {
         }
 
         let data = {
-            orderId: document.getElementById("orderName").value,
+            name: document.getElementById("orderName").value,
             date: document.getElementById("orderDate").value,
             ingredients: ingredients
         }
@@ -291,7 +291,7 @@ let newOrderComp = {
                 }else{
                     let order = new Order(
                        response._id,
-                       response.orderId,
+                       response.name,
                        response.date,
                        response.ingredients,
                        merchant 

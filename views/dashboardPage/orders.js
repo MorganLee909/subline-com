@@ -23,7 +23,7 @@ window.ordersStrandObj = {
                         for(let i = 0; i < response.length; i++){
                             newOrders.push(new Order(
                                 response[i]._id,
-                                response[i].orderId,
+                                response[i].name,
                                 response[i].date,
                                 response[i].ingredients,
                                 merchant

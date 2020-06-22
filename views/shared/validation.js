@@ -158,7 +158,7 @@ let validator = {
     order: function(order, createBanner = true){
         let errors = [];
 
-        if(!validator.isSanitary(order.orderId, false)){
+        if(!validator.isSanitary(order.name, false)){
             errors.push("Your string contains illegal characters");
         }
 

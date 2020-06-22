@@ -8,7 +8,7 @@ module.exports = {
     GET - get the 25 most recent orders
     return = [
         _id: id of order,
-        orderId: user created id for order,
+        name: user created id for order,
         date: date order was created,
         ingredients: [{
             _id: unused id of this object,
@@ -29,7 +29,7 @@ module.exports = {
             {$sort: {date: -1}},
             {$limit: 25},
             {$project: {
-                orderId: 1,
+                name: 1,
                 date: 1,
                 ingredients: 1
             }}
@@ -45,7 +45,7 @@ module.exports = {
     /*
     POST - Creates a new order from the site
     req.body = {
-        orderId: user created order id
+        name: user created order id
         date: creation date
         ingredients: [{
             ingredient: id of the ingredient

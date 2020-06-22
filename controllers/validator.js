@@ -97,7 +97,7 @@ module.exports = {
     },
 
     order: function(order){
-        if(!this.isSanitary([order.orderId])){
+        if(!this.isSanitary([order.name])){
             return "Order name contains illegal characters";
         }
 
