@@ -760,6 +760,11 @@ let newRecipeComp = {
     display: function(){
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
         let categories = merchant.categorizeIngredients();
+
+        while(ingredientsSelect.children.length > 0){
+            ingredientsSelect.removeChild(ingredientsSelect.firstChild);
+        }
+
         for(let category of categories){
             let optgroup = document.createElement("optgroup");
             optgroup.label = category.name;
