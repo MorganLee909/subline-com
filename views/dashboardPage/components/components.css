@@ -251,70 +251,6 @@
         margin-left: auto;
     }
 
-    .addIngredientsIngredients{
-        flex-direction: column;
-        padding: 0 20px;
-    }
-
-        .addIngredientsIngredient{
-            display: flex;
-            justify-content: left;
-            align-items: center;
-            margin: 5px;
-        }
-
-            .addIngredientsIngredient > *:nth-child(2){
-                margin-left: auto;
-            }
-
-            .addIngredientsIngredient input[type=number]{
-                width: 100px;
-            }
-
-            .addButton{
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 25px;
-                font-weight: bold;
-                background: none;
-                border: 1px solid black;
-                border-radius: 5px;
-                width: 30px;
-                cursor: pointer;
-            }
-
-                .addButton:hover{
-                    background:rgb(0, 27, 45);
-                    color: white;
-                }
-
-/* Ingredient Details */
-#ingredientDetails{
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-    #ingredientDetails > p{
-        border-radius: 10px;
-        background: gray;
-        color: white;
-        padding: 0 3px;
-        font-size: 14px;
-    }
-
-    #ingredientDetails label{
-        font-size: 20px;
-        text-align: center;
-    }
-
-    #ingredientDetails label p{
-        font-size: 30px;
-        font-weight: bold;
-        padding: 10px;
-    }
-
     .addIngredientsCategory{
         width: 90%;
     }
@@ -344,6 +280,70 @@
                 background: rgb(0, 27, 45);
                 color: white;
             }
+
+        .addIngredientsIngredients{
+            flex-direction: column;
+            padding: 0 20px;
+        }
+
+            .addIngredientsIngredient{
+                display: flex;
+                justify-content: left;
+                align-items: center;
+                margin: 5px;
+            }
+
+                .addIngredientsIngredient > *:nth-child(2){
+                    margin-left: auto;
+                }
+
+                .addIngredientsIngredient input[type=number]{
+                    width: 100px;
+                }
+
+                .addButton{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 25px;
+                    font-weight: bold;
+                    background: none;
+                    border: 1px solid black;
+                    border-radius: 5px;
+                    width: 30px;
+                    cursor: pointer;
+                }
+
+                    .addButton:hover{
+                        background:rgb(0, 27, 45);
+                        color: white;
+                    }
+
+/* Ingredient Details */
+#ingredientDetails{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #ingredientDetails > p{
+        border-radius: 10px;
+        background: gray;
+        color: white;
+        padding: 0 3px;
+        font-size: 14px;
+    }
+
+    #ingredientDetails label{
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #ingredientDetails label p{
+        font-size: 30px;
+        font-weight: bold;
+        padding: 10px;
+    }
 
 /* Recipe Details */
 #recipeDetails{
