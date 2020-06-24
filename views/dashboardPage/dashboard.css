@@ -1,3 +1,6 @@
+/* 
+General page styling 
+*/
 html{
     height: 100%;
     max-width: 100%;
@@ -10,6 +13,9 @@ body{
     max-width: 100%;
 }
 
+/* 
+Multi-strand use classes 
+*/
 .contentBlock{
     width: 100%;
     height: 100vh;
@@ -38,22 +44,27 @@ body{
     align-items: center;
 }
 
-.rowItem{
+.itemDisplay{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 20px;
+    width: 100%;
     background: rgb(240, 252, 255);
     border-radius: 5px;
-    padding: 20px 20px;
-    width: 100%;
     border: 1px solid gray;
     cursor: pointer;
     box-sizing: border-box;
 }
 
-    .rowItem:hover{
+    .itemDisplay:hover{
         background: rgb(0, 27, 45);
         color: white;
+    }
+
+    .itemDisplay > *:first-of-type{
+        font-size: 20px;
+        font-weight: bold;
     }
 
 .searchBar{
@@ -118,38 +129,40 @@ body{
         cursor: pointer;
     }
 
-/* Home Strand */
+/* 
+Home Strand 
+*/
 #homeStrand{
     display: flex;
 }
 
-.card{
-    margin: 0 15px;
-    border: 1px solid rgba(183, 183, 183, 0.9);
-    border-radius: 7px;
-    box-shadow: 1px 2px gray;
-    flex-grow: 1;
-    height: 100%;
-}
+    .card{
+        margin: 0 15px;
+        border: 1px solid rgba(183, 183, 183, 0.9);
+        border-radius: 7px;
+        box-shadow: 1px 2px gray;
+        flex-grow: 1;
+        height: 100%;
+    }
 
-.card > *{
-    margin: 10px;
-}
+    .card > *{
+        margin: 10px;
+    }
 
-.card p:first-of-type{
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-}
+    .card p:first-of-type{
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+    }
 
-.flexRow{
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    flex-basis: 100px;
-    flex-grow: 1;
-    margin: 15px 0;
-}
+    .flexRow{
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        flex-basis: 100px;
+        flex-grow: 1;
+        margin: 15px 0;
+    }
 
 #revenueCard{
     display: flex;
@@ -260,23 +273,23 @@ body{
                 -moz-appearance: textfield;
             }
 
-#popularIngredientsCard{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-basis: 100px;
-    flex-grow: 2.5;
+    #popularIngredientsCard{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-basis: 100px;
+        flex-grow: 2.5;
 
-}
-    #popularCanvas{
-        margin: 0 35px;
     }
+        #popularCanvas{
+            margin: 0 35px;
+        }
 
-    .notice{
-        color: red;
-        font-size: 35px;
-        font-weight: bold;
-    }
+        .notice{
+            color: red;
+            font-size: 35px;
+            font-weight: bold;
+        }
 
 /* Ingredients Strand */
 #ingredientsStrand{
