@@ -11,27 +11,22 @@ window.recipeBookStrandObj = {
     },
 
     populateRecipes: function(){
-        let recipeList = document.querySelector("#recipeList");
+        let recipeList = document.getElementById("recipeList");
+        let template = document.getElementById("recipe").content.children[0];
 
         this.recipeDivList = [];
         while(recipeList.children.length > 0){
             recipeList.removeChild(recipeList.firstChild);
         }
 
-        for(let recipe of merchant.recipes){
-            let recipeDiv = document.createElement("div");
-            recipeDiv.classList = "itemDisplay";
-            recipeDiv.onclick = ()=>{recipeDetailsComp.display(recipe)};
-            recipeDiv._name = recipe.name;
+        for(let i = 0; i < merchant.recipes.length; i++){
+            let recipeDiv = template.cloneNode(true);
+            recipeDiv.onclick = ()=>{recipeDetailsComp.display(merchant.recipes[i])};
+            recipeDiv._name = merchant.recipes[i].name;
             recipeList.appendChild(recipeDiv);
 
-            let recipeName = document.createElement("p");
-            recipeName.innerText = recipe.name;
-            recipeDiv.appendChild(recipeName);
-
-            let recipePrice = document.createElement("p");
-            recipePrice.innerText = `$${(recipe.price / 100).toFixed(2)}`;
-            recipeDiv.appendChild(recipePrice);
+            recipeDiv.children[0].innerText = merchant.recipes[i].name;
+            recipeDiv.children[1].innerText = `$${(merchant.recipes[i].price / 100).toFixed(2)}`;
 
             this.recipeDivList.push(recipeDiv);
         }
