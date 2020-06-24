@@ -129,6 +129,16 @@ Multi-strand use classes
         cursor: pointer;
     }
 
+    .button2Link{
+        background: none;
+        border: none;
+        color: blue;
+        text-decoration: underline;
+        font-size: 18px;
+        margin-top: auto;
+        cursor: pointer;
+    }
+
 /* 
 Home Strand 
 */
