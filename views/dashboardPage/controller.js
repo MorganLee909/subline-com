@@ -48,4 +48,36 @@ let openSidebar = (sidebar)=>{
     sidebar.style.display = "flex";
 }
 
+let changeMenu = ()=>{
+    let menu = document.querySelector(".menu");
+    let buttons = document.querySelectorAll(".menu > button");
+    if(!menu.classList.contains("menuMinimized")){
+        menu.classList = "menu menuMinimized";
+
+        for(let button of buttons){
+            button.children[1].style.display = "none";
+        }
+
+        document.querySelector(".logout p").style.display = "none"
+
+        document.querySelector("#max").style.display = "none";
+        document.querySelector("#min").style.display = "flex";
+
+        
+    }else if(menu.classList.contains("menuMinimized")){
+        menu.classList = "menu";
+
+        for(let button of buttons){
+            button.children[1].style.display = "block";
+        }
+
+        document.querySelector(".logout p").style.display = "flex"
+
+        setTimeout(()=>{
+            document.querySelector("#max").style.display = "flex";
+            document.querySelector("#min").style.display = "none";
+        }, 150);
+    }
+}
+
 homeStrandObj.display();
