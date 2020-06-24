@@ -533,28 +533,25 @@ Add Recipe
         overflow: auto;
     }
 
-        .orderIngredient{
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            box-sizing: border-box;
-            background: rgb(240, 252, 255);
-            border: 1px solid black;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 5px 0;
-        }
-
     #orderTotalPrice{
         display: flex;
         flex-direction: column;
         align-items: center;
+        font-size: 25px;
+        font-weight: bold;
     }
 
-        #orderTotalPrice{
-            font-size: 25px;
-            font-weight: bold;
-        }
+    .orderIngredient{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        box-sizing: border-box;
+        background: rgb(240, 252, 255);
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 5px 0;
+    }
 
 /* Ingredient Details */
 #ingredientRecipeList{
