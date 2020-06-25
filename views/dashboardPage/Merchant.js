@@ -44,8 +44,10 @@ class Transaction{
         this.recipes = [];
 
         for(let i = 0; i < recipes.length; i++){
+            let found = false;
             for(let j = 0; j < parent.recipes.length; j++){
                 if(recipes[i].recipe === parent.recipes[j].id){
+                    found = true;
                     this.recipes.push({
                         recipe: parent.recipes[j],
                         quantity: recipes[i].quantity

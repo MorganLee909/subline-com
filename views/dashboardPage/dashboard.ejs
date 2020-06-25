@@ -61,6 +61,14 @@
                 </svg>
                 <p>Orders</p>
             </button>
+
+            <button id="transactionsBtn" onclick="changeStrand('transactionsStrand')">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+                <p>Transactions</p>
+            </button>
         
             <a class="logout" href="/logout">
                 <p>Logout</p>
@@ -261,6 +269,21 @@
             </div>
         </div>
 
+        <div id="transactionsStrand" class="strand">
+            <div class="strandHead">
+                <h1 class="strandTitle">Transactions</h1>
+            </div>
+
+            <div id="transactionsList"></div>
+
+            <template id="transaction">
+                <div class="itemDisplay">
+                    <p></p>
+                    <p></p>
+                </div>
+            </template>
+        </div>
+
         <div id="sidebarDiv" class="sidebarHide">
             <% include ./sidebars/addIngredients %>
 
@@ -281,10 +304,12 @@
 
         <script src="/dashboardPage/Merchant.js"></script>
         <script>
+            console.time("Load");
             let merchant = new Merchant(
                 <%- JSON.stringify(merchant) %>,
                 <%- JSON.stringify(transactions) %>
             );
+            console.timeEnd("Load");
         </script>
         <script src="../shared/graphs.js"></script>
         <script src="/dashboardPage/home.js"></script>
@@ -293,6 +318,7 @@
         <script src="/dashboardPage/sidebars/sidebars.js"></script>
         <script src="/dashboardPage/controller.js"></script>
         <script src="/dashboardPage/orders.js"></script>
+        <script src="/dashboardPage/transactions.js"></script>
         <script src="../shared/validation.js"></script>
 
         <noscript>Please turn on javascript for this site to work properly</noscript>
