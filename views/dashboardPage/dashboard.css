@@ -414,5 +414,19 @@ Orders Strand
     #orderList{
         width: 50%;
         margin-top: 50px;
-        overflow: auto;
+        overflow-y: auto;
+    }
+
+/*
+Transactions Strand
+*/
+.transactions{
+    display: none;
+    align-items: center;
+}
+
+    .transactionsList{
+        width: 50%;
+        overflow-y: auto;
+        margin-top: 50px;
     }

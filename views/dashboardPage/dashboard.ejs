@@ -267,21 +267,22 @@
                     </div>
                 </template>
             </div>
-        </div>
 
-        <div id="transactionsStrand" class="strand">
-            <div class="strandHead">
-                <h1 class="strandTitle">Transactions</h1>
+            <div id="transactionsStrand" class="strand transactions">
+                <div class="strandHead">
+                    <h1 class="strandTitle">Transactions</h1>
+                </div>
+
+                <div id="transactionsList" class="transactionsList"></div>
+
+                <template id="transaction">
+                    <div class="itemDisplay">
+                        <p></p>
+                        <p></p>
+                    </div>
+                </template>
             </div>
 
-            <div id="transactionsList"></div>
-
-            <template id="transaction">
-                <div class="itemDisplay">
-                    <p></p>
-                    <p></p>
-                </div>
-            </template>
         </div>
 
         <div id="sidebarDiv" class="sidebarHide">
@@ -304,12 +305,10 @@
 
         <script src="/dashboardPage/Merchant.js"></script>
         <script>
-            console.time("Load");
             let merchant = new Merchant(
                 <%- JSON.stringify(merchant) %>,
                 <%- JSON.stringify(transactions) %>
             );
-            console.timeEnd("Load");
         </script>
         <script src="../shared/graphs.js"></script>
         <script src="/dashboardPage/home.js"></script>
