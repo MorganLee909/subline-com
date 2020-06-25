@@ -67,6 +67,19 @@ Multi-strand use classes
         font-weight: bold;
     }
 
+.smallItemDisplay{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%;
+    background: rgb(240, 252, 255);
+    border-radius: 5px;
+    border: 1px solid gray;
+    box-sizing: border-box;
+}
+
 .searchBar{
     display: flex;
     justify-content: space-between;
