@@ -865,7 +865,11 @@ let newRecipeComp = {
 }
 
 let transactionDetailsComp = {
+    transaction: {},
+
     display: function(transaction){
+        this.transaction = transaction;
+
         let recipeList = document.getElementById("transactionRecipes");
         let template = document.getElementById("transactionRecipe").content.children[0];
         let totalRecipes = 0;
@@ -898,5 +902,31 @@ let transactionDetailsComp = {
         document.getElementById("totalPrice").innerText = `$${(totalPrice / 100).toFixed(2)}`;
 
         openSidebar(document.getElementById("transactionDetails"));
+    },
+
+    remove: function(){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch(`/transaction/${this.transaction.id}`, {
+            method: "delete",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    //update the transactions on the front end
+                }
+            })
+            .catch((err)=>{
+                banner.createError("Something went wrong, please refresh the page");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }

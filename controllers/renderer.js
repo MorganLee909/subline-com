@@ -37,14 +37,6 @@ module.exports = {
         Merchant.findOne({_id: req.session.user}, {password: 0, createdAt: 0})
             .populate("inventory.ingredient")
             .populate("recipes")
-            // .populate({
-            //     path: "recipes",
-            //     model: "Recipe",
-            //     populate: {
-            //         path: "ingredients.ingredient",
-            //         model: "Ingredient"
-            //     }
-            // })
             .then((merchant)=>{
                 if(merchant.pos === "clover"){
                     axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
@@ -146,7 +138,6 @@ module.exports = {
                         }},
                         {$sort: {date: 1}},
                         {$project: {
-                            _id: 0,
                             date: 1,
                             recipes: 1
                         }}

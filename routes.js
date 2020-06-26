@@ -35,12 +35,13 @@ module.exports = function(app){
     app.post("/order", orderData.createOrder);
     app.delete("/order/:id", orderData.removeOrder);
 
+    //Transactions
+    app.delete("/transaction/:id", transactionData.remove);
+    app.get("/populatesometransactions", transactionData.populate);
+
     //Other
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
     app.get("/cloverlogin", otherData.cloverRedirect);
-    app.get("/cloverauth*", otherData.cloverAuth);
-
-    //Transactions
-    app.get("/populatesometransactions", transactionData.populate);
+    app.get("/cloverauth*", otherData.cloverAuth);   
 }

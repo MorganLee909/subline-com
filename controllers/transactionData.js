@@ -1,5 +1,4 @@
 const Transaction = require("../models/transaction");
-const Order = require("../models/order");
 const Merchant = require("../models/merchant");
 
 module.exports = {
@@ -55,6 +54,24 @@ module.exports = {
             })
             .catch((err)=>{
                 return;
+            });
+    },
+
+    /*
+    DELETE - Remove a transaction from the database
+    */
+    remove: function(req, res){
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        Transaction.deleteOne({_id: req.params.id})
+            .then((response)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("Error: unable to delete the transaction");
             });
     }
 }

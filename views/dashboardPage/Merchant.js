@@ -29,25 +29,16 @@ class Recipe{
     }
 }
 
-/*
-parent: merchant associated with,
-date: date created,
-recipes: [{
-    recipe: Recipe Object,
-    quantity: quantity of the recipe
-}
-*/
 class Transaction{
-    constructor(date, recipes, parent){
+    constructor(id, date, recipes, parent){
+        this.id = id;
         this.parent = parent;
         this.date = new Date(date);
         this.recipes = [];
 
         for(let i = 0; i < recipes.length; i++){
-            let found = false;
             for(let j = 0; j < parent.recipes.length; j++){
                 if(recipes[i].recipe === parent.recipes[j].id){
-                    found = true;
                     this.recipes.push({
                         recipe: parent.recipes[j],
                         quantity: recipes[i].quantity
@@ -112,9 +103,9 @@ class Merchant{
             ));
         }
 
-        
         for(let i = 0; i < transactions.length; i++){
             this.transactions.push(new Transaction(
+                transactions[i]._id,
                 transactions[i].date,
                 transactions[i].recipes,
                 this
@@ -224,6 +215,13 @@ class Merchant{
         ordersStrandObj.populate();
         closeSidebar();
     }
+
+    // editTransactions(transaction, remove = false){
+    //     for(let )
+    //     if(remove){
+
+    //     }
+    // }
 
     /*
     Gets the indices of two dates from transactions
