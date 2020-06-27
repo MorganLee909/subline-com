@@ -216,12 +216,21 @@ class Merchant{
         closeSidebar();
     }
 
-    // editTransactions(transaction, remove = false){
-    //     for(let )
-    //     if(remove){
+    editTransactions(transaction, remove = false){
+        for(let i = 0; i < this.transactions.length; i++){
+            if(this.transactions[i] === transaction){
+                if(remove){
+                    this.transactions.splice(i, 1);
+                }
 
-    //     }
-    // }
+                break;
+            }
+        }
+
+        transactionsStrandObj.isPopulated = false;
+        transactionsStrandObj.display();
+        closeSidebar();
+    }
 
     /*
     Gets the indices of two dates from transactions

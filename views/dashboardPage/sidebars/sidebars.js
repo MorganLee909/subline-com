@@ -919,7 +919,8 @@ let transactionDetailsComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    //update the transactions on the front end
+                    merchant.editTransactions(this.transaction, true);
+                    banner.createNotification("Transaction removed");
                 }
             })
             .catch((err)=>{
