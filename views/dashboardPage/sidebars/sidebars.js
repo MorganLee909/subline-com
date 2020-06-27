@@ -884,8 +884,8 @@ let transactionDetailsComp = {
             let price = transaction.recipes[i].quantity * transaction.recipes[i].recipe.price;
 
             recipe.children[0].innerText = transaction.recipes[i].recipe.name;
-            recipe.children[1].innerText = `${transaction.recipes[i].quantity} x ${parseFloat(transaction.recipes[i].recipe.price / 100).toFixed(2)}`;
-            recipe.children[2].innerText = (price / 100).toFixed(2);
+            recipe.children[1].innerText = `${transaction.recipes[i].quantity} x $${parseFloat(transaction.recipes[i].recipe.price / 100).toFixed(2)}`;
+            recipe.children[2].innerText = `$${(price / 100).toFixed(2)}`;
             recipeList.appendChild(recipe);
 
             totalRecipes += transaction.recipes[i].quantity;
@@ -929,5 +929,29 @@ let transactionDetailsComp = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+}
+
+let newTransactionComp = {
+    display: function(){
+        let recipeList = document.getElementById("newTransactionRecipes");
+        let template = document.getElementById("createTransaction").content.children[0];
+
+        while(recipeList.children.length > 0){
+            recipeList.removeChild(recipeList.firstChild);
+        }
+
+        for(let i = 0; i < merchant.recipes.length; i++){
+            let recipeDiv = template.cloneNode(true);
+            recipeList.appendChild(recipeDiv);
+
+            recipeDiv.children[0].innerText = merchant.recipes[i].name;
+        }
+
+        openSidebar(document.getElementById("newTransaction"));
+    },
+
+    submit: function(){
+        console.log("submitting");
     }
 }

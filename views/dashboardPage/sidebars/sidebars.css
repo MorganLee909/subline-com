@@ -592,3 +592,19 @@ Transaction Details
         font-size: 25px;
         font-weight: bold;
     }
+
+/*
+New Transaction
+*/
+.newTransaction{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    .newTransactionRecipes{
+        width: 100%;
+        height: 90%;
+        overflow-y: auto;
+    }
