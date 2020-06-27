@@ -943,6 +943,7 @@ let newTransactionComp = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let recipeDiv = template.cloneNode(true);
+            recipeDiv.recipe = merchant.recipes[i];
             recipeList.appendChild(recipeDiv);
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
@@ -952,6 +953,66 @@ let newTransactionComp = {
     },
 
     submit: function(){
-        console.log("submitting");
+        let recipeDivs = document.getElementById("newTransactionRecipes");
+        let date = document.getElementById("newTransactionDate").valueAsDate;
+        console.log(recipeDivs);
+        
+        if(date > new Date()){
+            banner.createError("Cannot have a date in the future");
+            return;
+        }
+        
+        let newTransaction = {
+            date: date,
+            recipes: []
+        };
+
+        for(let i = 0; i < recipeDivs.children.length;  i++){
+            let quantity = recipeDivs.children[i].children[1].value;
+            if(quantity !== "" && quantity > 0){
+                newTransaction.recipes.push({
+                    recipe: recipeDivs.children[i].recipe.id,
+                    quantity: quantity
+                });
+            }else if(quantity < 0){
+                banner.createError("Cannot have negative values");
+                return;
+            }
+        }
+
+        if(newTransaction.recipes.length > 0){
+            let loader = document.getElementById("loaderContainer");
+            loader.style.display = "flex";
+
+            fetch("/transaction", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                body: JSON.stringify(newTransaction)
+            })
+                .then(response => response.json())
+                .then((response)=>{
+                    if(typeof(response) === "string"){
+                        banner.createError(response);
+                    }else{
+                        let transaction = new Transaction(
+                            response._id,
+                            response.date,
+                            response.recipes,
+                            merchant
+                        );
+                        merchant.editTransactions(transaction);
+                        banner.createNotification("NEW TRANSACTION CREATED");
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                    banner.createError("Something went wrong, try refreshing the page");
+                })
+                .finally(()=>{
+                    loader.style.display = "none";
+                });
+        }
     }
 }

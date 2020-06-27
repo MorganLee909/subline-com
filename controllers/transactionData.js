@@ -58,6 +58,38 @@ module.exports = {
     },
 
     /*
+    POST - create a new transaction
+    req.body = {
+        date: date of the transaction,
+        recipes: [{
+            recipe: id of the recipe to add,
+            quantity: quantity of the recipe sold
+        }]
+    }
+    */
+    createTransaction: function(req, res){
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        let newTransaction = new Transaction({
+            merchant: req.session.user,
+            date: new Date(req.body.date),
+            device: "none",
+            recipes: req.body.recipes
+        });
+
+        newTransaction.save()
+            .then((response)=>{
+                return res.json(response);
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO CREATE NEW TRANSACTION");
+            });
+    },
+
+    /*
     DELETE - Remove a transaction from the database
     */
     remove: function(req, res){

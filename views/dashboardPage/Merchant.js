@@ -217,14 +217,21 @@ class Merchant{
     }
 
     editTransactions(transaction, remove = false){
+        let isNew = true;
         for(let i = 0; i < this.transactions.length; i++){
             if(this.transactions[i] === transaction){
                 if(remove){
                     this.transactions.splice(i, 1);
                 }
 
+                isNew = false;
                 break;
             }
+        }
+
+        if(isNew){
+            this.transactions.push(transaction);
+            this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
         }
 
         transactionsStrandObj.isPopulated = false;
