@@ -47,12 +47,12 @@ module.exports = {
                     return res.redirect("/dashboard");
                 })
                 .catch((err)=>{
-                    req.session.error = "Error: Unable to create account at this time";
+                    req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
 
                     return res.redirect("/");
                 });
         }else{
-            req.session.error = "Error: Passwords must match";
+            req.session.error = "PASSWORDS DO NOT MATCH";
 
             return res.redirect("/");
         }
@@ -94,7 +94,7 @@ module.exports = {
 
                         Recipe.create(recipes)
                             .catch((err)=>{
-                                req.session.error = "Error: unable to create your recipes from Clover.  Try using updating your recipes on the recipe page."
+                                req.session.error = "ERROR: UNABLE TO CREATE YOUR RECIPES FROM CLOVER."
                             })
 
                         merchant.save()
@@ -105,20 +105,20 @@ module.exports = {
                                 return res.redirect("/dashboard");
                             })
                             .catch((err)=>{
-                                req.session.error = "Error: unable to save data from Clover";
+                                req.session.error = "ERROR: UNABLE TO SAVE DATA FROM CLOVER";
 
                                 return res.redirect("/");
                             });
                     })
                     .catch((err)=>{
-                        req.session.error = "Error: unable to retrieve necessary data from Clover";
+                        req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
                         return res.redirect("/");
                     })
 
                 
             })
             .catch((err)=>{
-                req.session.error = "Error: Unable to retrieve data from Clover";
+                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
 
                 return res.redirect("/");
             });
@@ -127,14 +127,14 @@ module.exports = {
     //DELETE - removes a single recipe from the merchant
     removeRecipe: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 if(merchant.pos === "clover"){
-                    return res.json("Error: you must edit your recipes inside Clover");
+                    return res.json("YOU MUST EDIT YOUR RECIPES INSIDE CLOVER");
                 }
                 
                 for(let i = 0; i < merchant.recipes.length; i++){
@@ -149,11 +149,11 @@ module.exports = {
                         return res.json({});
                     })
                     .catch((err)=>{
-                        return res.json("Error: unable to save data")
+                        return res.json("ERROR: UNABLE TO SAVE DATA");
                     })
             })
             .catch((err)=>{
-                return res.json("Error: unable to retrieve merchant data");
+                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },
 
@@ -166,7 +166,7 @@ module.exports = {
     */
     addMerchantIngredient: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -184,7 +184,7 @@ module.exports = {
                 for(let i = 0; i < req.body.length; i++){
                     for(let j = 0; j < merchant.inventory.length; j++){
                         if(merchant.inventory[j].ingredient.toString() === req.body[i].id){
-                            return res.json("Error: Duplicate ingredient detected");
+                            return res.json("ERROR: DUPLICATE INGREDIENT DETECTED");
                         }
                     }
                     
@@ -199,18 +199,18 @@ module.exports = {
                         return res.json({});
                     })
                     .catch((err)=>{
-                        return res.json("Error: unable to save new ingredient");
+                        return res.json("ERROR: UNABLE TO SAVE NEW INGREDIENT");
                     });
             })
             .catch((err)=>{
-                return res.json("Error: unable to retrieve user data");
+                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },
 
     //POST - Removes an ingredient from the merchant's inventory
     removeMerchantIngredient: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -228,11 +228,11 @@ module.exports = {
                         return res.json({});
                     })
                     .catch((err)=>{
-                        return res.json("Error: unable to save user data");
+                        return res.json("ERROR: UNABLE TO SAVE USER DATA");
                     });
             })
             .catch((err)=>{
-                return res.json("Error: unable to retrieve user data");
+                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },
 
@@ -245,7 +245,7 @@ module.exports = {
     */
     updateMerchantIngredient: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -287,11 +287,11 @@ module.exports = {
                         return;
                     })
                     .catch((err)=>{
-                        return res.json("Error: your data could not be saved");
+                        return res.json("ERROR: UNABLE TO SAVE DATA");
                     })
             })
             .catch((err)=>{
-                return res.json("Error: your data could not be retrieved");
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });        
     },
 
@@ -319,12 +319,12 @@ module.exports = {
 
                     return merchant.save();
                 }else{
-                    req.session.error = "Error: unable to retrieve merchant data";
+                    req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
                     return res.redirect("/");
                 }
             })
             .then((merchant)=>{
-                req.session.error = "Password successfully reset.  Please log in";
+                req.session.error = "PASSWORD SUCCESSFULLY RESET. PLEASE LOG IN";
                 return res.redirect("/");
             })
             .catch((err)=>{});

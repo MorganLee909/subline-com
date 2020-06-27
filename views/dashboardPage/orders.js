@@ -35,7 +35,7 @@ window.ordersStrandObj = {
                     }
                 })
                 .catch((err)=>{
-                    banner.createError("Unable to retrieve your orders at the moment");
+                    banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
                     loader.style.display = "none";

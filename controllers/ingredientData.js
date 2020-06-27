@@ -12,7 +12,7 @@ module.exports = {
                 return res.json(ingredients);
             })
             .catch((err)=>{
-                return res.json("Error: unable to retrieve ingredients");
+                return res.json("ERROR: UNABLE TO RETRIEVE INGREDIENTS");
             });
     },
 
@@ -31,7 +31,7 @@ module.exports = {
     */
     createIngredient: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -63,7 +63,7 @@ module.exports = {
                 return res.json(newIngredient);
             })
             .catch((err)=>{
-                return res.json("Error: unable to create new ingredient");
+                return res.json("ERROR: UNABLE TO CREATE NEW INGREDIENT");
             });
     }
 }

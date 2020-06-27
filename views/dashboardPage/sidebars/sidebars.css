@@ -448,7 +448,7 @@ Add Recipe
         align-items: center;
         box-sizing: border-box;
         margin: 0 0 25px 0;
-        width:75%;
+        width:100%;
         overflow-y: auto;
         overflow-x: hidden;
         box-shadow: 0 0 2px gray;
@@ -465,6 +465,12 @@ Add Recipe
             padding: 10px 15px;
             text-align: center;
         }
+
+            #recipeInputIngredients div > label{
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 2px;
+            }
 
             #recipeInputIngredients div h4{
                 color: rgb(255, 99, 107);

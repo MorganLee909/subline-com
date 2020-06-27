@@ -21,17 +21,17 @@ module.exports = {
                             req.session.user = merchant._id;
                             return res.redirect("/dashboard");
                         }else{
-                            req.session.error = "Invalid email or password";
+                            req.session.error = "INVALID EMAIL OR PASSWORD";
                             return res.redirect("/");
                         }
                     });
                 }else{
-                    req.session.error = "Invalid email or password";
+                    req.session.error = "INVALID EMAIL OR PASSWORD";
                     return res.redirect("/");
                 }
             })
             .catch((err)=>{
-                req.session.error = "There was an error and your data could not be retrieved";
+                req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
 
                 return res.redirect("/");
             });
@@ -89,12 +89,12 @@ module.exports = {
                         }
                     })
                     .catch((err)=>{
-                        req.session.error = "Error: there was an oopsies";
+                        req.session.error = "ERROR: WE MADE AN OOPSIES";
                     });
                 
             })
             .catch((err)=>{
-                req.session.error = "Error: Unable to retrieve data from Clover";
+                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
                 return res.redirect("/");
             });
     }

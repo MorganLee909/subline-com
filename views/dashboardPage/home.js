@@ -163,7 +163,7 @@ window.homeStrandObj = {
                     });
                 }
             }else{
-                banner.createError("Cannot have negative ingredients");
+                banner.createError("CANNOT HAVE NEGATIVE INGREDIENTS");
                 return;
             }
         }
@@ -185,7 +185,7 @@ window.homeStrandObj = {
                         banner.createError(response);
                     }else{
                         merchant.editIngredients(changes);
-                        banner.createNotification("Ingredients updated");
+                        banner.createNotification("INGREDIENTS UPDATED");
                     }
                 })
                 .catch((err)=>{})

@@ -69,7 +69,7 @@ module.exports = {
     */
     createTransaction: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -94,7 +94,7 @@ module.exports = {
     */
     remove: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -103,7 +103,7 @@ module.exports = {
                 return res.json({});
             })
             .catch((err)=>{
-                return res.json("Error: unable to delete the transaction");
+                return res.json("ERROR: UNABLE TO DELETE TRANSACTION");
             });
     }
 }

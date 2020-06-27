@@ -14,7 +14,7 @@
             <div id="max" class="menuHead">
                 <a href="/">
                     <img class="menuLogo" src="/shared/images/logo.png" alt="The Subline">
-                    <p>The Subline</p>
+                    <p>THE SUBLINE</p>
                 </a>
         
                 <button onclick="changeMenu()">&#8801;</button>
@@ -33,7 +33,7 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                <p>Home</p>
+                <p>HOME</p>
             </button>
         
             <button id="ingredientsBtn" onclick="changeStrand('ingredientsStrand')">
@@ -42,7 +42,7 @@
                     <rect x="1" y="3" width="22" height="5"></rect>
                     <line x1="10" y1="12" x2="14" y2="12"></line>
                 </svg>
-                <p>Ingredients</p>
+                <p>INGREDIENTS</p>
             </button>
         
             <button id="recipeBookBtn" onclick="changeStrand('recipeBookStrand')">
@@ -50,7 +50,7 @@
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                 </svg>
-                <p>Recipe Book</p>
+                <p>RECIPE BOOK</p>
             </button>
         
             <button id="ordersBtn" onclick="changeStrand('ordersStrand')">
@@ -59,7 +59,7 @@
                     <circle cx="20" cy="21" r="1"></circle>
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                <p>Orders</p>
+                <p>ORDERS</p>
             </button>
 
             <button id="transactionsBtn" onclick="changeStrand('transactionsStrand')">
@@ -67,11 +67,11 @@
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                     <line x1="1" y1="10" x2="23" y2="10"></line>
                 </svg>
-                <p>Transactions</p>
+                <p>TRANSACTIONS</p>
             </button>
         
             <a class="logout" href="/logout">
-                <p>Logout</p>
+                <p>LOGOUT</p>
         
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -85,7 +85,7 @@
             <% include ../shared/banner %>
             
             <div id="homeStrand" class="strand">
-                <h1 class="strandTitle">Dashboard</h1>
+                <h1 class="strandTitle">DASHBOARD</h1>
 
                 <div class="flexRow">
                     <div id="revenueCard" class="card">
@@ -138,15 +138,9 @@
 
             <div id="ingredientsStrand" class="strand">
                 <div class="strandHead">
-                    <h1 class="strandTitle">Ingredient Inventory</h1>
+                    <h1 class="strandTitle">INGREDIENT INVENTORY</h1>
 
-                    <button class="button" onclick="addIngredientsComp.display()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        add
-                    </button>
+                    <button class="button" onclick="addIngredientsComp.display()">NEW</button>
                 </div>
 
                 <div class="searchBar">
@@ -205,13 +199,10 @@
 
             <div id="recipeBookStrand" class="strand">
                 <div class="strandHead">
-                    <h1 class="strandTitle">Recipe Book</h1>
+                    <h1 class="strandTitle">RECIPE BOOK</h1>
 
                     <% if(merchant.pos === "none"){ %>
-                        <button class="button" onclick="newRecipeComp.display()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            add
-                        </button>
+                        <button class="button" onclick="newRecipeComp.display()">NEW</button>
                     <% } %>
                 </div>
 
@@ -245,15 +236,9 @@
 
             <div id="ordersStrand" class="strand">
                 <div class="strandHead">
-                    <h1 class="strandTitle">Orders</h1>
+                    <h1 class="strandTitle">ORDERS</h1>
 
-                    <button class="button" onclick="newOrderComp.display()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        add
-                    </button>
+                    <button class="button" onclick="newOrderComp.display()">NEW</button>
                 </div>
 
                 <div id="orderList"></div>
@@ -270,15 +255,9 @@
 
             <div id="transactionsStrand" class="strand transactions">
                 <div class="strandHead">
-                    <h1 class="strandTitle">Transactions</h1>
+                    <h1 class="strandTitle">TRANSACTIONS</h1>
 
-                    <button class="button" onclick="newTransactionComp.display()">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        add
-                    </button>
+                    <button class="button" onclick="newTransactionComp.display()">NEW</button>
                 </div>
 
                 <div id="transactionsList" class="transactionsList"></div>

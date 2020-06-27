@@ -17,7 +17,7 @@ module.exports = {
     */
     createRecipe: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -39,11 +39,11 @@ module.exports = {
                 merchant.recipes.push(recipe);
                 merchant.save()
                     .catch((err)=>{
-                        return res.json("Error: unable to save recipe");
+                        return res.json("ERROR: UNABLE TO SAVE RECIPE");
                     });
             })
             .catch((err)=>{
-                return res.json("Error: unable to retrieve user data");
+                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
 
         recipe.save()
@@ -51,7 +51,7 @@ module.exports = {
                 return res.json(newRecipe);
             })
             .catch((err)=>{
-                return res.json("Error: unable to save new ingredient");
+                return res.json("ERROR: UNABLE TO SAVE INGREDIENT");
             });
     },
 
@@ -69,7 +69,7 @@ module.exports = {
     */
     updateRecipe: function(req, res){
         if(!req.session.user){
-            req.session.error = "Must be logged in to do that";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -90,7 +90,7 @@ module.exports = {
                 return res.json({});
             })
             .catch((err)=>{
-                return res.json("Error: unable to update your recipe");
-            })
+                return res.json("ERROR: UNABLE TO UPDATE RECIPE");
+            });
     }
 }

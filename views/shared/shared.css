@@ -148,14 +148,15 @@ form{
     border: none;
     text-decoration: none;
     border-radius: 4px;
-    padding: 10px 29px;
+    padding: 10px;
     color: white;
     cursor: pointer;
     transition: 0.3s;
     text-align: center;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     margin-right: 33px;
+    min-width: 100px;
 } 
 
     .buttonWithBorder {

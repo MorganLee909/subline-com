@@ -8,37 +8,37 @@
         </button>
     </div>
 
-    <h1>New Recipe</h1>
+    <h1>NEW RECIPE</h1>
 
     <div class="recipeBasicInfo">
-        <label>Name:
+        <label>NAME:
             <input id="newRecipeName" type="text">
         </label>
 
-        <label>Price:
+        <label>PRICE:
             <input id="newRecipePrice" type="number" step="0.01" min="0">
         </label>
 
-        <label># of Ingredients
+        <label># OF INGREDIENTS
             <input id="ingredientCount" type="number" step="1" min="1" onchange="newRecipeComp.changeRecipeCount()">
         </label>
     </div>
 
-    <h2>Ingredients</h2>
+    <h2>INGREDIENTS</h2>
     
     <div id="recipeInputIngredients">
         <div>
-            <h4>Ingredient 1</h4>
+            <h4>INGREDIENT 1</h4>
 
-            <label>Ingredient:
+            <label>INGREDIENT:
                 <select></select>
             </label>
 
-            <label>Quantity:
+            <label>QUANTITY:
                 <input type="number" step="0.01" min="0">
             </label>
         </div>
     </div>
     
-    <button class="button" onclick="newRecipeComp.submit()">Create</button>
+    <button class="button" onclick="newRecipeComp.submit()">CREATE</button>
 </div>

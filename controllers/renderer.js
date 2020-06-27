@@ -30,7 +30,7 @@ module.exports = {
     */
     displayDashboard: function(req, res){
         if(!req.session.user){
-            req.session.error = "You must be logged in to view that page";
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
@@ -148,13 +148,13 @@ module.exports = {
                         .catch((err)=>{});
                         
                 }else{
-                    req.session.error = "Error: WEBSITE PANIC";
+                    req.session.error = "ERROR: WEBSITE PANIC!";
                     
                     return res.redirect("/");
                 }
             })
             .catch((err)=>{
-                req.session.error = "Error: could not retrieve user data";
+                req.session.error = "ERROR: COULD NOT RETRIEVE USER DATA";
                 
                 return res.redirect("/");
             });

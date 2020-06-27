@@ -120,11 +120,11 @@ let recipeDetailsComp = {
                     banner.createError(response);
                 }else{
                     merchant.editRecipe(this.recipe);
-                    banner.createNotification("Recipe successfully updated");
+                    banner.createNotification("RECIPE UPDATE");
                 }
             })
             .catch((err)=>{
-                banner.createError("Something went wrong.  Please refresh the page");
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -141,11 +141,11 @@ let recipeDetailsComp = {
                     banner.createError(response);
                 }else{
                     merchant.editRecipe(this.recipe, true);
-                    banner.createNotification("Recipe removed");
+                    banner.createNotification("RECIPE REMOVED");
                 }
             })
             .catch((err)=>{
-                banner.createError("Something went wrong.  Try refreshing the page");
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             });
     },
 
@@ -299,11 +299,11 @@ let newOrderComp = {
 
                     merchant.editOrders([order]);
                     merchant.editIngredients(order.ingredients, false, true);
-                    banner.createNotification("New order created");
+                    banner.createNotification("ORDER CREATED");
                 }
             })
             .catch((err)=>{
-                banner.createError("Something went wrong.  Try refreshing the page");
+                banner.createError("SOEMTHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -334,39 +334,37 @@ let newIngredientComp = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        // if(validator.ingredient(newIngredient)){
-            fetch("/ingredients/create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                body: JSON.stringify(newIngredient)
-            })
-                .then((response) => response.json())
-                .then((response)=>{
-                    if(typeof(response) === "string"){
-                        banner.createError(response);
-                    }else{
-                        merchant.editIngredients([{
-                            ingredient: new Ingredient(
-                                response.ingredient._id,
-                                response.ingredient.name,
-                                response.ingredient.category,
-                                response.ingredient.unit
-                            ),
-                            quantity: response.quantity
-                        }]);
+        fetch("/ingredients/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(newIngredient)
+        })
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    merchant.editIngredients([{
+                        ingredient: new Ingredient(
+                            response.ingredient._id,
+                            response.ingredient.name,
+                            response.ingredient.category,
+                            response.ingredient.unit
+                        ),
+                        quantity: response.quantity
+                    }]);
 
-                        banner.createNotification("Ingredient successfully created");
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("Something went wrong.  Try refreshing the page");
-                })
-                .finally(()=>{
-                    loader.style.display = "none";
-                });
-        // }
+                    banner.createNotification("INGREDIENT CREATED");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 
@@ -417,11 +415,11 @@ let orderDetailsComp = {
                     banner.createError(response);
                 }else{
                     merchant.editOrders([order], true);
-                    banner.createNotification("Order successfully removed");
+                    banner.createNotification("ORDER REMOVED");
                 }
             })
             .catch((err)=>{
-                banner.createError("Something went wrong, try refreshing the page");
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -472,7 +470,7 @@ let addIngredientsComp = {
                     }
                 })
                 .catch((err)=>{
-                    banner.createError("Unable to retrieve data");
+                    banner.createError("UNABLE TO RETRIEVE DATA");
                 })
                 .finally(()=>{
                     loader.style.display = "none";
@@ -586,7 +584,7 @@ let addIngredientsComp = {
 
         for(let i = 0; i < ingredients.length; i++){
             if(ingredients[i].children[1].value === ""){
-                banner.createError("Please enter a quantity for each ingredient you want to add to your inventory");
+                banner.createError("PLEASE ENTER A QUANTITY FOR EACH INGREDIENT YOU WANT TO ADD TO YOUR INVENTORY");
                 return;
             }
 
@@ -618,11 +616,11 @@ let addIngredientsComp = {
                 }else{
                     merchant.editIngredients(newIngredients);
                     this.isPopulated = false;
-                    banner.createNotification("All ingredients added successfully");
+                    banner.createNotification("ALL INGREDIENTS ADDED");
                 }
             })
             .catch((err)=>{
-                banner.createError("Something went wrong.  Try refreshing the page");
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -686,7 +684,7 @@ let ingredientDetailsComp = {
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
                 if(this.ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){
-                    banner.createError("Must remove ingredient from all recipes before removing");
+                    banner.createError("MUST REMOVE INGREDIENT FROM ALL RECIPES BEFORE REMOVING FROM INVENTORY");
                     return;
                 }
             }
@@ -703,7 +701,7 @@ let ingredientDetailsComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    banner.createNotification("Ingredient removed");
+                    banner.createNotification("INGREDIENT REMOVED");
                     merchant.editIngredients([this.ingredient], true);
                 }
             })
@@ -743,11 +741,11 @@ let ingredientDetailsComp = {
                         banner.createError(response);
                     }else{
                         merchant.editIngredients([this.ingredient]);
-                        banner.createNotification("Ingredient updated");
+                        banner.createNotification("INGREDIENT UPDATED");
                     }
                 })
                 .catch((err)=>{
-                    banner.createError("Something went wrong, try refreshing the page");
+                    banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
                 })
                 .finally(()=>{
                     loader.style.display = "none";
@@ -798,7 +796,7 @@ let newRecipeComp = {
             }
 
             for(let i = 0; i < newCount; i++){
-                ingredientsDiv.children[i].children[0].innerText = `Ingredient ${i + 1}`;
+                ingredientsDiv.children[i].children[0].innerText = `INGREDIENT ${i + 1}`;
             }
         }else if(newCount < oldCount){
             let newDivs = oldCount - newCount;
@@ -852,11 +850,11 @@ let newRecipeComp = {
                     );
                     
                     merchant.editRecipe(recipe);
-                    banner.createNotification("New recipe successfully created");
+                    banner.createNotification("RECIPE CREATED");
                 }
             })
             .catch((err)=>{
-                banner.createError("Refresh page to update data");
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -920,11 +918,11 @@ let transactionDetailsComp = {
                     banner.createError(response);
                 }else{
                     merchant.editTransactions(this.transaction, true);
-                    banner.createNotification("Transaction removed");
+                    banner.createNotification("TRANSACTION REMOVED");
                 }
             })
             .catch((err)=>{
-                banner.createError("Something went wrong, please refresh the page");
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -958,7 +956,7 @@ let newTransactionComp = {
         console.log(recipeDivs);
         
         if(date > new Date()){
-            banner.createError("Cannot have a date in the future");
+            banner.createError("CANNOT HAVE A DATE IN THE FUTURE");
             return;
         }
         
@@ -975,7 +973,7 @@ let newTransactionComp = {
                     quantity: quantity
                 });
             }else if(quantity < 0){
-                banner.createError("Cannot have negative values");
+                banner.createError("CANNOT HAVE NEGATIVE VALUES");
                 return;
             }
         }
@@ -1008,7 +1006,7 @@ let newTransactionComp = {
                 })
                 .catch((err)=>{
                     console.log(err);
-                    banner.createError("Something went wrong, try refreshing the page");
+                    banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
                 })
                 .finally(()=>{
                     loader.style.display = "none";
