@@ -953,7 +953,6 @@ let newTransactionComp = {
     submit: function(){
         let recipeDivs = document.getElementById("newTransactionRecipes");
         let date = document.getElementById("newTransactionDate").valueAsDate;
-        console.log(recipeDivs);
         
         if(date > new Date()){
             banner.createError("CANNOT HAVE A DATE IN THE FUTURE");
@@ -1005,7 +1004,6 @@ let newTransactionComp = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
                 })
                 .finally(()=>{

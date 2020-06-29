@@ -482,6 +482,18 @@ Transactions Strand
             display: none;
         }
 
+        .itemDisplay{
+            color: black;
+            padding: 5px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+            .itemDisplay:hover{
+                background: rgb(240, 252, 255);
+                color: black;
+            }
+
     /*
     Home
     */
@@ -538,4 +550,24 @@ Transactions Strand
         .ingredient > *{
             width: 50%;
         }
+
+    /*
+    Recipe Book
+    */
+    .searchBar{
+        padding: 0;
+    }
+
+    .searchAndIcon{
+        width: 100%;
+    }
+
+    #recipeSearch{
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    #recipeList{
+        width: 95%;
+    }
 }

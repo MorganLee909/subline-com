@@ -38,7 +38,6 @@ let closeSidebar = ()=>{
     if(window.screen.availWidth <= 1000){
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").style.display = "block";
-        console.log("doing shit and stuff");
         document.getElementById("sidebarCloser").style.display = "none";
     }
     
