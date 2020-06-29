@@ -21,6 +21,10 @@ let changeStrand = (name)=>{
 
     document.querySelector(`#${name}`).style.display = "flex";
     window[`${name}Obj`].display();
+
+    if(window.screen.availWidth <= 1000){
+        closeMenu();
+    }
 }
 
 //Close any open sidebar
