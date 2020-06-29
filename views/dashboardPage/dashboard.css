@@ -494,6 +494,10 @@ Transactions Strand
                 color: black;
             }
 
+        .smallItemDisplay{
+            color: black;
+        }
+
     /*
     Home
     */
@@ -575,6 +579,13 @@ Transactions Strand
     Orders
     */
     #orderList{
+        width: 95%;
+    }
+
+    /*
+    Transactions
+    */
+    .transactionsList{
         width: 95%;
     }
 }
