@@ -80,4 +80,16 @@ let changeMenu = ()=>{
     }
 }
 
+let openMenu = ()=>{
+    document.getElementById("menu").style.display = "flex";
+    document.querySelector(".contentBlock").style.display = "none";
+    document.getElementById("mobileMenuSelector").onclick = ()=>{closeMenu()};
+}
+
+let closeMenu = ()=>{
+    document.getElementById("menu").style.display = "none";
+    document.querySelector(".contentBlock").style.display = "flex";
+    document.getElementById("mobileMenuSelector").onclick = ()=>{openMenu()};
+}
+
 homeStrandObj.display();

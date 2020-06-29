@@ -11,14 +11,14 @@
         <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
     </head>
     <body>
-        <div class="menu">
+        <div id="menu" class="menu">
             <div id="max" class="menuHead">
                 <a href="/">
                     <img class="menuLogo" src="/shared/images/logo.png" alt="The Subline">
                     <p>THE SUBLINE</p>
                 </a>
         
-                <button onclick="changeMenu()">&#8801;</button>
+                <button class="menuShifter" onclick="changeMenu()">&#8801;</button>
             </div>
         
             <div id="min" class="menuHead menuHeadMin">
@@ -81,6 +81,8 @@
                 </svg>
             </a>
         </div>
+
+        <div id="mobileMenuSelector" class="mobileMenuSelector" onclick="openMenu()">&#8801;</div>
 
         <div class="contentBlock">
             <% include ../shared/banner %>
