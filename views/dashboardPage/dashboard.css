@@ -570,4 +570,11 @@ Transactions Strand
     #recipeList{
         width: 95%;
     }
+
+    /*
+    Orders
+    */
+    #orderList{
+        width: 95%;
+    }
 }

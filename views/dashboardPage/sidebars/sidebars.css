@@ -659,5 +659,13 @@ New Transaction
 
     .mobileMenuSelector{
         display: block;
-    }        
+    }
+
+    #orderIngredients{
+        width: 100%;
+    }
+    
+        .orderIngredient{
+            color: black;
+        }
 }
