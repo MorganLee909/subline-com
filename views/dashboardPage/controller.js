@@ -34,6 +34,14 @@ let closeSidebar = ()=>{
         sidebar.children[i].style.display = "none";
     }
     sidebar.classList = "sidebarHide";
+
+    if(window.screen.availWidth <= 1000){
+        document.querySelector(".contentBlock").style.display = "flex";
+        document.getElementById("mobileMenuSelector").style.display = "block";
+        console.log("doing shit and stuff");
+        document.getElementById("sidebarCloser").style.display = "none";
+    }
+    
 }
 
 /*
@@ -50,6 +58,12 @@ let openSidebar = (sidebar)=>{
     }
 
     sidebar.style.display = "flex";
+
+    if(window.screen.availWidth <= 1000){
+        document.querySelector(".contentBlock").style.display = "none";
+        document.getElementById("mobileMenuSelector").style.display = "none";
+        document.getElementById("sidebarCloser").style.display = "block";
+    }
 }
 
 let changeMenu = ()=>{

@@ -627,69 +627,37 @@ New Transaction
         overflow-y: auto;
     }
 
-@media (max-width: 1000px){
-    body{
-        flex-direction: column;
-        background: rgb(0, 27, 45);
-        color: white;
+@media screen and (max-width: 1000px){
+    .sidebar{
+        width: 100vw;
     }
 
-        .contentBlock{
-            padding: 0;
-        }
-
-            .menu{
-                display: none;
-                width: 100vw;
-                height: 100vh;
-            }
-
-                .menuHead{
-                    padding: 0;
-                    margin-bottom: 15px;
-                }
-
-                    .menuHead a{
-                        display: flex;
-                        justify-content: right;
-                        width: 70%;
-                    }
-
-                .menuShifter{
-                    display: none;
-                }
-
-            .mobileMenuSelector{
-                display: block;
-            }
-
-            .strandTitle{
-                margin-top: 35px;
-            }
-
-            .sidebar{
-                width: 100vw;
-            }
-
-    /*
-    Home
-    */
-    .card{
-        margin: 5px 10px;
-        background: white;
-        color: black;
-    }
-
-    #inventoryCheckCard{
+    .sidebarIconButtons > .iconButton{
         display: none;
     }
 
-    #popularIngredientsCard{
-        padding-bottom: 10px;
+    .menu{
+        display: none;
+        width: 100vw;
+        height: 100vh;
     }
 
-    .flexRow{
-        flex-direction: column;
-        margin: 0;
-    }
+        .menuHead{
+            padding: 0;
+            margin-bottom: 15px;
+        }
+
+            .menuHead a{
+                display: flex;
+                justify-content: right;
+                width: 70%;
+            }
+
+        .menuShifter{
+            display: none;
+        }
+
+    .mobileMenuSelector{
+        display: block;
+    }        
 }

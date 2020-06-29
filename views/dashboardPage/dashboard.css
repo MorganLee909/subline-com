@@ -94,6 +94,7 @@ Multi-strand use classes
 
     .searchAndIcon{
         display: flex;
+        width: 25%;
     }
 
         .searchAndIcon svg{
@@ -101,7 +102,9 @@ Multi-strand use classes
             border-bottom-left-radius: 5px;
             border-top-left-radius: 5px;
             color: gray;
-            padding: 5px;
+            padding: 5px 0 5px 5px;
+            width: 30px;
+            z-index: 10;
         }
 
         .searchAndIcon input{
@@ -112,6 +115,7 @@ Multi-strand use classes
             border-top-right-radius: 5px;
             font-size: 20px;
             padding: 5px 0 5px 10px;
+            max-width: 200px;
         }
 
     .clearButton{
@@ -151,6 +155,17 @@ Multi-strand use classes
         margin-top: auto;
         cursor: pointer;
     }
+
+#sidebarCloser{
+    width: 30px;
+    background: rgb(0, 27, 45);
+    color: white;
+    margin-right: auto;
+    border: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+}
 
 /* 
 Home Strand 
@@ -443,3 +458,84 @@ Transactions Strand
         overflow-y: auto;
         margin-top: 50px;
     }
+
+@media screen and (max-width: 1000px){
+    body{
+        flex-direction: column;
+        background: rgb(0, 27, 45);
+        color: white;
+    }
+
+        .banner{
+            display: none;
+        }
+
+        .contentBlock{
+            padding: 0;
+        }
+
+            .strandTitle{
+                margin-top: 35px;
+            }
+
+        .mobileHide{
+            display: none;
+        }
+
+    /*
+    Home
+    */
+    .card{
+        margin: 5px 10px;
+        background: white;
+        color: black;
+    }
+
+    #inventoryCheckCard{
+        display: none;
+    }
+
+    #popularIngredientsCard{
+        padding-bottom: 10px;
+    }
+
+    .flexRow{
+        flex-direction: column;
+        margin: 0;
+    }
+
+    /*
+    Ingredients
+    */
+    #categoryList{
+        width: 95%;
+        color: black;
+    }
+
+        #ingredientSearch{
+            border-radius: 5px;
+        }
+
+        .categoryDiv > div:first-of-type p{
+            padding: 5px 0 5px 5px;
+        }
+
+        .categoryDiv div:first-of-type button{
+            height: 50px;
+            width: 50px;
+        }
+
+        .ingredient{
+            color: white;
+            width: 75%;
+            border: 2px solid rgb(201, 201, 201);
+            padding: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            box-shadow: 1px 1px gray;
+        }
+
+        .ingredient > *{
+            width: 50%;
+        }
+}
