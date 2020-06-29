@@ -129,7 +129,7 @@ window.homeStrandObj = {
             }
 
             let thisCanvas = document.querySelector("#popularCanvas");
-            thisCanvas.width = thisCanvas.parentElement.clientWidth;
+            thisCanvas.width = thisCanvas.parentElement.clientWidth * 0.9;
             thisCanvas.height = thisCanvas.parentElement.clientHeight * 0.75;
 
             let popularGraph = new HorizontalBarGraph(document.querySelector("#popularCanvas"));

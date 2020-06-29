@@ -614,3 +614,41 @@ New Transaction
         height: 90%;
         overflow-y: auto;
     }
+
+@media (max-width: 600px){
+    body{
+        flex-direction: column;
+    }
+
+    .contentBlock{
+        padding: 0;
+    }
+
+    /*
+    Home
+    */
+    .card{
+        margin: 5px;
+    }
+
+    #inventoryCheckCard{
+        display: none;
+    }
+
+    #popularIngredientsCard{
+        padding-bottom: 10px;
+    }
+
+    .flexRow{
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .menu{
+        display: none;
+    }
+
+    .sidebar{
+        width: 100vw;
+    }
+}
