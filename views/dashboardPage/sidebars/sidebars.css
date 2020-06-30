@@ -627,6 +627,12 @@ New Transaction
         overflow-y: auto;
     }
 
+@media screen and (max-width: 1400px){
+    .sidebar{
+        width: 30vw;
+    }
+}
+
 @media screen and (max-width: 1000px){
     .sidebar{
         width: 100vw;

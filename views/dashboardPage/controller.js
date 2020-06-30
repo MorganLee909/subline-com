@@ -109,4 +109,8 @@ let closeMenu = ()=>{
     document.getElementById("mobileMenuSelector").onclick = ()=>{openMenu()};
 }
 
+if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
+    changeMenu();
+    document.getElementById("menuShifter2").style.display = "none";
+}
 homeStrandObj.display();
