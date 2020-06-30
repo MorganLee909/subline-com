@@ -10,13 +10,14 @@ let changeStrand = (name)=>{
         strand.style.display = "none";
     }
 
-    for(let button of document.querySelectorAll(".menu > button")){
-        button.classList = "";
-        button.onclick = ()=>{changeStrand(`${button.id.slice(0, button.id.indexOf("Btn"))}Strand`)};
+    let buttons = document.querySelectorAll(".menuButton");
+    for(let i = 0; i < buttons.length - 1; i++){
+        buttons[i].classList = "menuButton";
+        buttons[i].onclick = ()=>{changeStrand(`${buttons[i].id.slice(0, buttons[i].id.indexOf("Btn"))}Strand`)};
     }
 
     let activeButton = document.querySelector(`#${name.slice(0, name.indexOf("Strand"))}Btn`);
-    activeButton.classList = "active";
+    activeButton.classList = "menuButton active";
     activeButton.onclick = undefined;
 
     document.querySelector(`#${name}`).style.display = "flex";
@@ -67,15 +68,13 @@ let openSidebar = (sidebar)=>{
 
 let changeMenu = ()=>{
     let menu = document.querySelector(".menu");
-    let buttons = document.querySelectorAll(".menu > button");
+    let buttons = document.querySelectorAll(".menuButton");
     if(!menu.classList.contains("menuMinimized")){
         menu.classList = "menu menuMinimized";
 
         for(let button of buttons){
             button.children[1].style.display = "none";
         }
-
-        document.querySelector(".logout p").style.display = "none"
 
         document.querySelector("#max").style.display = "none";
         document.querySelector("#min").style.display = "flex";
@@ -87,8 +86,6 @@ let changeMenu = ()=>{
         for(let button of buttons){
             button.children[1].style.display = "block";
         }
-
-        document.querySelector(".logout p").style.display = "flex"
 
         setTimeout(()=>{
             document.querySelector("#max").style.display = "flex";

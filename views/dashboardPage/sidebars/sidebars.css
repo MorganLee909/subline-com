@@ -3,12 +3,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     background: rgb(0, 27, 45);
     width: 18vw;
     height: 100vh;
     transition: width 0.3s;
     flex-grow: 0;
     flex-shrink: 0;
+    padding-bottom: 100px;
+    box-sizing: border-box;
 }
 
     .menuHead{
@@ -20,7 +23,7 @@
         margin-top: 10px;
         font-size: 22px;
         font-weight: bold;
-        margin-bottom: 100px;
+        margin-bottom: 50px;
         text-decoration: none;
     }
 
@@ -58,12 +61,7 @@
         border: 0;
     }
 
-    .menu > button svg{
-        stroke: white;
-        margin-right: 25px;
-    }
-
-    .menu > button{
+    .menuButton{
         display: flex;
         align-items: center;
         background: none;
@@ -77,21 +75,29 @@
         cursor: pointer;
         text-align: left;
         border: 0;
+        outline: 0;
+        box-sizing: border-box;
+        text-decoration: none;
     }
 
-    .menu > button::-moz-focus-inner{
-        border: 0;
-    }  
+        .menuButton svg{
+            stroke: white;
+            margin-right: 25px;
+        }
 
-    .menu > button:hover{
-        background: rgb(201, 201, 201);
-        color: black;
-        fill: black;
-    }
+        .menuButton::-moz-focus-inner{
+            border: 0;
+        }  
 
-    .menu > button:hover svg{
-        stroke: black;
-    }
+        .menuButton:hover{
+            background: rgb(201, 201, 201);
+            color: black;
+            fill: black;
+        }
+
+        .menuButton:hover svg{
+            stroke: black;
+        }
 
 .menu > .active{
     background: rgb(179, 191, 209);
@@ -105,33 +111,6 @@
 
 .menu > .active:hover svg{
     stroke: white;
-}
-
-.logout{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    bottom: 25px;
-    color: white;
-    text-decoration: none;
-    font-size: 20px;
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.logout img{
-    height: 25px;
-    width: 25px;
-}
-
-.logout > *{
-    margin: 10px;
-}
-
-.logout:hover{
-    background: rgb(179, 191, 209);
-    color: black;
 }
 
 /* Minimized menu */
@@ -148,12 +127,12 @@
     flex-direction: column;
 }
 
-.menuMinimized button{
+.menuMinimized .menuButton{
     justify-content: center;
     padding: 0;
 }
 
-.menuMinimized button svg{
+.menuMinimized .menuButton svg{
     margin: 0;
 }
 
