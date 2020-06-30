@@ -644,6 +644,7 @@ New Transaction
 
     .mobileMenuSelector{
         display: block;
+        z-index: 20;
     }
 
     #orderIngredients{

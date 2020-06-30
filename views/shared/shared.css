@@ -280,23 +280,23 @@ form{
     width: 100%;
     text-align: center;
     list-style-type: none;
-    font-weight: bold;
+    font-size: 20px;
     color: white;
-    
+    z-index: 10;
+    position: absolute;
+    border-radius: 5px;
 }
 
     .banner .notification{
-        background: rgb(201, 201, 201);
+        background: rgba(0, 255, 0, 0.75);
         list-style-type: none;
-        padding: 3px;
-        color: black;
+        padding: 5px;
     }
 
     .banner .error{
-        background: rgb(255, 99, 107);
+        background: rgba(255, 0, 0, 0.75);
         list-style-type: none;
         padding: 5px;
-        color: white;
     }
 
 /* Footer Partial */
