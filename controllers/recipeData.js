@@ -123,7 +123,6 @@ module.exports = {
                         });
                     }
                 }
-                console.log(changes);
 
                 recipe.name = req.body.name;
                 recipe.price = req.body.price;
