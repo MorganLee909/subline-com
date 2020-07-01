@@ -61,5 +61,44 @@ window.recipeBookStrandObj = {
     clearSorting: function(){
         document.getElementById("recipeSearch").value = "";
         this.search();
+    },
+
+    posUpdate: function(){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipe/update/clover", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                for(let i = 0; i < response.new.length; i++){
+                    merchant.editRecipe(new Recipe(
+                        response.new[i]._id,
+                        response.new[i].name,
+                        response.new[i].price,
+                        merchant,
+                        []
+                    ));
+                }
+
+                for(let i = 0; i < response.removed.length; i++){
+                    for(let j = 0; j < merchant.recipes.length; j++){
+                        if(response.removed[i]._id === merchant.recipes[j].id){
+                            merchant.editRecipe(merchant.recipes[j], true);
+                            break;
+                        }
+                    }
+                }
+            })
+            .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }

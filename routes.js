@@ -29,6 +29,7 @@ module.exports = function(app){
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);
     app.put("/recipe/update", recipeData.updateRecipe);
+    app.get("/recipe/update/clover", recipeData.updateRecipesClover);
 
     //Orders
     app.get("/order", orderData.getOrders);

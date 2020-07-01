@@ -213,6 +213,8 @@
 
                     <% if(merchant.pos === "none"){ %>
                         <button class="button mobileHide" onclick="newRecipeComp.display()">NEW</button>
+                    <% }else if(merchant.pos === "clover"){ %>
+                        <button class="button mobileHide" onclick="recipeBookStrandObj.posUpdate()">UPDATE</button>
                     <% } %>
                 </div>
 

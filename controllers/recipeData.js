@@ -3,6 +3,8 @@ const Merchant = require("../models/merchant.js");
 const RecipeChange = require("../models/recipeChange.js");
 const Validator = require("./validator.js");
 
+const axios = require("axios");
+
 module.exports = {
     /*
     POST - creates a single new recipe
@@ -143,6 +145,86 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO UPDATE RECIPE");
+            });
+    },
+
+    //GET - Checks clover for new or deleted recipes
+    //Returns: 
+    //  merchant: Full merchant (recipe ingredients populated)
+    //  count: Number of new recipes
+    updateRecipesClover: function(req, res){
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        Merchant.find({_id: req.session.user})
+            .populate("recipes")
+            .then((response)=>{
+                merchant = response[0];
+                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/items?access_token=${merchant.posAccessToken}`)
+                    .then((result)=>{
+                        let deletedRecipes = merchant.recipes.slice();
+                        for(let i = 0; i < result.data.elements.length; i++){
+                            for(let j = 0; j < deletedRecipes.length; j++){
+                                if(result.data.elements[i].id === deletedRecipes[j].posId){
+                                    result.data.elements.splice(i, 1);
+                                    deletedRecipes.splice(j, 1);
+                                    i--;
+                                    break;
+                                }
+                            }
+                        }
+
+                        for(let recipe of deletedRecipes){
+                            for(let i = 0; i < merchant.recipes.length; i++){
+                                if(recipe._id === merchant.recipes[i]._id){
+                                    merchant.recipes.splice(i, 1);
+                                    break;
+                                }
+                            }
+                        }
+
+                        let newRecipes = []
+                        for(let recipe of result.data.elements){
+                            let newRecipe = new Recipe({
+                                posId: recipe.id,
+                                merchant: merchant._id,
+                                name: recipe.name,
+                                ingredients: [],
+                                price: recipe.price
+                            });
+
+                            merchant.recipes.push(newRecipe);
+                            newRecipes.push(newRecipe);
+                        }
+
+                        Recipe.create(newRecipes)
+                            .catch((err)=>{
+                                return res.json("ERROR: UNABLE TO SAVE RECIPES");
+                            });
+
+                        merchant.save()
+                            .then((newMerchant)=>{
+                                newMerchant.populate("recipes.ingredients.ingredient").execPopulate()
+                                    .then((newestMerchant)=>{
+                                        merchant.password = undefined;
+                                        return res.json({new: newRecipes, removed: deletedRecipes});
+                                    })
+                                    .catch((err)=>{
+                                        return res.json("ERROR: UNABLE TO RETRIEVE DATA");
+                                    });
+                            })
+                            .catch((err)=>{
+                                return res.json("ERROR: UNABLE TO SAVE CHANGES FROM CLOVER");
+                            });
+                    })
+                    .catch((err)=>{
+                        return res.json("ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER");
+                    });
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO RETRIEVE MERCHANT DATA");
             });
     }
 }
