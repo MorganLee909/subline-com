@@ -6,15 +6,21 @@ const RecipeChangeSchema = new mongoose.Schema({
         ref: "Recipe",
         required: true
     },
-    ingredient: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Ingredient",
-        required: true
+    date: {
+        type: Date,
+        default: Date.now
     },
-    change: {
-        type: Number,
-        required: true
-    },
+    changes: [{
+        ingredient: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Ingredient",
+            required: true
+        },
+        change: {
+            type: Number,
+            required: true
+        }
+    }],
     date: {
         type: Date,
         default: Date.now
