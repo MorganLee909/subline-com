@@ -158,27 +158,29 @@ class Merchant{
     /*
     Updates a recipe in the merchants list of recipes
     Can create, edit or remove
-    recipe = Recipe object
+    recipe = [Recipe object]
     remove = will remove recipe when true
     */
-    editRecipe(recipe, remove = false){
+    editRecipes(recipes, remove = false){
         let isNew = true;
 
-        for(let i = 0; i < this.recipes.length; i++){
-            if(recipe === this.recipes[i]){
-                if(remove){
-                    this.recipes.splice(i, 1);
-                }else{
-                    this.recipes[i] = recipe;
+        for(let i = 0; i < recipes.length; i++){
+            for(let j = 0; j < this.recipes.length; j++){
+                if(recipes[i] === this.recipes[j]){
+                    if(remove){
+                        this.recipes.splice(j, 1);
+                    }else{
+                        this.recipes[j] = recipes[i];
+                    }
+
+                    isNew = false;
+                    break;
                 }
-
-                isNew = false;
-                break;
             }
-        }
 
-        if(isNew){
-            merchant.recipes.push(recipe);
+            if(isNew){
+                merchant.recipes.push(recipes[i]);
+            }
         }
 
         recipeBookStrandObj.populateRecipes();

@@ -119,7 +119,7 @@ let recipeDetailsComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editRecipe(this.recipe);
+                    merchant.editRecipes([this.recipe]);
                     banner.createNotification("RECIPE UPDATE");
                 }
             })
@@ -140,7 +140,7 @@ let recipeDetailsComp = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editRecipe(this.recipe, true);
+                    merchant.editRecipes([this.recipe], true);
                     banner.createNotification("RECIPE REMOVED");
                 }
             })
@@ -853,7 +853,7 @@ let newRecipeComp = {
                         merchant,
                     );
                     
-                    merchant.editRecipe(recipe);
+                    merchant.editRecipes([recipe]);
                     banner.createNotification("RECIPE CREATED");
                 }
             })

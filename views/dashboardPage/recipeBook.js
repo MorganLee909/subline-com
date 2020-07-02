@@ -75,8 +75,9 @@ window.recipeBookStrandObj = {
         })
             .then(response => response.json())
             .then((response)=>{
+                let newRecipes = [];
                 for(let i = 0; i < response.new.length; i++){
-                    merchant.editRecipe(new Recipe(
+                    newRecipes.push(new Recipe(
                         response.new[i]._id,
                         response.new[i].name,
                         response.new[i].price,
@@ -84,14 +85,21 @@ window.recipeBookStrandObj = {
                         []
                     ));
                 }
+                if(newRecipes.length > 0){
+                    merchant.editRecipes(newRecipes);
+                }
 
+                let removeRecipes = [];
                 for(let i = 0; i < response.removed.length; i++){
                     for(let j = 0; j < merchant.recipes.length; j++){
                         if(response.removed[i]._id === merchant.recipes[j].id){
-                            merchant.editRecipe(merchant.recipes[j], true);
+                            removeRecipes.push(merchant.recipes[j], true);
                             break;
                         }
                     }
+                }
+                if(removeRecipes.length > 0){
+                    merchant.editRecipes(removeRecipes, true);
                 }
             })
             .catch((err)=>{
