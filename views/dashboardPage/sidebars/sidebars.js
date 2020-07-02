@@ -638,8 +638,12 @@ let ingredientDetailsComp = {
 
         document.querySelector("#ingredientDetails p").innerText = ingredient.ingredient.category;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
-        document.querySelector("#ingredientStock").innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
-        document.querySelector("#ingredientInput").placeholder = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        let ingredientStock = document.getElementById("ingredientStock");
+        ingredientStock.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        ingredientStock.style.display = "block";
+        let ingredientInput = document.getElementById("ingredientInput");
+        ingredientInput.placeholder = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        ingredientInput.style.display = "none";
 
         let quantities = [];
         let now = new Date();
