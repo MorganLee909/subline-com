@@ -318,15 +318,14 @@ let newIngredientComp = {
         document.querySelector("#newIngName").value = "";
         document.querySelector("#newIngCategory").value = "";
         document.querySelector("#newIngQuantity").value = 0;
-        document.querySelector("#newIngUnit").value = ""
     },
 
     submit: function(){
         let newIngredient = {
             ingredient: {
-                name: document.querySelector("#newIngName").value,
-                category: document.querySelector("#newIngCategory").value,
-                unit: document.querySelector("#newIngUnit").value
+                name: document.getElementById("newIngName").value,
+                category: document.getElementById("newIngCategory").value,
+                unit: document.getElementById("unitSelector").value
             },
             quantity: document.querySelector("#newIngQuantity").value
         }

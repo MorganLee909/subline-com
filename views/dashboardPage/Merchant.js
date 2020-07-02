@@ -486,3 +486,93 @@ class Merchant{
         return recipes;
     }
 }
+
+let convertMass = (quantity, from, to)=>{
+    //change to g
+    let converted = 0;
+    switch(from){
+        case "g":
+            converted = quantity;
+            break;
+        case "kg":
+            converted = quantity * 1000;
+            break;
+        case "oz":
+            converted = quantity * 28.3495;
+            break;
+        case "lb":
+            converted = quantity * 453.5924;
+            break;
+    }
+
+    //change to end
+    switch(to){
+        case "g":
+            break;
+        case "kg":
+            converted = converted / 1000;
+            break;
+        case "oz":
+            converted = converted / 28.3495;
+            break;
+        case "lb":
+            converted = converted / 453.5924;
+            break;
+    }
+
+    return converted;
+}
+
+let convertVolume = (quantity, from, to)=>{
+    //change to l
+    let converted = 0;
+    switch(from){
+        case "ml": converted = quantity / 1000; break;
+        case "l": converted = quantity; break;
+        case "tsp": converted = quantity / 202.8842; break;
+        case "tbsp": converted = quantity / 67.6278; break;
+        case "ozfl": converted = quantity / 33.8141; break;
+        case "cup": converted = quantity / 4.1667; break;
+        case "pt": converted = quantity / 2.1134; break;
+        case "qt": converted = quantity / 1.0567; break;
+        case "gal": converted = quantity * 3.7854; break;
+    }
+
+    //change to end
+    switch(to){
+        case "ml": converted *= 1000; break;
+        case "l": break;
+        case "tsp": converted *= 202.8842; break;
+        case "tbsp": converted *= 67.6278; break;
+        case "ozfl": converted *= 33.8141; break;
+        case "cup": converted *= 4.1667; break;
+        case "pt": converted *= 2.1134; break;
+        case "qt": converted *= 1.0567; break;
+        case "gal": converted /= 3.7854; break;
+    }
+
+    return converted;
+}
+
+let convertLength = (quantity, from, to)=>{
+    //change to m
+    let converted = 0;
+    switch(from){
+        case "mm": converted = quantity / 1000; break;
+        case "cm": converted = quantity / 100; break;
+        case "m": converted = quantity; break;
+        case "in": converted = quantity / 39.3701; break;
+        case "ft": converted = quantity / 3.2808; break;
+    }
+
+    //change to end
+    switch(to){
+        case "mm": converted *= 1000; break;
+        case "cm": converted *= 100; break;
+        case "m": break;
+        case "in": converted *= 39.3701; break;
+        case "ft": converted *= 3.2808; break;
+    }
+
+    return converted;
+}
