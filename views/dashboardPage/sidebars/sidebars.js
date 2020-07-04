@@ -355,7 +355,8 @@ let newIngredientComp = {
                             response.ingredient.name,
                             response.ingredient.category,
                             response.ingredient.unitType,
-                            response.defaultUnit
+                            response.defaultUnit,
+                            merchant
                         ),
                         quantity: response.quantity
                     }]);
