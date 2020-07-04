@@ -10,7 +10,8 @@ window.transactionsStrandObj = {
                 transactionsList.removeChild(transactionsList.firstChild);
             }
 
-            for(let i = merchant.transactions.length - 1; i > merchant.transactions.length - 101 ; i--){
+            let i = 0
+            while(i < merchant.transactions.length && i < 100){
                 let transaction = template.cloneNode(true);
                 transaction.onclick = ()=>{transactionDetailsComp.display(merchant.transactions[i])};
                 transactionsList.appendChild(transaction);
@@ -26,6 +27,8 @@ window.transactionsStrandObj = {
                 transaction.children[0].innerText = `${merchant.transactions[i].date.toLocaleDateString()} ${merchant.transactions[i].date.toLocaleTimeString()}`;
                 transaction.children[1].innerText = `${totalRecipes} recipes sold`;
                 transaction.children[2].innerText = `$${(totalPrice / 100).toFixed(2)}`;
+
+                i--;
             }
 
             this.isPopulated = true;

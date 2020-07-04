@@ -96,7 +96,7 @@ window.homeStrandObj = {
             ingredientCheck.ingredient = merchant.ingredients[rands[i]];
             ingredientCheck.children[0].innerText = merchant.ingredients[rands[i]].ingredient.name;
             ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
-            input.value = merchant.ingredients[rands[i]].quantity;
+            input.value = merchant.ingredients[rands[i]].quantity.toFixed(2);
             ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
             ingredientCheck.children[2].innerText = merchant.ingredients[rands[i]].ingredient.unit.toUpperCase();
 
@@ -110,22 +110,26 @@ window.homeStrandObj = {
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
-        if(ingredientList){
+        if(ingredientList.length > 0){
             for(let i = 0; i < 5; i++){
-                let max = ingredientList[0].quantity
-                let index = 0;
-                for(let j = 0; j < ingredientList.length; j++){
-                    if(ingredientList[j].quantity > max){
-                        max = ingredientList[j].quantity;
-                        index = j;
+                try{
+                    let max = ingredientList[0].quantity;
+                    let index = 0;
+                    for(let j = 0; j < ingredientList.length; j++){
+                        if(ingredientList[j].quantity > max){
+                            max = ingredientList[j].quantity;
+                            index = j;
+                        }
                     }
-                }
 
-                dataArray.push({
-                    num: max,
-                    label: `${ingredientList[index].ingredient.name}: ${+ingredientList[index].quantity.toFixed(2)} ${ingredientList[index].ingredient.unit}`
-                });
-                ingredientList.splice(index, 1);
+                    dataArray.push({
+                        num: max,
+                        label: `${ingredientList[index].ingredient.name}: ${+ingredientList[index].quantity.toFixed(2)} ${ingredientList[index].ingredient.unit}`
+                    });
+                    ingredientList.splice(index, 1);
+                }catch(err){
+                    break;
+                }
             }
 
             let thisCanvas = document.querySelector("#popularCanvas");

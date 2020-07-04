@@ -365,7 +365,6 @@ let newIngredientComp = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -396,7 +395,7 @@ let orderDetailsComp = {
             grandTotal += price;
 
             ingredient.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredient.children[1].innerText = `${order.ingredients[i].quantity} x $${(order.ingredients[i].price / 100).toFixed(2)}`;
+            ingredient.children[1].innerText = `${order.ingredients[i].quantity} ${order.ingredients[i].ingredient.unit.toUpperCase()} x $${(order.ingredients[i].price / 100).toFixed(2)}`;
             ingredient.children[2].innerText = `$${price.toFixed(2)}`;
 
             ingredientList.appendChild(ingredient);
@@ -645,11 +644,25 @@ let ingredientDetailsComp = {
         document.querySelector("#ingredientDetails p").innerText = ingredient.ingredient.category;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
         let ingredientStock = document.getElementById("ingredientStock");
-        ingredientStock.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        ingredientStock.innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
         ingredientStock.style.display = "block";
         let ingredientInput = document.getElementById("ingredientInput");
-        ingredientInput.placeholder = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        ingredientInput.value = ingredient.quantity;
         ingredientInput.style.display = "none";
+        document.getElementById("ingredientRecipeList").style.display = "none"
+
+        let select = document.getElementById("unitChanger");
+        select.onchange = ()=>{this.ingredient.ingredient.convert(select.value)};
+        while(select.children.length > 0){
+            select.removeChild(select.firstChild);
+        }
+        let units = merchant.units[this.ingredient.ingredient.unitType];
+        for(let i = 0; i < units.length; i++){
+            let option = document.createElement("option");
+            option.innerText = units[i].toUpperCase();
+            option.value = units[i];
+            select.appendChild(option);
+        }
 
         let quantities = [];
         let now = new Date();
@@ -722,9 +735,9 @@ let ingredientDetailsComp = {
     },
 
     edit: function(){
-        document.querySelector("#ingredientStock").style.display = "none";
-        document.querySelector("#ingredientInput").style.display = "block";
-        document.querySelector("#editSubmitButton").style.display = "block";
+        document.getElementById("ingredientStock").style.display = "none";
+        document.getElementById("ingredientInput").style.display = "block";
+        document.getElementById("editSubmitButton").style.display = "block";
     },
 
     editSubmit: function(){
