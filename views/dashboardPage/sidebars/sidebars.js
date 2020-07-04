@@ -321,13 +321,17 @@ let newIngredientComp = {
     },
 
     submit: function(){
+        let unitSelector = document.getElementById("unitSelector");
+        let options = document.querySelectorAll("#unitSelector option");
+
         let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
                 category: document.getElementById("newIngCategory").value,
-                unit: document.getElementById("unitSelector").value
+                unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: document.querySelector("#newIngQuantity").value
+            quantity: document.querySelector("#newIngQuantity").value,
+            defaultUnit: unitSelector.value
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -350,7 +354,8 @@ let newIngredientComp = {
                             response.ingredient._id,
                             response.ingredient.name,
                             response.ingredient.category,
-                            response.ingredient.unit
+                            response.ingredient.unitType,
+                            response.defaultUnit
                         ),
                         quantity: response.quantity
                     }]);
@@ -359,6 +364,7 @@ let newIngredientComp = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

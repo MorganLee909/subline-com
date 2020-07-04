@@ -10,7 +10,7 @@ const IngredientSchema = new mongoose.Schema({
         type: String,
         minlength: 3
     },
-    unit: {
+    unitType: {
         type: String,
         required: true
     }

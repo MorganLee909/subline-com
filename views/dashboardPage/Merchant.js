@@ -1,8 +1,9 @@
 class Ingredient{
-    constructor(id, name, category, unit){
+    constructor(id, name, category, unitType, unit){
         this.id = id;
         this.name = name;
         this.category = category;
+        this.unitType = unitType;
         this.unit = unit;
     }
 }
@@ -87,7 +88,8 @@ class Merchant{
                     oldMerchant.inventory[i].ingredient._id,
                     oldMerchant.inventory[i].ingredient.name,
                     oldMerchant.inventory[i].ingredient.category,
-                    oldMerchant.inventory[i].ingredient.unit,
+                    oldMerchant.inventory[i].ingredient.unitType,
+                    oldMerchant.inventory[i].defaultUnit,
                 ),
                 quantity: oldMerchant.inventory[i].quantity
             });
@@ -491,33 +493,18 @@ let convertMass = (quantity, from, to)=>{
     //change to g
     let converted = 0;
     switch(from){
-        case "g":
-            converted = quantity;
-            break;
-        case "kg":
-            converted = quantity * 1000;
-            break;
-        case "oz":
-            converted = quantity * 28.3495;
-            break;
-        case "lb":
-            converted = quantity * 453.5924;
-            break;
+        case "g": converted = quantity; break;
+        case "kg": converted = quantity * 1000; break;
+        case "oz": converted = quantity * 28.3495; break;
+        case "lb": converted = quantity * 453.5924; break;
     }
 
     //change to end
     switch(to){
-        case "g":
-            break;
-        case "kg":
-            converted = converted / 1000;
-            break;
-        case "oz":
-            converted = converted / 28.3495;
-            break;
-        case "lb":
-            converted = converted / 453.5924;
-            break;
+        case "g": break;
+        case "kg": converted = converted / 1000; break;
+        case "oz": converted = converted / 28.3495; break;
+        case "lb": converted = converted / 453.5924; break;
     }
 
     return converted;

@@ -39,7 +39,7 @@ const MerchantSchema = new mongoose.Schema({
             required: true,
             min: 0
         },
-        displayUnit: {
+        defaultUnit: {
             type: String,
             required: true
         }
