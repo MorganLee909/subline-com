@@ -790,6 +790,33 @@ let ingredientDetailsComp = {
 
         console.log(newActive);
         newActive.classList.add("unitActive");
+    },
+
+    changeUnitDefault: function(){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        let id = this.ingredient.ingredient.id;
+        let unit = this.ingredient.ingredient.unit;
+        fetch(`/merchant/ingredients/update/${id}/${unit}`, {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+        })
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    banner.createNotification("INGREDIENT DEFAULT UNIT UPDATED");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 
