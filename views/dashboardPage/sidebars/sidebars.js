@@ -649,20 +649,6 @@ let ingredientDetailsComp = {
         let ingredientInput = document.getElementById("ingredientInput");
         ingredientInput.value = ingredient.quantity;
         ingredientInput.style.display = "none";
-        document.getElementById("ingredientRecipeList").style.display = "none"
-
-        let select = document.getElementById("unitChanger");
-        select.onchange = ()=>{this.ingredient.ingredient.convert(select.value)};
-        while(select.children.length > 0){
-            select.removeChild(select.firstChild);
-        }
-        let units = merchant.units[this.ingredient.ingredient.unitType];
-        for(let i = 0; i < units.length; i++){
-            let option = document.createElement("option");
-            option.innerText = units[i].toUpperCase();
-            option.value = units[i];
-            select.appendChild(option);
-        }
 
         let quantities = [];
         let now = new Date();
@@ -698,6 +684,23 @@ let ingredientDetailsComp = {
                 recipeDetailsComp.display(recipes[i]);
             }
             ul.appendChild(li);
+        }
+
+        let ingredientButtons = document.getElementById("ingredientButtons");
+        let units = merchant.units[this.ingredient.ingredient.unitType];
+        while(ingredientButtons.children.length > 0){
+            ingredientButtons.removeChild(ingredientButtons.firstChild);
+        }
+        for(let i = 0; i < units.length; i++){
+            let button = document.createElement("button");
+            button.classList.add("unitButton");
+            button.innerText = units[i].toUpperCase();
+            button.onclick = ()=>{this.changeUnit(button, units[i])};
+            ingredientButtons.appendChild(button);
+
+            if(units[i] === this.ingredient.ingredient.unit){
+                button.classList.add("unitActive");
+            }
         }
 
         openSidebar(sidebar);
@@ -774,6 +777,19 @@ let ingredientDetailsComp = {
                     loader.style.display = "none";
                 });
         }
+    },
+
+    changeUnit: function(newActive, unit){
+        this.ingredient.ingredient.convert(unit);
+
+        let ingredientButtons = document.querySelectorAll(".unitButton");
+        for(let i = 0; i < ingredientButtons.length; i++){
+            console.log(ingredientButtons[i]);
+            ingredientButtons[i].classList.remove("unitActive");
+        }
+
+        console.log(newActive);
+        newActive.classList.add("unitActive");
     }
 }
 

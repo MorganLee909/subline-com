@@ -340,6 +340,25 @@ Ingredient Details
         padding: 10px;
     }
 
+    .unitButton{
+        margin: 5px;
+        padding: 5px;
+        background: none;
+        border: 1px solid black;
+        font-size: 25px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+        .unitButton:hover{
+            background: rgb(0, 27, 45);
+            color: white;
+        }
+
+        .unitActive{
+            background: rgb(255, 99, 107);
+        }
+
 /* 
 Recipe Details 
 */

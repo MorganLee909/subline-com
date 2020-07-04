@@ -33,10 +33,6 @@
         <input id="ingredientInput" type="number" min="0" step="0.01" style="display: none;">
     </label>
 
-    <label>CHANGE UNITS:
-        <select id="unitChanger"></select>
-    </label>
-
     <div class="lineBorder"></div>
 
     <label>AVERAGE DAILY USE (30 DAYS)
@@ -48,6 +44,12 @@
     <label>RECIPES:
         <ul id="ingredientRecipeList"></ul>
     </label>
+
+    <div class="lineBorder"></div>
+
+    <label>DISPLAY UNIT:</label>
+
+    <div id="ingredientButtons" class="ingredientButtons"></div>
 
     <button id="editSubmitButton" class="button" onclick="ingredientDetailsComp.editSubmit()" style="display: none;">SAVE CHANGES</button>
 </div>
