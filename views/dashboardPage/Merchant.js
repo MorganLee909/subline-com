@@ -8,80 +8,37 @@ class Ingredient{
         this.parent = parent;
     }
 
-    convert(unit){
-        let converted = 0;
-        let parentIngredient;
-
-        for(let i = 0; i < this.parent.ingredients.length; i++){
-            if(this === this.parent.ingredients[i].ingredient){
-                parentIngredient = this.parent.ingredients[i];
-                break;
-            }
-        }
-
+    convert(quantity){
         if(this.unitType === "mass"){
             switch(this.unit){
-                case "g": converted = parentIngredient.quantity; break;
-                case "kg": converted = parentIngredient.quantity * 1000; break;
-                case "oz": converted = parentIngredient.quantity * 28.3495; break;
-                case "lb": converted = parentIngredient.quantity * 453.5924; break;
-            }
-
-            switch(unit){
                 case "g": break;
-                case "kg": converted = converted / 1000; break;
-                case "oz": converted = converted / 28.3495; break;
-                case "lb": converted = converted / 453.5924; break;
+                case "kg": quantity /= 1000; break;
+                case "oz":  quantity /= 28.3495; break;
+                case "lb":  quantity /= 453.5924; break;
             }
         }else if(this.unitType === "volume"){
             switch(this.unit){
-                case "ml": converted = parentIngredient.quantity / 1000; break;
-                case "l": converted = parentIngredient.quantity; break;
-                case "tsp": converted = parentIngredient.quantity / 202.8842; break;
-                case "tbsp": converted = parentIngredient.quantity / 67.6278; break;
-                case "ozfl": converted = parentIngredient.quantity / 33.8141; break;
-                case "cup": converted = parentIngredient.quantity / 4.1667; break;
-                case "pt": converted = parentIngredient.quantity / 2.1134; break;
-                case "qt": converted = parentIngredient.quantity / 1.0567; break;
-                case "gal": converted = parentIngredient.quantity * 3.7854; break;
-            }
-
-            switch(unit){
-                case "ml": converted *= 1000; break;
+                case "ml": quantity *= 1000; break;
                 case "l": break;
-                case "tsp": converted *= 202.8842; break;
-                case "tbsp": converted *= 67.6278; break;
-                case "ozfl": converted *= 33.8141; break;
-                case "cup": converted *= 4.1667; break;
-                case "pt": converted *= 2.1134; break;
-                case "qt": converted *= 1.0567; break;
-                case "gal": converted /= 3.7854; break;
+                case "tsp": quantity *= 202.8842; break;
+                case "tbsp": quantity *= 67.6278; break;
+                case "ozfl": quantity *= 33.8141; break;
+                case "cup": quantity *= 4.1667; break;
+                case "pt": quantity *= 2.1134; break;
+                case "qt": quantity *= 1.0567; break;
+                case "gal": quantity /= 3.7854; break;
             }
         }else if(this.unitType === "length"){
             switch(this.unit){
-                case "mm": converted = parentIngredient.quantity / 1000; break;
-                case "cm": converted = parentIngredient.quantity / 100; break;
-                case "m": converted = parentIngredient.quantity; break;
-                case "in": converted = parentIngredient.quantity / 39.3701; break;
-                case "ft": converted = parentIngredient.quantity / 3.2808; break;
-            }
-
-            switch(unit){
-                case "mm": converted *= 1000; break;
-                case "cm": converted *= 100; break;
+                case "mm": quantity *= 1000; break;
+                case "cm": quantity *= 100; break;
                 case "m": break;
-                case "in": converted *= 39.3701; break;
-                case "ft": converted *= 3.2808; break;
+                case "in": quantity *= 39.3701; break;
+                case "ft": quantity *= 3.2808; break;
             }
         }
 
-        parentIngredient.quantity = converted;
-        this.unit = unit;
-
-        homeStrandObj.drawInventoryCheckCard();
-        ingredientsStrandObj.populateByProperty("category");
-        addIngredientsComp.isPopulated = false;
-        document.getElementById("ingredientStock").innerText = `${converted.toFixed(2)} ${this.unit.toUpperCase()}`;
+        return quantity;
     }
 }
 
@@ -147,6 +104,39 @@ class Order{
                 }
             }
         }
+    }
+
+    convertPrice(unitType, unit, price){
+        if(unitType === "mass"){
+            switch(unit){
+                case "g": break;
+                case "kg": price *= 1000; break;
+                case "oz":  price *= 28.3495; break;
+                case "lb":  price *= 453.5924; break;
+            }
+        }else if(unitType === "volume"){
+            switch(unit){
+                case "ml": price /= 1000; break;
+                case "l": break;
+                case "tsp": price /= 202.8842; break;
+                case "tbsp": price /= 67.6278; break;
+                case "ozfl": price /= 33.8141; break;
+                case "cup": price /= 4.1667; break;
+                case "pt": price /= 2.1134; break;
+                case "qt": price /= 1.0567; break;
+                case "gal": price *= 3.7854; break;
+            }
+        }else if(unitType === "length"){
+            switch(unit){
+                case "mm": price /= 1000; break;
+                case "cm": price /= 100; break;
+                case "m": break;
+                case "in": price /= 39.3701; break;
+                case "ft": price /= 3.2808; break;
+            }
+        }
+
+        return price;
     }
 }
 

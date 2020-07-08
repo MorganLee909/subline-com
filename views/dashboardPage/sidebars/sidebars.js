@@ -19,7 +19,7 @@ let recipeDetailsComp = {
             ingredientDiv = template.cloneNode(true);
 
             ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = `${recipe.ingredients[i].quantity} ${recipe.ingredients[i].ingredient.unit}`;
+            ingredientDiv.children[2].innerText = `${recipe.ingredients[i].ingredient.convert(recipe.ingredients[i].quantity).toFixed(2)} ${recipe.ingredients[i].ingredient.unit}`;
             ingredientDiv.ingredient = recipe.ingredients[i].ingredient;
             ingredientDiv.name = recipe.ingredients[i].ingredient.name;
 
@@ -57,7 +57,7 @@ let recipeDetailsComp = {
 
             div.children[2].innerText = this.recipe.ingredients[i].ingredient.unit;
             div.children[1].style.display = "block";
-            div.children[1].value = parseFloat(this.recipe.ingredients[i].quantity);
+            div.children[1].value = this.recipe.ingredients[i].ingredient.convert(this.recipe.ingredients[i].quantity).toFixed(2);
             div.children[3].style.display = "block";
             div.children[3].onclick = ()=>{div.parentElement.removeChild(div)};
         }
@@ -390,15 +390,19 @@ let orderDetailsComp = {
         let template = document.querySelector("#orderIngredient").content.children[0];
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
-            let ingredient = template.cloneNode(true);
+            let ingredientDiv = template.cloneNode(true);
             let price = (order.ingredients[i].quantity * order.ingredients[i].price) / 100;
             grandTotal += price;
 
-            ingredient.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredient.children[1].innerText = `${order.ingredients[i].quantity} ${order.ingredients[i].ingredient.unit.toUpperCase()} x $${(order.ingredients[i].price / 100).toFixed(2)}`;
-            ingredient.children[2].innerText = `$${price.toFixed(2)}`;
+            let ingredient = order.ingredients[i].ingredient;
+            let priceText = ingredient.convert(order.ingredients[i].quantity).toFixed(2) + " " + 
+                ingredient.unit.toUpperCase() + " x $" +
+                (order.convertPrice(ingredient.unitType, ingredient.unit, order.ingredients[i].price) / 100).toFixed(2);
+            ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
+            ingredientDiv.children[1].innerText = priceText;
+            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
 
-            ingredientList.appendChild(ingredient);
+            ingredientList.appendChild(ingredientDiv);
         }
 
         document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
@@ -644,10 +648,10 @@ let ingredientDetailsComp = {
         document.querySelector("#ingredientDetails p").innerText = ingredient.ingredient.category;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
         let ingredientStock = document.getElementById("ingredientStock");
-        ingredientStock.innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        ingredientStock.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
         ingredientStock.style.display = "block";
         let ingredientInput = document.getElementById("ingredientInput");
-        ingredientInput.value = ingredient.quantity;
+        ingredientInput.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
         ingredientInput.style.display = "none";
 
         let quantities = [];
@@ -780,16 +784,17 @@ let ingredientDetailsComp = {
     },
 
     changeUnit: function(newActive, unit){
-        this.ingredient.ingredient.convert(unit);
+        this.ingredient.ingredient.unit = unit;
 
         let ingredientButtons = document.querySelectorAll(".unitButton");
         for(let i = 0; i < ingredientButtons.length; i++){
-            console.log(ingredientButtons[i]);
             ingredientButtons[i].classList.remove("unitActive");
         }
 
-        console.log(newActive);
         newActive.classList.add("unitActive");
+
+        ingredientsStrandObj.populateByProperty("category");
+        document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
     },
 
     changeUnitDefault: function(){

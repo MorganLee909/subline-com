@@ -12,9 +12,11 @@ window.transactionsStrandObj = {
 
             let i = 0
             while(i < merchant.transactions.length && i < 100){
-                let transaction = template.cloneNode(true);
-                transaction.onclick = ()=>{transactionDetailsComp.display(merchant.transactions[i])};
-                transactionsList.appendChild(transaction);
+                let transactionDiv = template.cloneNode(true);
+                let transaction = merchant.transactions[i];
+
+                transactionDiv.onclick = ()=>{transactionDetailsComp.display(transaction)};
+                transactionsList.appendChild(transactionDiv);
 
                 let totalRecipes = 0;
                 let totalPrice = 0;
@@ -24,11 +26,11 @@ window.transactionsStrandObj = {
                     totalPrice += merchant.transactions[i].recipes[j].recipe.price * merchant.transactions[i].recipes[j].quantity;
                 }
 
-                transaction.children[0].innerText = `${merchant.transactions[i].date.toLocaleDateString()} ${merchant.transactions[i].date.toLocaleTimeString()}`;
-                transaction.children[1].innerText = `${totalRecipes} recipes sold`;
-                transaction.children[2].innerText = `$${(totalPrice / 100).toFixed(2)}`;
+                transactionDiv.children[0].innerText = `${merchant.transactions[i].date.toLocaleDateString()} ${merchant.transactions[i].date.toLocaleTimeString()}`;
+                transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
+                transactionDiv.children[2].innerText = `$${(totalPrice / 100).toFixed(2)}`;
 
-                i--;
+                i++;
             }
 
             this.isPopulated = true;
