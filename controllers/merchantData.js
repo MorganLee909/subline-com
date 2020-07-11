@@ -162,6 +162,7 @@ module.exports = {
     req.body = [{
         id: ingredient id,
         quantity: quantity of ingredient for the merchant
+        defaultUnit: default unit of measurement to display
     }]
     */
     addMerchantIngredient: function(req, res){
@@ -190,7 +191,8 @@ module.exports = {
                     
                     merchant.inventory.push({
                         ingredient: req.body[i].id,
-                        quantity: req.body[i].quantity
+                        quantity: req.body[i].quantity,
+                        defaultUnit: req.body[i].defaultUnit
                     });
                 }
 

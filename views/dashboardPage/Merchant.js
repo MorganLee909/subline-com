@@ -193,7 +193,8 @@ class Merchant{
     If ingredient doesn't exist, add it
     ingredients = {
         ingredient: Ingredient object,
-        quantity: new quantity
+        quantity: new quantity,
+        defaultUnit: the default unit to be displayed
     }
     remove = set true if removing
     isOrder = set true if this is coming from an order
@@ -219,7 +220,8 @@ class Merchant{
             if(isNew){
                 merchant.ingredients.push({
                     ingredient: ingredients[i].ingredient,
-                    quantity: parseFloat(ingredients[i].quantity)
+                    quantity: parseFloat(ingredients[i].quantity),
+                    defaultUnit: ingredients[i].defaultUnit
                 });
             }
         }
@@ -560,4 +562,41 @@ class Merchant{
 
         return recipes;
     }
+}
+
+let convertToMain = (unit, quantity)=>{
+    let converted = 0;
+
+    if(merchant.units.mass.includes(unit)){
+        switch(unit){
+            case "g": break;
+            case "kg": converted = quantity * 1000; break;
+            case "oz": converted = quantity * 28.3495; break;
+            case "lb": converted = quantity * 453.5924; break;
+        }
+    }else if(merchant.units.volume.includes(unit)){
+        switch(unit){
+            case "ml": converted = quantity / 1000; break;
+            case "l": break;
+            case "tsp": converted = quantity / 202.8842; break;
+            case "tbsp": converted = quantity / 67.6278; break;
+            case "ozfl": converted = quantity / 33.8141; break;
+            case "cup": converted = quantity / 4.1667; break;
+            case "pt": converted = quantity / 2.1134; break;
+            case "qt": converted = quantity / 1.0567; break;
+            case "gal": converted = quantity * 3.7854; break;
+        }
+    }else if(merchant.units.length.includes(unit)){
+        switch(unit){
+            case "mm": converted = quantity / 1000; break;
+            case "cm": converted = quantity / 100; break;
+            case "m": break;
+            case "in": converted = quantity / 39.3701; break;
+            case "ft": converted = quantity / 3.2808; break;
+        }
+    }else{
+        converted = quantity;
+    }
+
+    return converted;
 }

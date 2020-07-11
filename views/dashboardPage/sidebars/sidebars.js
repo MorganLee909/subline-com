@@ -594,19 +594,27 @@ let addIngredientsComp = {
         let fetchable = [];
 
         for(let i = 0; i < ingredients.length; i++){
-            if(ingredients[i].children[1].value === ""){
+            let quantity = ingredients[i].children[1].value;
+            let unit = ingredients[i].children[2].value;
+
+            if(quantity === ""){
                 banner.createError("PLEASE ENTER A QUANTITY FOR EACH INGREDIENT YOU WANT TO ADD TO YOUR INVENTORY");
                 return;
             }
+            quantity = convertToMain(unit, quantity);
 
-            newIngredients.push({
+            let newIngredient = {
                 ingredient: ingredients[i].ingredient,
-                quantity: ingredients[i].children[1].value
-            });
+                quantity: quantity
+            }
+            newIngredient.ingredient.unit = unit;
+
+            newIngredients.push(newIngredient);
 
             fetchable.push({
                 id: ingredients[i].ingredient.id,
-                quantity: ingredients[i].children[1].value
+                quantity: quantity,
+                defaultUnit: unit
             });
         }
 
