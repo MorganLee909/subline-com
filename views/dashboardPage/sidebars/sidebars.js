@@ -193,7 +193,7 @@ let newOrderComp = {
                     let ingredientDiv = ingredientTemplate.cloneNode(true);
     
                     ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
-                    ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
+                    ingredientDiv.children[2].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
                     ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
     
                     this.unused.push(categories[i].ingredients[j]);
@@ -217,7 +217,7 @@ let newOrderComp = {
 
         let quantityInput = document.createElement("input");
         quantityInput.type = "number";
-        quantityInput.placeholder = ingredientDiv.ingredient.unit;
+        quantityInput.placeholder = `QUANTITY (${ingredientDiv.ingredient.unit})`;
         quantityInput.min = "0";
         quantityInput.step = "0.01";
         ingredientDiv.insertBefore(quantityInput, ingredientDiv.children[1]);
@@ -229,8 +229,8 @@ let newOrderComp = {
         priceInput.step = "0.01";
         ingredientDiv.insertBefore(priceInput, ingredientDiv.children[2]);
 
-        ingredientDiv.children[3].innerText = "-";
-        ingredientDiv.children[3].onclick = ()=>{this.removeOne(ingredientDiv, container)};
+        ingredientDiv.children[4].innerText = "-";
+        ingredientDiv.children[4].onclick = ()=>{this.removeOne(ingredientDiv, container)};
 
         container.removeChild(ingredientDiv);
         document.getElementById("newOrderAdded").appendChild(ingredientDiv);

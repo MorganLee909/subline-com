@@ -514,6 +514,7 @@ Add Recipe
 
     #newOrderAdded{
         max-height: 25%;
+        width: 100%;
         overflow: auto;
     }
 
