@@ -256,11 +256,12 @@ let newOrderComp = {
             let quantity = categoriesList.children[i].children[1].value;
             let price = categoriesList.children[i].children[2].value;
 
+            let fakeOrder = new Order(undefined, undefined, new Date(), [], undefined);
             if(quantity !== ""  && price !== ""){
                 ingredients.push({
                     ingredient: categoriesList.children[i].ingredient.id,
-                    quantity: parseFloat(quantity),
-                    price: parseInt(price * 100)
+                    quantity: convertToMain(categoriesList.children[i].ingredient.unit, parseFloat(quantity)),
+                    price: categoriesList.children[i].ingredient.convert(parseInt(price * 100))
                 });
             }
         }
@@ -269,7 +270,7 @@ let newOrderComp = {
             name: document.getElementById("orderName").value,
             date: document.getElementById("orderDate").value,
             ingredients: ingredients
-        }
+        };
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
