@@ -281,17 +281,17 @@ Add Ingredients
 
             .addIngredientsIngredient{
                 display: flex;
-                justify-content: left;
+                justify-content: space-between;
                 align-items: center;
                 margin: 5px;
             }
 
-                .addIngredientsIngredient > *:nth-child(2){
-                    margin-left: auto;
-                }
-
                 .addIngredientsIngredient input[type=number]{
                     width: 100px;
+                }
+
+                .addIngredientsIngredient select{
+                    width: 60px;
                 }
 
                 .addButton{

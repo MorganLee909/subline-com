@@ -466,8 +466,7 @@ let addIngredientsComp = {
                         for(let i = 0; i < response.length; i++){
                             response[i] = {ingredient: response[i]}
                         }
-                        this.fakeMerchant = new Merchant(
-                            {
+                        this.fakeMerchant = new Merchant({
                                 name: "none",
                                 inventory: response,
                                 recipes: [],
@@ -513,7 +512,7 @@ let addIngredientsComp = {
             for(let j = 0; j < categories[i].ingredients.length; j++){
                 let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
                 ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
-                ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv)};
+                ingredientDiv.children[2].onclick = ()=>{this.addOne(ingredientDiv)};
                 ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
@@ -555,20 +554,23 @@ let addIngredientsComp = {
         input.type = "number";
         input.min = "0";
         input.step = "0.01";
-        input.placeholder = element._unit;
+        input.placeholder = "QUANTITY";
         element.insertBefore(input, element.children[1]);
 
-        element.children[2].innerText = "-";
-        element.children[2].onclick = ()=>{this.removeOne(element)};
+        element.children[2].style.display = "block";
+
+        element.children[3].innerText = "-";
+        element.children[3].onclick = ()=>{this.removeOne(element)};
     },
 
     removeOne: function(element){
         element.parentElement.removeChild(element);
 
         element.removeChild(element.children[1]);
+        element.children[1].style.display = "none";
 
-        element.children[1].innerText = "+";
-        element.children[1].onclick = ()=>{this.addOne(element)};
+        element.children[2].innerText = "+";
+        element.children[2].onclick = ()=>{this.addOne(element)};
 
         if(document.getElementById("myIngredients").children.length === 0){
             document.getElementById("myIngredientsDiv").style.display = "none";
