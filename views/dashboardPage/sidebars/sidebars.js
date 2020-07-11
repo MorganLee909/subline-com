@@ -324,14 +324,16 @@ let newIngredientComp = {
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
 
+        let unit = unitSelector.value;
+
         let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: document.querySelector("#newIngQuantity").value,
-            defaultUnit: unitSelector.value
+            quantity: convertToMain(unit, document.querySelector("#newIngQuantity").value),
+            defaultUnit: unit
         }
 
         let loader = document.getElementById("loaderContainer");
