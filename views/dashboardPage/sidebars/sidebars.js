@@ -63,9 +63,6 @@ let recipeDetailsComp = {
         }
 
         document.querySelector("#addRecIng").style.display = "flex";
-
-        
-
         document.querySelector("#recipeUpdate").style.display = "flex";
     },
 
@@ -80,12 +77,12 @@ let recipeDetailsComp = {
                 let select = divs[i].children[0];
                 this.recipe.ingredients.push({
                     ingredient: select.options[select.selectedIndex].ingredient,
-                    quantity: divs[i].children[1].value
+                    quantity: convertToMain(select.options[select.selectedIndex].ingredient.unit, divs[i].children[1].value)
                 });
             }else{
                 this.recipe.ingredients.push({
                     ingredient: divs[i].ingredient,
-                    quantity: divs[i].children[1].value
+                    quantity: convertToMain(divs[i].ingredient.unit, divs[i].children[1].value)
                 });
             }
         }
