@@ -851,7 +851,7 @@ let newRecipeComp = {
             for(let ingredient of category.ingredients){
                 let option = document.createElement("option");
                 option.value = ingredient.ingredient.id;
-                option.innerText = ingredient.ingredient.name;
+                option.innerText = `${ingredient.ingredient.name} (${ingredient.ingredient.unit})`;
                 optgroup.appendChild(option);
             }
         }
@@ -889,17 +889,23 @@ let newRecipeComp = {
 
     submit: function(){
         let newRecipe = {
-            name: document.querySelector("#newRecipeName").value,
-            price: document.querySelector("#newRecipePrice").value,
+            name: document.getElementById("newRecipeName").value,
+            price: document.getElementById("newRecipePrice").value,
             ingredients: []
         }
 
         let inputs = document.querySelectorAll("#recipeInputIngredients > div");
-        for(let input of inputs){
-            newRecipe.ingredients.push({
-                ingredient: input.children[1].children[0].value,
-                quantity: input.children[2].children[0].value
-            });
+        for(let i = 0; i < inputs.length; i++){
+            for(let j = 0; j < merchant.ingredients.length; j++){
+                if(merchant.ingredients[j].ingredient.id === inputs[i].children[1].children[0].value){
+                    newRecipe.ingredients.push({
+                        ingredient: inputs[i].children[1].children[0].value,
+                        quantity: convertToMain(merchant.ingredients[j].ingredient.unit, inputs[i].children[2].children[0].value)
+                    });
+
+                    break;
+                }
+            }
         }
 
         if(!validator.recipe(newRecipe)){

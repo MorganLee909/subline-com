@@ -482,6 +482,10 @@ Add Recipe
                 margin-bottom: 2px;
             }
 
+            #recipeInputIngredients input{
+                width: 100px;
+            }
+
             #recipeInputIngredients div h4{
                 color: rgb(255, 99, 107);
             }
