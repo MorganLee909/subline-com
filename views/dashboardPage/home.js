@@ -1,12 +1,16 @@
 window.homeStrandObj = {
     isPopulated: false,
     graph: {},
+    popularWidth: 0,
+    popularHeight: 0,
 
     display: function(){
         if(!this.isPopulated){
             this.drawRevenueCard();
             this.drawRevenueGraph();
             this.drawInventoryCheckCard();
+            this.popularWidth = document.getElementById("popularIngredientsCard").offsetWidth;
+            this.popularHeight = document.getElementById("popularIngredientsCard").offsetHeight;
             this.drawPopularCard();
 
             this.isPopulated = true;
@@ -110,8 +114,10 @@ window.homeStrandObj = {
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
+        window.ingredientList = [...ingredientList];
+        let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;
         if(ingredientList.length > 0){
-            for(let i = 0; i < 5; i++){
+            for(let i = 0; i < iterations; i++){
                 try{
                     let max = ingredientList[0].quantity;
                     let index = 0;
@@ -124,7 +130,9 @@ window.homeStrandObj = {
 
                     dataArray.push({
                         num: max,
-                        label: `${ingredientList[index].ingredient.name}: ${+ingredientList[index].quantity.toFixed(2)} ${ingredientList[index].ingredient.unit}`
+                        label: ingredientList[index].ingredient.name + ": " +
+                        ingredientList[index].ingredient.convert(ingredientList[index].quantity).toFixed(2) +
+                        " " + ingredientList[index].ingredient.unit
                     });
                     ingredientList.splice(index, 1);
                 }catch(err){
@@ -132,11 +140,11 @@ window.homeStrandObj = {
                 }
             }
 
-            let thisCanvas = document.querySelector("#popularCanvas");
-            thisCanvas.width = thisCanvas.parentElement.clientWidth * 0.9;
-            thisCanvas.height = thisCanvas.parentElement.clientHeight * 0.75;
+            let thisCanvas = document.getElementById("popularCanvas");
+            thisCanvas.width = this.popularWidth;
+            thisCanvas.height = this.popularHeight;
 
-            let popularGraph = new HorizontalBarGraph(document.querySelector("#popularCanvas"));
+            let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);
         }else{
             document.querySelector("#popularCanvas").style.display = "none";
