@@ -61,7 +61,7 @@ module.exports = {
     },
 
     ingredient: function(ingredient){
-        if(!this.isSanitary([ingredient.name, ingredient.category, ingredient.unit])){
+        if(!this.isSanitary([ingredient.name, ingredient.category])){
             return "Ingredient contains illegal characters";
         }
 

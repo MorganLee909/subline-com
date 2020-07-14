@@ -39,7 +39,7 @@ window.ingredientsStrandObj = {
                 let ingredientDiv = ingredientTemplate.cloneNode(true);
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
-                ingredientDiv.children[2].innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+                ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient)};
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();

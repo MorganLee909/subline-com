@@ -162,6 +162,7 @@ module.exports = {
     req.body = [{
         id: ingredient id,
         quantity: quantity of ingredient for the merchant
+        defaultUnit: default unit of measurement to display
     }]
     */
     addMerchantIngredient: function(req, res){
@@ -190,7 +191,8 @@ module.exports = {
                     
                     merchant.inventory.push({
                         ingredient: req.body[i].id,
-                        quantity: req.body[i].quantity
+                        quantity: req.body[i].quantity,
+                        defaultUnit: req.body[i].defaultUnit
                     });
                 }
 
@@ -233,6 +235,31 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
+            });
+    },
+
+    //PUT - Update the default unit for a single ingredient
+    ingredientDefaultUnit: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    if(merchant.inventory[i].ingredient.toString() === req.params.id){
+                        merchant.inventory[i].defaultUnit =req.params.unit;
+                    }
+                }
+
+                return merchant.save()
+            })
+            .then((merchant)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO UPDATE DEFAULT UNIT");
             });
     },
 

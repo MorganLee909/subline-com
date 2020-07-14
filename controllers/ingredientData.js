@@ -22,9 +22,10 @@ module.exports = {
         ingredient: {
             name: name of ingredient,
             category: category of ingredient,
-            unit: unit measurement of ingredient
+            unitType: category for the unit (mass, volume, length)
         },
-        quantity: quantity of ingredient for current merchant
+        quantity: quantity of ingredient for current merchant,
+        defaultUnit: default unit of measurement to display
     }
     Returns:
         Same as above, with the _id
@@ -52,7 +53,8 @@ module.exports = {
             .then((response)=>{
                 newIngredient = {
                     ingredient: response[0],
-                    quantity: req.body.quantity
+                    quantity: req.body.quantity,
+                    defaultUnit: req.body.defaultUnit
                 }
 
                 response[1].inventory.push(newIngredient);

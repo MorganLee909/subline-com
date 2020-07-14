@@ -19,7 +19,7 @@ let recipeDetailsComp = {
             ingredientDiv = template.cloneNode(true);
 
             ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = `${recipe.ingredients[i].quantity} ${recipe.ingredients[i].ingredient.unit}`;
+            ingredientDiv.children[2].innerText = `${recipe.ingredients[i].ingredient.convert(recipe.ingredients[i].quantity).toFixed(2)} ${recipe.ingredients[i].ingredient.unit}`;
             ingredientDiv.ingredient = recipe.ingredients[i].ingredient;
             ingredientDiv.name = recipe.ingredients[i].ingredient.name;
 
@@ -57,15 +57,12 @@ let recipeDetailsComp = {
 
             div.children[2].innerText = this.recipe.ingredients[i].ingredient.unit;
             div.children[1].style.display = "block";
-            div.children[1].value = parseFloat(this.recipe.ingredients[i].quantity);
+            div.children[1].value = this.recipe.ingredients[i].ingredient.convert(this.recipe.ingredients[i].quantity).toFixed(2);
             div.children[3].style.display = "block";
             div.children[3].onclick = ()=>{div.parentElement.removeChild(div)};
         }
 
         document.querySelector("#addRecIng").style.display = "flex";
-
-        
-
         document.querySelector("#recipeUpdate").style.display = "flex";
     },
 
@@ -80,12 +77,12 @@ let recipeDetailsComp = {
                 let select = divs[i].children[0];
                 this.recipe.ingredients.push({
                     ingredient: select.options[select.selectedIndex].ingredient,
-                    quantity: divs[i].children[1].value
+                    quantity: convertToMain(select.options[select.selectedIndex].ingredient.unit, divs[i].children[1].value)
                 });
             }else{
                 this.recipe.ingredients.push({
                     ingredient: divs[i].ingredient,
-                    quantity: divs[i].children[1].value
+                    quantity: convertToMain(divs[i].ingredient.unit, divs[i].children[1].value)
                 });
             }
         }
@@ -196,7 +193,7 @@ let newOrderComp = {
                     let ingredientDiv = ingredientTemplate.cloneNode(true);
     
                     ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
-                    ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
+                    ingredientDiv.children[2].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
                     ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
     
                     this.unused.push(categories[i].ingredients[j]);
@@ -220,7 +217,7 @@ let newOrderComp = {
 
         let quantityInput = document.createElement("input");
         quantityInput.type = "number";
-        quantityInput.placeholder = ingredientDiv.ingredient.unit;
+        quantityInput.placeholder = `QUANTITY (${ingredientDiv.ingredient.unit})`;
         quantityInput.min = "0";
         quantityInput.step = "0.01";
         ingredientDiv.insertBefore(quantityInput, ingredientDiv.children[1]);
@@ -232,8 +229,8 @@ let newOrderComp = {
         priceInput.step = "0.01";
         ingredientDiv.insertBefore(priceInput, ingredientDiv.children[2]);
 
-        ingredientDiv.children[3].innerText = "-";
-        ingredientDiv.children[3].onclick = ()=>{this.removeOne(ingredientDiv, container)};
+        ingredientDiv.children[4].innerText = "-";
+        ingredientDiv.children[4].onclick = ()=>{this.removeOne(ingredientDiv, container)};
 
         container.removeChild(ingredientDiv);
         document.getElementById("newOrderAdded").appendChild(ingredientDiv);
@@ -259,11 +256,12 @@ let newOrderComp = {
             let quantity = categoriesList.children[i].children[1].value;
             let price = categoriesList.children[i].children[2].value;
 
+            let fakeOrder = new Order(undefined, undefined, new Date(), [], undefined);
             if(quantity !== ""  && price !== ""){
                 ingredients.push({
                     ingredient: categoriesList.children[i].ingredient.id,
-                    quantity: parseFloat(quantity),
-                    price: parseInt(price * 100)
+                    quantity: convertToMain(categoriesList.children[i].ingredient.unit, parseFloat(quantity)),
+                    price: categoriesList.children[i].ingredient.convert(parseInt(price * 100))
                 });
             }
         }
@@ -272,7 +270,7 @@ let newOrderComp = {
             name: document.getElementById("orderName").value,
             date: document.getElementById("orderDate").value,
             ingredients: ingredients
-        }
+        };
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
@@ -318,17 +316,22 @@ let newIngredientComp = {
         document.querySelector("#newIngName").value = "";
         document.querySelector("#newIngCategory").value = "";
         document.querySelector("#newIngQuantity").value = 0;
-        document.querySelector("#newIngUnit").value = ""
     },
 
     submit: function(){
+        let unitSelector = document.getElementById("unitSelector");
+        let options = document.querySelectorAll("#unitSelector option");
+
+        let unit = unitSelector.value;
+
         let newIngredient = {
             ingredient: {
-                name: document.querySelector("#newIngName").value,
-                category: document.querySelector("#newIngCategory").value,
-                unit: document.querySelector("#newIngUnit").value
+                name: document.getElementById("newIngName").value,
+                category: document.getElementById("newIngCategory").value,
+                unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: document.querySelector("#newIngQuantity").value
+            quantity: convertToMain(unit, document.querySelector("#newIngQuantity").value),
+            defaultUnit: unit
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -351,7 +354,9 @@ let newIngredientComp = {
                             response.ingredient._id,
                             response.ingredient.name,
                             response.ingredient.category,
-                            response.ingredient.unit
+                            response.ingredient.unitType,
+                            response.defaultUnit,
+                            merchant
                         ),
                         quantity: response.quantity
                     }]);
@@ -385,15 +390,19 @@ let orderDetailsComp = {
         let template = document.querySelector("#orderIngredient").content.children[0];
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
-            let ingredient = template.cloneNode(true);
+            let ingredientDiv = template.cloneNode(true);
             let price = (order.ingredients[i].quantity * order.ingredients[i].price) / 100;
             grandTotal += price;
 
-            ingredient.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredient.children[1].innerText = `${order.ingredients[i].quantity} x $${(order.ingredients[i].price / 100).toFixed(2)}`;
-            ingredient.children[2].innerText = `$${price.toFixed(2)}`;
+            let ingredient = order.ingredients[i].ingredient;
+            let priceText = ingredient.convert(order.ingredients[i].quantity).toFixed(2) + " " + 
+                ingredient.unit.toUpperCase() + " x $" +
+                (order.convertPrice(ingredient.unitType, ingredient.unit, order.ingredients[i].price) / 100).toFixed(2);
+            ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
+            ingredientDiv.children[1].innerText = priceText;
+            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
 
-            ingredientList.appendChild(ingredient);
+            ingredientList.appendChild(ingredientDiv);
         }
 
         document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
@@ -457,8 +466,7 @@ let addIngredientsComp = {
                         for(let i = 0; i < response.length; i++){
                             response[i] = {ingredient: response[i]}
                         }
-                        this.fakeMerchant = new Merchant(
-                            {
+                        this.fakeMerchant = new Merchant({
                                 name: "none",
                                 inventory: response,
                                 recipes: [],
@@ -504,7 +512,7 @@ let addIngredientsComp = {
             for(let j = 0; j < categories[i].ingredients.length; j++){
                 let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
                 ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
-                ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv)};
+                ingredientDiv.children[2].onclick = ()=>{this.addOne(ingredientDiv)};
                 ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
@@ -546,20 +554,23 @@ let addIngredientsComp = {
         input.type = "number";
         input.min = "0";
         input.step = "0.01";
-        input.placeholder = element._unit;
+        input.placeholder = "QUANTITY";
         element.insertBefore(input, element.children[1]);
 
-        element.children[2].innerText = "-";
-        element.children[2].onclick = ()=>{this.removeOne(element)};
+        element.children[2].style.display = "block";
+
+        element.children[3].innerText = "-";
+        element.children[3].onclick = ()=>{this.removeOne(element)};
     },
 
     removeOne: function(element){
         element.parentElement.removeChild(element);
 
         element.removeChild(element.children[1]);
+        element.children[1].style.display = "none";
 
-        element.children[1].innerText = "+";
-        element.children[1].onclick = ()=>{this.addOne(element)};
+        element.children[2].innerText = "+";
+        element.children[2].onclick = ()=>{this.addOne(element)};
 
         if(document.getElementById("myIngredients").children.length === 0){
             document.getElementById("myIngredientsDiv").style.display = "none";
@@ -583,19 +594,27 @@ let addIngredientsComp = {
         let fetchable = [];
 
         for(let i = 0; i < ingredients.length; i++){
-            if(ingredients[i].children[1].value === ""){
+            let quantity = ingredients[i].children[1].value;
+            let unit = ingredients[i].children[2].value;
+
+            if(quantity === ""){
                 banner.createError("PLEASE ENTER A QUANTITY FOR EACH INGREDIENT YOU WANT TO ADD TO YOUR INVENTORY");
                 return;
             }
+            quantity = convertToMain(unit, quantity);
 
-            newIngredients.push({
+            let newIngredient = {
                 ingredient: ingredients[i].ingredient,
-                quantity: ingredients[i].children[1].value
-            });
+                quantity: quantity
+            }
+            newIngredient.ingredient.unit = unit;
+
+            newIngredients.push(newIngredient);
 
             fetchable.push({
                 id: ingredients[i].ingredient.id,
-                quantity: ingredients[i].children[1].value
+                quantity: quantity,
+                defaultUnit: unit
             });
         }
 
@@ -639,10 +658,10 @@ let ingredientDetailsComp = {
         document.querySelector("#ingredientDetails p").innerText = ingredient.ingredient.category;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
         let ingredientStock = document.getElementById("ingredientStock");
-        ingredientStock.innerText = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        ingredientStock.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
         ingredientStock.style.display = "block";
         let ingredientInput = document.getElementById("ingredientInput");
-        ingredientInput.placeholder = `${ingredient.quantity} ${ingredient.ingredient.unit}`;
+        ingredientInput.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
         ingredientInput.style.display = "none";
 
         let quantities = [];
@@ -681,6 +700,23 @@ let ingredientDetailsComp = {
             ul.appendChild(li);
         }
 
+        let ingredientButtons = document.getElementById("ingredientButtons");
+        let units = merchant.units[this.ingredient.ingredient.unitType];
+        while(ingredientButtons.children.length > 0){
+            ingredientButtons.removeChild(ingredientButtons.firstChild);
+        }
+        for(let i = 0; i < units.length; i++){
+            let button = document.createElement("button");
+            button.classList.add("unitButton");
+            button.innerText = units[i].toUpperCase();
+            button.onclick = ()=>{this.changeUnit(button, units[i])};
+            ingredientButtons.appendChild(button);
+
+            if(units[i] === this.ingredient.ingredient.unit){
+                button.classList.add("unitActive");
+            }
+        }
+
         openSidebar(sidebar);
     },
 
@@ -716,9 +752,9 @@ let ingredientDetailsComp = {
     },
 
     edit: function(){
-        document.querySelector("#ingredientStock").style.display = "none";
-        document.querySelector("#ingredientInput").style.display = "block";
-        document.querySelector("#editSubmitButton").style.display = "block";
+        document.getElementById("ingredientStock").style.display = "none";
+        document.getElementById("ingredientInput").style.display = "block";
+        document.getElementById("editSubmitButton").style.display = "block";
     },
 
     editSubmit: function(){
@@ -755,6 +791,48 @@ let ingredientDetailsComp = {
                     loader.style.display = "none";
                 });
         }
+    },
+
+    changeUnit: function(newActive, unit){
+        this.ingredient.ingredient.unit = unit;
+
+        let ingredientButtons = document.querySelectorAll(".unitButton");
+        for(let i = 0; i < ingredientButtons.length; i++){
+            ingredientButtons[i].classList.remove("unitActive");
+        }
+
+        newActive.classList.add("unitActive");
+
+        homeStrandObj.drawInventoryCheckCard();
+        ingredientsStrandObj.populateByProperty("category");
+        document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
+    },
+
+    changeUnitDefault: function(){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        let id = this.ingredient.ingredient.id;
+        let unit = this.ingredient.ingredient.unit;
+        fetch(`/merchant/ingredients/update/${id}/${unit}`, {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+        })
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    banner.createNotification("INGREDIENT DEFAULT UNIT UPDATED");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 
@@ -775,7 +853,7 @@ let newRecipeComp = {
             for(let ingredient of category.ingredients){
                 let option = document.createElement("option");
                 option.value = ingredient.ingredient.id;
-                option.innerText = ingredient.ingredient.name;
+                option.innerText = `${ingredient.ingredient.name} (${ingredient.ingredient.unit})`;
                 optgroup.appendChild(option);
             }
         }
@@ -813,17 +891,23 @@ let newRecipeComp = {
 
     submit: function(){
         let newRecipe = {
-            name: document.querySelector("#newRecipeName").value,
-            price: document.querySelector("#newRecipePrice").value,
+            name: document.getElementById("newRecipeName").value,
+            price: document.getElementById("newRecipePrice").value,
             ingredients: []
         }
 
         let inputs = document.querySelectorAll("#recipeInputIngredients > div");
-        for(let input of inputs){
-            newRecipe.ingredients.push({
-                ingredient: input.children[1].children[0].value,
-                quantity: input.children[2].children[0].value
-            });
+        for(let i = 0; i < inputs.length; i++){
+            for(let j = 0; j < merchant.ingredients.length; j++){
+                if(merchant.ingredients[j].ingredient.id === inputs[i].children[1].children[0].value){
+                    newRecipe.ingredients.push({
+                        ingredient: inputs[i].children[1].children[0].value,
+                        quantity: convertToMain(merchant.ingredients[j].ingredient.unit, inputs[i].children[2].children[0].value)
+                    });
+
+                    break;
+                }
+            }
         }
 
         if(!validator.recipe(newRecipe)){

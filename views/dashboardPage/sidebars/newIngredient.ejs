@@ -23,7 +23,38 @@
     </label>
 
     <label>UNIT:
-        <input id="newIngUnit" type="text">
+        <select id="unitSelector">
+            <optgroup label="MASS/WEIGHT">
+                <option type="mass" value="g">G</option>
+                <option type="mass" value="kg">KG</option>
+                <option type="mass" value="oz">OZ</option>
+                <option type="mass" value="lb">LB</option>
+            </optgroup>
+
+            <optgroup label="VOLUME">
+                <option type="volume" value="ml">ML</option>
+                <option type="volume" value="l">L</option>
+                <option type="volume" value="tsp">TSP</option>
+                <option type="volume" value="tbsp">TBSP</option>
+                <option type="volume" value="ozfl">OZ. FL</option>
+                <option type="volume" value="cup">CUP</option>
+                <option type="volume" value="pt">PT</option>
+                <option type="volume" value="qt">QT</option>
+                <option type="volume" value="gal">GAL</option>
+            </optgroup>
+
+            <optgroup label="LENGTH">
+                <option type="length" value="mm">MM</option>
+                <option type="length" value="cm">CM</option>
+                <option type="length" value="m">M</option>
+                <option type="length" value="in">IN</option>
+                <option type="length" value="ft">FT</option>
+            </optgroup>
+
+            <optgroup label="OTHER">
+                <option value="count">count</option>
+            </optgroup>
+        </select>
     </label>
 
     <button class="button" onclick="newIngredientComp.submit()">CREATE</button>

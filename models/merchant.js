@@ -8,7 +8,7 @@ const MerchantSchema = new mongoose.Schema({
     email: String,
     password: {
         type: String,
-        minlength: [15, "Password must contain at least 15 characters"]
+        minlength: 15
     },
     pos: {
         type: String,
@@ -37,7 +37,11 @@ const MerchantSchema = new mongoose.Schema({
         quantity: {
             type: Number,
             required: true,
-            min: [0, "Quantity cannot be less than 0"]
+            min: 0
+        },
+        defaultUnit: {
+            type: String,
+            required: true
         }
     }],
     recipes: [{
