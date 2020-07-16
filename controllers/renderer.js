@@ -39,6 +39,17 @@ module.exports = {
             .populate("recipes")
             .then((merchant)=>{
                 if(merchant.pos === "clover"){
+                    axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`)
+                        .then((response)=>{
+                            if(response.data.status !== "ACTIVE"){
+                                req.session.error = "SUBSCRIPTION EXPIRED.  PLEASE RENEW ON CLOVER";
+                                return res.redirect("/");
+                            }
+                        })
+                        .catch((err)=>{
+                            console.log(err);
+                        });
+
                     axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
                         .then((result)=>{
                             let transactions = [];
