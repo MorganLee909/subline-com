@@ -518,6 +518,11 @@ let addIngredientsComp = {
                 categoryDiv.children[1].appendChild(ingredientDiv);
             }
         }
+
+        let myIngredients = document.getElementById("myIngredients");
+        while(myIngredients.children.length > 0){
+            myIngredients.removeChild(myIngredients.firstChild);
+        }
     },
 
     toggleAddIngredient: function(categoryElement){
@@ -557,7 +562,18 @@ let addIngredientsComp = {
         input.placeholder = "QUANTITY";
         element.insertBefore(input, element.children[1]);
 
-        element.children[2].style.display = "block";
+        let select = element.children[2];
+        console.log(select.style.display);
+        select.style.display = "block";
+        console.log(select.style.display);
+        let units = merchant.units[element.ingredient.unitType];
+        for(let i = 0; i < units.length; i++){
+            let option = document.createElement("option");
+            option.innerText = units[i].toUpperCase();
+            option.type = element.ingredient.unitType;
+            option.value = units[i];
+            select.appendChild(option);
+        }
 
         element.children[3].innerText = "-";
         element.children[3].onclick = ()=>{this.removeOne(element)};
@@ -567,7 +583,12 @@ let addIngredientsComp = {
         element.parentElement.removeChild(element);
 
         element.removeChild(element.children[1]);
-        element.children[1].style.display = "none";
+
+        let select = element.children[1];
+        while(select.children.length > 0){
+            select.removeChild(select.firstChild);
+        }
+        select.style.display = "none";
 
         element.children[2].innerText = "+";
         element.children[2].onclick = ()=>{this.addOne(element)};

@@ -566,7 +566,6 @@ class Merchant{
 
 let convertToMain = (unit, quantity)=>{
     let converted = 0;
-    console.log(unit);
 
     if(merchant.units.mass.includes(unit)){
         switch(unit){
