@@ -110,9 +110,9 @@ window.homeStrandObj = {
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
-        window.ingredientList = [...ingredientList];
-        let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;
-        if(ingredientList.length > 0){
+        if(ingredientList !== false){
+            window.ingredientList = [...ingredientList];
+            let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;
             for(let i = 0; i < iterations; i++){
                 try{
                     let max = ingredientList[0].quantity;
