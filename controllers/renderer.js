@@ -39,21 +39,26 @@ module.exports = {
             .populate("recipes")
             .then((merchant)=>{
                 if(merchant.pos === "clover"){
-                    axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`)
+                    let subscriptionCheck = axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`);
+
+                    let transactionRetrieval = axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
+                        
+                        .catch((err)=>{
+                            let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
+
+                            merchant.password = undefined;
+                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
+                        });
+
+                    Promise.all([subscriptionCheck, transactionRetrieval])
                         .then((response)=>{
-                            if(response.data.status !== "ACTIVE"){
+                            if(response[0].data.status !== "ACTIVE"){
                                 req.session.error = "SUBSCRIPTION EXPIRED.  PLEASE RENEW ON CLOVER";
                                 return res.redirect("/");
                             }
-                        })
-                        .catch((err)=>{
-                            console.log(err);
-                        });
 
-                    axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
-                        .then((result)=>{
                             let transactions = [];
-                            for(let order of result.data.elements){
+                            for(let order of response[1].data.elements){
                                 let newTransaction = new Transaction({
                                     merchant: merchant._id,
                                     date: new Date(order.createdTime),
@@ -131,11 +136,9 @@ module.exports = {
                                 });
                         })
                         .catch((err)=>{
-                            let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
-
-                            merchant.password = undefined;
-                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
-                        });
+                            req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
+                            return res.redirect("/");
+                        })
                 }else if(merchant.pos === "none"){
                     merchant.password = undefined;
 
