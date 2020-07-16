@@ -6,6 +6,18 @@ window.transactionsStrandObj = {
             let transactionsList = document.getElementById("transactionsList");
             let template = document.getElementById("transaction").content.children[0];
 
+            let now = new Date();
+            let monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            document.getElementById("transFilDate1").valueAsDate = monthAgo;
+            document.getElementById("transFilDate2").valueAsDate = now;
+            
+            let dataList = document.getElementById("transFilRecData");
+            for(let i = 0; i < merchant.recipes.length; i++){
+                let option = document.createElement("option");
+                option.innerText = merchant.recipes[i].name;
+                dataList.appendChild(option);
+            }
+
             while(transactionsList.children.length > 0){
                 transactionsList.removeChild(transactionsList.firstChild);
             }
@@ -35,5 +47,17 @@ window.transactionsStrandObj = {
 
             this.isPopulated = true;
         }
+    },
+
+    submitFilter: function(){
+        event.preventDefault();
+
+        let data = {
+            startDate: document.getElementById("transFilDate1").valueAsDate,
+            endDate: document.getElementById("transFilDate2").valueAsDate,
+            recipes: document.getElementById("transFilRecipes").value.split(", ")
+        }
+
+        
     }
 }

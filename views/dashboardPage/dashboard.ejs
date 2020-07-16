@@ -272,6 +272,14 @@
                     <button class="button mobileHide" onclick="newTransactionComp.display()">NEW</button>
                 </div>
 
+                <form onsubmit="transactionsStrandObj.submitFilter()" id="transactionFilter">
+                    <input id="transFilDate1"type="date">
+                    <input id="transFilDate2" type="date">
+                    <input id="transFilRecipes" type="text" list="transFilRecData"></input>
+                    <datalist id="transFilRecData"></datalist>
+                    <input class="button" type="submit" value="Submit">
+                </form>
+
                 <div id="transactionsList" class="transactionsList"></div>
 
                 <template id="transaction">
@@ -287,21 +295,13 @@
 
         <div id="sidebarDiv" class="sidebarHide">
             <% include ./sidebars/addIngredients %>
-
             <% include ./sidebars/newIngredient %>
-
             <% include ./sidebars/ingredientDetails %>
-
             <% include ./sidebars/recipeDetails %>
-
             <% include ./sidebars/addRecipe %>
-
             <% include ./sidebars/orderDetails %>
-
             <% include ./sidebars/newOrder %>
-
             <% include ./sidebars/transactionDetails %>
-
             <% include ./sidebars/newTransaction %>
         </div>
 
