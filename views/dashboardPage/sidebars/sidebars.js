@@ -563,9 +563,7 @@ let addIngredientsComp = {
         element.insertBefore(input, element.children[1]);
 
         let select = element.children[2];
-        console.log(select.style.display);
         select.style.display = "block";
-        console.log(select.style.display);
         let units = merchant.units[element.ingredient.unitType];
         for(let i = 0; i < units.length; i++){
             let option = document.createElement("option");
@@ -824,7 +822,7 @@ let ingredientDetailsComp = {
 
         newActive.classList.add("unitActive");
 
-        homeStrandObj.drawInventoryCheckCard();
+        homeStrandObj.isPopulated = false;
         ingredientsStrandObj.populateByProperty("category");
         document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
     },

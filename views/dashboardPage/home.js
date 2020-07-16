@@ -1,16 +1,12 @@
 window.homeStrandObj = {
     isPopulated: false,
     graph: {},
-    popularWidth: 0,
-    popularHeight: 0,
 
     display: function(){
         if(!this.isPopulated){
             this.drawRevenueCard();
             this.drawRevenueGraph();
             this.drawInventoryCheckCard();
-            this.popularWidth = document.getElementById("popularIngredientsCard").offsetWidth;
-            this.popularHeight = document.getElementById("popularIngredientsCard").offsetHeight;
             this.drawPopularCard();
 
             this.isPopulated = true;
@@ -141,8 +137,8 @@ window.homeStrandObj = {
             }
 
             let thisCanvas = document.getElementById("popularCanvas");
-            thisCanvas.width = this.popularWidth;
-            thisCanvas.height = this.popularHeight;
+            thisCanvas.width = thisCanvas.parentElement.offsetWidth;
+            thisCanvas.height = thisCanvas.parentElement.offsetHeight;
 
             let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);
