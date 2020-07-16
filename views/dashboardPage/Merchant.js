@@ -566,10 +566,11 @@ class Merchant{
 
 let convertToMain = (unit, quantity)=>{
     let converted = 0;
+    console.log(unit);
 
     if(merchant.units.mass.includes(unit)){
         switch(unit){
-            case "g": break;
+            case "g": converted = quantity; break;
             case "kg": converted = quantity * 1000; break;
             case "oz": converted = quantity * 28.3495; break;
             case "lb": converted = quantity * 453.5924; break;
@@ -577,7 +578,7 @@ let convertToMain = (unit, quantity)=>{
     }else if(merchant.units.volume.includes(unit)){
         switch(unit){
             case "ml": converted = quantity / 1000; break;
-            case "l": break;
+            case "l": converted = quantity; break;
             case "tsp": converted = quantity / 202.8842; break;
             case "tbsp": converted = quantity / 67.6278; break;
             case "ozfl": converted = quantity / 33.8141; break;
@@ -590,7 +591,7 @@ let convertToMain = (unit, quantity)=>{
         switch(unit){
             case "mm": converted = quantity / 1000; break;
             case "cm": converted = quantity / 100; break;
-            case "m": break;
+            case "m": converted = quantity; break;
             case "in": converted = quantity / 39.3701; break;
             case "ft": converted = quantity / 3.2808; break;
         }
