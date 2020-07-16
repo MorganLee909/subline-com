@@ -1088,7 +1088,7 @@ let newTransactionComp = {
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
 
-            fetch("/transaction", {
+            fetch("/transaction/create", {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"

@@ -58,6 +58,28 @@ window.transactionsStrandObj = {
             recipes: document.getElementById("transFilRecipes").value.split(", ")
         }
 
-        
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/transaction", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    console.log("doing things");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("UNABLE TO DISPLAY THE TRANSACTIONS");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }

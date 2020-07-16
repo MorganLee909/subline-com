@@ -38,7 +38,8 @@ module.exports = function(app){
     app.delete("/order/:id", orderData.removeOrder);
 
     //Transactions
-    app.post("/transaction", transactionData.createTransaction);
+    app.post("/transaction", transactionData.getTransactions);
+    app.post("/transaction/create", transactionData.createTransaction);
     app.delete("/transaction/:id", transactionData.remove);
     app.get("/populatesometransactions", transactionData.populate);
 
