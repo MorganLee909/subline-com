@@ -68,11 +68,39 @@ window.transactionsStrandObj = {
             },
             body: JSON.stringify(data)
         })
+            .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    console.log("doing things");
+                    let transactionList = document.getElementById("transactionsList");
+                    let template = document.getElementById("transaction").content.children[0];
+
+                    while(transactionList.children.length > 0){
+                        transactionList.removeChild(transactionList.firstChild);
+                    }
+
+                    for(let i = 0; i < response.length; i++){
+                        let transactionDiv = template.cloneNode(true);
+                        let recipeCount = 0;
+                        let cost = 0;
+                        let transaction = new Transaction(
+                            response[i]._id,
+                            response[i].date,
+                            response[i].recipes,
+                            merchant
+                        );
+
+                        for(let j = 0; j < transaction.recipes.length; j++){
+                            recipeCount += transaction.recipes[j].quantity;
+                            cost += transaction.recipes[j].quantity * transaction.recipes[j].recipe.price;
+                        }
+
+                        transactionDiv.children[0].innerText = `${transaction.date.toLocaleDateString()} ${transaction.date.toLocaleTimeString()}`;
+                        transactionDiv.children[1].innerText = `${recipeCount} recipes sold`;
+                        transactionDiv.children[2].innerText = `$${(cost / 100).toFixed(2)}`;
+                        transactionList.appendChild(transactionDiv);
+                    }
                 }
             })
             .catch((err)=>{
