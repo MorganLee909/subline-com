@@ -27,9 +27,34 @@ module.exports = {
                     $gte: startDate,
                     $lt: endDate
                 }
+            }},
+            {$sort: {
+                date: 1
             }}
         ])
             .then((transactions)=>{
+                if(req.body.recipes.length > 0){
+                    for(let i = 0; i < transactions.length; i++){
+                        let hasRecipe = false;
+                        for(let j = 0; j < transactions[i].recipes.length; j++){
+                            for(let k = 0; k < req.body.recipes.length; k++){
+                                
+                                if(transactions[i].recipes[j].recipe.toString() === req.body.recipes[k]){
+                                    hasRecipe = true;
+                                    break;
+                                }
+                            }
+                            if(hasRecipe){
+                                break;
+                            }
+                        }
+                        if(!hasRecipe){
+                            transactions.splice(i, 1);
+                            i--;
+                        }
+                    }
+                }
+
                 return res.json(transactions);
             })
             .catch((err)=>{

@@ -4,18 +4,27 @@ window.transactionsStrandObj = {
     display: function(){
         if(!this.isPopulated){
             let transactionsList = document.getElementById("transactionsList");
+            let checkboxes = document.getElementById("transFilCheckboxes");
             let template = document.getElementById("transaction").content.children[0];
 
             let now = new Date();
             let monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
             document.getElementById("transFilDate1").valueAsDate = monthAgo;
             document.getElementById("transFilDate2").valueAsDate = now;
-            
-            let dataList = document.getElementById("transFilRecData");
+
+            while(checkboxes.children.length > 0){
+                checkboxes.removeChild(checkboxes.firstChild);
+            }
+
             for(let i = 0; i < merchant.recipes.length; i++){
-                let option = document.createElement("option");
-                option.innerText = merchant.recipes[i].name;
-                dataList.appendChild(option);
+                let label = document.createElement("label");
+                label.innerText = merchant.recipes[i].name;
+                checkboxes.appendChild(label);
+
+                let checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.recipe = merchant.recipes[i];
+                label.appendChild(checkbox);
             }
 
             while(transactionsList.children.length > 0){
@@ -55,7 +64,19 @@ window.transactionsStrandObj = {
         let data = {
             startDate: document.getElementById("transFilDate1").valueAsDate,
             endDate: document.getElementById("transFilDate2").valueAsDate,
-            recipes: document.getElementById("transFilRecipes").value.split(", ")
+            recipes: []
+        }
+
+        if(data.startDate >= data.endDate){
+            banner.createError("START DATE CANNOT BE AFTER END DATE");
+            return;
+        }
+
+        let recipeChoices = document.getElementById("transFilCheckboxes");
+        for(let i = 0; i < recipeChoices.children.length; i++){
+            if(recipeChoices.children[i].children[0].checked){
+                data.recipes.push(recipeChoices.children[i].children[0].recipe.id);
+            }
         }
 
         let loader = document.getElementById("loaderContainer");
