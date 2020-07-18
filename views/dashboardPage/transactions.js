@@ -120,6 +120,7 @@ window.transactionsStrandObj = {
                         transactionDiv.children[0].innerText = `${transaction.date.toLocaleDateString()} ${transaction.date.toLocaleTimeString()}`;
                         transactionDiv.children[1].innerText = `${recipeCount} recipes sold`;
                         transactionDiv.children[2].innerText = `$${(cost / 100).toFixed(2)}`;
+                        transactionDiv.onclick = ()=>{transactionDetailsComp.display(transaction)};
                         transactionList.appendChild(transactionDiv);
                     }
                 }
