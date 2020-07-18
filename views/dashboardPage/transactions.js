@@ -17,14 +17,18 @@ window.transactionsStrandObj = {
             }
 
             for(let i = 0; i < merchant.recipes.length; i++){
-                let label = document.createElement("label");
-                label.innerText = merchant.recipes[i].name;
-                checkboxes.appendChild(label);
-
                 let checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.recipe = merchant.recipes[i];
-                label.appendChild(checkbox);
+                checkboxes.appendChild(checkbox);
+
+                let label = document.createElement("label");
+                label.innerText = merchant.recipes[i].name;
+                label.for = checkbox;
+                checkboxes.appendChild(label);
+
+                let brk = document.createElement("br");
+                checkboxes.appendChild(brk);
             }
 
             while(transactionsList.children.length > 0){

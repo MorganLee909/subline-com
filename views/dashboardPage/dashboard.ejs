@@ -273,10 +273,17 @@
                 </div>
 
                 <form onsubmit="transactionsStrandObj.submitFilter()" id="transactionFilter">
-                    <input id="transFilDate1"type="date">
-                    <input id="transFilDate2" type="date">
-                    <div id="transFilCheckboxes"></div>
-                    <input class="button" type="submit" value="Submit">
+                    <h2>Search</h2>
+                    <div>
+                        <label class="filterLabel">DATES:
+                            <input id="transFilDate1"type="date">
+                            <input id="transFilDate2" type="date">
+                        </label>
+                        <label class="filterLabel">RECIPES:
+                            <div id="transFilCheckboxes"></div>
+                        </label>
+                        <input class="button" type="submit" value="SUBMIT">
+                    </div>
                 </form>
 
                 <div id="transactionsList" class="transactionsList"></div>

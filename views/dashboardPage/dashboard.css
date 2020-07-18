@@ -461,6 +461,37 @@ Transactions Strand
         margin-top: 50px;
     }
 
+    #transactionFilter{
+        padding: 5px;
+        margin: 0;
+        align-items: center;
+    }
+
+        #transactionFilter > div{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+        }
+
+            .filterLabel{
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+            }
+
+                #transFilCheckboxes{
+                    text-align: left;
+                }
+
+                    #transFilCheckboxes label{
+                        margin: 0;
+                    }
+        
+            #transactionFilter input[type=submit]{
+                max-height: 50px;
+            }
+
 @media screen and (max-width: 1000px){
     body{
         flex-direction: column;
@@ -592,6 +623,6 @@ Transactions Strand
     Transactions
     */
     .transactionsList{
-        width: 95%;
+        width: 10%;
     }
 }
