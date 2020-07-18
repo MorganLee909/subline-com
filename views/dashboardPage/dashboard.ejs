@@ -279,11 +279,21 @@
                             <input id="transFilDate1"type="date">
                             <input id="transFilDate2" type="date">
                         </label>
-                        <label class="filterLabel">RECIPES:
+                        <div class="filterLabel2">
+                            <div class="filterLabelHead">
+                                <p>RECIPES</p>
+                                <button onclick="transactionsStrandObj.toggleRecipes()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+
                             <div id="transFilCheckboxes"></div>
-                        </label>
-                        <input class="button" type="submit" value="SUBMIT">
+                        </div>
                     </div>
+
+                    <input class="button" type="submit" value="SUBMIT">
                 </form>
 
                 <div id="transactionsList" class="transactionsList"></div>

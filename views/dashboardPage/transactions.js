@@ -12,6 +12,7 @@ window.transactionsStrandObj = {
             document.getElementById("transFilDate1").valueAsDate = monthAgo;
             document.getElementById("transFilDate2").valueAsDate = now;
 
+            checkboxes.style.display = "none";
             while(checkboxes.children.length > 0){
                 checkboxes.removeChild(checkboxes.firstChild);
             }
@@ -135,5 +136,16 @@ window.transactionsStrandObj = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    toggleRecipes: function(){
+        event.preventDefault();
+
+        let checkboxes = document.getElementById("transFilCheckboxes");
+        if(checkboxes.style.display === "none"){
+            checkboxes.style.display = "block";
+        }else{
+            checkboxes.style.display = "none";
+        }
     }
 }
