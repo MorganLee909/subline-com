@@ -11,6 +11,8 @@ module.exports = {
         endDate: ending date to filter on,
         recipes: list of recipes to filter on
     }
+    NOTE: May be a good idea to search recipes with for looping rather than query
+        Needs some testing and playing with if so
     */
     getTransactions: function(req, res){
         console.time("query");
@@ -45,29 +47,6 @@ module.exports = {
             }}
         ])
             .then((transactions)=>{
-                // if(req.body.recipes.length > 0){
-                //     for(let i = 0; i < transactions.length; i++){
-                //         let hasRecipe = false;
-                //         for(let j = 0; j < transactions[i].recipes.length; j++){
-                //             for(let k = 0; k < req.body.recipes.length; k++){
-                                
-                //                 if(transactions[i].recipes[j].recipe.toString() === req.body.recipes[k]){
-                //                     hasRecipe = true;
-                //                     break;
-                //                 }
-                //             }
-                //             if(hasRecipe){
-                //                 break;
-                //             }
-                //         }
-                //         if(!hasRecipe){
-                //             transactions.splice(i, 1);
-                //             i--;
-                //         }
-                //     }
-                // }
-
-                console.timeEnd("query");
                 return res.json(transactions);
             })
             .catch((err)=>{
