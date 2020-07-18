@@ -13,11 +13,16 @@ module.exports = {
     }
     */
     getTransactions: function(req, res){
+        console.time("query");
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
 
+        let objectifiedRecipes = [];
+        for(let i = 0; i < req.body.recipes.length; i++){
+            objectifiedRecipes.push(new ObjectId(req.body.recipes[i]));
+        }
         let startDate = new Date(req.body.startDate);
         let endDate = new Date(req.body.endDate);
         Transaction.aggregate([
@@ -26,6 +31,13 @@ module.exports = {
                 date: {
                     $gte: startDate,
                     $lt: endDate
+                },
+                recipes: {
+                    $elemMatch: {
+                        recipe: {
+                            $in: objectifiedRecipes
+                        }
+                    }
                 }
             }},
             {$sort: {
@@ -33,28 +45,29 @@ module.exports = {
             }}
         ])
             .then((transactions)=>{
-                if(req.body.recipes.length > 0){
-                    for(let i = 0; i < transactions.length; i++){
-                        let hasRecipe = false;
-                        for(let j = 0; j < transactions[i].recipes.length; j++){
-                            for(let k = 0; k < req.body.recipes.length; k++){
+                // if(req.body.recipes.length > 0){
+                //     for(let i = 0; i < transactions.length; i++){
+                //         let hasRecipe = false;
+                //         for(let j = 0; j < transactions[i].recipes.length; j++){
+                //             for(let k = 0; k < req.body.recipes.length; k++){
                                 
-                                if(transactions[i].recipes[j].recipe.toString() === req.body.recipes[k]){
-                                    hasRecipe = true;
-                                    break;
-                                }
-                            }
-                            if(hasRecipe){
-                                break;
-                            }
-                        }
-                        if(!hasRecipe){
-                            transactions.splice(i, 1);
-                            i--;
-                        }
-                    }
-                }
+                //                 if(transactions[i].recipes[j].recipe.toString() === req.body.recipes[k]){
+                //                     hasRecipe = true;
+                //                     break;
+                //                 }
+                //             }
+                //             if(hasRecipe){
+                //                 break;
+                //             }
+                //         }
+                //         if(!hasRecipe){
+                //             transactions.splice(i, 1);
+                //             i--;
+                //         }
+                //     }
+                // }
 
+                console.timeEnd("query");
                 return res.json(transactions);
             })
             .catch((err)=>{

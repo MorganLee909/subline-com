@@ -77,9 +77,9 @@ window.transactionsStrandObj = {
         }
 
         let recipeChoices = document.getElementById("transFilCheckboxes");
-        for(let i = 0; i < recipeChoices.children.length; i++){
-            if(recipeChoices.children[i].children[0].checked){
-                data.recipes.push(recipeChoices.children[i].children[0].recipe.id);
+        for(let i = 0; i < recipeChoices.children.length; i += 3){
+            if(recipeChoices.children[i].checked){
+                data.recipes.push(recipeChoices.children[i].recipe.id);
             }
         }
 
