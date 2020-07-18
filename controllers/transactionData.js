@@ -15,7 +15,6 @@ module.exports = {
         Needs some testing and playing with if so
     */
     getTransactions: function(req, res){
-        console.time("query");
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");

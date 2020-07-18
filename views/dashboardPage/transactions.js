@@ -148,7 +148,6 @@ window.transactionsStrandObj = {
     toggleDropdown: function(dropdown){
         event.preventDefault();
         let polyline = dropdown.parentElement.children[0].children[1].children[0].children[0];
-        console.log(polyline);
 
         if(dropdown.style.display === "none"){
             dropdown.style.display = "block";
