@@ -275,21 +275,32 @@
                 <form onsubmit="transactionsStrandObj.submitFilter()" id="transactionFilter">
                     <h2>Search</h2>
                     <div>
-                        <label class="filterLabel">DATES:
-                            <input id="transFilDate1"type="date">
-                            <input id="transFilDate2" type="date">
-                        </label>
-                        <div class="filterLabel2">
-                            <div class="filterLabelHead">
+                        <div class="dropdown">
+                            <div class="dropdownHead">
+                                <p>DATES</p>
+                                <button id="dateFilterBtn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="dropdownContents" id="dateDropdown">
+                                <input id="transFilDate1"type="date">
+                                <input id="transFilDate2" type="date">
+                            </div>
+                            
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdownHead">
                                 <p>RECIPES</p>
-                                <button onclick="transactionsStrandObj.toggleRecipes()">
+                                <button id="recipeFilterBtn">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="6 9 12 15 18 9"></polyline>
                                     </svg>
                                 </button>
                             </div>
 
-                            <div id="transFilCheckboxes"></div>
+                            <div class="dropdownContents" id="recipeDropDown"></div>
                         </div>
                     </div>
 

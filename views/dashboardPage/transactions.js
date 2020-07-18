@@ -4,7 +4,8 @@ window.transactionsStrandObj = {
     display: function(){
         if(!this.isPopulated){
             let transactionsList = document.getElementById("transactionsList");
-            let checkboxes = document.getElementById("transFilCheckboxes");
+            let dateDropdown = document.getElementById("dateDropdown");
+            let recipeDropdown = document.getElementById("recipeDropDown");
             let template = document.getElementById("transaction").content.children[0];
 
             let now = new Date();
@@ -12,24 +13,30 @@ window.transactionsStrandObj = {
             document.getElementById("transFilDate1").valueAsDate = monthAgo;
             document.getElementById("transFilDate2").valueAsDate = now;
 
-            checkboxes.style.display = "none";
-            while(checkboxes.children.length > 0){
-                checkboxes.removeChild(checkboxes.firstChild);
+
+            dateDropdown.style.display = "none";
+            recipeDropdown.style.display = "none";
+
+            document.getElementById("dateFilterBtn").onclick = ()=>{this.toggleDropdown(dateDropdown)};
+            document.getElementById("recipeFilterBtn").onclick = ()=>{this.toggleDropdown(recipeDropdown)};
+
+            while(recipeDropdown.children.length > 0){
+                recipeDropdown.removeChild(recipeDropdown.firstChild);
             }
 
             for(let i = 0; i < merchant.recipes.length; i++){
                 let checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.recipe = merchant.recipes[i];
-                checkboxes.appendChild(checkbox);
+                recipeDropdown.appendChild(checkbox);
 
                 let label = document.createElement("label");
                 label.innerText = merchant.recipes[i].name;
                 label.for = checkbox;
-                checkboxes.appendChild(label);
+                recipeDropdown.appendChild(label);
 
                 let brk = document.createElement("br");
-                checkboxes.appendChild(brk);
+                recipeDropdown.appendChild(brk);
             }
 
             while(transactionsList.children.length > 0){
@@ -138,14 +145,17 @@ window.transactionsStrandObj = {
             });
     },
 
-    toggleRecipes: function(){
+    toggleDropdown: function(dropdown){
         event.preventDefault();
+        let polyline = dropdown.parentElement.children[0].children[1].children[0].children[0];
+        console.log(polyline);
 
-        let checkboxes = document.getElementById("transFilCheckboxes");
-        if(checkboxes.style.display === "none"){
-            checkboxes.style.display = "block";
+        if(dropdown.style.display === "none"){
+            dropdown.style.display = "block";
+            polyline.setAttribute("points", "18 15 12 9 6 15");
         }else{
-            checkboxes.style.display = "none";
+            dropdown.style.display = "none";
+            polyline.setAttribute("points", "6 9 12 15 18 9");
         }
     }
 }
