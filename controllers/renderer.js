@@ -43,7 +43,7 @@ module.exports = {
                 let promiseArray = [];
                 if(merchant.pos === "clover"){
                     const subscriptionCheck = axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`);
-                    const transactionRetrieval = axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`);
+                    const transactionRetrieval = axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=modifiedTime>=${merchant.lastUpdatedTime}&expand=lineItems&expand=payment&access_token=${merchant.posAccessToken}`);
                     await Promise.all([subscriptionCheck, transactionRetrieval])
                         .then((response)=>{
                             if(response[0].data.status !== "ACTIVE"){
@@ -57,7 +57,7 @@ module.exports = {
                             let transactions = [];
                             for(let i = 0; i < response[1].data.elements.length; i++){
                                 let order = response[1].data.elements[i];
-                                if(order.state !== "locked"){   //THIS MAY NEED TO BE REPLACED SOON
+                                if(order.paymentState !== "PAID"){
                                     break;
                                 }
                                 let newTransaction = new Transaction({
@@ -141,7 +141,7 @@ module.exports = {
                     }}
                 ])
                     .then((transactions)=>{
-                        return res.render("dashboardPage/dashboard", {merchant: response[0], transactions: transactions})
+                        return res.render("dashboardPage/dashboard", {merchant: response[0], transactions: transactions});
                     })
                     .catch((err)=>{});
             })
