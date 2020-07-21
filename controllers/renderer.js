@@ -3,8 +3,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const Merchant = require("../models/merchant");
 const Transaction = require("../models/transaction");
-const transaction = require("../models/transaction");
-const ingredient = require("../models/ingredient");
+// const ingredient = require("../models/ingredient");
 
 module.exports = {
     /*
@@ -45,7 +44,7 @@ module.exports = {
                     const subscriptionCheck = axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`);
                     const transactionRetrieval = axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=modifiedTime>=${merchant.lastUpdatedTime}&expand=lineItems&expand=payment&access_token=${merchant.posAccessToken}`);
                     await Promise.all([subscriptionCheck, transactionRetrieval])
-                        .then((response)=>{
+                        .then(async (response)=>{
                             if(response[0].data.status !== "ACTIVE"){
                                 req.session.error = "SUBSCRIPTION EXPIRED.  PLEASE RENEW ON CLOVER";
                                 return res.redirect("/");
@@ -63,9 +62,9 @@ module.exports = {
                                 let newTransaction = new Transaction({
                                     merchant: merchant._id,
                                     date: new Date(order.createdTime),
-                                    device: order.device.id
+                                    device: order.device.id,
+                                    posId: order.id
                                 });
-
 
                                 //Go through lineItems from Clover
                                 //Get the appropriate recipe from Subline
@@ -114,6 +113,13 @@ module.exports = {
                             }
 
                             merchant.lastUpdatedTime = updatedTime;
+
+                            //Remove any existing orders so that they can ber replaced
+                            let ids = [];
+                            for(let i = 0; i < transactions.length; i++){
+                                ids.push(transactions[i].posId);
+                            }
+                            Transaction.deleteMany({posId: {$in: ids}});
 
                             promiseArray.push(Transaction.create(transactions));
                         })
