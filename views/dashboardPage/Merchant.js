@@ -260,6 +260,7 @@ class Merchant{
             }
         }
 
+        transactionsStrandObj.isPopulated = false;
         recipeBookStrandObj.populateRecipes();
         closeSidebar();
     }

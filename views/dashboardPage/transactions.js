@@ -13,7 +13,6 @@ window.transactionsStrandObj = {
             document.getElementById("transFilDate1").valueAsDate = monthAgo;
             document.getElementById("transFilDate2").valueAsDate = now;
 
-
             dateDropdown.style.display = "none";
             recipeDropdown.style.display = "none";
 
