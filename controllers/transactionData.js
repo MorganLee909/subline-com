@@ -26,6 +26,7 @@ module.exports = {
         }
         let startDate = new Date(req.body.startDate);
         let endDate = new Date(req.body.endDate);
+        endDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1);
         Transaction.aggregate([
             {$match: {
                 merchant: new ObjectId(req.session.user),

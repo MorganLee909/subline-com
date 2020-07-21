@@ -84,7 +84,7 @@ window.transactionsStrandObj = {
             return;
         }
 
-        let recipeChoices = document.getElementById("transFilCheckboxes");
+        let recipeChoices = document.getElementById("recipeDropDown");
         for(let i = 0; i < recipeChoices.children.length; i += 3){
             if(recipeChoices.children[i].checked){
                 data.recipes.push(recipeChoices.children[i].recipe.id);
