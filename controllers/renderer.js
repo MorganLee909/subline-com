@@ -57,6 +57,9 @@ module.exports = {
                             let transactions = [];
                             for(let i = 0; i < response[1].data.elements.length; i++){
                                 let order = response[1].data.elements[i];
+                                if(order.state !== "locked"){   //THIS MAY NEED TO BE REPLACED SOON
+                                    break;
+                                }
                                 let newTransaction = new Transaction({
                                     merchant: merchant._id,
                                     date: new Date(order.createdTime),
