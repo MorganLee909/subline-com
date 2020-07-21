@@ -137,8 +137,8 @@ window.homeStrandObj = {
             }
 
             let thisCanvas = document.getElementById("popularCanvas");
-            thisCanvas.width = thisCanvas.parentElement.offsetWidth;
-            thisCanvas.height = thisCanvas.parentElement.offsetHeight;
+            thisCanvas.width = thisCanvas.parentElement.offsetWidth * 0.8;
+            thisCanvas.height = thisCanvas.parentElement.offsetHeight * 0.8;
 
             let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);

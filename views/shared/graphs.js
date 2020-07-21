@@ -259,7 +259,7 @@ class HorizontalBarGraph{
     }
 
     drawGraph(){
-        let barHeight = (this.bottom - this.top) / this.data.length;
+        let barHeight = ((this.bottom - this.top) / this.data.length) - 2;
 
         for(let i = 0; i < this.data.length; i++){
             let topLocation = this.top + (i * barHeight) + 5;

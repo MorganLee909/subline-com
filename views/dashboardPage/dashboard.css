@@ -27,15 +27,17 @@ Multi-strand use classes
 */
 .strand{
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
     width: 100%;
+    padding-bottom: 25px;
+    box-sizing: border-box;
 }
 
     .strandHead{
         display: flex;
         justify-content: space-between;
         width: 100%;
-        padding: 50px 50px 0 50px;
+        padding: 10px 50px 0 50px;
         align-items: center;
         box-sizing: border-box;
     }
