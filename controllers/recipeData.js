@@ -158,10 +158,9 @@ module.exports = {
             return res.redirect("/");
         }
 
-        Merchant.find({_id: req.session.user})
+        Merchant.findOne({_id: req.session.user})
             .populate("recipes")
-            .then((response)=>{
-                merchant = response[0];
+            .then((merchant)=>{
                 axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/items?access_token=${merchant.posAccessToken}`)
                     .then((result)=>{
                         let deletedRecipes = merchant.recipes.slice();

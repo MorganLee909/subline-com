@@ -52,7 +52,18 @@ module.exports = {
             .save()
             .catch(()=>{});
 
-        Merchant.findOne({_id: req.session.user}, {password: 0, createdAt: 0})
+        Merchant.findOne(
+            {_id: req.session.user},
+            {
+                name: 1,
+                pos: 1,
+                posId: 1,
+                posAccessToken: 1,
+                lastUpdatedTime: 1,
+                inventory: 1,
+                recipes: 1
+            }
+        )
             .populate("inventory.ingredient")
             .populate("recipes")
             .then(async (merchant)=>{
@@ -164,11 +175,17 @@ module.exports = {
                     }}
                 ])
                     .then((transactions)=>{
+                        response[0]._id = undefined;
+                        response[0].posAccessToken = undefined;
+                        response[0].lastUpdatedTime = undefined;
+                        response[0].accountStatus = undefined;
+
                         return res.render("dashboardPage/dashboard", {merchant: response[0], transactions: transactions});
                     })
                     .catch((err)=>{});
             })
             .catch((err)=>{
+                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
                 return res.redirect("/");
             });

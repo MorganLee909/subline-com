@@ -326,7 +326,6 @@ let newIngredientComp = {
 
         let unit = unitSelector.value;
 
-        console.log(options[unitSelector.selectedIndex].getAttribute("type"));
         let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
@@ -350,7 +349,6 @@ let newIngredientComp = {
             .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    console.log(response);
                     banner.createError(response);
                 }else{
                     merchant.editIngredients([{
