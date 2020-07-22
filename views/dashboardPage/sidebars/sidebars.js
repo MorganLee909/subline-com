@@ -383,8 +383,9 @@ let orderDetailsComp = {
 
         document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order)};
 
-        document.querySelector("#orderDetails h1").innerText = order.name;
-        document.querySelector("#orderDetails h3").innerText = order.date.toLocaleDateString("en-US");
+        document.getElementById("orderDetailName").innerText = order.name;
+        document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
+        document.getElementById("orderDetailTime").innerText = order.date.toLocaleTimeString("en-US");
 
         let ingredientList = document.querySelector("#orderIngredients");
         while(ingredientList.children.length > 0){
