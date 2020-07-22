@@ -266,9 +266,11 @@ let newOrderComp = {
             }
         }
 
+        let date = `${document.getElementById("orderDate").value}T${document.getElementById("orderTime").value}:00`
+
         let data = {
             name: document.getElementById("orderName").value,
-            date: document.getElementById("orderDate").value,
+            date: date,
             ingredients: ingredients
         };
 
