@@ -324,6 +324,7 @@ let newIngredientComp = {
 
         let unit = unitSelector.value;
 
+        console.log(options[unitSelector.selectedIndex].getAttribute("type"));
         let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
@@ -347,6 +348,7 @@ let newIngredientComp = {
             .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
+                    console.log(response);
                     banner.createError(response);
                 }else{
                     merchant.editIngredients([{
@@ -720,7 +722,18 @@ let ingredientDetailsComp = {
         }
 
         let ingredientButtons = document.getElementById("ingredientButtons");
-        let units = merchant.units[this.ingredient.ingredient.unitType];
+        let units = [];
+        let unitLabel = document.getElementById("displayUnitLabel");
+        let defaultButton = document.getElementById("defaultUnit");
+        if(this.ingredient.ingredient.unitType !== "other"){
+            units = merchant.units[this.ingredient.ingredient.unitType];
+            unitLabel.style.display = "block";
+            defaultButton.style.display = "block";
+        }else{
+            unitLabel.style.display = "none";
+            defaultButton.style.display = "none";
+        }
+        
         while(ingredientButtons.children.length > 0){
             ingredientButtons.removeChild(ingredientButtons.firstChild);
         }

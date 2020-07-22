@@ -65,6 +65,7 @@ module.exports = {
                 return res.json(newIngredient);
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("ERROR: UNABLE TO CREATE NEW INGREDIENT");
             });
     }
