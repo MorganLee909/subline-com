@@ -1,9 +1,9 @@
 const axios = require("axios");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-const Merchant = require("../models/merchant");
-const Transaction = require("../models/transaction");
-// const ingredient = require("../models/ingredient");
+const Merchant = require("../models/merchant.js");
+const Transaction = require("../models/transaction.js");
+const Activity = require("../models/activity.js");
 
 module.exports = {
     /*
@@ -12,6 +12,15 @@ module.exports = {
     Renders landingPage
     */
     landingPage: function(req, res){
+        let activity = new Activity({
+            ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            merchant: req.session.user,
+            route: "landing",
+            date: new Date()
+        })
+            .save()
+            .catch(()=>{});
+
         let error = {};
         let isLoggedIn = req.session.isLoggedIn || false;
         if(req.session.error){
@@ -34,6 +43,14 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
+        let activity = new Activity({
+            ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            merchant: req.session.user,
+            route: "dashboard",
+            date: new Date()
+        })
+            .save()
+            .catch(()=>{});
 
         Merchant.findOne({_id: req.session.user}, {password: 0, createdAt: 0})
             .populate("inventory.ingredient")
