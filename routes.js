@@ -34,7 +34,8 @@ module.exports = function(app){
 
     //Orders
     app.get("/order", orderData.getOrders);
-    app.post("/order", orderData.createOrder);
+    app.post("/order", orderData.orderFilter);
+    app.post("/order/create", orderData.createOrder);
     app.delete("/order/:id", orderData.removeOrder);
 
     //Transactions

@@ -277,7 +277,7 @@ let newOrderComp = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
         
-        fetch("/order", {
+        fetch("/order/create", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"

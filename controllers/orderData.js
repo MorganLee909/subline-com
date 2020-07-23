@@ -43,6 +43,52 @@ module.exports = {
     },
 
     /*
+    POST - retrieves a list of transactions based on the filter
+    req.body = {
+        startDate: starting date to filter on,
+        endDate: ending date to filter on,
+        ingredients: list of recipes.to filter on
+    }
+    */
+    orderFilter: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        let objectifiedIngredients = [];
+        for(let i = 0; i < req.body.ingredients; i++){
+            objectifiedIngredients.push(new ObjectId(req.body.ingredients[i]));
+        }
+        let startDate = new Date(req.body.startDate);
+        let endDate = new Date(req.body.endDate);
+        endDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1);
+        Order.aggregate([
+            {$match: {
+                merchant: new ObjectId(req.session.user),
+                date: {
+                    $gte: startDate,
+                    $lt: endDate
+                },
+                ingredients: {
+                    $elemMatch: {
+                        ingredient: {
+                            $in: objectifiedIngredients
+                        }
+                    }
+                }
+            }},
+            {$sort: {date: 1}}
+        ])
+            .then((orders)=>{
+                return res.json(orders);
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO RETRIEVE YOUR TRANSACTIONS");
+            });
+    },
+
+    /*
     POST - Creates a new order from the site
     req.body = {
         name: user created order id
