@@ -1,3 +1,5 @@
+const { quantity } = require("../../controllers/validator");
+
 window.ordersStrandObj = {
     isFetched: false,
 
@@ -56,11 +58,11 @@ window.ordersStrandObj = {
         for(let i = 0; i < merchant.ingredients.length; i++){
             let checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.ingredient = merchant.ingredients[i];
+            checkbox.ingredient = merchant.ingredients[i].ingredient;
             ingredientDropdown.appendChild(checkbox);
 
             let label = document.createElement("label");
-            label.innerText = merchant.ingredients[i].name;
+            label.innerText = merchant.ingredients[i].ingredient.name;
             label.for = checkbox;
             ingredientDropdown.appendChild(label);
 
@@ -94,7 +96,67 @@ window.ordersStrandObj = {
     submitFilter: function(){
         event.preventDefault();
 
-        console.log("something");
+        let data = {
+            startDate: document.getElementById("orderFilDate1").valueAsDate,
+            endDate: document.getElementById("orderFilDate2").valueAsDate,
+            ingredients: []
+        }
+
+        if(data.startDate >= data.endDate){
+            banner.createError("START DATE CANNOT BE AFTER END DATE");
+            return;
+        }
+
+        let ingredientChoices = document.getElementById("ingredientDropdown");
+        for(let i = 0; i < ingredientChoices.children.length; i += 3){
+            if(ingredientChoices.children[i].checked){
+                data.ingredients.push(ingredientChoices.children[i].ingredient.id);
+            }
+        }
+
+        let loader = document.getElementById("loarderContainer");
+        loader.style.display = "flex";
+
+        fetch("/order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    let orderList = document.getElementById("orderList");
+                    let template = document.getElementById("order").content.children[0];
+
+                    while(orderList.children.length > 0){
+                        orderList.removeChild(orderList.firstChild);
+                    }
+
+                    for(let i = 0; i < response.length; i++){
+                        let order = template.cloneNode(true);
+                        let cost = 0;
+                        for(let j = 0; j < response[i].ingredients.length; j++){
+                            cost += (response[i].ingredients[j].price / 100) * quantity;
+                        }
+
+                        order.children[0].innerText = response[i].name,
+                        order.children[1].innerText = response[i].ingredients.length;
+                        order.children[2].innerText = response[i].date.toLocaleDateString();
+                        order.children[3].innerText = cost;
+                        orderList.appendChild(order);
+                    }
+                }
+            })
+            .catch((err)=>{
+                banner.createError("UNABLE TO DISPLAY THE ORDERS");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     },
 
     toggleDropdown: function(dropdown){
