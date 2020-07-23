@@ -185,7 +185,6 @@ module.exports = {
                     .catch((err)=>{});
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
                 return res.redirect("/");
             });

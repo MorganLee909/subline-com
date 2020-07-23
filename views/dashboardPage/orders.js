@@ -1,5 +1,3 @@
-const { quantity } = require("../../controllers/validator");
-
 window.ordersStrandObj = {
     isFetched: false,
 
@@ -114,7 +112,13 @@ window.ordersStrandObj = {
             }
         }
 
-        let loader = document.getElementById("loarderContainer");
+        if(data.ingredients.length === 0){
+            for(let i = 0; i < merchant.ingredients.length; i++){
+                data.ingredients.push(merchant.ingredients[i].ingredient.id);
+            }
+        }
+
+        let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
         fetch("/order", {
@@ -140,13 +144,13 @@ window.ordersStrandObj = {
                         let order = template.cloneNode(true);
                         let cost = 0;
                         for(let j = 0; j < response[i].ingredients.length; j++){
-                            cost += (response[i].ingredients[j].price / 100) * quantity;
+                            cost += (response[i].ingredients[j].price / 100) * response[i].ingredients[j].quantity;
                         }
 
                         order.children[0].innerText = response[i].name,
-                        order.children[1].innerText = response[i].ingredients.length;
-                        order.children[2].innerText = response[i].date.toLocaleDateString();
-                        order.children[3].innerText = cost;
+                        order.children[1].innerText = `${response[i].ingredients.length} items`;
+                        order.children[2].innerText = new Date(response[i].date).toLocaleDateString();
+                        order.children[3].innerText = `$${cost.toFixed(2)}`;
                         orderList.appendChild(order);
                     }
                 }
