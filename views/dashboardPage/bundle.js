@@ -229,11 +229,11 @@ module.exports = {
     }
 }
 },{}],2:[function(require,module,exports){
-const homeStrandObj = require("./home.js");
-const ingredientsStrandObj = require("./ingredients.js");
-const ordersStrandObj = require("./orders.js");
-const recipeBookStrandObj = require("./recipeBook.js");
-const transactions = require("./transactions.js");
+const homeStrand = require("./home.js");
+const ingredientsStrand = require("./ingredients.js");
+const ordersStrand = require("./orders.js");
+const recipeBookStrand = require("./recipeBook.js");
+const transactionsStrand = require("./transactions.js");
 
 const addIngredientsComp = require("./addIngredients.js");
 const ingredientDetailsComp = require("./ingredientDetails.js");
@@ -244,6 +244,10 @@ const newTransactionComp = require("./newTransaction.js");
 const orderDetailsComp = require("./orderDetails.js");
 const recipeDetailsComp = require("./recipeDetails.js");
 const transactionDetailsComp = require("./transactionDetails.js");
+const ingredients = require("./ingredients.js");
+const recipeBook = require("./recipeBook.js");
+const orders = require("./orders.js");
+const transactions = require("./transactions.js");
 
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent){
@@ -854,7 +858,7 @@ Switches to a different strand
 Input:
  name: name of the strand.  Must end with "Strand"
 */
-let changeStrand = (name)=>{
+window.changeStrand = (name)=>{
     closeSidebar();
 
     for(let strand of document.querySelectorAll(".strand")){
@@ -864,15 +868,40 @@ let changeStrand = (name)=>{
     let buttons = document.querySelectorAll(".menuButton");
     for(let i = 0; i < buttons.length - 1; i++){
         buttons[i].classList = "menuButton";
-        buttons[i].onclick = ()=>{changeStrand(`${buttons[i].id.slice(0, buttons[i].id.indexOf("Btn"))}Strand`)};
+        buttons[i].disabled = false;
     }
 
-    let activeButton = document.querySelector(`#${name.slice(0, name.indexOf("Strand"))}Btn`);
-    activeButton.classList = "menuButton active";
-    activeButton.onclick = undefined;
+    let activeButton = {};
+    switch(name){
+        case 1: 
+            activeButton = document.getElementById("homeBtn");
+            document.getElementById("homeStrand").style.display = "flex";
+            homeStrand.display();
+            break;
+        case 2: 
+            activeButton = document.getElementById("ingredientsBtn");
+            document.getElementById("ingredientsStrand").style.display = "flex";
+            ingredients.display();
+            break;
+        case 3:
+            activeButton = document.getElementById("recipeBookBtn");
+            document.getElementById("recipeBookStrand").style.display = "flex";
+            recipeBook.display();
+            break;
+        case 4:
+            activeButton = document.getElementById("ordersBtn");
+            document.getElementById("ordersStrand").style.display = "flex";
+            orders.display();
+            break;
+        case 5:
+            activeButton = document.getElementById("transactionsBtn");
+            document.getElementById("transactionsStrand").style.display = "flex";
+            transactions.display();
+            break;
+    }
 
-    document.querySelector(`#${name}`).style.display = "flex";
-    window[`${name}Obj`].display();
+    activeButton.classList = "menuButton active";
+    activeButton.disabled = true;
 
     if(window.screen.availWidth <= 1000){
         closeMenu();
@@ -962,20 +991,16 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     document.getElementById("menuShifter2").style.display = "none";
 }
 
-let merchant = new Merchant(data.merchant, data.transactions);
-console.log(merchant);
-module.exports = merchant;
-homeStrandObj.display();
+merchant = new Merchant(data.merchant, data.transactions);
+homeStrand.display(merchant);
 },{"./addIngredients.js":1,"./home.js":3,"./ingredientDetails.js":4,"./ingredients.js":5,"./newIngredient.js":6,"./newOrder.js":7,"./newRecipe.js":8,"./newTransaction.js":9,"./orderDetails.js":10,"./orders.js":11,"./recipeBook.js":12,"./recipeDetails.js":13,"./transactionDetails.js":14,"./transactions.js":15}],3:[function(require,module,exports){
-let merchant = require("./dashboard.js");
-
 module.exports = {
     isPopulated: false,
     graph: {},
 
-    display: function(){
+    display: function(merchant){
         if(!this.isPopulated){
-            this.drawRevenueCard();
+            this.drawRevenueCard(merchant);
             this.drawRevenueGraph();
             this.drawInventoryCheckCard();
             this.drawPopularCard();
@@ -984,13 +1009,12 @@ module.exports = {
         }
     },
 
-    drawRevenueCard: function(){
+    drawRevenueCard: function(merchant){
         let today = new Date();
         let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        console.log(merchant);
         let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
         let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
 
@@ -1015,6 +1039,7 @@ module.exports = {
         graphCanvas.height = graphCanvas.parentElement.clientHeight;
         graphCanvas.width = graphCanvas.parentElement.clientWidth;
 
+        let LineGraph = require("../../shared/graphs.js").LineGraph;
         this.graph = new LineGraph(graphCanvas);
         this.graph.addTitle("Revenue");
 
@@ -1112,6 +1137,7 @@ module.exports = {
             thisCanvas.width = thisCanvas.parentElement.offsetWidth * 0.8;
             thisCanvas.height = thisCanvas.parentElement.offsetHeight * 0.8;
 
+            let HorizontalBarGraph = require("../../shared/graphs.js").HorizontalBarGraph;
             let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);
         }else{
@@ -1175,7 +1201,7 @@ module.exports = {
         }
     }
 }
-},{"./dashboard.js":2}],4:[function(require,module,exports){
+},{"../../shared/graphs.js":16}],4:[function(require,module,exports){
 module.exports = {
     ingredient: {},
 
@@ -2664,5 +2690,295 @@ module.exports = {
             polyline.setAttribute("points", "6 9 12 15 18 9");
         }
     }
+}
+},{}],16:[function(require,module,exports){
+//Creates a line graph within a canvas
+//Will expand or shrink to the size of the canvas
+//Inputs:
+//  canvas = the canvas that you would like to draw on
+//  yName = a string for the name of the Y axis
+//  xName = a string for the name of the X axis
+class LineGraph{
+    constructor(canvas){
+        this.canvas = canvas;
+        this.context = canvas.getContext("2d");
+        this.left = canvas.clientWidth - (canvas.clientWidth * 0.95);
+        this.right = canvas.clientWidth * 1;
+        this.top = canvas.clientHeight - (canvas.clientHeight * 1);
+        this.bottom = canvas.clientHeight * 0.85;
+        this.data = [];
+        this.max = 0;
+        this.xRange = [];
+        this.colors = [];
+        this.colorIndex = 0;
+
+        for(let i = 0; i < 100; i++){
+            let redRand = Math.floor(Math.random() * 200);
+            let greenRand = Math.floor(Math.random() * 200);
+            let blueRand = Math.floor(Math.random() * 200);
+
+            this.colors.push(`rgb(${redRand}, ${greenRand}, ${blueRand})`);
+        }
+    }
+
+    //Add a dataset to the graph to draw
+    //Inputs:
+    //  data = array containing list of numbers as the data points for the graph
+    //      data[0] will be on the left.  data[data.length-1] will be on the right.
+    //  xRange = array containing two elements, start and end for x axis data (currently only dates)
+    //  name = string name for the line.  Used for display and finding lines.  Each must be unique
+    addData(data, xRange, name){
+        data = {
+            set: data,
+            colorIndex: this.colorIndex,
+            name: name
+        }
+        this.colorIndex++;
+        this.data.push(data);
+
+        let isChange = false;
+        for(let point of data.set){
+            if(point > this.max){
+                this.max = point;
+                this.verticalMultiplier = (this.bottom - this.top) / this.max;
+                this.horizontalMultiplier = (this.right - this.left) / (data.set.length - 1);
+                isChange = true;
+            }
+        }
+
+        if(this.xRange.length === 0){
+            this.xRange = xRange;
+            isChange = true;
+        }else{
+            if(xRange[0] < this.xRange[0]){
+                this.xRange[0] = xRange[0];
+                isChange = true;
+            }
+            if(xRange[1] > this.xRange[1]){
+                this.xRange[1] = xRange[1];
+                isChange = true;
+            }
+        }
+
+        if(isChange){
+            this.drawGraph();
+        }else{
+            this.drawLine(data);
+        }
+    }
+
+    //Removes a single data set from the graph and its line
+    //Inputs:
+    //  id = the unique identifier of the data set that was passed in with addData function
+    removeData(name){
+        for(let i = 0; i < this.data.length; i++){
+            if(this.data[i].name === name){
+                this.data.splice(i, 1);
+                break;
+            }
+        }
+
+        this.drawGraph();
+    }
+
+    //Completely clears all data
+    //Does not delete the current graph displaying
+    clearData(){
+        this.max = 0;
+        this.data = [];
+        this.xRange = [];
+    }
+
+    addTitle(title){
+        this.top = this.canvas.clientHeight - (this.canvas.clientHeight * 0.9);
+        
+        this.title = title;
+    }
+
+    /**********
+    *********PRIVATE*********
+    **********/
+    drawGraph(){
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.drawYAxis();
+        this.drawXAxis();
+
+        for(let dataSet of this.data){
+            this.drawLine(dataSet);
+        }
+
+        if(this.title){
+            this.context.font = "25px Saira";
+            let xLocation = ((this.right - this.left) / 2) - (this.context.measureText(this.title).width / 2);
+            this.context.fillText(this.title, xLocation, this.top - 10);
+        }
+    }
+
+    drawLine(data){
+        for(let i = 0; i < data.set.length - 1; i++){
+            this.context.beginPath();
+            this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom - (this.verticalMultiplier * data.set[i]));
+            this.context.lineTo(this.left + (this.horizontalMultiplier * (i + 1)), this.bottom - (this.verticalMultiplier * data.set[i + 1]));
+            this.context.strokeStyle = this.colors[data.colorIndex];
+            this.context.lineWidth = 2;
+            this.context.stroke();
+        }
+
+        this.context.strokeStyle = "black";
+
+        if(this.data.length > 1){
+            this.drawLegend(data.colorIndex, data.name);
+        }
+    }
+
+    drawXAxis(){
+        this.context.beginPath();
+        this.context.moveTo(this.left, this.bottom);
+        this.context.lineTo(this.right, this.bottom);
+        this.context.lineWidth = 4;
+        this.context.stroke();
+
+        this.context.setLineDash([5, 10]);
+        this.context.font = "10px Arial";
+        this.context.lineWidth = 1;
+
+        if(Object.prototype.toString.call(this.xRange[0]) === '[object Date]'){
+            let diff = Math.abs(Math.floor((Date.UTC(this.xRange[0].getFullYear(), this.xRange[0].getMonth(), this.xRange[0].getDate()) - Date.UTC(this.xRange[1].getFullYear(), this.xRange[1].getMonth(), this.xRange[1].getDate())) / (1000 * 60 * 60 * 24))) + 1;
+            let showDate = new Date(this.xRange[0]);
+            
+            for(let i = 0; i < diff; i += Math.floor(diff / 10)){
+                this.context.fillText(showDate.toLocaleDateString("en-US", {month: "short", day: "numeric", year: "2-digit"}), this.left + (this.horizontalMultiplier * i) - 20, this.bottom + 15);
+
+                if(i !== 0){
+                    this.context.beginPath()
+                    this.context.moveTo(this.left + (this.horizontalMultiplier * i), this.bottom);
+                    this.context.lineTo(this.left + (this.horizontalMultiplier * i), this.top);
+                    this.context.strokeStyle = "#a5a5a5";
+                    this.context.stroke();
+                }
+
+                showDate.setDate(showDate.getDate() + Math.abs(diff / 10));
+            }
+            
+        }
+
+        this.context.strokeStyle = "black";
+        this.context.setLineDash([]);
+    }
+
+    drawYAxis(){
+        this.context.beginPath();
+        this.context.moveTo(this.left, this.top);
+        this.context.lineTo(this.left, this.bottom);
+        this.context.lineWidth = 2;
+        this.context.stroke();
+
+        this.context.setLineDash([5, 10]);
+        this.context.font = "10px Arial";
+        this.context.lineWidth = 1;
+
+        let axisNum = 0;
+        let verticalIncrement = (this.bottom - this.top) / 10;
+        let verticalOffset = 0;
+        do{
+            this.context.fillText(Math.round(axisNum).toString(), this.left - 20, this.bottom - verticalOffset + 3);
+
+            this.context.beginPath();
+            this.context.moveTo(this.left, this.bottom - verticalOffset);
+            this.context.lineTo(this.right, this.bottom - verticalOffset);
+            this.context.strokeStyle = "#a5a5a5";
+            this.context.stroke();
+
+            verticalOffset += verticalIncrement;
+            axisNum += this.max / 10;
+        }while(verticalOffset <= (this.bottom - this.top));
+
+        this.context.strokeStyle = "black";
+        this.context.setLineDash([]);
+    }
+
+    drawLegend(colorIndex, name){
+        let verticalOffset;
+        for(let i = 0; i < this.data.length; i++){
+            if(this.data[i].name === name){
+                verticalOffset = i * 25;
+                break;
+            }
+        }
+
+        this.context.beginPath();
+        this.context.fillStyle = this.colors[colorIndex];
+        this.context.fillRect(this.right + 50, this.top + 50 + verticalOffset, 10, 10);
+        this.context.stroke();
+
+        this.context.font = "15px Arial";
+        this.context.fillText(name, this.right + 65, this.top + 60 + verticalOffset);
+
+        this.context.fillStyle = "black";
+    }
+}
+
+class HorizontalBarGraph{
+    constructor(canvas){
+        this.canvas = canvas;
+        this.context = canvas.getContext("2d");
+        this.left = 0;
+        this.right = canvas.clientWidth;
+        this.top = canvas.clientHeight - (canvas.clientHeight * 0.99);
+        this.bottom = canvas.clientHeight;
+        this.data = [];
+        this.max = 0;
+    }
+
+    //Adds an array of data points to the chart
+    //All data is removed  and redrawn when called
+    //Must pass in all data points
+    //Inputs: 
+    //  dataArray: array of objects
+    //      num: number for the actual data
+    //      label: text to display on bar
+    addData(dataArray){
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for(let point of dataArray){
+            if(point.num > this.max){
+                this.max = point.num;
+            }
+
+            this.data.push(point);
+        }
+
+        this.drawGraph();
+    }
+
+    drawGraph(){
+        let barHeight = ((this.bottom - this.top) / this.data.length) - 2;
+
+        for(let i = 0; i < this.data.length; i++){
+            let topLocation = this.top + (i * barHeight) + 5;
+            let width = (this.right - this.left) * (this.data[i].num / this.max);
+
+            if(this.data[i].num >= this.max){
+                this.context.fillStyle = "rgb(255, 99, 107)";
+            }else{
+                this.context.fillStyle = "rgb(179, 191, 209)";
+            }
+
+            this.context.beginPath();
+            this.context.fillRect(this.left, topLocation, width, barHeight - 5);
+            this.context.stroke();
+
+            let textLocation  = 15;
+            this.context.font = "12px Saira";
+            this.context.fillStyle = "black";
+            this.context.fillText(this.data[i].label, textLocation, (this.top) + (i * barHeight) + (barHeight / 1.5));
+        }
+    }
+}
+
+module.exports = {
+    LineGraph: LineGraph,
+    HorizontalBarGraph: HorizontalBarGraph
 }
 },{}]},{},[2]);

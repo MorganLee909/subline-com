@@ -1,12 +1,10 @@
-let merchant = require("./dashboard.js");
-
 module.exports = {
     isPopulated: false,
     graph: {},
 
-    display: function(){
+    display: function(merchant){
         if(!this.isPopulated){
-            this.drawRevenueCard();
+            this.drawRevenueCard(merchant);
             this.drawRevenueGraph();
             this.drawInventoryCheckCard();
             this.drawPopularCard();
@@ -15,13 +13,12 @@ module.exports = {
         }
     },
 
-    drawRevenueCard: function(){
+    drawRevenueCard: function(merchant){
         let today = new Date();
         let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        console.log(merchant);
         let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
         let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
 
@@ -46,6 +43,7 @@ module.exports = {
         graphCanvas.height = graphCanvas.parentElement.clientHeight;
         graphCanvas.width = graphCanvas.parentElement.clientWidth;
 
+        let LineGraph = require("../../shared/graphs.js").LineGraph;
         this.graph = new LineGraph(graphCanvas);
         this.graph.addTitle("Revenue");
 
@@ -143,6 +141,7 @@ module.exports = {
             thisCanvas.width = thisCanvas.parentElement.offsetWidth * 0.8;
             thisCanvas.height = thisCanvas.parentElement.offsetHeight * 0.8;
 
+            let HorizontalBarGraph = require("../../shared/graphs.js").HorizontalBarGraph;
             let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);
         }else{

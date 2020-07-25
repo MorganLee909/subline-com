@@ -1,21 +1,22 @@
-import homeStrandObj from "./home.js";
-// const homeStrandObj = require("./home.js");
-// const ingredientsStrandObj = require("./ingredients.js");
-// const ordersStrandObj = require("./orders.js");
-// const recipeBookStrandObj = require("./recipeBook.js");
-// const transactions = require("./transactions.js");
+const homeStrand = require("./home.js");
+const ingredientsStrand = require("./ingredients.js");
+const ordersStrand = require("./orders.js");
+const recipeBookStrand = require("./recipeBook.js");
+const transactionsStrand = require("./transactions.js");
 
-// const addIngredientsComp = require("./addIngredients.js");
-// const ingredientDetailsComp = require("./ingredientDetails.js");
-// const newIngredientComp = require("./newIngredient.js");
-// const newOrderComp = require("./newOrder.js");
-// const newRecipeComp = require("./newRecipe.js");
-// const newTransactionComp = require("./newTransaction.js");
-// const orderDetailsComp = require("./orderDetails.js");
-// const recipeDetailsComp = require("./recipeDetails.js");
-// const transactionDetailsComp = require("./transactionDetails.js");
-
-
+const addIngredientsComp = require("./addIngredients.js");
+const ingredientDetailsComp = require("./ingredientDetails.js");
+const newIngredientComp = require("./newIngredient.js");
+const newOrderComp = require("./newOrder.js");
+const newRecipeComp = require("./newRecipe.js");
+const newTransactionComp = require("./newTransaction.js");
+const orderDetailsComp = require("./orderDetails.js");
+const recipeDetailsComp = require("./recipeDetails.js");
+const transactionDetailsComp = require("./transactionDetails.js");
+const ingredients = require("./ingredients.js");
+const recipeBook = require("./recipeBook.js");
+const orders = require("./orders.js");
+const transactions = require("./transactions.js");
 
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent){
@@ -626,7 +627,7 @@ Switches to a different strand
 Input:
  name: name of the strand.  Must end with "Strand"
 */
-let changeStrand = (name)=>{
+window.changeStrand = (name)=>{
     closeSidebar();
 
     for(let strand of document.querySelectorAll(".strand")){
@@ -636,15 +637,40 @@ let changeStrand = (name)=>{
     let buttons = document.querySelectorAll(".menuButton");
     for(let i = 0; i < buttons.length - 1; i++){
         buttons[i].classList = "menuButton";
-        buttons[i].onclick = ()=>{changeStrand(`${buttons[i].id.slice(0, buttons[i].id.indexOf("Btn"))}Strand`)};
+        buttons[i].disabled = false;
     }
 
-    let activeButton = document.querySelector(`#${name.slice(0, name.indexOf("Strand"))}Btn`);
-    activeButton.classList = "menuButton active";
-    activeButton.onclick = undefined;
+    let activeButton = {};
+    switch(name){
+        case 1: 
+            activeButton = document.getElementById("homeBtn");
+            document.getElementById("homeStrand").style.display = "flex";
+            homeStrand.display();
+            break;
+        case 2: 
+            activeButton = document.getElementById("ingredientsBtn");
+            document.getElementById("ingredientsStrand").style.display = "flex";
+            ingredients.display();
+            break;
+        case 3:
+            activeButton = document.getElementById("recipeBookBtn");
+            document.getElementById("recipeBookStrand").style.display = "flex";
+            recipeBook.display();
+            break;
+        case 4:
+            activeButton = document.getElementById("ordersBtn");
+            document.getElementById("ordersStrand").style.display = "flex";
+            orders.display();
+            break;
+        case 5:
+            activeButton = document.getElementById("transactionsBtn");
+            document.getElementById("transactionsStrand").style.display = "flex";
+            transactions.display();
+            break;
+    }
 
-    document.querySelector(`#${name}`).style.display = "flex";
-    window[`${name}Obj`].display();
+    activeButton.classList = "menuButton active";
+    activeButton.disabled = true;
 
     if(window.screen.availWidth <= 1000){
         closeMenu();
@@ -734,7 +760,5 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     document.getElementById("menuShifter2").style.display = "none";
 }
 
-let merchant = new Merchant(data.merchant, data.transactions);
-console.log(merchant);
-module.exports = merchant;
-homeStrandObj.display();
+merchant = new Merchant(data.merchant, data.transactions);
+homeStrand.display(merchant);

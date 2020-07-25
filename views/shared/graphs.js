@@ -282,3 +282,8 @@ class HorizontalBarGraph{
         }
     }
 }
+
+module.exports = {
+    LineGraph: LineGraph,
+    HorizontalBarGraph: HorizontalBarGraph
+}

@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "watch-js": "watchify views/dashboardPage/js/dashboard.js -o views/dashboardPage/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,10 @@
     "ejs": "^2.7.1",
     "express": "^4.17.1",
     "mongoose": "^5.7.4"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.1",
+    "tinyify": "^2.5.2",
+    "watchify": "^3.11.1"
   }
 }
