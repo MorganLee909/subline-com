@@ -1,4 +1,4 @@
-window.ingredientsStrandObj = {
+module.exports = {
     isPopulated: false,
     ingredients: [],
 

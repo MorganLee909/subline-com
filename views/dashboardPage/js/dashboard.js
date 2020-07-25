@@ -1,3 +1,22 @@
+import homeStrandObj from "./home.js";
+// const homeStrandObj = require("./home.js");
+// const ingredientsStrandObj = require("./ingredients.js");
+// const ordersStrandObj = require("./orders.js");
+// const recipeBookStrandObj = require("./recipeBook.js");
+// const transactions = require("./transactions.js");
+
+// const addIngredientsComp = require("./addIngredients.js");
+// const ingredientDetailsComp = require("./ingredientDetails.js");
+// const newIngredientComp = require("./newIngredient.js");
+// const newOrderComp = require("./newOrder.js");
+// const newRecipeComp = require("./newRecipe.js");
+// const newTransactionComp = require("./newTransaction.js");
+// const orderDetailsComp = require("./orderDetails.js");
+// const recipeDetailsComp = require("./recipeDetails.js");
+// const transactionDetailsComp = require("./transactionDetails.js");
+
+
+
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent){
         this.id = id;
@@ -714,3 +733,8 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
 }
+
+let merchant = new Merchant(data.merchant, data.transactions);
+console.log(merchant);
+module.exports = merchant;
+homeStrandObj.display();

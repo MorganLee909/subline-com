@@ -1,4 +1,4 @@
-window.transactionsStrandObj = {
+module.exports = {
     isPopulated: false, 
 
     display: function(){

@@ -379,24 +379,13 @@
 
         <% include ../shared/loader %>
 
-        <script src="/dashboardPage/controller.js"></script>
         <script>
-            let merchant = new Merchant(
-                <%- JSON.stringify(merchant) %>,
-                <%- JSON.stringify(transactions) %>
-            );
+            let data = {
+                merchant: <%- JSON.stringify(merchant) %>,
+                transactions: <%- JSON.stringify(transactions) %>
+            }
         </script>
-        <script src="../shared/graphs.js"></script>
-        <script src="/dashboardPage/home.js"></script>
-        <script src="/dashboardPage/ingredients.js"></script>
-        <script src="/dashboardPage/recipeBook.js"></script>
-        <script src="/dashboardPage/sidebars/sidebars.js"></script>
-        <script src="/dashboardPage/orders.js"></script>
-        <script src="/dashboardPage/transactions.js"></script>
-        <script src="../shared/validation.js"></script>
-        <script>
-            homeStrandObj.display();
-        </script>
+        <script src="./dashboardPage/js/dashboard.js"></script>
 
         <noscript>Please turn on javascript for this site to work properly</noscript>
     </body>

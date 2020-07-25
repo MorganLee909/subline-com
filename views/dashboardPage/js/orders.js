@@ -1,4 +1,4 @@
-window.ordersStrandObj = {
+module.exports = {
     isFetched: false,
 
     display: async function(){

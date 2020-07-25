@@ -1,4 +1,4 @@
-window.recipeBookStrandObj = {
+module.exports = {
     isPopulated: false,
     recipeDivList: [],
 

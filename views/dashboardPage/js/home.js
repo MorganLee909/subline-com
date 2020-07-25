@@ -1,4 +1,6 @@
-window.homeStrandObj = {
+let merchant = require("./dashboard.js");
+
+module.exports = {
     isPopulated: false,
     graph: {},
 
@@ -19,6 +21,7 @@ window.homeStrandObj = {
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
+        console.log(merchant);
         let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
         let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
 
