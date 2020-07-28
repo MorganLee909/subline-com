@@ -103,6 +103,8 @@ module.exports = {
 
             ul.appendChild(ingredientCheck);
         }
+
+        document.getElementById("inventoryCheck").onclick = ()=>{this.submitInventoryCheck()};
     },
 
     drawPopularCard: function(){
@@ -158,6 +160,7 @@ module.exports = {
         let lis = document.querySelectorAll("#inventoryCheckCard li");
 
         let changes = [];
+        let fetchData = [];
 
         for(let i = 0; i < lis.length; i++){
             if(lis[i].children[1].children[1].value >= 0){
@@ -171,6 +174,11 @@ module.exports = {
                         ingredient: merchIngredient.ingredient,
                         quantity: value
                     });
+
+                    fetchData.push({
+                        id: merchIngredient.ingredient.id,
+                        quantity: value
+                    });
                 }
             }else{
                 banner.createError("CANNOT HAVE NEGATIVE INGREDIENTS");
@@ -181,19 +189,21 @@ module.exports = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
         
-        if(changes.length > 0){
+        if(fetchData.length > 0){
             fetch("/merchant/ingredients/update", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"
                 },
-                body: JSON.stringify(changes)
+                body: JSON.stringify(fetchData)
             })
                 .then((response) => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
+                        
+
                         merchant.editIngredients(changes);
                         banner.createNotification("INGREDIENTS UPDATED");
                     }

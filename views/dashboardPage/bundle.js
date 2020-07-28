@@ -229,25 +229,21 @@ module.exports = {
     }
 }
 },{}],2:[function(require,module,exports){
-const homeStrand = require("./home.js");
-const ingredientsStrand = require("./ingredients.js");
-const ordersStrand = require("./orders.js");
-const recipeBookStrand = require("./recipeBook.js");
-const transactionsStrand = require("./transactions.js");
-
-const addIngredientsComp = require("./addIngredients.js");
-const ingredientDetailsComp = require("./ingredientDetails.js");
-const newIngredientComp = require("./newIngredient.js");
-const newOrderComp = require("./newOrder.js");
-const newRecipeComp = require("./newRecipe.js");
-const newTransactionComp = require("./newTransaction.js");
-const orderDetailsComp = require("./orderDetails.js");
-const recipeDetailsComp = require("./recipeDetails.js");
-const transactionDetailsComp = require("./transactionDetails.js");
+const home = require("./home.js");
 const ingredients = require("./ingredients.js");
 const recipeBook = require("./recipeBook.js");
 const orders = require("./orders.js");
 const transactions = require("./transactions.js");
+
+const addIngredients = require("./addIngredients.js");
+const ingredientDetails = require("./ingredientDetails.js");
+const newIngredient = require("./newIngredient.js");
+const newOrder = require("./newOrder.js");
+const newRecipe = require("./newRecipe.js");
+const newTransaction = require("./newTransaction.js");
+const orderDetails = require("./orderDetails.js");
+const recipeDetails = require("./recipeDetails.js");
+const transactionDetails = require("./transactionDetails.js");
 
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent){
@@ -876,7 +872,7 @@ window.changeStrand = (name)=>{
         case 1: 
             activeButton = document.getElementById("homeBtn");
             document.getElementById("homeStrand").style.display = "flex";
-            homeStrand.display();
+            home.display();
             break;
         case 2: 
             activeButton = document.getElementById("ingredientsBtn");
@@ -921,7 +917,6 @@ let closeSidebar = ()=>{
         document.getElementById("mobileMenuSelector").style.display = "block";
         document.getElementById("sidebarCloser").style.display = "none";
     }
-    
 }
 
 /*
@@ -992,7 +987,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 merchant = new Merchant(data.merchant, data.transactions);
-homeStrand.display(merchant);
+home.display(merchant);
 },{"./addIngredients.js":1,"./home.js":3,"./ingredientDetails.js":4,"./ingredients.js":5,"./newIngredient.js":6,"./newOrder.js":7,"./newRecipe.js":8,"./newTransaction.js":9,"./orderDetails.js":10,"./orders.js":11,"./recipeBook.js":12,"./recipeDetails.js":13,"./transactionDetails.js":14,"./transactions.js":15}],3:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
@@ -1099,6 +1094,8 @@ module.exports = {
 
             ul.appendChild(ingredientCheck);
         }
+
+        document.getElementById("inventoryCheck").onclick = ()=>{this.submitInventoryCheck()};
     },
 
     drawPopularCard: function(){
@@ -1154,6 +1151,7 @@ module.exports = {
         let lis = document.querySelectorAll("#inventoryCheckCard li");
 
         let changes = [];
+        let fetchData = [];
 
         for(let i = 0; i < lis.length; i++){
             if(lis[i].children[1].children[1].value >= 0){
@@ -1167,6 +1165,11 @@ module.exports = {
                         ingredient: merchIngredient.ingredient,
                         quantity: value
                     });
+
+                    fetchData.push({
+                        id: merchIngredient.ingredient.id,
+                        quantity: value
+                    });
                 }
             }else{
                 banner.createError("CANNOT HAVE NEGATIVE INGREDIENTS");
@@ -1177,19 +1180,21 @@ module.exports = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
         
-        if(changes.length > 0){
+        if(fetchData.length > 0){
             fetch("/merchant/ingredients/update", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"
                 },
-                body: JSON.stringify(changes)
+                body: JSON.stringify(fetchData)
             })
                 .then((response) => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
+                        
+
                         merchant.editIngredients(changes);
                         banner.createNotification("INGREDIENTS UPDATED");
                     }

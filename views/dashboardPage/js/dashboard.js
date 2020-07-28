@@ -1,22 +1,18 @@
-const homeStrand = require("./home.js");
-const ingredientsStrand = require("./ingredients.js");
-const ordersStrand = require("./orders.js");
-const recipeBookStrand = require("./recipeBook.js");
-const transactionsStrand = require("./transactions.js");
-
-const addIngredientsComp = require("./addIngredients.js");
-const ingredientDetailsComp = require("./ingredientDetails.js");
-const newIngredientComp = require("./newIngredient.js");
-const newOrderComp = require("./newOrder.js");
-const newRecipeComp = require("./newRecipe.js");
-const newTransactionComp = require("./newTransaction.js");
-const orderDetailsComp = require("./orderDetails.js");
-const recipeDetailsComp = require("./recipeDetails.js");
-const transactionDetailsComp = require("./transactionDetails.js");
+const home = require("./home.js");
 const ingredients = require("./ingredients.js");
 const recipeBook = require("./recipeBook.js");
 const orders = require("./orders.js");
 const transactions = require("./transactions.js");
+
+const addIngredients = require("./addIngredients.js");
+const ingredientDetails = require("./ingredientDetails.js");
+const newIngredient = require("./newIngredient.js");
+const newOrder = require("./newOrder.js");
+const newRecipe = require("./newRecipe.js");
+const newTransaction = require("./newTransaction.js");
+const orderDetails = require("./orderDetails.js");
+const recipeDetails = require("./recipeDetails.js");
+const transactionDetails = require("./transactionDetails.js");
 
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent){
@@ -645,7 +641,7 @@ window.changeStrand = (name)=>{
         case 1: 
             activeButton = document.getElementById("homeBtn");
             document.getElementById("homeStrand").style.display = "flex";
-            homeStrand.display();
+            home.display();
             break;
         case 2: 
             activeButton = document.getElementById("ingredientsBtn");
@@ -690,7 +686,6 @@ let closeSidebar = ()=>{
         document.getElementById("mobileMenuSelector").style.display = "block";
         document.getElementById("sidebarCloser").style.display = "none";
     }
-    
 }
 
 /*
@@ -761,4 +756,4 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 merchant = new Merchant(data.merchant, data.transactions);
-homeStrand.display(merchant);
+home.display(merchant);
