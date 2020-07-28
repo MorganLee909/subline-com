@@ -136,9 +136,8 @@ class Merchant{
             }
         }
     
-        ingredientsStrandObj.populateByProperty("category");
-        addIngredientsComp.isPopulated = false;
-        closeSidebar();
+        controller.updateData("ingredient");
+        controller.closeSidebar();
     }
 
     /*
@@ -169,9 +168,8 @@ class Merchant{
             }
         }
 
-        transactionsStrandObj.isPopulated = false;
-        recipeBookStrandObj.populateRecipes();
-        closeSidebar();
+        controller.updateData("recipe");
+        controller.closeSidebar();
     }
 
     /*
@@ -201,8 +199,8 @@ class Merchant{
             }
         }
 
-        ordersStrandObj.populate();
-        closeSidebar();
+        controller.updateData("order");
+        controller.closeSidebar();
     }
 
     editTransactions(transaction, remove = false){
@@ -223,9 +221,8 @@ class Merchant{
             this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
         }
 
-        transactionsStrandObj.isPopulated = false;
-        transactionsStrandObj.display();
-        closeSidebar();
+        controller.updateData("transaction");
+        controller.closeSidebar();
     }
 
     /*
@@ -771,6 +768,7 @@ const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
 const Merchant = require("./Merchant.js");
+const { transaction } = require("./transactionDetails.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
 
@@ -943,6 +941,32 @@ controller = {
         }
     
         return converted;
+    },
+
+    /*
+    Sets certain strands to repopulate everything the next time it is opened
+    Use for when any data is changed
+    item = whatever is being updated
+    */
+    updateData: function(item){
+        switch(item){
+            case "ingredient":
+                home.drawInventoryCheckCard();
+                ingredients.populateByProperty("category");
+                addIngredients.isPopulated = false;
+                break;
+            case "recipe":
+                transactions.isPopulated = false;
+                recipeBook.populateRecipes();
+                break;
+            case "order":
+                orders.populate();
+                break;
+            case "transaction":
+                transactions.isPopulated = false;
+                transaction.display();
+                break;
+        }
     }
 }
 

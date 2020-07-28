@@ -89,9 +89,8 @@ class Merchant{
             }
         }
     
-        ingredientsStrandObj.populateByProperty("category");
-        addIngredientsComp.isPopulated = false;
-        closeSidebar();
+        controller.updateData("ingredient");
+        controller.closeSidebar();
     }
 
     /*
@@ -122,9 +121,8 @@ class Merchant{
             }
         }
 
-        transactionsStrandObj.isPopulated = false;
-        recipeBookStrandObj.populateRecipes();
-        closeSidebar();
+        controller.updateData("recipe");
+        controller.closeSidebar();
     }
 
     /*
@@ -154,8 +152,8 @@ class Merchant{
             }
         }
 
-        ordersStrandObj.populate();
-        closeSidebar();
+        controller.updateData("order");
+        controller.closeSidebar();
     }
 
     editTransactions(transaction, remove = false){
@@ -176,9 +174,8 @@ class Merchant{
             this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
         }
 
-        transactionsStrandObj.isPopulated = false;
-        transactionsStrandObj.display();
-        closeSidebar();
+        controller.updateData("transaction");
+        controller.closeSidebar();
     }
 
     /*
