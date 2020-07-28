@@ -3,9 +3,7 @@ module.exports = {
     fakeMerchant: {},
     chosenIngredients: [],
 
-    display: function(){
-        let sidebar = document.querySelector("#addIngredients");
-
+    display: function(Merchant){
         if(!this.isPopulated){
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
@@ -40,6 +38,7 @@ module.exports = {
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("UNABLE TO RETRIEVE DATA");
                 })
                 .finally(()=>{
@@ -48,8 +47,6 @@ module.exports = {
 
             this.isPopulated = true;
         }
-
-        openSidebar(sidebar);
     },
 
     populateAddIngredients: function(){
@@ -65,7 +62,7 @@ module.exports = {
         for(let i = 0; i < categories.length; i++){
             let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
             categoryDiv.children[0].children[0].innerText = categories[i].name;
-            categoryDiv.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(categoryDiv)};
+            categoryDiv.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(categoryDiv)};
             categoryDiv.children[1].style.display = "none";
             categoryDiv.children[0].children[1].children[1].style.display = "none";
 
@@ -85,6 +82,9 @@ module.exports = {
         while(myIngredients.children.length > 0){
             myIngredients.removeChild(myIngredients.firstChild);
         }
+
+        document.getElementById("addIngredientsBtn").onclick = ()=>{this.submit()};
+        document.getElementById("openNewIngredient").onclick = ()=>{AbortController.openSidebar("newIngredient")};
     },
 
     toggleAddIngredient: function(categoryElement){
@@ -182,7 +182,7 @@ module.exports = {
                 banner.createError("PLEASE ENTER A QUANTITY FOR EACH INGREDIENT YOU WANT TO ADD TO YOUR INVENTORY");
                 return;
             }
-            quantity = convertToMain(unit, quantity);
+            quantity = controller.convertToMain(unit, quantity);
 
             let newIngredient = {
                 ingredient: ingredients[i].ingredient,
@@ -220,6 +220,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

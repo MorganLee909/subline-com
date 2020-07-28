@@ -60,7 +60,8 @@ class Merchant{
         this.units = {
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
-            length: ["mm", "cm", "m", "in", "foot"]
+            length: ["mm", "cm", "m", "in", "foot"],
+            other: ["each"]
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
@@ -135,7 +136,6 @@ class Merchant{
             }
         }
     
-        homeStrandObj.drawInventoryCheckCard();
         ingredientsStrandObj.populateByProperty("category");
         addIngredientsComp.isPopulated = false;
         closeSidebar();
@@ -474,43 +474,6 @@ class Merchant{
     }
 }
 
-let convertToMain = (unit, quantity)=>{
-    let converted = 0;
-
-    if(merchant.units.mass.includes(unit)){
-        switch(unit){
-            case "g": converted = quantity; break;
-            case "kg": converted = quantity * 1000; break;
-            case "oz": converted = quantity * 28.3495; break;
-            case "lb": converted = quantity * 453.5924; break;
-        }
-    }else if(merchant.units.volume.includes(unit)){
-        switch(unit){
-            case "ml": converted = quantity / 1000; break;
-            case "l": converted = quantity; break;
-            case "tsp": converted = quantity / 202.8842; break;
-            case "tbsp": converted = quantity / 67.6278; break;
-            case "ozfl": converted = quantity / 33.8141; break;
-            case "cup": converted = quantity / 4.1667; break;
-            case "pt": converted = quantity / 2.1134; break;
-            case "qt": converted = quantity / 1.0567; break;
-            case "gal": converted = quantity * 3.7854; break;
-        }
-    }else if(merchant.units.length.includes(unit)){
-        switch(unit){
-            case "mm": converted = quantity / 1000; break;
-            case "cm": converted = quantity / 100; break;
-            case "m": converted = quantity; break;
-            case "in": converted = quantity / 39.3701; break;
-            case "ft": converted = quantity / 3.2808; break;
-        }
-    }else{
-        converted = quantity;
-    }
-
-    return converted;
-}
-
 module.exports = Merchant;
 },{"./Ingredient.js":1,"./Recipe.js":3,"./Transaction.js":4}],3:[function(require,module,exports){
 class Recipe{
@@ -565,9 +528,7 @@ module.exports = {
     fakeMerchant: {},
     chosenIngredients: [],
 
-    display: function(){
-        let sidebar = document.querySelector("#addIngredients");
-
+    display: function(Merchant){
         if(!this.isPopulated){
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
@@ -602,6 +563,7 @@ module.exports = {
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("UNABLE TO RETRIEVE DATA");
                 })
                 .finally(()=>{
@@ -610,8 +572,6 @@ module.exports = {
 
             this.isPopulated = true;
         }
-
-        openSidebar(sidebar);
     },
 
     populateAddIngredients: function(){
@@ -627,7 +587,7 @@ module.exports = {
         for(let i = 0; i < categories.length; i++){
             let categoryDiv = categoryTemplate.content.children[0].cloneNode(true);
             categoryDiv.children[0].children[0].innerText = categories[i].name;
-            categoryDiv.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(categoryDiv)};
+            categoryDiv.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(categoryDiv)};
             categoryDiv.children[1].style.display = "none";
             categoryDiv.children[0].children[1].children[1].style.display = "none";
 
@@ -647,6 +607,9 @@ module.exports = {
         while(myIngredients.children.length > 0){
             myIngredients.removeChild(myIngredients.firstChild);
         }
+
+        document.getElementById("addIngredientsBtn").onclick = ()=>{this.submit()};
+        document.getElementById("openNewIngredient").onclick = ()=>{AbortController.openSidebar("newIngredient")};
     },
 
     toggleAddIngredient: function(categoryElement){
@@ -744,7 +707,7 @@ module.exports = {
                 banner.createError("PLEASE ENTER A QUANTITY FOR EACH INGREDIENT YOU WANT TO ADD TO YOUR INVENTORY");
                 return;
             }
-            quantity = convertToMain(unit, quantity);
+            quantity = controller.convertToMain(unit, quantity);
 
             let newIngredient = {
                 ingredient: ingredients[i].ingredient,
@@ -782,6 +745,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -807,7 +771,8 @@ const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
 const Merchant = require("./Merchant.js");
-let merchant = new Merchant(data.merchant, data.transactions);
+
+merchant = new Merchant(data.merchant, data.transactions);
 
 controller = {
     openStrand: function(strand){
@@ -873,7 +838,10 @@ controller = {
 
         switch(sidebar){
             case "ingredientDetails":
-                ingredientDetails.display(merchant, data);
+                ingredientDetails.display(data);
+                break;
+            case "addIngredients":
+                addIngredients.display(Merchant);
                 break;
         }
 
@@ -938,6 +906,43 @@ controller = {
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{openMenu()};
+    },
+
+    convertToMain: function(unit, quantity){
+        let converted = 0;
+    
+        if(merchant.units.mass.includes(unit)){
+            switch(unit){
+                case "g": converted = quantity; break;
+                case "kg": converted = quantity * 1000; break;
+                case "oz": converted = quantity * 28.3495; break;
+                case "lb": converted = quantity * 453.5924; break;
+            }
+        }else if(merchant.units.volume.includes(unit)){
+            switch(unit){
+                case "ml": converted = quantity / 1000; break;
+                case "l": converted = quantity; break;
+                case "tsp": converted = quantity / 202.8842; break;
+                case "tbsp": converted = quantity / 67.6278; break;
+                case "ozfl": converted = quantity / 33.8141; break;
+                case "cup": converted = quantity / 4.1667; break;
+                case "pt": converted = quantity / 2.1134; break;
+                case "qt": converted = quantity / 1.0567; break;
+                case "gal": converted = quantity * 3.7854; break;
+            }
+        }else if(merchant.units.length.includes(unit)){
+            switch(unit){
+                case "mm": converted = quantity / 1000; break;
+                case "cm": converted = quantity / 100; break;
+                case "m": converted = quantity; break;
+                case "in": converted = quantity / 39.3701; break;
+                case "ft": converted = quantity / 3.2808; break;
+            }
+        }else{
+            converted = quantity;
+        }
+    
+        return converted;
     }
 }
 
@@ -952,18 +957,18 @@ module.exports = {
     isPopulated: false,
     graph: {},
 
-    display: function(merchant){
+    display: function(){
         if(!this.isPopulated){
-            this.drawRevenueCard(merchant);
-            this.drawRevenueGraph(merchant);
-            this.drawInventoryCheckCard(merchant);
-            this.drawPopularCard(merchant);
+            this.drawRevenueCard();
+            this.drawRevenueGraph();
+            this.drawInventoryCheckCard();
+            this.drawPopularCard();
 
             this.isPopulated = true;
         }
     },
 
-    drawRevenueCard: function(merchant){
+    drawRevenueCard: function(){
         let today = new Date();
         let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
@@ -986,7 +991,7 @@ module.exports = {
         document.querySelector("#revenueChange img").src = img;
     },
 
-    drawRevenueGraph: function(merchant){
+    drawRevenueGraph: function(){
         let graphCanvas = document.querySelector("#graphCanvas");
         let today = new Date();
 
@@ -1017,7 +1022,7 @@ module.exports = {
         }
     },
 
-    drawInventoryCheckCard: function(merchant){
+    drawInventoryCheckCard: function(){
         let num;
         if(merchant.ingredients.length < 5){
             num = merchant.ingredients.length;
@@ -1057,7 +1062,7 @@ module.exports = {
         document.getElementById("inventoryCheck").onclick = ()=>{this.submitInventoryCheck()};
     },
 
-    drawPopularCard: function(merchant){
+    drawPopularCard: function(){
         let dataArray = [];
         let now = new Date();
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);

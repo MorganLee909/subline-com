@@ -2,18 +2,18 @@ module.exports = {
     isPopulated: false,
     graph: {},
 
-    display: function(merchant){
+    display: function(){
         if(!this.isPopulated){
-            this.drawRevenueCard(merchant);
-            this.drawRevenueGraph(merchant);
-            this.drawInventoryCheckCard(merchant);
-            this.drawPopularCard(merchant);
+            this.drawRevenueCard();
+            this.drawRevenueGraph();
+            this.drawInventoryCheckCard();
+            this.drawPopularCard();
 
             this.isPopulated = true;
         }
     },
 
-    drawRevenueCard: function(merchant){
+    drawRevenueCard: function(){
         let today = new Date();
         let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
@@ -36,7 +36,7 @@ module.exports = {
         document.querySelector("#revenueChange img").src = img;
     },
 
-    drawRevenueGraph: function(merchant){
+    drawRevenueGraph: function(){
         let graphCanvas = document.querySelector("#graphCanvas");
         let today = new Date();
 
@@ -67,7 +67,7 @@ module.exports = {
         }
     },
 
-    drawInventoryCheckCard: function(merchant){
+    drawInventoryCheckCard: function(){
         let num;
         if(merchant.ingredients.length < 5){
             num = merchant.ingredients.length;
@@ -107,7 +107,7 @@ module.exports = {
         document.getElementById("inventoryCheck").onclick = ()=>{this.submitInventoryCheck()};
     },
 
-    drawPopularCard: function(merchant){
+    drawPopularCard: function(){
         let dataArray = [];
         let now = new Date();
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);

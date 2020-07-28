@@ -15,7 +15,8 @@ const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
 const Merchant = require("./Merchant.js");
-let merchant = new Merchant(data.merchant, data.transactions);
+
+merchant = new Merchant(data.merchant, data.transactions);
 
 controller = {
     openStrand: function(strand){
@@ -81,7 +82,10 @@ controller = {
 
         switch(sidebar){
             case "ingredientDetails":
-                ingredientDetails.display(merchant, data);
+                ingredientDetails.display(data);
+                break;
+            case "addIngredients":
+                addIngredients.display(Merchant);
                 break;
         }
 
@@ -146,6 +150,43 @@ controller = {
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{openMenu()};
+    },
+
+    convertToMain: function(unit, quantity){
+        let converted = 0;
+    
+        if(merchant.units.mass.includes(unit)){
+            switch(unit){
+                case "g": converted = quantity; break;
+                case "kg": converted = quantity * 1000; break;
+                case "oz": converted = quantity * 28.3495; break;
+                case "lb": converted = quantity * 453.5924; break;
+            }
+        }else if(merchant.units.volume.includes(unit)){
+            switch(unit){
+                case "ml": converted = quantity / 1000; break;
+                case "l": converted = quantity; break;
+                case "tsp": converted = quantity / 202.8842; break;
+                case "tbsp": converted = quantity / 67.6278; break;
+                case "ozfl": converted = quantity / 33.8141; break;
+                case "cup": converted = quantity / 4.1667; break;
+                case "pt": converted = quantity / 2.1134; break;
+                case "qt": converted = quantity / 1.0567; break;
+                case "gal": converted = quantity * 3.7854; break;
+            }
+        }else if(merchant.units.length.includes(unit)){
+            switch(unit){
+                case "mm": converted = quantity / 1000; break;
+                case "cm": converted = quantity / 100; break;
+                case "m": converted = quantity; break;
+                case "in": converted = quantity / 39.3701; break;
+                case "ft": converted = quantity / 3.2808; break;
+            }
+        }else{
+            converted = quantity;
+        }
+    
+        return converted;
     }
 }
 
