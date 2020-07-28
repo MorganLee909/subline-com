@@ -606,7 +606,7 @@ module.exports = {
         }
 
         document.getElementById("addIngredientsBtn").onclick = ()=>{this.submit()};
-        document.getElementById("openNewIngredient").onclick = ()=>{AbortController.openSidebar("newIngredient")};
+        document.getElementById("openNewIngredient").onclick = ()=>{controller.openSidebar("newIngredient")};
     },
 
     toggleAddIngredient: function(categoryElement){
@@ -897,13 +897,13 @@ controller = {
     openMenu: function(){
         document.getElementById("menu").style.display = "flex";
         document.querySelector(".contentBlock").style.display = "none";
-        document.getElementById("mobileMenuSelector").onclick = ()=>{closeMenu()};
+        document.getElementById("mobileMenuSelector").onclick = ()=>{this.closeMenu()};
     },
 
     closeMenu: function(){
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
-        document.getElementById("mobileMenuSelector").onclick = ()=>{openMenu()};
+        document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
     },
 
     convertToMain: function(unit, quantity){
@@ -971,7 +971,7 @@ controller = {
 }
 
 if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
-    changeMenu();
+    this.changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
 }
 
@@ -1522,8 +1522,6 @@ module.exports = {
 },{}],10:[function(require,module,exports){
 module.exports = {
     display: function(){
-        openSidebar(document.querySelector("#newIngredient"));
-
         document.querySelector("#newIngName").value = "";
         document.querySelector("#newIngCategory").value = "";
         document.querySelector("#newIngQuantity").value = 0;
@@ -1541,7 +1539,7 @@ module.exports = {
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: convertToMain(unit, document.querySelector("#newIngQuantity").value),
+            quantity: controller.convertToMain(unit, document.querySelector("#newIngQuantity").value),
             defaultUnit: unit
         }
 
@@ -1619,8 +1617,6 @@ module.exports = {
 
             this.isPopulated = true;
         }
-
-        openSidebar(document.querySelector("#newOrder"));
     },
 
     addOne: function(ingredientDiv, container){
@@ -1676,7 +1672,7 @@ module.exports = {
             if(quantity !== ""  && price !== ""){
                 ingredients.push({
                     ingredient: categoriesList.children[i].ingredient.id,
-                    quantity: convertToMain(categoriesList.children[i].ingredient.unit, parseFloat(quantity)),
+                    quantity: controller.convertToMain(categoriesList.children[i].ingredient.unit, parseFloat(quantity)),
                     price: categoriesList.children[i].ingredient.convert(parseInt(price * 100))
                 });
             }
@@ -1748,8 +1744,6 @@ module.exports = {
                 optgroup.appendChild(option);
             }
         }
-
-        openSidebar(document.querySelector("#addRecipe"));
     },
 
     //Updates the number of ingredient inputs displayed for new recipes
@@ -1793,7 +1787,7 @@ module.exports = {
                 if(merchant.ingredients[j].ingredient.id === inputs[i].children[1].children[0].value){
                     newRecipe.ingredients.push({
                         ingredient: inputs[i].children[1].children[0].value,
-                        quantity: convertToMain(merchant.ingredients[j].ingredient.unit, inputs[i].children[2].children[0].value)
+                        quantity: controller.convertToMain(merchant.ingredients[j].ingredient.unit, inputs[i].children[2].children[0].value)
                     });
 
                     break;
@@ -1857,8 +1851,6 @@ module.exports = {
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
-
-        openSidebar(document.getElementById("newTransaction"));
     },
 
     submit: function(){
@@ -1926,8 +1918,6 @@ module.exports = {
 },{}],14:[function(require,module,exports){
 module.exports = {
     display: function(order){
-        openSidebar(document.querySelector("#orderDetails"));
-
         document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order)};
 
         document.getElementById("orderDetailName").innerText = order.name;
@@ -2285,7 +2275,6 @@ module.exports = {
 
     display: function(recipe){
         this.recipe = recipe;
-        openSidebar(document.querySelector("#recipeDetails"));
 
         document.querySelector("#recipeName").style.display = "block";
         document.querySelector("#recipeNameIn").style.display = "none";
@@ -2359,12 +2348,12 @@ module.exports = {
                 let select = divs[i].children[0];
                 this.recipe.ingredients.push({
                     ingredient: select.options[select.selectedIndex].ingredient,
-                    quantity: convertToMain(select.options[select.selectedIndex].ingredient.unit, divs[i].children[1].value)
+                    quantity: controller.convertToMain(select.options[select.selectedIndex].ingredient.unit, divs[i].children[1].value)
                 });
             }else{
                 this.recipe.ingredients.push({
                     ingredient: divs[i].ingredient,
-                    quantity: convertToMain(divs[i].ingredient.unit, divs[i].children[1].value)
+                    quantity: controller.convertToMain(divs[i].ingredient.unit, divs[i].children[1].value)
                 });
             }
         }
@@ -2486,8 +2475,6 @@ module.exports = {
         document.getElementById("transactionTime").innerText = transaction.date.toLocaleTimeString();
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
         document.getElementById("totalPrice").innerText = `$${(totalPrice / 100).toFixed(2)}`;
-
-        openSidebar(document.getElementById("transactionDetails"));
     },
 
     remove: function(){

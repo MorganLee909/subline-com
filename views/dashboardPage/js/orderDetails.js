@@ -1,7 +1,5 @@
 module.exports = {
     display: function(order){
-        openSidebar(document.querySelector("#orderDetails"));
-
         document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order)};
 
         document.getElementById("orderDetailName").innerText = order.name;

@@ -33,8 +33,6 @@ module.exports = {
 
             this.isPopulated = true;
         }
-
-        openSidebar(document.querySelector("#newOrder"));
     },
 
     addOne: function(ingredientDiv, container){
@@ -90,7 +88,7 @@ module.exports = {
             if(quantity !== ""  && price !== ""){
                 ingredients.push({
                     ingredient: categoriesList.children[i].ingredient.id,
-                    quantity: convertToMain(categoriesList.children[i].ingredient.unit, parseFloat(quantity)),
+                    quantity: controller.convertToMain(categoriesList.children[i].ingredient.unit, parseFloat(quantity)),
                     price: categoriesList.children[i].ingredient.convert(parseInt(price * 100))
                 });
             }

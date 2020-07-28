@@ -3,7 +3,6 @@ module.exports = {
 
     display: function(recipe){
         this.recipe = recipe;
-        openSidebar(document.querySelector("#recipeDetails"));
 
         document.querySelector("#recipeName").style.display = "block";
         document.querySelector("#recipeNameIn").style.display = "none";
@@ -77,12 +76,12 @@ module.exports = {
                 let select = divs[i].children[0];
                 this.recipe.ingredients.push({
                     ingredient: select.options[select.selectedIndex].ingredient,
-                    quantity: convertToMain(select.options[select.selectedIndex].ingredient.unit, divs[i].children[1].value)
+                    quantity: controller.convertToMain(select.options[select.selectedIndex].ingredient.unit, divs[i].children[1].value)
                 });
             }else{
                 this.recipe.ingredients.push({
                     ingredient: divs[i].ingredient,
-                    quantity: convertToMain(divs[i].ingredient.unit, divs[i].children[1].value)
+                    quantity: controller.convertToMain(divs[i].ingredient.unit, divs[i].children[1].value)
                 });
             }
         }

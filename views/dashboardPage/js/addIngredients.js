@@ -84,7 +84,7 @@ module.exports = {
         }
 
         document.getElementById("addIngredientsBtn").onclick = ()=>{this.submit()};
-        document.getElementById("openNewIngredient").onclick = ()=>{AbortController.openSidebar("newIngredient")};
+        document.getElementById("openNewIngredient").onclick = ()=>{controller.openSidebar("newIngredient")};
     },
 
     toggleAddIngredient: function(categoryElement){

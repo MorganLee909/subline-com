@@ -34,8 +34,6 @@ module.exports = {
         document.getElementById("transactionTime").innerText = transaction.date.toLocaleTimeString();
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
         document.getElementById("totalPrice").innerText = `$${(totalPrice / 100).toFixed(2)}`;
-
-        openSidebar(document.getElementById("transactionDetails"));
     },
 
     remove: function(){

@@ -18,7 +18,7 @@
                     <p>THE SUBLINE</p>
                 </a>
         
-                <button class="menuShifter" onclick="changeMenu()">&#8801;</button>
+                <button class="menuShifter" onclick="controller.changeMenu()">&#8801;</button>
             </div>
         
             <div id="min" class="menuHead menuHeadMin">
@@ -26,7 +26,7 @@
                     <img class="menuLogoMin" src="/shared/images/logo.png" alt="The Subline">
                 </a>
         
-                <button id="menuShifter2" onclick="changeMenu()">&#8801;</button>
+                <button id="menuShifter2" onclick="controller.changeMenu()">&#8801;</button>
             </div>
         
             <button class="menuButton active" id="homeBtn" class="active" onclick="controller.openStrand('home')">
@@ -81,8 +81,8 @@
             </a>
         </div>
 
-        <div id="mobileMenuSelector" class="mobileMenuSelector" onclick="openMenu()">&#8801;</div>
-        <button id="sidebarCloser" style="display: none;" onclick="closeSidebar()">
+        <div id="mobileMenuSelector" class="mobileMenuSelector" onclick="controller.openMenu()">&#8801;</div>
+        <button id="sidebarCloser" style="display: none;" onclick="controller.closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>

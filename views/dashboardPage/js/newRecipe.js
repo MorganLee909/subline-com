@@ -19,8 +19,6 @@ module.exports = {
                 optgroup.appendChild(option);
             }
         }
-
-        openSidebar(document.querySelector("#addRecipe"));
     },
 
     //Updates the number of ingredient inputs displayed for new recipes
@@ -64,7 +62,7 @@ module.exports = {
                 if(merchant.ingredients[j].ingredient.id === inputs[i].children[1].children[0].value){
                     newRecipe.ingredients.push({
                         ingredient: inputs[i].children[1].children[0].value,
-                        quantity: convertToMain(merchant.ingredients[j].ingredient.unit, inputs[i].children[2].children[0].value)
+                        quantity: controller.convertToMain(merchant.ingredients[j].ingredient.unit, inputs[i].children[2].children[0].value)
                     });
 
                     break;

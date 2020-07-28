@@ -1,7 +1,5 @@
 module.exports = {
     display: function(){
-        openSidebar(document.querySelector("#newIngredient"));
-
         document.querySelector("#newIngName").value = "";
         document.querySelector("#newIngCategory").value = "";
         document.querySelector("#newIngQuantity").value = 0;
@@ -19,7 +17,7 @@ module.exports = {
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: convertToMain(unit, document.querySelector("#newIngQuantity").value),
+            quantity: controller.convertToMain(unit, document.querySelector("#newIngQuantity").value),
             defaultUnit: unit
         }
 

@@ -14,8 +14,6 @@ module.exports = {
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
-
-        openSidebar(document.getElementById("newTransaction"));
     },
 
     submit: function(){

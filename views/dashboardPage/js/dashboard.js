@@ -144,13 +144,13 @@ controller = {
     openMenu: function(){
         document.getElementById("menu").style.display = "flex";
         document.querySelector(".contentBlock").style.display = "none";
-        document.getElementById("mobileMenuSelector").onclick = ()=>{closeMenu()};
+        document.getElementById("mobileMenuSelector").onclick = ()=>{this.closeMenu()};
     },
 
     closeMenu: function(){
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
-        document.getElementById("mobileMenuSelector").onclick = ()=>{openMenu()};
+        document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
     },
 
     convertToMain: function(unit, quantity){
@@ -218,7 +218,7 @@ controller = {
 }
 
 if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
-    changeMenu();
+    this.changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
 }
 
