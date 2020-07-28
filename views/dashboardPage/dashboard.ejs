@@ -159,10 +159,10 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input id="ingredientSearch" type="text" placeholder="FILTER" oninput="ingredientsStrandObj.search()">
+                        <input id="ingredientSearch" type="text" placeholder="FILTER">
                     </div>
 
-                    <button id="ingredientClearButton" class="clearButton" onclick="ingredientsStrandObj.clearSorting()" style="display: none;">
+                    <button id="ingredientClearButton" class="clearButton" style="display: none;">
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -170,7 +170,7 @@
                         </svg>
                     </button>
 
-                    <select id="ingredientSelect" class="mobileHide" onchange="ingredientsStrandObj.sort(this.value)">Sort Bys:
+                    <select id="ingredientSelect" class="mobileHide">Sort By:
                         <option value="" selected disabled>Sort By:</option>
                         <option value="_name">Ingredient</option>
                         <option value="category">Category</option>
@@ -214,7 +214,7 @@
                     <% if(merchant.pos === "none"){ %>
                         <button class="button mobileHide" onclick="controller.openSidebar('newRecipe')">NEW</button>
                     <% }else if(merchant.pos === "clover"){ %>
-                        <button class="button mobileHide" onclick="recipeBookStrandObj.posUpdate()">UPDATE</button>
+                        <button id="posUpdateRecipe" class="button mobileHide">UPDATE</button>
                     <% } %>
                 </div>
 
@@ -224,10 +224,10 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input id="recipeSearch" type="text" placeholder="FILTER" oninput="recipeBookStrandObj.search()">
+                        <input id="recipeSearch" type="text" placeholder="FILTER">
                     </div>
 
-                    <button id="recipeClearButton" class="clearButton" onclick="recipeBookStrandObj.clearSorting()" style="display: none;">
+                    <button id="recipeClearButton" class="clearButton" style="display: none;">
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -253,7 +253,7 @@
                     <button class="button mobileHide" onclick="controller.openSidebar('newOrder')">NEW</button>
                 </div>
 
-                <form onsubmit="ordersStrandObj.submitFilter()" class="filterForm">
+                <form id="orderSubmitForm" class="filterForm">
                     <h2>Search</h2>
                     <div>
                         <div class="dropdown">
@@ -312,7 +312,7 @@
                     <button class="button mobileHide" onclick="controller.openSidebar('newTransaction')">NEW</button>
                 </div>
 
-                <form onsubmit="transactionsStrandObj.submitFilter()" class="filterForm">
+                <form id="transFormSubmit" class="filterForm">
                     <h2>Search</h2>
                     <div>
                         <div class="dropdown">

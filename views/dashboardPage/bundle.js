@@ -984,6 +984,11 @@ controller = {
                 transactions.isPopulated = false;
                 transaction.display();
                 break;
+            case "unit":
+                home.isPopulated = false;
+                ingredients.populateByProperty("category");
+                document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
+                break;
         }
     }
 }
@@ -1216,7 +1221,7 @@ module.exports = {
 module.exports = {
     ingredient: {},
 
-    display: function(merchant, ingredient){
+    display: function(ingredient){
         this.ingredient = ingredient;
 
         document.getElementById("editIngBtn").onclick = ()=>{this.edit()};
@@ -1337,39 +1342,42 @@ module.exports = {
     },
 
     editSubmit: function(){
-        this.ingredient.quantity = Number(document.getElementById("ingredientInput").value);
+        this.ingredient.quantity = controller.convertToMain(
+            this.ingredient.ingredient.unit,
+            Number(document.getElementById("ingredientInput").value)
+        );
+        
         let data = [{
             id: this.ingredient.ingredient.id,
-            quantity: this.ingredient.quantity
+            quantity: controller.convertToMain(this.ingredient.ingredient.unit, this.ingredient.quantity)
         }];
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        if(validator.ingredientQuantity(data[0].quantity)){
-            fetch("/merchant/ingredients/update", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                body: JSON.stringify(data)
+        fetch("/merchant/ingredients/update", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    merchant.editIngredients([this.ingredient]);
+                    banner.createNotification("INGREDIENT UPDATED");
+                }
             })
-                .then((response) => response.json())
-                .then((response)=>{
-                    if(typeof(response) === "string"){
-                        banner.createError(response);
-                    }else{
-                        merchant.editIngredients([this.ingredient]);
-                        banner.createNotification("INGREDIENT UPDATED");
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
-                })
-                .finally(()=>{
-                    loader.style.display = "none";
-                });
-        }
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     },
 
     changeUnit: function(newActive, unit){
@@ -1382,9 +1390,7 @@ module.exports = {
 
         newActive.classList.add("unitActive");
 
-        homeStrandObj.isPopulated = false;
-        ingredientsStrandObj.populateByProperty("category");
-        document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
+        controller.updateData("unit");
     },
 
     changeUnitDefault: function(){
@@ -1419,15 +1425,19 @@ module.exports = {
     isPopulated: false,
     ingredients: [],
 
-    display: function(merchant){
+    display: function(){
         if(!this.isPopulated){
-            this.populateByProperty("category", merchant);
+            this.populateByProperty("category");
+
+            document.getElementById("ingredientSearch").oninput = ()=>{this.search()};
+            document.getElementById("ingredientClearButton").onclick = ()=>{this.clearSorting()};
+            document.getElementById("ingredientSelect").onchange = ()=>{this.sort()};
 
             this.isPopulated = true;
         }
     },
 
-    populateByProperty: function(property, merchant){
+    populateByProperty: function(property){
         let categories;
         if(property === "category"){
             categories = merchant.categorizeIngredients();
@@ -1510,7 +1520,9 @@ module.exports = {
         this.displayIngredientsOnly(matchingIngredients);
     },
 
-    sort: function(sortType){
+    sort: function(){
+        let sortType = document.getElementById("ingredientSelect");
+        
         if(sortType === ""){
             return;
         }
@@ -2053,6 +2065,8 @@ module.exports = {
                         }
                         merchant.editOrders(newOrders);
 
+                        document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter()};
+
                         this.isFetched = true;
                     }
                 })
@@ -2207,6 +2221,10 @@ module.exports = {
     display: function(){
         if(!this.isPopulated){
             this.populateRecipes();
+
+            document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
+            document.getElementById("recipeSearch").oninput = ()=>{this.search()};
+            document.getElementById("recipeClearButton").onclick = ()=>{this.clearSorting()};
 
             this.isPopulated = true;
         }
@@ -2621,6 +2639,8 @@ module.exports = {
 
                 i++;
             }
+
+            document.getElementById("transFormSubmit").onsubmit = ()=>{this.submitFilter()};
 
             this.isPopulated = true;
         }

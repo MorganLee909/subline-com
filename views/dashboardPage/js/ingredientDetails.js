@@ -1,7 +1,7 @@
 module.exports = {
     ingredient: {},
 
-    display: function(merchant, ingredient){
+    display: function(ingredient){
         this.ingredient = ingredient;
 
         document.getElementById("editIngBtn").onclick = ()=>{this.edit()};
@@ -122,39 +122,42 @@ module.exports = {
     },
 
     editSubmit: function(){
-        this.ingredient.quantity = Number(document.getElementById("ingredientInput").value);
+        this.ingredient.quantity = controller.convertToMain(
+            this.ingredient.ingredient.unit,
+            Number(document.getElementById("ingredientInput").value)
+        );
+        
         let data = [{
             id: this.ingredient.ingredient.id,
-            quantity: this.ingredient.quantity
+            quantity: controller.convertToMain(this.ingredient.ingredient.unit, this.ingredient.quantity)
         }];
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        if(validator.ingredientQuantity(data[0].quantity)){
-            fetch("/merchant/ingredients/update", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                body: JSON.stringify(data)
+        fetch("/merchant/ingredients/update", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response) => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    merchant.editIngredients([this.ingredient]);
+                    banner.createNotification("INGREDIENT UPDATED");
+                }
             })
-                .then((response) => response.json())
-                .then((response)=>{
-                    if(typeof(response) === "string"){
-                        banner.createError(response);
-                    }else{
-                        merchant.editIngredients([this.ingredient]);
-                        banner.createNotification("INGREDIENT UPDATED");
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
-                })
-                .finally(()=>{
-                    loader.style.display = "none";
-                });
-        }
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     },
 
     changeUnit: function(newActive, unit){
@@ -167,9 +170,7 @@ module.exports = {
 
         newActive.classList.add("unitActive");
 
-        homeStrandObj.isPopulated = false;
-        ingredientsStrandObj.populateByProperty("category");
-        document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
+        controller.updateData("unit");
     },
 
     changeUnitDefault: function(){

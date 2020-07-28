@@ -29,6 +29,8 @@ module.exports = {
                         }
                         merchant.editOrders(newOrders);
 
+                        document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter()};
+
                         this.isFetched = true;
                     }
                 })

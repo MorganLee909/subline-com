@@ -65,6 +65,8 @@ module.exports = {
                 i++;
             }
 
+            document.getElementById("transFormSubmit").onsubmit = ()=>{this.submitFilter()};
+
             this.isPopulated = true;
         }
     },

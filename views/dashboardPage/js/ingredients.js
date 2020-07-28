@@ -2,15 +2,19 @@ module.exports = {
     isPopulated: false,
     ingredients: [],
 
-    display: function(merchant){
+    display: function(){
         if(!this.isPopulated){
-            this.populateByProperty("category", merchant);
+            this.populateByProperty("category");
+
+            document.getElementById("ingredientSearch").oninput = ()=>{this.search()};
+            document.getElementById("ingredientClearButton").onclick = ()=>{this.clearSorting()};
+            document.getElementById("ingredientSelect").onchange = ()=>{this.sort()};
 
             this.isPopulated = true;
         }
     },
 
-    populateByProperty: function(property, merchant){
+    populateByProperty: function(property){
         let categories;
         if(property === "category"){
             categories = merchant.categorizeIngredients();
@@ -93,7 +97,9 @@ module.exports = {
         this.displayIngredientsOnly(matchingIngredients);
     },
 
-    sort: function(sortType){
+    sort: function(){
+        let sortType = document.getElementById("ingredientSelect");
+        
         if(sortType === ""){
             return;
         }
