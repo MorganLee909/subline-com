@@ -2,15 +2,15 @@ module.exports = {
     isPopulated: false,
     ingredients: [],
 
-    display: function(){
+    display: function(merchant){
         if(!this.isPopulated){
-            this.populateByProperty("category");
+            this.populateByProperty("category", merchant);
 
             this.isPopulated = true;
         }
     },
 
-    populateByProperty: function(property){
+    populateByProperty: function(property, merchant){
         let categories;
         if(property === "category"){
             categories = merchant.categorizeIngredients();
@@ -40,7 +40,7 @@ module.exports = {
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
                 ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient)};
+                ingredientDiv.onclick = ()=>{controller.openSidebar("ingredientDetails", ingredient)};
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 

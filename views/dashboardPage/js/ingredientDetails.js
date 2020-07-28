@@ -1,10 +1,11 @@
 module.exports = {
     ingredient: {},
 
-    display: function(ingredient){
+    display: function(merchant, ingredient){
         this.ingredient = ingredient;
 
-        sidebar = document.querySelector("#ingredientDetails");
+        document.getElementById("editIngBtn").onclick = ()=>{this.edit()};
+        document.getElementById("removeIngBtn").onclick = ()=>{this.remove(merchant)};
 
         document.querySelector("#ingredientDetails p").innerText = ingredient.ingredient.category;
         document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
@@ -78,11 +79,9 @@ module.exports = {
                 button.classList.add("unitActive");
             }
         }
-
-        openSidebar(sidebar);
     },
 
-    remove: function(){
+    remove: function(merchant){
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
                 if(this.ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){

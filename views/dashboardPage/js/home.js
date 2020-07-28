@@ -5,9 +5,9 @@ module.exports = {
     display: function(merchant){
         if(!this.isPopulated){
             this.drawRevenueCard(merchant);
-            this.drawRevenueGraph();
-            this.drawInventoryCheckCard();
-            this.drawPopularCard();
+            this.drawRevenueGraph(merchant);
+            this.drawInventoryCheckCard(merchant);
+            this.drawPopularCard(merchant);
 
             this.isPopulated = true;
         }
@@ -36,7 +36,7 @@ module.exports = {
         document.querySelector("#revenueChange img").src = img;
     },
 
-    drawRevenueGraph: function(){
+    drawRevenueGraph: function(merchant){
         let graphCanvas = document.querySelector("#graphCanvas");
         let today = new Date();
 
@@ -67,7 +67,7 @@ module.exports = {
         }
     },
 
-    drawInventoryCheckCard: function(){
+    drawInventoryCheckCard: function(merchant){
         let num;
         if(merchant.ingredients.length < 5){
             num = merchant.ingredients.length;
@@ -107,7 +107,7 @@ module.exports = {
         document.getElementById("inventoryCheck").onclick = ()=>{this.submitInventoryCheck()};
     },
 
-    drawPopularCard: function(){
+    drawPopularCard: function(merchant){
         let dataArray = [];
         let now = new Date();
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
