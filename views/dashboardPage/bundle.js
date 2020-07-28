@@ -987,7 +987,6 @@ controller = {
             case "unit":
                 home.isPopulated = false;
                 ingredients.populateByProperty("category");
-                document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
                 break;
         }
     }
@@ -1391,6 +1390,7 @@ module.exports = {
         newActive.classList.add("unitActive");
 
         controller.updateData("unit");
+        document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
     },
 
     changeUnitDefault: function(){
@@ -2222,7 +2222,9 @@ module.exports = {
         if(!this.isPopulated){
             this.populateRecipes();
 
-            document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
+            if(merchant.pos === "clover"){
+                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
+            }
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
             document.getElementById("recipeClearButton").onclick = ()=>{this.clearSorting()};
 

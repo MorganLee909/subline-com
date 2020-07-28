@@ -234,7 +234,6 @@ controller = {
             case "unit":
                 home.isPopulated = false;
                 ingredients.populateByProperty("category");
-                document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
                 break;
         }
     }

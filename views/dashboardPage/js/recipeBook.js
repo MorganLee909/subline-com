@@ -6,7 +6,9 @@ module.exports = {
         if(!this.isPopulated){
             this.populateRecipes();
 
-            document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
+            if(merchant.pos === "clover"){
+                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
+            }
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
             document.getElementById("recipeClearButton").onclick = ()=>{this.clearSorting()};
 

@@ -171,6 +171,7 @@ module.exports = {
         newActive.classList.add("unitActive");
 
         controller.updateData("unit");
+        document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
     },
 
     changeUnitDefault: function(){
