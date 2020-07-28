@@ -85,8 +85,7 @@ module.exports = {
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
             row.children[3].innerText = `$${(totalCost / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
-            row.onclick = ()=>{orderDetailsComp.display(merchant.orders[i])};
-
+            row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);
         }
     },

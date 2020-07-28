@@ -14,6 +14,8 @@ module.exports = {
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
+
+        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit()};
     },
 
     submit: function(){

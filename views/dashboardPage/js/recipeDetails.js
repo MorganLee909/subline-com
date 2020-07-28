@@ -4,16 +4,16 @@ module.exports = {
     display: function(recipe){
         this.recipe = recipe;
 
-        document.querySelector("#recipeName").style.display = "block";
-        document.querySelector("#recipeNameIn").style.display = "none";
+        document.getElementById("recipeName").style.display = "block";
+        document.getElementById("recipeNameIn").style.display = "none";
         document.querySelector("#recipeDetails h1").innerText = recipe.name;
 
-        let ingredientList = document.querySelector("#recipeIngredientList");
+        let ingredientList = document.getElementById("recipeIngredientList");
         while(ingredientList.children.length > 0){
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
-        let template = document.querySelector("#recipeIngredient").content.children[0];
+        let template = document.getElementById("recipeIngredient").content.children[0];
         for(let i = 0; i < recipe.ingredients.length; i++){
             ingredientDiv = template.cloneNode(true);
 
@@ -25,14 +25,19 @@ module.exports = {
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.querySelector("#addRecIng").style.display = "none";
+        document.getElementById("addRecIng").style.display = "none";
 
-        let price = document.querySelector("#recipePrice");
+        let price = document.getElementById("recipePrice");
         price.children[1].style.display = "block";
         price.children[2].style.display = "none";
         price.children[1].innerText = `$${(recipe.price / 100).toFixed(2)}`;
 
-        document.querySelector("#recipeUpdate").style.display = "none";
+        document.getElementById("recipeUpdate").style.display = "none";
+
+        document.getElementById("editRecipeBtn").onclick = ()=>{this.edit()};
+        document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
+        document.getElementById("addRecIng").onclick = ()=>{this.displayAddIngredient()};
+        document.getElementById("recipeUpdate").onclick = ()=>{this.update()};
     },
 
     edit: function(){

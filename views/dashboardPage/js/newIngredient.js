@@ -1,8 +1,10 @@
 module.exports = {
     display: function(){
-        document.querySelector("#newIngName").value = "";
-        document.querySelector("#newIngCategory").value = "";
-        document.querySelector("#newIngQuantity").value = 0;
+        document.getElementById("newIngName").value = "";
+        document.getElementById("newIngCategory").value = "";
+        document.getElementById("newIngQuantity").value = 0;
+
+        document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
     },
 
     submit: function(){

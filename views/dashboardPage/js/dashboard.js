@@ -88,6 +88,24 @@ controller = {
             case "addIngredients":
                 addIngredients.display(Merchant);
                 break;
+            case "recipeDetails":
+                recipeDetails.display(data);
+                break;
+            case "newRecipe":
+                newRecipe.display();
+                break;
+            case "orderDetails":
+                orderDetails.display(data);
+                break;
+            case "newOrder":
+                newOrder.display();
+                break;
+            case "transactionDetails":
+                transactionDetails.display(data);
+                break;
+            case "newTransaction":
+                newTransaction.display();
+                break;
         }
 
         if(window.screen.availWidth <= 1000){

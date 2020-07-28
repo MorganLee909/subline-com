@@ -13,7 +13,7 @@ module.exports = {
                 let category = template.cloneNode(true);
     
                 category.children[0].children[0].innerText = categories[i].name;
-                category.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(category)};
+                category.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(category)};
                 category.children[0].children[1].children[1].style.display = "none";
                 category.children[1].style.display = "none";
                 
@@ -30,6 +30,8 @@ module.exports = {
                     category.children[1].appendChild(ingredientDiv);
                 }
             }
+
+            document.getElementById("submitNewOrder").onclick = ()=>{this.submit()};
 
             this.isPopulated = true;
         }
@@ -74,6 +76,23 @@ module.exports = {
         
         ingredientDiv.parentElement.removeChild(ingredientDiv);
         container.appendChild(ingredientDiv);
+    },
+
+    toggleAddIngredient: function(categoryElement){
+        let button = categoryElement.children[0].children[1];
+        let ingredientDisplay = categoryElement.children[1];
+
+        if(ingredientDisplay.style.display === "none"){
+            ingredientDisplay.style.display = "flex";
+
+            button.children[0].style.display = "none";
+            button.children[1].style.display = "block";
+        }else{
+            ingredientDisplay.style.display = "none";
+
+            button.children[0].style.display = "block";
+            button.children[1].style.display = "none";
+        }
     },
 
     submit: function(){

@@ -841,6 +841,24 @@ controller = {
             case "addIngredients":
                 addIngredients.display(Merchant);
                 break;
+            case "recipeDetails":
+                recipeDetails.display(data);
+                break;
+            case "newRecipe":
+                newRecipe.display();
+                break;
+            case "orderDetails":
+                orderDetails.display(data);
+                break;
+            case "newOrder":
+                newOrder.display();
+                break;
+            case "transactionDetails":
+                transactionDetails.display(data);
+                break;
+            case "newTransaction":
+                newTransaction.display();
+                break;
         }
 
         if(window.screen.availWidth <= 1000){
@@ -1243,8 +1261,8 @@ module.exports = {
             let li = document.createElement("li");
             li.innerText = recipes[i].name;
             li.onclick = ()=>{
-                changeStrand("recipeBookStrand");
-                recipeDetailsComp.display(recipes[i]);
+                controller.openStrand("recipeBook");
+                controller.openSidebar("recipeDetails", recipes[i]);
             }
             ul.appendChild(li);
         }
@@ -1276,6 +1294,9 @@ module.exports = {
                 button.classList.add("unitActive");
             }
         }
+
+        document.getElementById("defaultUnit").onclick = ()=>{this.changeUnitDefault};
+        document.getElementById("editSubmitButton").onclick = ()=>{this.editSubmit()};
     },
 
     remove: function(merchant){
@@ -1522,9 +1543,11 @@ module.exports = {
 },{}],10:[function(require,module,exports){
 module.exports = {
     display: function(){
-        document.querySelector("#newIngName").value = "";
-        document.querySelector("#newIngCategory").value = "";
-        document.querySelector("#newIngQuantity").value = 0;
+        document.getElementById("newIngName").value = "";
+        document.getElementById("newIngCategory").value = "";
+        document.getElementById("newIngQuantity").value = 0;
+
+        document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
     },
 
     submit: function(){
@@ -1597,7 +1620,7 @@ module.exports = {
                 let category = template.cloneNode(true);
     
                 category.children[0].children[0].innerText = categories[i].name;
-                category.children[0].children[1].onclick = ()=>{addIngredientsComp.toggleAddIngredient(category)};
+                category.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(category)};
                 category.children[0].children[1].children[1].style.display = "none";
                 category.children[1].style.display = "none";
                 
@@ -1614,6 +1637,8 @@ module.exports = {
                     category.children[1].appendChild(ingredientDiv);
                 }
             }
+
+            document.getElementById("submitNewOrder").onclick = ()=>{this.submit()};
 
             this.isPopulated = true;
         }
@@ -1658,6 +1683,23 @@ module.exports = {
         
         ingredientDiv.parentElement.removeChild(ingredientDiv);
         container.appendChild(ingredientDiv);
+    },
+
+    toggleAddIngredient: function(categoryElement){
+        let button = categoryElement.children[0].children[1];
+        let ingredientDisplay = categoryElement.children[1];
+
+        if(ingredientDisplay.style.display === "none"){
+            ingredientDisplay.style.display = "flex";
+
+            button.children[0].style.display = "none";
+            button.children[1].style.display = "block";
+        }else{
+            ingredientDisplay.style.display = "none";
+
+            button.children[0].style.display = "block";
+            button.children[1].style.display = "none";
+        }
     },
 
     submit: function(){
@@ -1851,6 +1893,8 @@ module.exports = {
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
+
+        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit()};
     },
 
     submit: function(){
@@ -2065,8 +2109,7 @@ module.exports = {
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
             row.children[3].innerText = `$${(totalCost / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
-            row.onclick = ()=>{orderDetailsComp.display(merchant.orders[i])};
-
+            row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);
         }
     },
@@ -2180,7 +2223,7 @@ module.exports = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let recipeDiv = template.cloneNode(true);
-            recipeDiv.onclick = ()=>{recipeDetailsComp.display(merchant.recipes[i])};
+            recipeDiv.onclick = ()=>{ocntroller.openSidebar("recipeDetails", merchant.recipes[i])};
             recipeDiv._name = merchant.recipes[i].name;
             recipeList.appendChild(recipeDiv);
 
@@ -2276,16 +2319,16 @@ module.exports = {
     display: function(recipe){
         this.recipe = recipe;
 
-        document.querySelector("#recipeName").style.display = "block";
-        document.querySelector("#recipeNameIn").style.display = "none";
+        document.getElementById("recipeName").style.display = "block";
+        document.getElementById("recipeNameIn").style.display = "none";
         document.querySelector("#recipeDetails h1").innerText = recipe.name;
 
-        let ingredientList = document.querySelector("#recipeIngredientList");
+        let ingredientList = document.getElementById("recipeIngredientList");
         while(ingredientList.children.length > 0){
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
-        let template = document.querySelector("#recipeIngredient").content.children[0];
+        let template = document.getElementById("recipeIngredient").content.children[0];
         for(let i = 0; i < recipe.ingredients.length; i++){
             ingredientDiv = template.cloneNode(true);
 
@@ -2297,14 +2340,19 @@ module.exports = {
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.querySelector("#addRecIng").style.display = "none";
+        document.getElementById("addRecIng").style.display = "none";
 
-        let price = document.querySelector("#recipePrice");
+        let price = document.getElementById("recipePrice");
         price.children[1].style.display = "block";
         price.children[2].style.display = "none";
         price.children[1].innerText = `$${(recipe.price / 100).toFixed(2)}`;
 
-        document.querySelector("#recipeUpdate").style.display = "none";
+        document.getElementById("recipeUpdate").style.display = "none";
+
+        document.getElementById("editRecipeBtn").onclick = ()=>{this.edit()};
+        document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
+        document.getElementById("addRecIng").onclick = ()=>{this.displayAddIngredient()};
+        document.getElementById("recipeUpdate").onclick = ()=>{this.update()};
     },
 
     edit: function(){
@@ -2475,6 +2523,8 @@ module.exports = {
         document.getElementById("transactionTime").innerText = transaction.date.toLocaleTimeString();
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
         document.getElementById("totalPrice").innerText = `$${(totalPrice / 100).toFixed(2)}`;
+
+        document.getElementById("removeTransBtn").onclick = ()=>{this.remove()};
     },
 
     remove: function(){
@@ -2554,7 +2604,7 @@ module.exports = {
                 let transactionDiv = template.cloneNode(true);
                 let transaction = merchant.transactions[i];
 
-                transactionDiv.onclick = ()=>{transactionDetailsComp.display(transaction)};
+                transactionDiv.onclick = ()=>{controller.openStrand("transactionDetails", transaction)};
                 transactionsList.appendChild(transactionDiv);
 
                 let totalRecipes = 0;
@@ -2644,7 +2694,7 @@ module.exports = {
                         transactionDiv.children[0].innerText = `${transaction.date.toLocaleDateString()} ${transaction.date.toLocaleTimeString()}`;
                         transactionDiv.children[1].innerText = `${recipeCount} recipes sold`;
                         transactionDiv.children[2].innerText = `$${(cost / 100).toFixed(2)}`;
-                        transactionDiv.onclick = ()=>{transactionDetailsComp.display(transaction)};
+                        transactionDiv.onclick = ()=>{controller.openSidebar("transactionDetails", transaction)};
                         transactionList.appendChild(transactionDiv);
                     }
                 }

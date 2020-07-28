@@ -21,7 +21,7 @@ module.exports = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let recipeDiv = template.cloneNode(true);
-            recipeDiv.onclick = ()=>{recipeDetailsComp.display(merchant.recipes[i])};
+            recipeDiv.onclick = ()=>{ocntroller.openSidebar("recipeDetails", merchant.recipes[i])};
             recipeDiv._name = merchant.recipes[i].name;
             recipeList.appendChild(recipeDiv);
 

@@ -46,8 +46,8 @@ module.exports = {
             let li = document.createElement("li");
             li.innerText = recipes[i].name;
             li.onclick = ()=>{
-                changeStrand("recipeBookStrand");
-                recipeDetailsComp.display(recipes[i]);
+                controller.openStrand("recipeBook");
+                controller.openSidebar("recipeDetails", recipes[i]);
             }
             ul.appendChild(li);
         }
@@ -79,6 +79,9 @@ module.exports = {
                 button.classList.add("unitActive");
             }
         }
+
+        document.getElementById("defaultUnit").onclick = ()=>{this.changeUnitDefault};
+        document.getElementById("editSubmitButton").onclick = ()=>{this.editSubmit()};
     },
 
     remove: function(merchant){
