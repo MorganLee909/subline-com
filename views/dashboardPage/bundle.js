@@ -770,7 +770,7 @@ const transactionDetails = require("./transactionDetails.js");
 
 const Merchant = require("./Merchant.js");
 const Ingredient = require("./Ingredient.js");
-const { transaction } = require("./transactionDetails.js");
+const Recipe = require("./Recipe.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
 
@@ -849,8 +849,8 @@ controller = {
             case "recipeDetails":
                 recipeDetails.display(data);
                 break;
-            case "newRecipe":
-                newRecipe.display();
+            case "addRecipe":
+                newRecipe.display(Recipe);
                 break;
             case "orderDetails":
                 orderDetails.display(data);
@@ -1001,7 +1001,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./addIngredients.js":5,"./home.js":7,"./ingredientDetails.js":8,"./ingredients.js":9,"./newIngredient.js":10,"./newOrder.js":11,"./newRecipe.js":12,"./newTransaction.js":13,"./orderDetails.js":14,"./orders.js":15,"./recipeBook.js":16,"./recipeDetails.js":17,"./transactionDetails.js":18,"./transactions.js":19}],7:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Recipe.js":3,"./addIngredients.js":5,"./home.js":7,"./ingredientDetails.js":8,"./ingredients.js":9,"./newIngredient.js":10,"./newOrder.js":11,"./newRecipe.js":12,"./newTransaction.js":13,"./orderDetails.js":14,"./orders.js":15,"./recipeBook.js":16,"./recipeDetails.js":17,"./transactionDetails.js":18,"./transactions.js":19}],7:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     graph: {},
@@ -1302,7 +1302,7 @@ module.exports = {
             }
         }
 
-        document.getElementById("defaultUnit").onclick = ()=>{this.changeUnitDefault};
+        document.getElementById("defaultUnit").onclick = ()=>{this.changeUnitDefault()};
         document.getElementById("editSubmitButton").onclick = ()=>{this.editSubmit()};
     },
 
@@ -1611,7 +1611,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -1781,7 +1780,8 @@ module.exports = {
 }
 },{}],12:[function(require,module,exports){
 module.exports = {
-    display: function(){
+    display: function(Recipe){
+        console.log("display");
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
         let categories = merchant.categorizeIngredients();
 
@@ -1801,10 +1801,14 @@ module.exports = {
                 optgroup.appendChild(option);
             }
         }
+
+        document.getElementById("ingredientCount").onclick = ()=>{this.changeRecipeCount()};
+        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit(Recipe)};
     },
 
     //Updates the number of ingredient inputs displayed for new recipes
     changeRecipeCount: function(){
+        console.log("doing things");
         let newCount = document.querySelector("#ingredientCount").value;
         let ingredientsDiv = document.querySelector("#recipeInputIngredients");
         let oldCount = ingredientsDiv.children.length;
@@ -1831,7 +1835,7 @@ module.exports = {
         }
     },
 
-    submit: function(){
+    submit: function(Recipe){
         let newRecipe = {
             name: document.getElementById("newRecipeName").value,
             price: document.getElementById("newRecipePrice").value,
@@ -1850,10 +1854,6 @@ module.exports = {
                     break;
                 }
             }
-        }
-
-        if(!validator.recipe(newRecipe)){
-            return;
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -1884,6 +1884,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2246,7 +2247,7 @@ module.exports = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let recipeDiv = template.cloneNode(true);
-            recipeDiv.onclick = ()=>{ocntroller.openSidebar("recipeDetails", merchant.recipes[i])};
+            recipeDiv.onclick = ()=>{controller.openSidebar("recipeDetails", merchant.recipes[i])};
             recipeDiv._name = merchant.recipes[i].name;
             recipeList.appendChild(recipeDiv);
 

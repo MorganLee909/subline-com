@@ -80,7 +80,7 @@ module.exports = {
             }
         }
 
-        document.getElementById("defaultUnit").onclick = ()=>{this.changeUnitDefault};
+        document.getElementById("defaultUnit").onclick = ()=>{this.changeUnitDefault()};
         document.getElementById("editSubmitButton").onclick = ()=>{this.editSubmit()};
     },
 
