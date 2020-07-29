@@ -829,6 +829,7 @@ const Merchant = require("./Merchant.js");
 const Ingredient = require("./Ingredient.js");
 const Recipe = require("./Recipe.js");
 const Order = require("./Order.js");
+const Transaction = require("./Transaction.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
 
@@ -871,7 +872,7 @@ controller = {
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
-                transactions.display();
+                transactions.display(Transaction);
                 break;
         }
 
@@ -920,7 +921,7 @@ controller = {
                 transactionDetails.display(data);
                 break;
             case "newTransaction":
-                newTransaction.display();
+                newTransaction.display(Transaction);
                 break;
         }
 
@@ -1043,7 +1044,7 @@ controller = {
                 break;
             case "transaction":
                 transactions.isPopulated = false;
-                transaction.display();
+                transactions.display(Transaction);
                 break;
             case "unit":
                 home.isPopulated = false;
@@ -1059,7 +1060,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./addIngredients.js":6,"./home.js":8,"./ingredientDetails.js":9,"./ingredients.js":10,"./newIngredient.js":11,"./newOrder.js":12,"./newRecipe.js":13,"./newTransaction.js":14,"./orderDetails.js":15,"./orders.js":16,"./recipeBook.js":17,"./recipeDetails.js":18,"./transactionDetails.js":19,"./transactions.js":20}],8:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./addIngredients.js":6,"./home.js":8,"./ingredientDetails.js":9,"./ingredients.js":10,"./newIngredient.js":11,"./newOrder.js":12,"./newRecipe.js":13,"./newTransaction.js":14,"./orderDetails.js":15,"./orders.js":16,"./recipeBook.js":17,"./recipeDetails.js":18,"./transactionDetails.js":19,"./transactions.js":20}],8:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     graph: {},
@@ -1963,7 +1964,7 @@ module.exports = {
 }
 },{}],14:[function(require,module,exports){
 module.exports = {
-    display: function(){
+    display: function(Transaction){
         let recipeList = document.getElementById("newTransactionRecipes");
         let template = document.getElementById("createTransaction").content.children[0];
 
@@ -1979,10 +1980,10 @@ module.exports = {
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
 
-        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit()};
+        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit(Transaction)};
     },
 
-    submit: function(){
+    submit: function(Transaction){
         let recipeDivs = document.getElementById("newTransactionRecipes");
         let date = document.getElementById("newTransactionDate").valueAsDate;
         
@@ -2652,6 +2653,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2663,7 +2665,7 @@ module.exports = {
 module.exports = {
     isPopulated: false, 
 
-    display: function(){
+    display: function(Transaction){
         if(!this.isPopulated){
             let transactionsList = document.getElementById("transactionsList");
             let dateDropdown = document.getElementById("dateDropdown");
@@ -2709,7 +2711,7 @@ module.exports = {
                 let transactionDiv = template.cloneNode(true);
                 let transaction = merchant.transactions[i];
 
-                transactionDiv.onclick = ()=>{controller.openStrand("transactionDetails", transaction)};
+                transactionDiv.onclick = ()=>{controller.openSidebar("transactionDetails", transaction)};
                 transactionsList.appendChild(transactionDiv);
 
                 let totalRecipes = 0;
@@ -2727,13 +2729,13 @@ module.exports = {
                 i++;
             }
 
-            document.getElementById("transFormSubmit").onsubmit = ()=>{this.submitFilter()};
+            document.getElementById("transFormSubmit").onsubmit = ()=>{this.submitFilter(Transaction)};
 
             this.isPopulated = true;
         }
     },
 
-    submitFilter: function(){
+    submitFilter: function(Transaction){
         event.preventDefault();
 
         let data = {
@@ -2807,6 +2809,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("UNABLE TO DISPLAY THE TRANSACTIONS");
             })
             .finally(()=>{

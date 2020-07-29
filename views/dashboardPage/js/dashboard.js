@@ -18,6 +18,7 @@ const Merchant = require("./Merchant.js");
 const Ingredient = require("./Ingredient.js");
 const Recipe = require("./Recipe.js");
 const Order = require("./Order.js");
+const Transaction = require("./Transaction.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
 
@@ -60,7 +61,7 @@ controller = {
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
-                transactions.display();
+                transactions.display(Transaction);
                 break;
         }
 
@@ -109,7 +110,7 @@ controller = {
                 transactionDetails.display(data);
                 break;
             case "newTransaction":
-                newTransaction.display();
+                newTransaction.display(Transaction);
                 break;
         }
 
@@ -232,7 +233,7 @@ controller = {
                 break;
             case "transaction":
                 transactions.isPopulated = false;
-                transaction.display();
+                transactions.display(Transaction);
                 break;
             case "unit":
                 home.isPopulated = false;

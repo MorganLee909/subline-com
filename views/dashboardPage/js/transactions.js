@@ -1,7 +1,7 @@
 module.exports = {
     isPopulated: false, 
 
-    display: function(){
+    display: function(Transaction){
         if(!this.isPopulated){
             let transactionsList = document.getElementById("transactionsList");
             let dateDropdown = document.getElementById("dateDropdown");
@@ -47,7 +47,7 @@ module.exports = {
                 let transactionDiv = template.cloneNode(true);
                 let transaction = merchant.transactions[i];
 
-                transactionDiv.onclick = ()=>{controller.openStrand("transactionDetails", transaction)};
+                transactionDiv.onclick = ()=>{controller.openSidebar("transactionDetails", transaction)};
                 transactionsList.appendChild(transactionDiv);
 
                 let totalRecipes = 0;
@@ -65,13 +65,13 @@ module.exports = {
                 i++;
             }
 
-            document.getElementById("transFormSubmit").onsubmit = ()=>{this.submitFilter()};
+            document.getElementById("transFormSubmit").onsubmit = ()=>{this.submitFilter(Transaction)};
 
             this.isPopulated = true;
         }
     },
 
-    submitFilter: function(){
+    submitFilter: function(Transaction){
         event.preventDefault();
 
         let data = {
@@ -145,6 +145,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("UNABLE TO DISPLAY THE TRANSACTIONS");
             })
             .finally(()=>{

@@ -1,5 +1,5 @@
 module.exports = {
-    display: function(){
+    display: function(Transaction){
         let recipeList = document.getElementById("newTransactionRecipes");
         let template = document.getElementById("createTransaction").content.children[0];
 
@@ -15,10 +15,10 @@ module.exports = {
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
 
-        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit()};
+        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit(Transaction)};
     },
 
-    submit: function(){
+    submit: function(Transaction){
         let recipeDivs = document.getElementById("newTransactionRecipes");
         let date = document.getElementById("newTransactionDate").valueAsDate;
         
