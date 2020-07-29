@@ -98,7 +98,7 @@ module.exports = {
     },
 
     sort: function(){
-        let sortType = document.getElementById("ingredientSelect");
+        let sortType = document.getElementById("ingredientSelect").value;
         
         if(sortType === ""){
             return;

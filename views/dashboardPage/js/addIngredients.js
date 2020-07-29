@@ -34,11 +34,10 @@ module.exports = {
                             []
                         );
 
-                        this.populateAddIngredients();
+                        this.populateAddIngredients(true);
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("UNABLE TO RETRIEVE DATA");
                 })
                 .finally(()=>{
@@ -49,7 +48,7 @@ module.exports = {
         }
     },
 
-    populateAddIngredients: function(){
+    populateAddIngredients: function(newRequest = false){
         let addIngredientsDiv = document.getElementById("addIngredientList");
         let categoryTemplate = document.getElementById("addIngredientsCategory");
         let ingredientTemplate = document.getElementById("addIngredientsIngredient");
@@ -78,9 +77,11 @@ module.exports = {
             }
         }
 
-        let myIngredients = document.getElementById("myIngredients");
-        while(myIngredients.children.length > 0){
-            myIngredients.removeChild(myIngredients.firstChild);
+        if(newRequest){
+            let myIngredients = document.getElementById("myIngredients");
+            while(myIngredients.children.length > 0){
+                myIngredients.removeChild(myIngredients.firstChild);
+            }
         }
 
         document.getElementById("addIngredientsBtn").onclick = ()=>{this.submit()};
@@ -166,6 +167,7 @@ module.exports = {
                 break;
             }
         }
+        
         this.populateAddIngredients();
     },
 
@@ -220,7 +222,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

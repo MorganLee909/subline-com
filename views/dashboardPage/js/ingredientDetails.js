@@ -152,7 +152,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
