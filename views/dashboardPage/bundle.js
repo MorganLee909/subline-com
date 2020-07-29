@@ -769,6 +769,7 @@ const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
 const Merchant = require("./Merchant.js");
+const Ingredient = require("./Ingredient.js");
 const { transaction } = require("./transactionDetails.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
@@ -842,6 +843,9 @@ controller = {
             case "addIngredients":
                 addIngredients.display(Merchant);
                 break;
+            case "newIngredient":
+                newIngredient.display(Ingredient);
+                break;
             case "recipeDetails":
                 recipeDetails.display(data);
                 break;
@@ -882,8 +886,6 @@ controller = {
             document.getElementById("sidebarCloser").style.display = "none";
         }
     },
-
-    
 
     changeMenu: function(){
         let menu = document.querySelector(".menu");
@@ -999,7 +1001,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Merchant.js":2,"./addIngredients.js":5,"./home.js":7,"./ingredientDetails.js":8,"./ingredients.js":9,"./newIngredient.js":10,"./newOrder.js":11,"./newRecipe.js":12,"./newTransaction.js":13,"./orderDetails.js":14,"./orders.js":15,"./recipeBook.js":16,"./recipeDetails.js":17,"./transactionDetails.js":18,"./transactions.js":19}],7:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./addIngredients.js":5,"./home.js":7,"./ingredientDetails.js":8,"./ingredients.js":9,"./newIngredient.js":10,"./newOrder.js":11,"./newRecipe.js":12,"./newTransaction.js":13,"./orderDetails.js":14,"./orders.js":15,"./recipeBook.js":16,"./recipeDetails.js":17,"./transactionDetails.js":18,"./transactions.js":19}],7:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     graph: {},
@@ -1554,15 +1556,15 @@ module.exports = {
 }
 },{}],10:[function(require,module,exports){
 module.exports = {
-    display: function(){
+    display: function(Ingredient){
         document.getElementById("newIngName").value = "";
         document.getElementById("newIngCategory").value = "";
         document.getElementById("newIngQuantity").value = 0;
 
-        document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
+        document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
     },
 
-    submit: function(){
+    submit: function(Ingredient){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
 
@@ -1609,6 +1611,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

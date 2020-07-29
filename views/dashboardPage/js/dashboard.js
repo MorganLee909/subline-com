@@ -15,6 +15,7 @@ const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
 const Merchant = require("./Merchant.js");
+const Ingredient = require("./Ingredient.js");
 const { transaction } = require("./transactionDetails.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
@@ -88,6 +89,9 @@ controller = {
             case "addIngredients":
                 addIngredients.display(Merchant);
                 break;
+            case "newIngredient":
+                newIngredient.display(Ingredient);
+                break;
             case "recipeDetails":
                 recipeDetails.display(data);
                 break;
@@ -128,8 +132,6 @@ controller = {
             document.getElementById("sidebarCloser").style.display = "none";
         }
     },
-
-    
 
     changeMenu: function(){
         let menu = document.querySelector(".menu");

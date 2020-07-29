@@ -1,13 +1,13 @@
 module.exports = {
-    display: function(){
+    display: function(Ingredient){
         document.getElementById("newIngName").value = "";
         document.getElementById("newIngCategory").value = "";
         document.getElementById("newIngQuantity").value = 0;
 
-        document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
+        document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
     },
 
-    submit: function(){
+    submit: function(Ingredient){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
 
@@ -54,6 +54,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
