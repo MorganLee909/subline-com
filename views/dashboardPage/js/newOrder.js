@@ -2,7 +2,7 @@ module.exports = {
     isPopulated: false,
     unused: [],
 
-    display: function(){
+    display: function(Order){
         if(!this.isPopulated){
             let categories = merchant.categorizeIngredients();
             let categoriesList = document.querySelector("#newOrderCategories");
@@ -31,7 +31,7 @@ module.exports = {
                 }
             }
 
-            document.getElementById("submitNewOrder").onclick = ()=>{this.submit()};
+            document.getElementById("submitNewOrder").onclick = ()=>{this.submit(Order)};
 
             this.isPopulated = true;
         }
@@ -95,7 +95,7 @@ module.exports = {
         }
     },
 
-    submit: function(){
+    submit: function(Order){
         let categoriesList = document.getElementById("newOrderAdded");
         let ingredients = [];
 
@@ -113,11 +113,22 @@ module.exports = {
             }
         }
 
-        let date = `${document.getElementById("orderDate").value}T${document.getElementById("orderTime").value}:00`
+        let time = document.getElementById("orderTime").value;
+        let date = document.getElementById("orderDate").value;
+        let dateTime = "";
+        if(time === "" && date === ""){
+            dateTime = undefined;
+        }else if(time === "" && date !== ""){
+            dateTime = date;
+        }else if(time !== "" && date === ""){
+            banner.createError("PLEASE ADD A DATE IF YOU WISH TO HAVE A TIME");
+        }else{
+            dateTime = `${date}T${time}:00`
+        }
 
         let data = {
             name: document.getElementById("orderName").value,
-            date: date,
+            date: dateTime,
             ingredients: ingredients
         };
 

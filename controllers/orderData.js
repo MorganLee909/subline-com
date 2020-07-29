@@ -118,6 +118,7 @@ module.exports = {
                 res.json(response);
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("ERROR: UNABLE TO SAVE ORDER");
             });
 

@@ -472,7 +472,64 @@ class Merchant{
 }
 
 module.exports = Merchant;
-},{"./Ingredient.js":1,"./Recipe.js":3,"./Transaction.js":4}],3:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Recipe.js":4,"./Transaction.js":5}],3:[function(require,module,exports){
+class Order{
+    constructor(id, name, date, ingredients, parent){
+        this.id = id;
+        this.name = name;
+        this.date = new Date(date);
+        this.ingredients = [];
+        this.parent = parent;
+
+        for(let i = 0; i < ingredients.length; i++){
+            for(let j = 0; j < parent.ingredients.length; j++){
+                if(ingredients[i].ingredient === parent.ingredients[j].ingredient.id){
+                    this.ingredients.push({
+                        ingredient: parent.ingredients[j].ingredient,
+                        quantity: ingredients[i].quantity,
+                        price: ingredients[i].price
+                    });
+                }
+            }
+        }
+    }
+
+    convertPrice(unitType, unit, price){
+        if(unitType === "mass"){
+            switch(unit){
+                case "g": break;
+                case "kg": price *= 1000; break;
+                case "oz":  price *= 28.3495; break;
+                case "lb":  price *= 453.5924; break;
+            }
+        }else if(unitType === "volume"){
+            switch(unit){
+                case "ml": price /= 1000; break;
+                case "l": break;
+                case "tsp": price /= 202.8842; break;
+                case "tbsp": price /= 67.6278; break;
+                case "ozfl": price /= 33.8141; break;
+                case "cup": price /= 4.1667; break;
+                case "pt": price /= 2.1134; break;
+                case "qt": price /= 1.0567; break;
+                case "gal": price *= 3.7854; break;
+            }
+        }else if(unitType === "length"){
+            switch(unit){
+                case "mm": price /= 1000; break;
+                case "cm": price /= 100; break;
+                case "m": break;
+                case "in": price /= 39.3701; break;
+                case "ft": price /= 3.2808; break;
+            }
+        }
+
+        return price;
+    }
+}
+
+module.exports = Order;
+},{}],4:[function(require,module,exports){
 class Recipe{
     constructor(id, name, price, ingredients, parent){
         this.id = id;
@@ -496,7 +553,7 @@ class Recipe{
 }
 
 module.exports = Recipe;
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 class Transaction{
     constructor(id, date, recipes, parent){
         this.id = id;
@@ -519,7 +576,7 @@ class Transaction{
 }
 
 module.exports = Transaction;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     fakeMerchant: {},
@@ -751,7 +808,7 @@ module.exports = {
             });
     }
 }
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 const home = require("./home.js");
 const ingredients = require("./ingredients.js");
 const recipeBook = require("./recipeBook.js");
@@ -771,6 +828,7 @@ const transactionDetails = require("./transactionDetails.js");
 const Merchant = require("./Merchant.js");
 const Ingredient = require("./Ingredient.js");
 const Recipe = require("./Recipe.js");
+const Order = require("./Order.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
 
@@ -793,12 +851,12 @@ controller = {
             case "home": 
                 activeButton = document.getElementById("homeBtn");
                 document.getElementById("homeStrand").style.display = "flex";
-                home.display(merchant);
+                home.display();
                 break;
             case "ingredients": 
                 activeButton = document.getElementById("ingredientsBtn");
                 document.getElementById("ingredientsStrand").style.display = "flex";
-                ingredients.display(merchant);
+                ingredients.display();
                 break;
             case "recipeBook":
                 activeButton = document.getElementById("recipeBookBtn");
@@ -808,7 +866,7 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.display();
+                orders.display(Order);
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -856,7 +914,7 @@ controller = {
                 orderDetails.display(data);
                 break;
             case "newOrder":
-                newOrder.display();
+                newOrder.display(Order);
                 break;
             case "transactionDetails":
                 transactionDetails.display(data);
@@ -1001,7 +1059,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./Recipe.js":3,"./addIngredients.js":5,"./home.js":7,"./ingredientDetails.js":8,"./ingredients.js":9,"./newIngredient.js":10,"./newOrder.js":11,"./newRecipe.js":12,"./newTransaction.js":13,"./orderDetails.js":14,"./orders.js":15,"./recipeBook.js":16,"./recipeDetails.js":17,"./transactionDetails.js":18,"./transactions.js":19}],7:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./addIngredients.js":6,"./home.js":8,"./ingredientDetails.js":9,"./ingredients.js":10,"./newIngredient.js":11,"./newOrder.js":12,"./newRecipe.js":13,"./newTransaction.js":14,"./orderDetails.js":15,"./orders.js":16,"./recipeBook.js":17,"./recipeDetails.js":18,"./transactionDetails.js":19,"./transactions.js":20}],8:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     graph: {},
@@ -1219,7 +1277,7 @@ module.exports = {
         }
     }
 }
-},{"../../shared/graphs.js":20}],8:[function(require,module,exports){
+},{"../../shared/graphs.js":21}],9:[function(require,module,exports){
 module.exports = {
     ingredient: {},
 
@@ -1422,7 +1480,7 @@ module.exports = {
             });
     }
 }
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     ingredients: [],
@@ -1554,7 +1612,7 @@ module.exports = {
         this.populateByProperty("category");
     }
 }
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = {
     display: function(Ingredient){
         document.getElementById("newIngName").value = "";
@@ -1618,12 +1676,12 @@ module.exports = {
             });
     }
 }
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     unused: [],
 
-    display: function(){
+    display: function(Order){
         if(!this.isPopulated){
             let categories = merchant.categorizeIngredients();
             let categoriesList = document.querySelector("#newOrderCategories");
@@ -1652,7 +1710,7 @@ module.exports = {
                 }
             }
 
-            document.getElementById("submitNewOrder").onclick = ()=>{this.submit()};
+            document.getElementById("submitNewOrder").onclick = ()=>{this.submit(Order)};
 
             this.isPopulated = true;
         }
@@ -1716,7 +1774,7 @@ module.exports = {
         }
     },
 
-    submit: function(){
+    submit: function(Order){
         let categoriesList = document.getElementById("newOrderAdded");
         let ingredients = [];
 
@@ -1734,11 +1792,22 @@ module.exports = {
             }
         }
 
-        let date = `${document.getElementById("orderDate").value}T${document.getElementById("orderTime").value}:00`
+        let time = document.getElementById("orderTime").value;
+        let date = document.getElementById("orderDate").value;
+        let dateTime = "";
+        if(time === "" && date === ""){
+            dateTime = undefined;
+        }else if(time === "" && date !== ""){
+            dateTime = date;
+        }else if(time !== "" && date === ""){
+            banner.createError("PLEASE ADD A DATE IF YOU WISH TO HAVE A TIME");
+        }else{
+            dateTime = `${date}T${time}:00`
+        }
 
         let data = {
             name: document.getElementById("orderName").value,
-            date: date,
+            date: dateTime,
             ingredients: ingredients
         };
 
@@ -1778,7 +1847,7 @@ module.exports = {
             });
     },
 }
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = {
     display: function(Recipe){
         console.log("display");
@@ -1892,7 +1961,7 @@ module.exports = {
             });
     },
 }
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = {
     display: function(){
         let recipeList = document.getElementById("newTransactionRecipes");
@@ -1975,7 +2044,7 @@ module.exports = {
         }
     }
 }
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = {
     display: function(order){
         document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order)};
@@ -2037,11 +2106,13 @@ module.exports = {
             });
     }
 }
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
+const Order = require("./Order");
+
 module.exports = {
     isFetched: false,
 
-    display: async function(){
+    display: async function(Order){
         if(!this.isFetched){
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
@@ -2069,12 +2140,13 @@ module.exports = {
                         }
                         merchant.editOrders(newOrders);
 
-                        document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter()};
+                        document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
 
                         this.isFetched = true;
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
@@ -2182,17 +2254,26 @@ module.exports = {
                     }
 
                     for(let i = 0; i < response.length; i++){
-                        let order = template.cloneNode(true);
+                        let orderDiv = template.cloneNode(true);
+                        let order = new Order(
+                            response[i]._id,
+                            response[i].name,
+                            response[i].date,
+                            response[i].ingredients,
+                            merchant
+                        );
+
                         let cost = 0;
-                        for(let j = 0; j < response[i].ingredients.length; j++){
-                            cost += (response[i].ingredients[j].price / 100) * response[i].ingredients[j].quantity;
+                        for(let j = 0; j < order.ingredients.length; j++){
+                            cost += (order.ingredients[j].price / 100) * order.ingredients[j].quantity;
                         }
 
-                        order.children[0].innerText = response[i].name,
-                        order.children[1].innerText = `${response[i].ingredients.length} items`;
-                        order.children[2].innerText = new Date(response[i].date).toLocaleDateString();
-                        order.children[3].innerText = `$${cost.toFixed(2)}`;
-                        orderList.appendChild(order);
+                        orderDiv.children[0].innerText = order.name;
+                        orderDiv.children[1].innerText = `${order.ingredients.length} items`;
+                        orderDiv.children[2].innerText = order.date.toLocaleDateString();
+                        orderDiv.children[3].innerText = `$${cost.toFixed(2)}`;
+                        orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", order)};
+                        orderList.appendChild(orderDiv);
                     }
                 }
             })
@@ -2217,7 +2298,7 @@ module.exports = {
         }
     }
 }
-},{}],16:[function(require,module,exports){
+},{"./Order":3}],17:[function(require,module,exports){
 module.exports = {
     isPopulated: false,
     recipeDivList: [],
@@ -2336,7 +2417,7 @@ module.exports = {
             });
     }
 }
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = {
     recipe: {},
 
@@ -2510,7 +2591,7 @@ module.exports = {
         }
     }
 }
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = {
     transaction: {},
 
@@ -2578,7 +2659,7 @@ module.exports = {
             });
     },
 }
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 module.exports = {
     isPopulated: false, 
 
@@ -2746,7 +2827,7 @@ module.exports = {
         }
     }
 }
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 //Creates a line graph within a canvas
 //Will expand or shrink to the size of the canvas
 //Inputs:
@@ -3036,4 +3117,4 @@ module.exports = {
     LineGraph: LineGraph,
     HorizontalBarGraph: HorizontalBarGraph
 }
-},{}]},{},[6]);
+},{}]},{},[7]);

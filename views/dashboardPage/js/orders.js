@@ -1,7 +1,9 @@
+const Order = require("./Order");
+
 module.exports = {
     isFetched: false,
 
-    display: async function(){
+    display: async function(Order){
         if(!this.isFetched){
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
@@ -29,12 +31,13 @@ module.exports = {
                         }
                         merchant.editOrders(newOrders);
 
-                        document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter()};
+                        document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
 
                         this.isFetched = true;
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
@@ -142,17 +145,26 @@ module.exports = {
                     }
 
                     for(let i = 0; i < response.length; i++){
-                        let order = template.cloneNode(true);
+                        let orderDiv = template.cloneNode(true);
+                        let order = new Order(
+                            response[i]._id,
+                            response[i].name,
+                            response[i].date,
+                            response[i].ingredients,
+                            merchant
+                        );
+
                         let cost = 0;
-                        for(let j = 0; j < response[i].ingredients.length; j++){
-                            cost += (response[i].ingredients[j].price / 100) * response[i].ingredients[j].quantity;
+                        for(let j = 0; j < order.ingredients.length; j++){
+                            cost += (order.ingredients[j].price / 100) * order.ingredients[j].quantity;
                         }
 
-                        order.children[0].innerText = response[i].name,
-                        order.children[1].innerText = `${response[i].ingredients.length} items`;
-                        order.children[2].innerText = new Date(response[i].date).toLocaleDateString();
-                        order.children[3].innerText = `$${cost.toFixed(2)}`;
-                        orderList.appendChild(order);
+                        orderDiv.children[0].innerText = order.name;
+                        orderDiv.children[1].innerText = `${order.ingredients.length} items`;
+                        orderDiv.children[2].innerText = order.date.toLocaleDateString();
+                        orderDiv.children[3].innerText = `$${cost.toFixed(2)}`;
+                        orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", order)};
+                        orderList.appendChild(orderDiv);
                     }
                 }
             })
