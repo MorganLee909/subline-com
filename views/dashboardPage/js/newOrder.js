@@ -5,9 +5,9 @@ module.exports = {
     display: function(Order){
         if(!this.isPopulated){
             let categories = merchant.categorizeIngredients();
-            let categoriesList = document.querySelector("#newOrderCategories");
-            let template = document.querySelector("#addIngredientsCategory").content.children[0];
-            let ingredientTemplate = document.querySelector("#addIngredientsIngredient").content.children[0];
+            let categoriesList = document.getElementById("newOrderCategories");
+            let template = document.getElementById("addIngredientsCategory").content.children[0];
+            let ingredientTemplate = document.getElementById("addIngredientsIngredient").content.children[0];
     
             for(let i = 0; i < categories.length; i++){
                 let category = template.cloneNode(true);

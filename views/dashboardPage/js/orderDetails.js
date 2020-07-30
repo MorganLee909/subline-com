@@ -1,17 +1,17 @@
 module.exports = {
     display: function(order){
-        document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order)};
+        document.getElementById("removeOrderBtn").onclick = ()=>{this.remove(order)};
 
         document.getElementById("orderDetailName").innerText = order.name;
         document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
         document.getElementById("orderDetailTime").innerText = order.date.toLocaleTimeString("en-US");
 
-        let ingredientList = document.querySelector("#orderIngredients");
+        let ingredientList = document.getElementById("orderIngredients");
         while(ingredientList.children.length > 0){
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
-        let template = document.querySelector("#orderIngredient").content.children[0];
+        let template = document.getElementById("orderIngredient").content.children[0];
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredientDiv = template.cloneNode(true);

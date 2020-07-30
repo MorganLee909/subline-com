@@ -26,8 +26,9 @@ controller = {
     openStrand: function(strand){
         this.closeSidebar();
 
-        for(let strand of document.querySelectorAll(".strand")){
-            strand.style.display = "none";
+        let strands = document.querySelectorAll(".strand");
+        for(let i = 0; i < strands.length; i++){
+            strands[i].style.display = "none";
         }
 
         let buttons = document.querySelectorAll(".menuButton");
@@ -122,7 +123,7 @@ controller = {
     },
 
     closeSidebar: function(){
-        let sidebar = document.querySelector("#sidebarDiv");
+        let sidebar = document.getElementById("sidebarDiv");
         for(let i = 0; i < sidebar.children.length; i++){
             sidebar.children[i].style.display = "none";
         }
@@ -145,8 +146,8 @@ controller = {
                 button.children[1].style.display = "none";
             }
 
-            document.querySelector("#max").style.display = "none";
-            document.querySelector("#min").style.display = "flex";
+            document.getElementById("max").style.display = "none";
+            document.getElementById("min").style.display = "flex";
 
             
         }else if(menu.classList.contains("menuMinimized")){
@@ -157,8 +158,8 @@ controller = {
             }
 
             setTimeout(()=>{
-                document.querySelector("#max").style.display = "flex";
-                document.querySelector("#min").style.display = "none";
+                document.getElementById("max").style.display = "flex";
+                document.getElementById("min").style.display = "none";
             }, 150);
         }
     },

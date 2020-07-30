@@ -3,13 +3,13 @@ let registerObj = {
         controller.clearScreen();
         controller.registerStrand.style.display = "flex";
 
-        document.querySelector("#checkAgree").checked = false;
-        document.querySelector("#regButton").classList = "buttonDisabled";
+        document.getElementById("checkAgree").checked = false;
+        document.getElementById("regButton").classList = "buttonDisabled";
     },
 
     agreement: function(){
-        let checkbox = document.querySelector("#checkAgree");
-        let button = document.querySelector("#regButton");
+        let checkbox = document.getElementById("checkAgree");
+        let button = document.getElementById("regButton");
 
         if(checkbox.checked){
             button.classList = "button";
@@ -22,7 +22,7 @@ let registerObj = {
         event.preventDefault();
 
         let form = document.querySelector("#registerStrand form");
-        let checkbox = document.querySelector("#checkAgree");
+        let checkbox = document.getElementById("checkAgree");
 
         if(!checkbox.checked){
             banner.createError("Please agree to the Privacy Policy and Terms and Conditions to continue");
@@ -37,7 +37,7 @@ let registerObj = {
         }
 
         if(checkbox.checked){
-            if(validator.isSanitary(document.querySelector("#regName").value)){
+            if(validator.isSanitary(document.getElementById("regName").value)){
                 document.getElementById("loaderContainer").style.display = "flex";
                 form.action = "merchant/create/none";
                 form.method = "post";

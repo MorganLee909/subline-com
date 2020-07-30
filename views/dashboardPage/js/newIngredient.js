@@ -19,7 +19,7 @@ module.exports = {
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: controller.convertToMain(unit, document.querySelector("#newIngQuantity").value),
+            quantity: controller.convertToMain(unit, document.getElementById("newIngQuantity").value),
             defaultUnit: unit
         }
 

@@ -837,8 +837,9 @@ controller = {
     openStrand: function(strand){
         this.closeSidebar();
 
-        for(let strand of document.querySelectorAll(".strand")){
-            strand.style.display = "none";
+        let strands = document.querySelectorAll(".strand");
+        for(let i = 0; i < strands.length; i++){
+            strands[i].style.display = "none";
         }
 
         let buttons = document.querySelectorAll(".menuButton");
@@ -933,7 +934,7 @@ controller = {
     },
 
     closeSidebar: function(){
-        let sidebar = document.querySelector("#sidebarDiv");
+        let sidebar = document.getElementById("sidebarDiv");
         for(let i = 0; i < sidebar.children.length; i++){
             sidebar.children[i].style.display = "none";
         }
@@ -956,8 +957,8 @@ controller = {
                 button.children[1].style.display = "none";
             }
 
-            document.querySelector("#max").style.display = "none";
-            document.querySelector("#min").style.display = "flex";
+            document.getElementById("max").style.display = "none";
+            document.getElementById("min").style.display = "flex";
 
             
         }else if(menu.classList.contains("menuMinimized")){
@@ -968,8 +969,8 @@ controller = {
             }
 
             setTimeout(()=>{
-                document.querySelector("#max").style.display = "flex";
-                document.querySelector("#min").style.display = "none";
+                document.getElementById("max").style.display = "flex";
+                document.getElementById("min").style.display = "none";
             }, 150);
         }
     },
@@ -1085,7 +1086,7 @@ module.exports = {
         let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
         let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
 
-        document.querySelector("#revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
+        document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
         let revenueChange = ((revenueThisMonth - revenueLastmonthToDay) / revenueLastmonthToDay) * 100;
         
@@ -1100,7 +1101,7 @@ module.exports = {
     },
 
     drawRevenueGraph: function(){
-        let graphCanvas = document.querySelector("#graphCanvas");
+        let graphCanvas = document.getElementById("graphCanvas");
         let today = new Date();
 
         graphCanvas.height = graphCanvas.parentElement.clientHeight;
@@ -1121,12 +1122,12 @@ module.exports = {
                 "Revenue"
             );
         }else{
-            document.querySelector("#graphCanvas").style.display = "none";
+            document.getElementById("graphCanvas").style.display = "none";
             
             let notice = document.createElement("h1");
             notice.innerText = "NO DATA YET";
             notice.classList = "notice";
-            document.querySelector("#graphCard").appendChild(notice);
+            document.getElementById("graphCard").appendChild(notice);
         }
     },
 
@@ -1149,7 +1150,7 @@ module.exports = {
         }
 
         let ul = document.querySelector("#inventoryCheckCard ul");
-        let template = document.querySelector("#ingredientCheck").content.children[0];
+        let template = document.getElementById("ingredientCheck").content.children[0];
         while(ul.children.length > 0){
             ul.removeChild(ul.firstChild);
         }
@@ -1210,12 +1211,12 @@ module.exports = {
             let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);
         }else{
-            document.querySelector("#popularCanvas").style.display = "none";
+            document.getElementById("popularCanvas").style.display = "none";
 
             let notice = document.createElement("p");
             notice.innerText = "N/A";
             notice.classList = "notice";
-            document.querySelector("#popularIngredientsCard").appendChild(notice);
+            document.getElementById("popularIngredientsCard").appendChild(notice);
         }
     },
 
@@ -1510,9 +1511,9 @@ module.exports = {
             categories = merchant.unitizeIngredients();
         }
         
-        let ingredientStrand = document.querySelector("#categoryList");
-        let categoryTemplate = document.querySelector("#categoryDiv").content.children[0];
-        let ingredientTemplate = document.querySelector("#ingredient").content.children[0];
+        let ingredientStrand = document.getElementById("categoryList");
+        let categoryTemplate = document.getElementById("categoryDiv").content.children[0];
+        let ingredientTemplate = document.getElementById("ingredient").content.children[0];
         this.ingredients = [];
 
         while(ingredientStrand.children.length > 0){
@@ -1544,7 +1545,7 @@ module.exports = {
     },
 
     displayIngredientsOnly: function(ingredients){
-        let ingredientDiv = document.querySelector("#categoryList");
+        let ingredientDiv = document.getElementById("categoryList");
 
         while(ingredientDiv.children.length > 0){
             ingredientDiv.removeChild(ingredientDiv.firstChild);
@@ -1565,12 +1566,12 @@ module.exports = {
     },
 
     search: function(){
-        let input = document.querySelector("#ingredientSearch").value.toLowerCase();
-        document.querySelector("#ingredientSelect").selectedIndex = 0;
+        let input = document.getElementById("ingredientSearch").value.toLowerCase();
+        document.getElementById("ingredientSelect").selectedIndex = 0;
 
         if(input === ""){
             this.populateByProperty("category");
-            document.querySelector("#ingredientClearButton").style.display = "none";
+            document.getElementById("ingredientClearButton").style.display = "none";
             return;
         }
 
@@ -1581,7 +1582,7 @@ module.exports = {
             }
         }
 
-        document.querySelector("#ingredientClearButton").style.display = "inline";
+        document.getElementById("ingredientClearButton").style.display = "inline";
         this.displayIngredientsOnly(matchingIngredients);
     },
 
@@ -1592,7 +1593,7 @@ module.exports = {
             return;
         }
 
-        document.querySelector("#ingredientSearch").value = "";
+        document.getElementById("ingredientSearch").value = "";
 
         if(sortType === "category"){
             this.populateByProperty("category");
@@ -1604,15 +1605,15 @@ module.exports = {
             return;
         }
 
-        document.querySelector("#ingredientClearButton").style.display = "inline";
+        document.getElementById("ingredientClearButton").style.display = "inline";
         let sortedIngredients = this.ingredients.slice().sort((a, b)=> (a[sortType] > b[sortType]) ? 1 : -1);
         this.displayIngredientsOnly(sortedIngredients);
     },
 
     clearSorting: function(button){
-        document.querySelector("#ingredientSearch").value = "";
-        document.querySelector("#ingredientSelect").selectedIndex = 0;
-        document.querySelector("#ingredientClearButton").style.display = "none";
+        document.getElementById("ingredientSearch").value = "";
+        document.getElementById("ingredientSelect").selectedIndex = 0;
+        document.getElementById("ingredientClearButton").style.display = "none";
 
         this.populateByProperty("category");
     }
@@ -1639,7 +1640,7 @@ module.exports = {
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: controller.convertToMain(unit, document.querySelector("#newIngQuantity").value),
+            quantity: controller.convertToMain(unit, document.getElementById("newIngQuantity").value),
             defaultUnit: unit
         }
 
@@ -1689,9 +1690,9 @@ module.exports = {
     display: function(Order){
         if(!this.isPopulated){
             let categories = merchant.categorizeIngredients();
-            let categoriesList = document.querySelector("#newOrderCategories");
-            let template = document.querySelector("#addIngredientsCategory").content.children[0];
-            let ingredientTemplate = document.querySelector("#addIngredientsIngredient").content.children[0];
+            let categoriesList = document.getElementById("newOrderCategories");
+            let template = document.getElementById("addIngredientsCategory").content.children[0];
+            let ingredientTemplate = document.getElementById("addIngredientsIngredient").content.children[0];
     
             for(let i = 0; i < categories.length; i++){
                 let category = template.cloneNode(true);
@@ -1883,8 +1884,8 @@ module.exports = {
     //Updates the number of ingredient inputs displayed for new recipes
     changeRecipeCount: function(){
         console.log("doing things");
-        let newCount = document.querySelector("#ingredientCount").value;
-        let ingredientsDiv = document.querySelector("#recipeInputIngredients");
+        let newCount = document.getElementById("ingredientCount").value;
+        let ingredientsDiv = document.getElementById("recipeInputIngredients");
         let oldCount = ingredientsDiv.children.length;
 
         if(newCount > oldCount){
@@ -2052,18 +2053,18 @@ module.exports = {
 },{}],15:[function(require,module,exports){
 module.exports = {
     display: function(order){
-        document.querySelector("#removeOrderBtn").onclick = ()=>{this.remove(order)};
+        document.getElementById("removeOrderBtn").onclick = ()=>{this.remove(order)};
 
         document.getElementById("orderDetailName").innerText = order.name;
         document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
         document.getElementById("orderDetailTime").innerText = order.date.toLocaleTimeString("en-US");
 
-        let ingredientList = document.querySelector("#orderIngredients");
+        let ingredientList = document.getElementById("orderIngredients");
         while(ingredientList.children.length > 0){
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
-        let template = document.querySelector("#orderIngredient").content.children[0];
+        let template = document.getElementById("orderIngredient").content.children[0];
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredientDiv = template.cloneNode(true);
@@ -2466,16 +2467,16 @@ module.exports = {
     },
 
     edit: function(){
-        let ingredientDivs = document.querySelector("#recipeIngredientList");
+        let ingredientDivs = document.getElementById("recipeIngredientList");
 
         if(merchant.pos === "none"){
-            let name = document.querySelector("#recipeName");
-            let nameIn = document.querySelector("#recipeNameIn");
+            let name = document.getElementById("recipeName");
+            let nameIn = document.getElementById("recipeNameIn");
             name.style.display = "none";
             nameIn.style.display = "block";
             nameIn.value = this.recipe.name;
 
-            let price = document.querySelector("#recipePrice");
+            let price = document.getElementById("recipePrice");
             price.children[1].style.display = "none";
             price.children[2].style.display = "block";
             price.children[2].value = parseFloat((this.recipe.price / 100).toFixed(2));
@@ -2491,16 +2492,16 @@ module.exports = {
             div.children[3].onclick = ()=>{div.parentElement.removeChild(div)};
         }
 
-        document.querySelector("#addRecIng").style.display = "flex";
-        document.querySelector("#recipeUpdate").style.display = "flex";
+        document.getElementById("addRecIng").style.display = "flex";
+        document.getElementById("recipeUpdate").style.display = "flex";
     },
 
     update: function(){
-        this.recipe.name = document.querySelector("#recipeNameIn").value || this.recipe.name;
-        this.recipe.price = Math.round((document.querySelector("#recipePrice").children[2].value * 100)) || this.recipe.price;
+        this.recipe.name = document.getElementById("recipeNameIn").value || this.recipe.name;
+        this.recipe.price = Math.round((document.getElementById("recipePrice").children[2].value * 100)) || this.recipe.price;
         this.recipe.ingredients = [];
 
-        let divs = document.querySelector("#recipeIngredientList").children;
+        let divs = document.getElementById("recipeIngredientList").children;
         for(let i = 0; i < divs.length; i++){
             if(divs[i].name === "new"){
                 let select = divs[i].children[0];
@@ -2576,9 +2577,9 @@ module.exports = {
     },
 
     displayAddIngredient: function(){
-        let template = document.querySelector("#addRecIngredient").content.children[0].cloneNode(true);
+        let template = document.getElementById("addRecIngredient").content.children[0].cloneNode(true);
         template.name = "new";
-        document.querySelector("#recipeIngredientList").appendChild(template);
+        document.getElementById("recipeIngredientList").appendChild(template);
 
         let categories = merchant.categorizeIngredients();
 

@@ -28,8 +28,8 @@ module.exports = {
     //Updates the number of ingredient inputs displayed for new recipes
     changeRecipeCount: function(){
         console.log("doing things");
-        let newCount = document.querySelector("#ingredientCount").value;
-        let ingredientsDiv = document.querySelector("#recipeInputIngredients");
+        let newCount = document.getElementById("ingredientCount").value;
+        let ingredientsDiv = document.getElementById("recipeInputIngredients");
         let oldCount = ingredientsDiv.children.length;
 
         if(newCount > oldCount){

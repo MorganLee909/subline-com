@@ -22,7 +22,7 @@ module.exports = {
         let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
         let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
 
-        document.querySelector("#revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
+        document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
         let revenueChange = ((revenueThisMonth - revenueLastmonthToDay) / revenueLastmonthToDay) * 100;
         
@@ -37,7 +37,7 @@ module.exports = {
     },
 
     drawRevenueGraph: function(){
-        let graphCanvas = document.querySelector("#graphCanvas");
+        let graphCanvas = document.getElementById("graphCanvas");
         let today = new Date();
 
         graphCanvas.height = graphCanvas.parentElement.clientHeight;
@@ -58,12 +58,12 @@ module.exports = {
                 "Revenue"
             );
         }else{
-            document.querySelector("#graphCanvas").style.display = "none";
+            document.getElementById("graphCanvas").style.display = "none";
             
             let notice = document.createElement("h1");
             notice.innerText = "NO DATA YET";
             notice.classList = "notice";
-            document.querySelector("#graphCard").appendChild(notice);
+            document.getElementById("graphCard").appendChild(notice);
         }
     },
 
@@ -86,7 +86,7 @@ module.exports = {
         }
 
         let ul = document.querySelector("#inventoryCheckCard ul");
-        let template = document.querySelector("#ingredientCheck").content.children[0];
+        let template = document.getElementById("ingredientCheck").content.children[0];
         while(ul.children.length > 0){
             ul.removeChild(ul.firstChild);
         }
@@ -147,12 +147,12 @@ module.exports = {
             let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);
         }else{
-            document.querySelector("#popularCanvas").style.display = "none";
+            document.getElementById("popularCanvas").style.display = "none";
 
             let notice = document.createElement("p");
             notice.innerText = "N/A";
             notice.classList = "notice";
-            document.querySelector("#popularIngredientsCard").appendChild(notice);
+            document.getElementById("popularIngredientsCard").appendChild(notice);
         }
     },
 

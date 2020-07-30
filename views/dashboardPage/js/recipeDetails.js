@@ -41,16 +41,16 @@ module.exports = {
     },
 
     edit: function(){
-        let ingredientDivs = document.querySelector("#recipeIngredientList");
+        let ingredientDivs = document.getElementById("recipeIngredientList");
 
         if(merchant.pos === "none"){
-            let name = document.querySelector("#recipeName");
-            let nameIn = document.querySelector("#recipeNameIn");
+            let name = document.getElementById("recipeName");
+            let nameIn = document.getElementById("recipeNameIn");
             name.style.display = "none";
             nameIn.style.display = "block";
             nameIn.value = this.recipe.name;
 
-            let price = document.querySelector("#recipePrice");
+            let price = document.getElementById("recipePrice");
             price.children[1].style.display = "none";
             price.children[2].style.display = "block";
             price.children[2].value = parseFloat((this.recipe.price / 100).toFixed(2));
@@ -66,16 +66,16 @@ module.exports = {
             div.children[3].onclick = ()=>{div.parentElement.removeChild(div)};
         }
 
-        document.querySelector("#addRecIng").style.display = "flex";
-        document.querySelector("#recipeUpdate").style.display = "flex";
+        document.getElementById("addRecIng").style.display = "flex";
+        document.getElementById("recipeUpdate").style.display = "flex";
     },
 
     update: function(){
-        this.recipe.name = document.querySelector("#recipeNameIn").value || this.recipe.name;
-        this.recipe.price = Math.round((document.querySelector("#recipePrice").children[2].value * 100)) || this.recipe.price;
+        this.recipe.name = document.getElementById("recipeNameIn").value || this.recipe.name;
+        this.recipe.price = Math.round((document.getElementById("recipePrice").children[2].value * 100)) || this.recipe.price;
         this.recipe.ingredients = [];
 
-        let divs = document.querySelector("#recipeIngredientList").children;
+        let divs = document.getElementById("recipeIngredientList").children;
         for(let i = 0; i < divs.length; i++){
             if(divs[i].name === "new"){
                 let select = divs[i].children[0];
@@ -151,9 +151,9 @@ module.exports = {
     },
 
     displayAddIngredient: function(){
-        let template = document.querySelector("#addRecIngredient").content.children[0].cloneNode(true);
+        let template = document.getElementById("addRecIngredient").content.children[0].cloneNode(true);
         template.name = "new";
-        document.querySelector("#recipeIngredientList").appendChild(template);
+        document.getElementById("recipeIngredientList").appendChild(template);
 
         let categories = merchant.categorizeIngredients();
 
