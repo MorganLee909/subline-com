@@ -79,7 +79,7 @@ module.exports = {
                 axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
                     .then((response)=>{
                         let recipes = [];
-                        for(let i = 0; i < response.data.elements.length; i++){}
+                        for(let i = 0; i < response.data.elements.length; i++){
                             let recipe = new Recipe({
                                 posId: response.data.elements[i].id,
                                 merchant: merchant,
