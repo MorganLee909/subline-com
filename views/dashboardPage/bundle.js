@@ -1856,7 +1856,6 @@ module.exports = {
 },{}],13:[function(require,module,exports){
 module.exports = {
     display: function(Recipe){
-        console.log("display");
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
         let categories = merchant.categorizeIngredients();
 
@@ -1883,7 +1882,6 @@ module.exports = {
 
     //Updates the number of ingredient inputs displayed for new recipes
     changeRecipeCount: function(){
-        console.log("doing things");
         let newCount = document.getElementById("ingredientCount").value;
         let ingredientsDiv = document.getElementById("recipeInputIngredients");
         let oldCount = ingredientsDiv.children.length;
@@ -1959,7 +1957,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2152,7 +2149,6 @@ module.exports = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
@@ -2658,7 +2654,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2814,7 +2809,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("UNABLE TO DISPLAY THE TRANSACTIONS");
             })
             .finally(()=>{

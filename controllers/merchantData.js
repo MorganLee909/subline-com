@@ -124,6 +124,10 @@ module.exports = {
             });
     },
 
+    createMerchantSquare: function(req, res){
+        
+    },
+
     //DELETE - removes a single recipe from the merchant
     removeRecipe: function(req, res){
         if(!req.session.user){

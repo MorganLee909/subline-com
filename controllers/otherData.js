@@ -52,6 +52,11 @@ module.exports = {
         return res.redirect(`${process.env.CLOVER_ADDRESS}/oauth/authorize?client_id=${process.env.SUBLINE_CLOVER_APPID}&redirect_uri=${process.env.SUBLINE_CLOVER_URI}`);
     },
 
+    //GET - Redirects user to Square OAuth page
+    squareRedirect: function(req, res){
+        return res.redirect(`https://connect.squareupsandbox.com/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
+    },
+
     //GET - Get access token from clover and  redirect to merchant creation
     cloverAuth: function(req, res){
         let dataArr = req.url.slice(req.url.indexOf("?") + 1).split("&");
@@ -97,5 +102,57 @@ module.exports = {
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
                 return res.redirect("/");
             });
+    },
+
+    squareAuth: function(req, res){
+        const code = req.url.slice(req.url.indexOf("code=") + 5, req.url.indexOf("&"));
+        const url = `${process.env.SQUARE_ADDRESS}/oauth2/token?`;
+        let data = {
+            client_id: process.env.SUBLINE_SQUARE_APPID,
+            client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
+            grant_type: "authorization_code",
+            code: code
+        };
+
+        axios.post(url, data)
+            .then((response)=>{
+                data = response.data;
+                return Merchant.findOne({posId: data.merchant_id});
+            })
+            .then((merchant)=>{
+                if(merchant){
+                    merchant.posAccessToken = data.access_token;
+
+                    return merchant.save()
+                        .then((merchant)=>{
+                            req.session.user = merchant._id;
+                            return res.redirect("/dashboard");
+                        })
+                        .catch((err)=>{
+                            req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
+                            return res.redirect("/");
+                        })
+                }else{
+                    req.session.merchantId = data.merchant_id;
+                    req.session.accessToken = data.access_token;
+
+                    return res.redirect("/merchant/create/square");
+                }
+            })
+            .catch((err)=>{
+                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM SQUARE";
+                return res.redirect("/");
+            });
     }
 } 
+
+/*
+{
+  access_token: 'EAAAEM5tPhVM2L2MkxzjgA2ATIeyDKFiZzzZEsvPwSB_YSRKyXVrTVZrg_qHNgXe',
+  token_type: 'bearer',
+  expires_at: '2020-08-29T09:39:11Z',
+  merchant_id: 'MLGGD4TQVAM4G',
+  refresh_token: 'EQAAEOGMweecHJhOnxYyQP95Pj3oP-9KaQP027Ad6RQTSAN3He5A55lN47dXHjV2'
+}
+
+*/
