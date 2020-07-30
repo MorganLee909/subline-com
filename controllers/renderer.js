@@ -12,7 +12,7 @@ module.exports = {
     Renders landingPage
     */
     landingPage: function(req, res){
-        let activity = new Activity({
+        new Activity({
             ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
             merchant: req.session.user,
             route: "landing",
