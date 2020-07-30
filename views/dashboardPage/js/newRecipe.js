@@ -8,15 +8,15 @@ module.exports = {
             ingredientsSelect.removeChild(ingredientsSelect.firstChild);
         }
 
-        for(let category of categories){
+        for(let i = 0; i < categories.length; i++){
             let optgroup = document.createElement("optgroup");
-            optgroup.label = category.name;
+            optgroup.label = categories[i].name;
             ingredientsSelect.appendChild(optgroup);
 
-            for(let ingredient of category.ingredients){
+            for(let j = 0; j < categories[i].ingredients.length; j++){
                 let option = document.createElement("option");
-                option.value = ingredient.ingredient.id;
-                option.innerText = `${ingredient.ingredient.name} (${ingredient.ingredient.unit})`;
+                option.value = categories[i].ingredients[j].ingredient.id;
+                option.innerText = `${categories[i].ingredients[j].ingredient.name} (${categories[i].ingredients[j].ingredient.unit})`;
                 optgroup.appendChild(option);
             }
         }

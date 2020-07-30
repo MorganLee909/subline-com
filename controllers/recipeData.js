@@ -175,23 +175,23 @@ module.exports = {
                             }
                         }
 
-                        for(let recipe of deletedRecipes){
-                            for(let i = 0; i < merchant.recipes.length; i++){
-                                if(recipe._id === merchant.recipes[i]._id){
-                                    merchant.recipes.splice(i, 1);
+                        for(let i = 0; i < deletedRecipes.length; i++){
+                            for(let j = 0; j < merchant.recipes.length; j++){
+                                if(deletedRecipes[i]._id === merchant.recipes[j]._id){
+                                    merchant.recipes.splice(j, 1);
                                     break;
                                 }
                             }
                         }
 
                         let newRecipes = []
-                        for(let recipe of result.data.elements){
+                        for(let i = 0; i < result.data.elements.length; i++){
                             let newRecipe = new Recipe({
-                                posId: recipe.id,
+                                posId: result.data.elements[i].id,
                                 merchant: merchant._id,
-                                name: recipe.name,
+                                name: result.data.elements[i].name,
                                 ingredients: [],
-                                price: recipe.price
+                                price: result.data.elements[i].price
                             });
 
                             merchant.recipes.push(newRecipe);

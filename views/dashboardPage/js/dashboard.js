@@ -142,8 +142,8 @@ controller = {
         if(!menu.classList.contains("menuMinimized")){
             menu.classList = "menu menuMinimized";
 
-            for(let button of buttons){
-                button.children[1].style.display = "none";
+            for(let i = 0; i < buttons.length; i++){
+                buttons[i].children[1].style.display = "none";
             }
 
             document.getElementById("max").style.display = "none";
@@ -153,8 +153,8 @@ controller = {
         }else if(menu.classList.contains("menuMinimized")){
             menu.classList = "menu";
 
-            for(let button of buttons){
-                button.children[1].style.display = "block";
+            for(let i = 0; i < buttons.length; i++){
+                buttons[i].children[1].style.display = "block";
             }
 
             setTimeout(()=>{

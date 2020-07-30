@@ -43,9 +43,9 @@ class LineGraph{
         this.data.push(data);
 
         let isChange = false;
-        for(let point of data.set){
-            if(point > this.max){
-                this.max = point;
+        for(let i = 0; i < data.set.length; i++){
+            if(data.set[i] > this.max){
+                this.max = data.set[i];
                 this.verticalMultiplier = (this.bottom - this.top) / this.max;
                 this.horizontalMultiplier = (this.right - this.left) / (data.set.length - 1);
                 isChange = true;
@@ -110,8 +110,8 @@ class LineGraph{
         this.drawYAxis();
         this.drawXAxis();
 
-        for(let dataSet of this.data){
-            this.drawLine(dataSet);
+        for(let i = 0; i < this.data.length; i++){
+            this.drawLine(this.data[i]);
         }
 
         if(this.title){
@@ -247,12 +247,12 @@ class HorizontalBarGraph{
     addData(dataArray){
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        for(let point of dataArray){
-            if(point.num > this.max){
-                this.max = point.num;
+        for(let i = 0; i < dataArray.length; i++){
+            if(dataArray[i].num > this.max){
+                this.max = dataArray[i].num;
             }
 
-            this.data.push(point);
+            this.data.push(dataArray[i]);
         }
 
         this.drawGraph();

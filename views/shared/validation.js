@@ -97,8 +97,8 @@ let validator = {
 
             if(errors.length > 0){
                 if(createBanner){
-                    for(let error of errors){
-                        banner.createError(error);
+                    for(let i = 0; i < errors.length; i++){
+                        banner.createError(errors[i]);
                     }
 
                     return false;
@@ -125,13 +125,13 @@ let validator = {
         }
 
         let checkSet = new Set();
-        for(let ingredient of newRecipe.ingredients){
-            if(ingredient.quantity < 0){
+        for(let i = 0; i < newRecipe.ingredients.length; i++){
+            if(newRecipe.ingredients[i].quantity < 0){
                 errors.push("Quantity must contain a non-negative number");
                 break;
             }
 
-            checkSet.add(ingredient.ingredient);
+            checkSet.add(newRecipe.ingredients[i].ingredient);
         }
 
         if(checkSet.size !== newRecipe.ingredients.length){
@@ -144,8 +144,8 @@ let validator = {
 
         if(errors.length > 0){
             if(createBanner){
-                for(let error of errors){
-                    banner.createError(error);
+                for(let i = 0; i < errors.length; i++){
+                    banner.createError(errors[i]);
                 }
 
                 return false;
@@ -185,8 +185,8 @@ let validator = {
 
         if(errors.length > 0){
             if(createBanner){
-                for(let error of errors){
-                    banner.createError(error);
+                for(let i = 0; i < errors.length; i++){
+                    banner.createError(errors[i]);
                 }
             }
 
@@ -199,8 +199,8 @@ let validator = {
     isSanitary: function(str, createBanner = true){
         let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
 
-        for(let char of disallowed){
-            if(str.includes(char)){
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
                 if(createBanner){
                     banner.createError("Your string contains illegal characters");
                 }

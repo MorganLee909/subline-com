@@ -58,11 +58,11 @@ module.exports = {
         let authorizationCode = "";
         let merchantId = "";
 
-        for(let str of dataArr){
-            if(str.slice(0, str.indexOf("=")) === "merchant_id"){
-                merchantId = str.slice(str.indexOf("=") + 1);
-            }else if(str.slice(0, str.indexOf("=")) === "code"){
-                authorizationCode = str.slice(str.indexOf("=") + 1);
+        for(let i = 0; i < dataArr.length; i++){
+            if(dataArr[i].slice(0, dataArr[i].indexOf("=")) === "merchant_id"){
+                merchantId = dataArr[i].slice(dataArr[i].indexOf("=") + 1);
+            }else if(dataArr[i].slice(0, dataArr[i].indexOf("=")) === "code"){
+                authorizationCode = dataArr[i].slice(dataArr[i].indexOf("=") + 1);
             }
         }
 
