@@ -1281,6 +1281,7 @@ module.exports = {
 },{"../../shared/graphs.js":21}],9:[function(require,module,exports){
 module.exports = {
     ingredient: {},
+    dailyUse: 0,
 
     display: function(ingredient){
         this.ingredient = ingredient;
@@ -1312,13 +1313,15 @@ module.exports = {
         }
 
         let sum = 0;
-        for(let quantity of quantities){
-            sum += quantity;
+        for(let i = 0; i < quantities.length; i++){
+            sum += quantities[i];
         }
 
-        document.querySelector("#dailyUse").innerText = `${(sum/quantities.length).toFixed(2)} ${ingredient.ingredient.unit}`;
+        this.dailyUse = sum / quantities.length;
 
-        let ul = document.querySelector("#ingredientRecipeList");
+        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(this.dailyUse).toFixed(2)} ${ingredient.ingredient.unit}`;
+
+        let ul = document.getElementById("ingredientRecipeList");
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
         while(ul.children.length > 0){
             ul.removeChild(ul.firstChild);
@@ -1452,6 +1455,7 @@ module.exports = {
 
         controller.updateData("unit");
         document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
+        document.getElementById("dailyUse").innerText = `${this.ingredient.ingredient.convert(this.dailyUse).toFixed(2)} ${this.ingredient.ingredient.unit}`;
     },
 
     changeUnitDefault: function(){
