@@ -18,7 +18,7 @@
                     <p>THE SUBLINE</p>
                 </a>
         
-                <button class="menuShifter" onclick="changeMenu()">&#8801;</button>
+                <button class="menuShifter" onclick="controller.changeMenu()">&#8801;</button>
             </div>
         
             <div id="min" class="menuHead menuHeadMin">
@@ -26,10 +26,10 @@
                     <img class="menuLogoMin" src="/shared/images/logo.png" alt="The Subline">
                 </a>
         
-                <button id="menuShifter2" onclick="changeMenu()">&#8801;</button>
+                <button id="menuShifter2" onclick="controller.changeMenu()">&#8801;</button>
             </div>
         
-            <button class="menuButton active" id="homeBtn" class="active" onclick="changeStrand('homeStrand')">
+            <button class="menuButton active" id="homeBtn" class="active" onclick="controller.openStrand('home')">
                 <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -37,7 +37,7 @@
                 <p>HOME</p>
             </button>
         
-            <button class="menuButton" id="ingredientsBtn" onclick="changeStrand('ingredientsStrand')">
+            <button class="menuButton" id="ingredientsBtn" onclick="controller.openStrand('ingredients')">
                 <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="21 8 21 21 3 21 3 8"></polyline>
                     <rect x="1" y="3" width="22" height="5"></rect>
@@ -46,7 +46,7 @@
                 <p>INGREDIENTS</p>
             </button>
         
-            <button class="menuButton" id="recipeBookBtn" onclick="changeStrand('recipeBookStrand')">
+            <button class="menuButton" id="recipeBookBtn" onclick="controller.openStrand('recipeBook')">
                 <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
@@ -54,7 +54,7 @@
                 <p>RECIPE BOOK</p>
             </button>
         
-            <button class="menuButton" id="ordersBtn" onclick="changeStrand('ordersStrand')">
+            <button class="menuButton" id="ordersBtn" onclick="controller.openStrand('orders')">
                 <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="9" cy="21" r="1"></circle>
                     <circle cx="20" cy="21" r="1"></circle>
@@ -63,7 +63,7 @@
                 <p>ORDERS</p>
             </button>
 
-            <button class="menuButton" id="transactionsBtn" onclick="changeStrand('transactionsStrand')">
+            <button class="menuButton" id="transactionsBtn" onclick="controller.openStrand('transactions')">
                 <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                     <line x1="1" y1="10" x2="23" y2="10"></line>
@@ -81,8 +81,8 @@
             </a>
         </div>
 
-        <div id="mobileMenuSelector" class="mobileMenuSelector" onclick="openMenu()">&#8801;</div>
-        <button id="sidebarCloser" style="display: none;" onclick="closeSidebar()">
+        <div id="mobileMenuSelector" class="mobileMenuSelector" onclick="controller.openMenu()">&#8801;</div>
+        <button id="sidebarCloser" style="display: none;" onclick="controller.closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -121,7 +121,7 @@
 
                         <ul></ul>
 
-                        <button class="button" onclick="homeStrandObj.submitInventoryCheck()">Update</button>
+                        <button id="inventoryCheck" class="button">Update</button>
                     </div>
 
                     <div id=popularIngredientsCard class="card">
@@ -150,7 +150,7 @@
                 <div class="strandHead">
                     <h1 class="strandTitle">INGREDIENT INVENTORY</h1>
 
-                    <button class="button mobileHide" onclick="addIngredientsComp.display()">NEW</button>
+                    <button class="button mobileHide" onclick="controller.openSidebar('addIngredients')">NEW</button>
                 </div>
 
                 <div class="searchBar">
@@ -159,10 +159,10 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input id="ingredientSearch" type="text" placeholder="FILTER" oninput="ingredientsStrandObj.search()">
+                        <input id="ingredientSearch" type="text" placeholder="FILTER">
                     </div>
 
-                    <button id="ingredientClearButton" class="clearButton" onclick="ingredientsStrandObj.clearSorting()" style="display: none;">
+                    <button id="ingredientClearButton" class="clearButton" style="display: none;">
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -170,7 +170,7 @@
                         </svg>
                     </button>
 
-                    <select id="ingredientSelect" class="mobileHide" onchange="ingredientsStrandObj.sort(this.value)">Sort Bys:
+                    <select id="ingredientSelect" class="mobileHide">Sort By:
                         <option value="" selected disabled>Sort By:</option>
                         <option value="_name">Ingredient</option>
                         <option value="category">Category</option>
@@ -212,9 +212,9 @@
                     <h1 class="strandTitle">RECIPE BOOK</h1>
 
                     <% if(merchant.pos === "none"){ %>
-                        <button class="button mobileHide" onclick="newRecipeComp.display()">NEW</button>
+                        <button class="button mobileHide" onclick="controller.openSidebar('addRecipe')">NEW</button>
                     <% }else if(merchant.pos === "clover"){ %>
-                        <button class="button mobileHide" onclick="recipeBookStrandObj.posUpdate()">UPDATE</button>
+                        <button id="posUpdateRecipe" class="button mobileHide">UPDATE</button>
                     <% } %>
                 </div>
 
@@ -224,10 +224,10 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input id="recipeSearch" type="text" placeholder="FILTER" oninput="recipeBookStrandObj.search()">
+                        <input id="recipeSearch" type="text" placeholder="FILTER">
                     </div>
 
-                    <button id="recipeClearButton" class="clearButton" onclick="recipeBookStrandObj.clearSorting()" style="display: none;">
+                    <button id="recipeClearButton" class="clearButton" style="display: none;">
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -250,8 +250,48 @@
                 <div class="strandHead">
                     <h1 class="strandTitle">ORDERS</h1>
 
-                    <button class="button mobileHide" onclick="newOrderComp.display()">NEW</button>
+                    <button class="button mobileHide" onclick="controller.openSidebar('newOrder')">NEW</button>
                 </div>
+
+                <form id="orderSubmitForm" class="filterForm">
+                    <h2>Search</h2>
+                    <div>
+                        <div class="dropdown">
+                            <div class="dropdownHead">
+                                <p>DATES</p>
+                                <button id="dateFilterBtnOrder">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="dropdownContents" id="dateDropdownOrder">
+                                <label>From:
+                                    <input id="orderFilDate1"type="date">
+                                </label>
+                                
+                                <label>To:
+                                    <input id="orderFilDate2" type="date">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdownHead">
+                                <p>INGREDIENTS</p>
+                                <button id="ingredientFilterBtn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="dropdownContents" id="ingredientDropdown"></div>
+                        </div>
+                    </div>
+
+                    <input class="button" type="submit" value="SUBMIT">
+                </form>
 
                 <div id="orderList"></div>
 
@@ -269,8 +309,48 @@
                 <div class="strandHead">
                     <h1 class="strandTitle">TRANSACTIONS</h1>
 
-                    <button class="button mobileHide" onclick="newTransactionComp.display()">NEW</button>
+                    <button class="button mobileHide" onclick="controller.openSidebar('newTransaction')">NEW</button>
                 </div>
+
+                <form id="transFormSubmit" class="filterForm">
+                    <h2>Search</h2>
+                    <div>
+                        <div class="dropdown">
+                            <div class="dropdownHead">
+                                <p>DATES</p>
+                                <button id="dateFilterBtn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="dropdownContents" id="dateDropdown">
+                                <label>From:
+                                    <input id="transFilDate1"type="date">
+                                </label>
+                                
+                                <label>To:
+                                    <input id="transFilDate2" type="date">
+                                </label>
+                            </div>
+                            
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdownHead">
+                                <p>RECIPES</p>
+                                <button id="recipeFilterBtn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="dropdownContents" id="recipeDropDown"></div>
+                        </div>
+                    </div>
+
+                    <input class="button" type="submit" value="SUBMIT">
+                </form>
 
                 <div id="transactionsList" class="transactionsList"></div>
 
@@ -287,42 +367,25 @@
 
         <div id="sidebarDiv" class="sidebarHide">
             <% include ./sidebars/addIngredients %>
-
             <% include ./sidebars/newIngredient %>
-
             <% include ./sidebars/ingredientDetails %>
-
             <% include ./sidebars/recipeDetails %>
-
-            <% include ./sidebars/addRecipe %>
-
+            <% include ./sidebars/newRecipe %>
             <% include ./sidebars/orderDetails %>
-
             <% include ./sidebars/newOrder %>
-
             <% include ./sidebars/transactionDetails %>
-
             <% include ./sidebars/newTransaction %>
         </div>
 
         <% include ../shared/loader %>
 
-        <script src="/dashboardPage/Merchant.js"></script>
         <script>
-            let merchant = new Merchant(
-                <%- JSON.stringify(merchant) %>,
-                <%- JSON.stringify(transactions) %>
-            );
+            let data = {
+                merchant: <%- JSON.stringify(merchant) %>,
+                transactions: <%- JSON.stringify(transactions) %>
+            }
         </script>
-        <script src="../shared/graphs.js"></script>
-        <script src="/dashboardPage/home.js"></script>
-        <script src="/dashboardPage/ingredients.js"></script>
-        <script src="/dashboardPage/recipeBook.js"></script>
-        <script src="/dashboardPage/sidebars/sidebars.js"></script>
-        <script src="/dashboardPage/controller.js"></script>
-        <script src="/dashboardPage/orders.js"></script>
-        <script src="/dashboardPage/transactions.js"></script>
-        <script src="../shared/validation.js"></script>
+        <script src="./dashboardPage/bundle.js"></script>
 
         <noscript>Please turn on javascript for this site to work properly</noscript>
     </body>

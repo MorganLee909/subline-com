@@ -1,6 +1,6 @@
 <div id="newOrder">
     <div class="sidebarIconButtons">
-        <button class="iconButton" onclick="closeSidebar()">
+        <button class="iconButton" onclick="controller.closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -10,11 +10,18 @@
 
     <h1>NEW ORDER</h1>
 
-    <label>ID OR NAME(OPTIONAL):
-        <input id="orderName" type="text"> 
+    <label>ID/NAME:
+        <input id="orderName" type="text">
     </label>
 
-    <input id="orderDate" type="date">
+    <label>Date:
+        <input id="orderDate" type="date">
+    </label>
+
+    <label>Time:
+        <input id="orderTime" type="time">
+    </label>
+    
 
     <div id=newOrderCategories></div>
 
@@ -26,5 +33,5 @@
 
     <div class="lineBorder"></div>
 
-    <button class="button" onclick="newOrderComp.submit()">CREATE</button>
+    <button id="submitNewOrder" class="button">CREATE</button>
 </div>

@@ -1,144 +1,6 @@
-class Ingredient{
-    constructor(id, name, category, unitType, unit, parent){
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.unitType = unitType;
-        this.unit = unit;
-        this.parent = parent;
-    }
-
-    convert(quantity){
-        if(this.unitType === "mass"){
-            switch(this.unit){
-                case "g": break;
-                case "kg": quantity /= 1000; break;
-                case "oz":  quantity /= 28.3495; break;
-                case "lb":  quantity /= 453.5924; break;
-            }
-        }else if(this.unitType === "volume"){
-            switch(this.unit){
-                case "ml": quantity *= 1000; break;
-                case "l": break;
-                case "tsp": quantity *= 202.8842; break;
-                case "tbsp": quantity *= 67.6278; break;
-                case "ozfl": quantity *= 33.8141; break;
-                case "cup": quantity *= 4.1667; break;
-                case "pt": quantity *= 2.1134; break;
-                case "qt": quantity *= 1.0567; break;
-                case "gal": quantity /= 3.7854; break;
-            }
-        }else if(this.unitType === "length"){
-            switch(this.unit){
-                case "mm": quantity *= 1000; break;
-                case "cm": quantity *= 100; break;
-                case "m": break;
-                case "in": quantity *= 39.3701; break;
-                case "ft": quantity *= 3.2808; break;
-            }
-        }
-
-        return quantity;
-    }
-}
-
-class Recipe{
-    constructor(id, name, price, ingredients, parent){
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.parent = parent;
-        this.ingredients = [];
-
-        for(let i = 0; i < ingredients.length; i++){
-            for(let j = 0; j < parent.ingredients.length; j++){
-                if(ingredients[i].ingredient === parent.ingredients[j].ingredient.id){
-                    this.ingredients.push({
-                        ingredient: parent.ingredients[j].ingredient,
-                        quantity: ingredients[i].quantity
-                    });
-                    break;
-                }
-            }
-        }
-    }
-}
-
-class Transaction{
-    constructor(id, date, recipes, parent){
-        this.id = id;
-        this.parent = parent;
-        this.date = new Date(date);
-        this.recipes = [];
-
-        for(let i = 0; i < recipes.length; i++){
-            for(let j = 0; j < parent.recipes.length; j++){
-                if(recipes[i].recipe === parent.recipes[j].id){
-                    this.recipes.push({
-                        recipe: parent.recipes[j],
-                        quantity: recipes[i].quantity
-                    });
-                    break;
-                }
-            }
-        }
-    }
-}
-
-class Order{
-    constructor(id, name, date, ingredients, parent){
-        this.id = id;
-        this.name = name;
-        this.date = new Date(date);
-        this.ingredients = [];
-        this.parent = parent;
-
-        for(let i = 0; i < ingredients.length; i++){
-            for(let j = 0; j < parent.ingredients.length; j++){
-                if(ingredients[i].ingredient === parent.ingredients[j].ingredient.id){
-                    this.ingredients.push({
-                        ingredient: parent.ingredients[j].ingredient,
-                        quantity: ingredients[i].quantity,
-                        price: ingredients[i].price
-                    });
-                }
-            }
-        }
-    }
-
-    convertPrice(unitType, unit, price){
-        if(unitType === "mass"){
-            switch(unit){
-                case "g": break;
-                case "kg": price *= 1000; break;
-                case "oz":  price *= 28.3495; break;
-                case "lb":  price *= 453.5924; break;
-            }
-        }else if(unitType === "volume"){
-            switch(unit){
-                case "ml": price /= 1000; break;
-                case "l": break;
-                case "tsp": price /= 202.8842; break;
-                case "tbsp": price /= 67.6278; break;
-                case "ozfl": price /= 33.8141; break;
-                case "cup": price /= 4.1667; break;
-                case "pt": price /= 2.1134; break;
-                case "qt": price /= 1.0567; break;
-                case "gal": price *= 3.7854; break;
-            }
-        }else if(unitType === "length"){
-            switch(unit){
-                case "mm": price /= 1000; break;
-                case "cm": price /= 100; break;
-                case "m": break;
-                case "in": price /= 39.3701; break;
-                case "ft": price /= 3.2808; break;
-            }
-        }
-
-        return price;
-    }
-}
+const Ingredient = require("./Ingredient.js");
+const Recipe = require("./Recipe.js");
+const Transaction = require("./Transaction.js");
 
 class Merchant{
     constructor(oldMerchant, transactions){
@@ -151,7 +13,8 @@ class Merchant{
         this.units = {
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
-            length: ["mm", "cm", "m", "in", "foot"]
+            length: ["mm", "cm", "m", "in", "foot"],
+            other: ["each"]
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
@@ -226,10 +89,8 @@ class Merchant{
             }
         }
     
-        homeStrandObj.drawInventoryCheckCard();
-        ingredientsStrandObj.populateByProperty("category");
-        addIngredientsComp.isPopulated = false;
-        closeSidebar();
+        controller.updateData("ingredient");
+        controller.closeSidebar();
     }
 
     /*
@@ -260,8 +121,8 @@ class Merchant{
             }
         }
 
-        recipeBookStrandObj.populateRecipes();
-        closeSidebar();
+        controller.updateData("recipe");
+        controller.closeSidebar();
     }
 
     /*
@@ -291,8 +152,8 @@ class Merchant{
             }
         }
 
-        ordersStrandObj.populate();
-        closeSidebar();
+        controller.updateData("order");
+        controller.closeSidebar();
     }
 
     editTransactions(transaction, remove = false){
@@ -313,9 +174,8 @@ class Merchant{
             this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
         }
 
-        transactionsStrandObj.isPopulated = false;
-        transactionsStrandObj.display();
-        closeSidebar();
+        controller.updateData("transaction");
+        controller.closeSidebar();
     }
 
     /*
@@ -564,39 +424,4 @@ class Merchant{
     }
 }
 
-let convertToMain = (unit, quantity)=>{
-    let converted = 0;
-
-    if(merchant.units.mass.includes(unit)){
-        switch(unit){
-            case "g": converted = quantity; break;
-            case "kg": converted = quantity * 1000; break;
-            case "oz": converted = quantity * 28.3495; break;
-            case "lb": converted = quantity * 453.5924; break;
-        }
-    }else if(merchant.units.volume.includes(unit)){
-        switch(unit){
-            case "ml": converted = quantity / 1000; break;
-            case "l": converted = quantity; break;
-            case "tsp": converted = quantity / 202.8842; break;
-            case "tbsp": converted = quantity / 67.6278; break;
-            case "ozfl": converted = quantity / 33.8141; break;
-            case "cup": converted = quantity / 4.1667; break;
-            case "pt": converted = quantity / 2.1134; break;
-            case "qt": converted = quantity / 1.0567; break;
-            case "gal": converted = quantity * 3.7854; break;
-        }
-    }else if(merchant.units.length.includes(unit)){
-        switch(unit){
-            case "mm": converted = quantity / 1000; break;
-            case "cm": converted = quantity / 100; break;
-            case "m": converted = quantity; break;
-            case "in": converted = quantity / 39.3701; break;
-            case "ft": converted = quantity / 3.2808; break;
-        }
-    }else{
-        converted = quantity;
-    }
-
-    return converted;
-}
+module.exports = Merchant;

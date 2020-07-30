@@ -1,4 +1,4 @@
-window.homeStrandObj = {
+module.exports = {
     isPopulated: false,
     graph: {},
 
@@ -22,7 +22,7 @@ window.homeStrandObj = {
         let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
         let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
 
-        document.querySelector("#revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
+        document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
         let revenueChange = ((revenueThisMonth - revenueLastmonthToDay) / revenueLastmonthToDay) * 100;
         
@@ -37,12 +37,13 @@ window.homeStrandObj = {
     },
 
     drawRevenueGraph: function(){
-        let graphCanvas = document.querySelector("#graphCanvas");
+        let graphCanvas = document.getElementById("graphCanvas");
         let today = new Date();
 
         graphCanvas.height = graphCanvas.parentElement.clientHeight;
         graphCanvas.width = graphCanvas.parentElement.clientWidth;
 
+        let LineGraph = require("../../shared/graphs.js").LineGraph;
         this.graph = new LineGraph(graphCanvas);
         this.graph.addTitle("Revenue");
 
@@ -57,12 +58,12 @@ window.homeStrandObj = {
                 "Revenue"
             );
         }else{
-            document.querySelector("#graphCanvas").style.display = "none";
+            document.getElementById("graphCanvas").style.display = "none";
             
             let notice = document.createElement("h1");
             notice.innerText = "NO DATA YET";
             notice.classList = "notice";
-            document.querySelector("#graphCard").appendChild(notice);
+            document.getElementById("graphCard").appendChild(notice);
         }
     },
 
@@ -85,7 +86,7 @@ window.homeStrandObj = {
         }
 
         let ul = document.querySelector("#inventoryCheckCard ul");
-        let template = document.querySelector("#ingredientCheck").content.children[0];
+        let template = document.getElementById("ingredientCheck").content.children[0];
         while(ul.children.length > 0){
             ul.removeChild(ul.firstChild);
         }
@@ -102,6 +103,8 @@ window.homeStrandObj = {
 
             ul.appendChild(ingredientCheck);
         }
+
+        document.getElementById("inventoryCheck").onclick = ()=>{this.submitInventoryCheck()};
     },
 
     drawPopularCard: function(){
@@ -110,9 +113,9 @@ window.homeStrandObj = {
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
         let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
-        window.ingredientList = [...ingredientList];
-        let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;
-        if(ingredientList.length > 0){
+        if(ingredientList !== false){
+            window.ingredientList = [...ingredientList];
+            let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;
             for(let i = 0; i < iterations; i++){
                 try{
                     let max = ingredientList[0].quantity;
@@ -137,18 +140,19 @@ window.homeStrandObj = {
             }
 
             let thisCanvas = document.getElementById("popularCanvas");
-            thisCanvas.width = thisCanvas.parentElement.offsetWidth;
-            thisCanvas.height = thisCanvas.parentElement.offsetHeight;
+            thisCanvas.width = thisCanvas.parentElement.offsetWidth * 0.8;
+            thisCanvas.height = thisCanvas.parentElement.offsetHeight * 0.8;
 
+            let HorizontalBarGraph = require("../../shared/graphs.js").HorizontalBarGraph;
             let popularGraph = new HorizontalBarGraph(thisCanvas);
             popularGraph.addData(dataArray);
         }else{
-            document.querySelector("#popularCanvas").style.display = "none";
+            document.getElementById("popularCanvas").style.display = "none";
 
             let notice = document.createElement("p");
             notice.innerText = "N/A";
             notice.classList = "notice";
-            document.querySelector("#popularIngredientsCard").appendChild(notice);
+            document.getElementById("popularIngredientsCard").appendChild(notice);
         }
     },
 
@@ -156,6 +160,7 @@ window.homeStrandObj = {
         let lis = document.querySelectorAll("#inventoryCheckCard li");
 
         let changes = [];
+        let fetchData = [];
 
         for(let i = 0; i < lis.length; i++){
             if(lis[i].children[1].children[1].value >= 0){
@@ -169,6 +174,11 @@ window.homeStrandObj = {
                         ingredient: merchIngredient.ingredient,
                         quantity: value
                     });
+
+                    fetchData.push({
+                        id: merchIngredient.ingredient.id,
+                        quantity: value
+                    });
                 }
             }else{
                 banner.createError("CANNOT HAVE NEGATIVE INGREDIENTS");
@@ -179,19 +189,21 @@ window.homeStrandObj = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
         
-        if(changes.length > 0){
+        if(fetchData.length > 0){
             fetch("/merchant/ingredients/update", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"
                 },
-                body: JSON.stringify(changes)
+                body: JSON.stringify(fetchData)
             })
                 .then((response) => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
+                        
+
                         merchant.editIngredients(changes);
                         banner.createNotification("INGREDIENTS UPDATED");
                     }

@@ -1,8 +1,9 @@
 const axios = require("axios");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-const Merchant = require("../models/merchant");
-const Transaction = require("../models/transaction");
+const Merchant = require("../models/merchant.js");
+const Transaction = require("../models/transaction.js");
+const Activity = require("../models/activity.js");
 
 module.exports = {
     /*
@@ -11,6 +12,15 @@ module.exports = {
     Renders landingPage
     */
     landingPage: function(req, res){
+        let activity = new Activity({
+            ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            merchant: req.session.user,
+            route: "landing",
+            date: new Date()
+        })
+            .save()
+            .catch(()=>{});
+
         let error = {};
         let isLoggedIn = req.session.isLoggedIn || false;
         if(req.session.error){
@@ -33,31 +43,74 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
+        let activity = new Activity({
+            ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            merchant: req.session.user,
+            route: "dashboard",
+            date: new Date()
+        })
+            .save()
+            .catch(()=>{});
 
-        Merchant.findOne({_id: req.session.user}, {password: 0, createdAt: 0})
+        Merchant.findOne(
+            {_id: req.session.user},
+            {
+                name: 1,
+                pos: 1,
+                posId: 1,
+                posAccessToken: 1,
+                lastUpdatedTime: 1,
+                inventory: 1,
+                recipes: 1
+            }
+        )
             .populate("inventory.ingredient")
             .populate("recipes")
-            .then((merchant)=>{
+            .then(async (merchant)=>{
+                let promiseArray = [];
                 if(merchant.pos === "clover"){
-                    axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=clientCreatedTime>=${merchant.lastUpdatedTime}&expand=lineItems&access_token=${merchant.posAccessToken}`)
-                        .then((result)=>{
+                    const subscriptionCheck = axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`);
+                    const transactionRetrieval = axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=modifiedTime>=${merchant.lastUpdatedTime}&expand=lineItems&expand=payment&access_token=${merchant.posAccessToken}`);
+                    await Promise.all([subscriptionCheck, transactionRetrieval])
+                        .then(async (response)=>{
+                            if(response[0].data.status !== "ACTIVE"){
+                                req.session.error = "SUBSCRIPTION EXPIRED.  PLEASE RENEW ON CLOVER";
+                                return res.redirect("/");
+                            }
+
+                            const updatedTime = Date.now();
+                            
+                            //Create Subline transactions from Clover Transactions
                             let transactions = [];
-                            for(let order of result.data.elements){
+                            for(let i = 0; i < response[1].data.elements.length; i++){
+                                let order = response[1].data.elements[i];
+                                if(order.paymentState !== "PAID"){
+                                    break;
+                                }
                                 let newTransaction = new Transaction({
                                     merchant: merchant._id,
                                     date: new Date(order.createdTime),
-                                    device: order.device.id
+                                    device: order.device.id,
+                                    posId: order.id
                                 });
 
-                                for(let item of order.lineItems.elements){
-                                    let recipe = merchant.recipes.find(r => r.posId === item.item.id);
+                                //Go through lineItems from Clover
+                                //Get the appropriate recipe from Subline
+                                //Add it to the transaction or increment if existing
+                                for(let j = 0; j < order.lineItems.elements.length; j++){
+                                    let recipe = {}
+                                    for(let k = 0; k < merchant.recipes.length; k++){
+                                        if(merchant.recipes[k].posId === order.lineItems.elements[j].item.id){
+                                            recipe = merchant.recipes[k];
+                                            break;
+                                        }
+                                    }
+
                                     if(recipe){
-                                        //Search and increment/add instead of just push
-                                        // newTransaction.recipes.push(recipe._id);
                                         let isNewRecipe = true;
-                                        for(let newRecipe of newTransaction.recipes){
-                                            if(newRecipe.recipe === recipe._id){
-                                                newRecipe.quantity++;
+                                        for(let k = 0; k < newTransaction.recipes.length; k++){
+                                            if(newTransaction.recipes[k].recipe === recipe._id){
+                                                newTransaction.recipes[k].quantity++;
                                                 isNewRecipe = false;
                                                 break;
                                             }
@@ -70,92 +123,69 @@ module.exports = {
                                             });
                                         }
 
-                                        //End modifications
-                                        for(let ingredient of recipe.ingredients){
+                                        //Subtract ingredients from merchants total for each ingredient in a recipe
+                                        for(let k = 0; k < recipe.ingredients.length; k++){
                                             let inventoryIngredient = {};
-                                            for(let invItem of merchant.inventory){
-                                                if(invItem.ingredient._id.toString() === ingredient.ingredient._id.toString()){
-                                                    inventoryIngredient = invItem;
+                                            for(let l = 0; l < merchant.inventory.length; l++){
+                                                if(merchant.inventory[l].ingredient._id.toString() === recipe.ingredients[k].ingredient._id.toString()){
+                                                    inventoryIngredient = merchant.inventory[l];
+                                                    break;
                                                 }
                                             }
-                                            inventoryIngredient.quantity = (inventoryIngredient.quantity - ingredient.quantity).toFixed(2);
+                                            inventoryIngredient.quantity = inventoryIngredient.quantity - ingredient.quantity;
                                         }
                                     }
                                 }
 
                                 transactions.push(newTransaction);
-                                merchant.lastUpdatedTime = Date.now();
                             }
 
-                            merchant.save()
-                                .then((updatedMerchant)=>{
-                                    updatedMerchant.accessToken = undefined;
-                                    merchant = updatedMerchant;
-                                    
-                                    Transaction.create(transactions);
+                            merchant.lastUpdatedTime = updatedTime;
 
-                                    let date = new Date();
-                                    let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+                            //Remove any existing orders so that they can ber replaced
+                            let ids = [];
+                            for(let i = 0; i < transactions.length; i++){
+                                ids.push(transactions[i].posId);
+                            }
+                            Transaction.deleteMany({posId: {$in: ids}});
 
-                                    return Transaction.aggregate([
-                                        {$match: {
-                                            merchant: new ObjectId(req.session.user),
-                                            date: {$gte: firstDay}
-                                        }},
-                                        {$sort: {date: 1}},
-                                        {$project: {
-                                            date: 1,
-                                            recipes: 1
-                                        }}
-                                    ])
-                                })
-                                .then((transactions)=>{
-                                    res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions});
-                                })
-                                .catch((err)=>{
-                                    let errorMessage = "Error: unable to update data";
-                                    
-                                    merchant.password = undefined;
-                                    return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
-                                });
+                            promiseArray.push(Transaction.create(transactions));
                         })
                         .catch((err)=>{
-                            let errorMessage = "There was an error and we could not retrieve your transactions from Clover";
-
-                            merchant.password = undefined;
-                            return res.render("dashboardPage/dashboard", {merchant: merchant, error: errorMessage, transactions: []});
+                            req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
+                            return res.redirect("/");
                         });
-                }else if(merchant.pos === "none"){
-                    merchant.password = undefined;
-
-                    let date = new Date();
-                    let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-
-                    Transaction.aggregate([
-                        {$match: {
-                            merchant: new ObjectId(req.session.user),
-                            date: {$gte: firstDay},
-                        }},
-                        {$sort: {date: 1}},
-                        {$project: {
-                            date: 1,
-                            recipes: 1
-                        }}
-                    ])
-                        .then((transactions)=>{
-                            return res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions})
-                        })
-                        .catch((err)=>{});
-                        
-                }else{
-                    req.session.error = "ERROR: WEBSITE PANIC!";
-                    
-                    return res.redirect("/");
                 }
+
+                return Promise.all([merchant.save()].concat(promiseArray));
+            })
+            .then((response)=>{
+                let date = new Date();
+                let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
+
+                Transaction.aggregate([
+                    {$match: {
+                        merchant: new ObjectId(req.session.user),
+                        date: {$gte: firstDay},
+                    }},
+                    {$sort: {date: 1}},
+                    {$project: {
+                        date: 1,
+                        recipes: 1
+                    }}
+                ])
+                    .then((transactions)=>{
+                        response[0]._id = undefined;
+                        response[0].posAccessToken = undefined;
+                        response[0].lastUpdatedTime = undefined;
+                        response[0].accountStatus = undefined;
+
+                        return res.render("dashboardPage/dashboard", {merchant: response[0], transactions: transactions});
+                    })
+                    .catch((err)=>{});
             })
             .catch((err)=>{
-                req.session.error = "ERROR: COULD NOT RETRIEVE USER DATA";
-                
+                req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
                 return res.redirect("/");
             });
     },

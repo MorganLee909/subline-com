@@ -1,10 +1,14 @@
-window.ingredientsStrandObj = {
+module.exports = {
     isPopulated: false,
     ingredients: [],
 
     display: function(){
         if(!this.isPopulated){
             this.populateByProperty("category");
+
+            document.getElementById("ingredientSearch").oninput = ()=>{this.search()};
+            document.getElementById("ingredientClearButton").onclick = ()=>{this.clearSorting()};
+            document.getElementById("ingredientSelect").onchange = ()=>{this.sort()};
 
             this.isPopulated = true;
         }
@@ -18,9 +22,9 @@ window.ingredientsStrandObj = {
             categories = merchant.unitizeIngredients();
         }
         
-        let ingredientStrand = document.querySelector("#categoryList");
-        let categoryTemplate = document.querySelector("#categoryDiv").content.children[0];
-        let ingredientTemplate = document.querySelector("#ingredient").content.children[0];
+        let ingredientStrand = document.getElementById("categoryList");
+        let categoryTemplate = document.getElementById("categoryDiv").content.children[0];
+        let ingredientTemplate = document.getElementById("ingredient").content.children[0];
         this.ingredients = [];
 
         while(ingredientStrand.children.length > 0){
@@ -40,7 +44,7 @@ window.ingredientsStrandObj = {
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
                 ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-                ingredientDiv.onclick = ()=>{ingredientDetailsComp.display(ingredient)};
+                ingredientDiv.onclick = ()=>{controller.openSidebar("ingredientDetails", ingredient)};
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 
@@ -52,7 +56,7 @@ window.ingredientsStrandObj = {
     },
 
     displayIngredientsOnly: function(ingredients){
-        let ingredientDiv = document.querySelector("#categoryList");
+        let ingredientDiv = document.getElementById("categoryList");
 
         while(ingredientDiv.children.length > 0){
             ingredientDiv.removeChild(ingredientDiv.firstChild);
@@ -73,12 +77,12 @@ window.ingredientsStrandObj = {
     },
 
     search: function(){
-        let input = document.querySelector("#ingredientSearch").value.toLowerCase();
-        document.querySelector("#ingredientSelect").selectedIndex = 0;
+        let input = document.getElementById("ingredientSearch").value.toLowerCase();
+        document.getElementById("ingredientSelect").selectedIndex = 0;
 
         if(input === ""){
             this.populateByProperty("category");
-            document.querySelector("#ingredientClearButton").style.display = "none";
+            document.getElementById("ingredientClearButton").style.display = "none";
             return;
         }
 
@@ -89,16 +93,18 @@ window.ingredientsStrandObj = {
             }
         }
 
-        document.querySelector("#ingredientClearButton").style.display = "inline";
+        document.getElementById("ingredientClearButton").style.display = "inline";
         this.displayIngredientsOnly(matchingIngredients);
     },
 
-    sort: function(sortType){
+    sort: function(){
+        let sortType = document.getElementById("ingredientSelect").value;
+        
         if(sortType === ""){
             return;
         }
 
-        document.querySelector("#ingredientSearch").value = "";
+        document.getElementById("ingredientSearch").value = "";
 
         if(sortType === "category"){
             this.populateByProperty("category");
@@ -110,15 +116,15 @@ window.ingredientsStrandObj = {
             return;
         }
 
-        document.querySelector("#ingredientClearButton").style.display = "inline";
+        document.getElementById("ingredientClearButton").style.display = "inline";
         let sortedIngredients = this.ingredients.slice().sort((a, b)=> (a[sortType] > b[sortType]) ? 1 : -1);
         this.displayIngredientsOnly(sortedIngredients);
     },
 
     clearSorting: function(button){
-        document.querySelector("#ingredientSearch").value = "";
-        document.querySelector("#ingredientSelect").selectedIndex = 0;
-        document.querySelector("#ingredientClearButton").style.display = "none";
+        document.getElementById("ingredientSearch").value = "";
+        document.getElementById("ingredientSelect").selectedIndex = 0;
+        document.getElementById("ingredientClearButton").style.display = "none";
 
         this.populateByProperty("category");
     }

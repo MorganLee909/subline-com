@@ -1,6 +1,6 @@
 <div id="addIngredients">
     <div class="sidebarIconButtons">
-        <button class="iconButton" onclick="closeSidebar()">
+        <button class="iconButton" onclick="controller.closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -22,9 +22,9 @@
         <div class="lineBorder"></div>
     </div>
 
-    <button id="addIngredientsBtn" class="button" onclick="addIngredientsComp.submit()">CREATE</button>
+    <button id="addIngredientsBtn" class="button">CREATE</button>
 
-    <button class="button2Link" onclick="newIngredientComp.display()">CAN'T FIND WHAT YOU'RE LOOKING FOR? CREATE IT...</button>
+    <button class="button2Link" id="openNewIngredient">CAN'T FIND WHAT YOU'RE LOOKING FOR? CREATE IT...</button>
 
     <template id="addIngredientsCategory">
         <div class="addIngredientsCategory">

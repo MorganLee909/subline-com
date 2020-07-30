@@ -37,18 +37,18 @@
                 ul.removeChild(ul.firstChild);
             }
 
-            for(let notification of this.notificationList){
+            for(let i = 0; i < this.notificationList.length; i++){
                 let li = document.createElement("li");                                                                       
                                                                                                             
                 li.classList = "notification";
-                li.innerText = notification;
+                li.innerText = this.notificationList[i];
                 ul.appendChild(li);
             }
 
-            for(let error of this.errorList){
+            for(let i = 0; i < this.errorList.length; i++){
                 let li = document.createElement("li");
                 li.classList = "error";
-                li.innerText = error;
+                li.innerText = this.errorList[i];
                 ul.appendChild(li);
             }
         }

@@ -1,6 +1,6 @@
 <div id="newTransaction" class="newTransaction">
     <div class="sidebarIconButtons">
-        <button class="iconButton" onclick="closeSidebar()">
+        <button class="iconButton" onclick="controller.closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -14,7 +14,7 @@
 
     <div id="newTransactionRecipes" class="newTransactionRecipes"></div>
 
-    <button class="button" onclick="newTransactionComp.submit()">Create</button>
+    <button id="submitNewTransaction" class="button">Create</button>
 
     <template id="createTransaction">
         <div class="createTransaction smallItemDisplay">

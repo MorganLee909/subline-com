@@ -34,11 +34,13 @@ module.exports = function(app){
 
     //Orders
     app.get("/order", orderData.getOrders);
-    app.post("/order", orderData.createOrder);
+    app.post("/order", orderData.orderFilter);
+    app.post("/order/create", orderData.createOrder);
     app.delete("/order/:id", orderData.removeOrder);
 
     //Transactions
-    app.post("/transaction", transactionData.createTransaction);
+    app.post("/transaction", transactionData.getTransactions);
+    app.post("/transaction/create", transactionData.createTransaction);
     app.delete("/transaction/:id", transactionData.remove);
     app.get("/populatesometransactions", transactionData.populate);
 

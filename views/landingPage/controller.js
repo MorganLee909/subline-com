@@ -1,7 +1,7 @@
 let controller = {
-    publicStrand: document.querySelector("#publicStrand"),
-    loginStrand: document.querySelector("#loginStrand"),
-    registerStrand: document.querySelector("#registerStrand"),
+    publicStrand: document.getElementById("publicStrand"),
+    loginStrand: document.getElementById("loginStrand"),
+    registerStrand: document.getElementById("registerStrand"),
 
     onStart: function(){
         if(error){

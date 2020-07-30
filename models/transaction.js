@@ -20,7 +20,8 @@ const TransactionSchema = new mongoose.Schema({
             type: Number,
             min: [0, "Must be a positive number"]
         }
-    }]
+    }],
+    posId: String
 });
 
 module.exports = mongoose.model("Transaction", TransactionSchema);

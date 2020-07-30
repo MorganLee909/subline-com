@@ -1,10 +1,16 @@
-window.recipeBookStrandObj = {
+module.exports = {
     isPopulated: false,
     recipeDivList: [],
 
     display: function(){
         if(!this.isPopulated){
             this.populateRecipes();
+
+            if(merchant.pos === "clover"){
+                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
+            }
+            document.getElementById("recipeSearch").oninput = ()=>{this.search()};
+            document.getElementById("recipeClearButton").onclick = ()=>{this.clearSorting()};
 
             this.isPopulated = true;
         }
@@ -21,7 +27,7 @@ window.recipeBookStrandObj = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let recipeDiv = template.cloneNode(true);
-            recipeDiv.onclick = ()=>{recipeDetailsComp.display(merchant.recipes[i])};
+            recipeDiv.onclick = ()=>{controller.openSidebar("recipeDetails", merchant.recipes[i])};
             recipeDiv._name = merchant.recipes[i].name;
             recipeList.appendChild(recipeDiv);
 

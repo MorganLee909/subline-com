@@ -47,8 +47,6 @@
             <form onsubmit="registerObj.submit()">
                 <h1> Join Subline </h1>
 
-                <a class="button buttonWithBorder" href="/cloverlogin"> Sign Up with Clover </a>
-
                 <label id="nameLabel">Restaurant Name
                     <input class="input" id="regName" name="name" type="text" required>
                 </label>
@@ -80,6 +78,10 @@
 
                 <input id="regButton" class="buttonDisabled" type="submit" value="Sign Up with Email">
 
+                <h1>OR</h1>
+
+                <a class="button buttonWithBorder" href="/cloverlogin"> Sign Up with Clover </a>
+
                 <h3 class="link" style="margin-top: 30px;" onclick="loginObj.display()"> Already have an account? Please Sign In </h3>
 
             </form>
@@ -88,8 +90,6 @@
         <div id="loginStrand">
             <form action="/login" method="post">
                 <h1> Welcome Back </h1>
-
-                <a class="button buttonWithBorder" href="/cloverlogin"> Sign In with Clover </a>
         
                 <label>Email
                     <input type="text" name="email" type="email" required>
@@ -100,6 +100,10 @@
                 </label>
         
                 <input id="signIn" type="submit" value="Sign In with Email">
+
+                <h1>OR</h1>
+
+                <a class="button buttonWithBorder" href="/cloverlogin"> Sign In with Clover </a>
 
                 <h3 class="link" style="margin-top: 30px;" onclick="registerObj.display()"> New Here? Please Sign Up </h3>
             </form>

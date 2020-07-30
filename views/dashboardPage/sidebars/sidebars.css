@@ -332,6 +332,7 @@ Ingredient Details
     #ingredientDetails label{
         font-size: 20px;
         text-align: center;
+        margin: 0;
     }
 
     #ingredientDetails label p{
@@ -340,23 +341,59 @@ Ingredient Details
         padding: 10px;
     }
 
-    .unitButton{
-        margin: 5px;
-        padding: 5px;
-        background: none;
-        border: 1px solid black;
-        font-size: 25px;
-        cursor: pointer;
-        border-radius: 5px;
+    .ingredientButtons{
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
     }
 
-        .unitButton:hover{
-            background: rgb(0, 27, 45);
-            color: white;
+        .unitButton{
+            margin: 5px;
+            padding: 3px;
+            background: none;
+            border: 1px solid black;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
-        .unitActive{
-            background: rgb(255, 99, 107);
+            .unitButton:hover{
+                background: rgb(0, 27, 45);
+                color: white;
+            }
+
+            .unitActive{
+                background: rgb(255, 99, 107);
+            }
+
+        #defaultUnit{
+            padding: 5px;
+            font-size: 15px;
+        }
+
+    #ingredientRecipeList{
+        list-style: none;
+        overflow: auto;
+        max-height: 150px;
+        width: 90%;
+        margin-left: auto;
+    }
+
+    #ingredientRecipeList > li{
+        font-size: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        background: rgb(240, 252, 255);
+        border: 1px solid black;
+        cursor: pointer;
+        margin: 1px 0;
+    }
+
+        #ingredientRecipeList > li:hover{
+            background: rgb(0, 27, 45);
+            color: white;
         }
 
 /* 
@@ -574,27 +611,6 @@ Add Recipe
         margin: 5px 0;
     }
 
-/* 
-Ingredient Details 
-*/
-#ingredientRecipeList{
-    list-style: none;
-    overflow: auto;
-}
-
-#ingredientRecipeList > li{
-    font-size: 25px;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-    #ingredientRecipeList > li:hover{
-        background: rgb(0, 27, 45);
-        color: white;
-    }
-
 /*
 Transaction Details
 */
@@ -678,4 +694,8 @@ New Transaction
         .orderIngredient{
             color: black;
         }
+
+    #ingredientRecipeList li{
+        color: black;
+    }
 }
