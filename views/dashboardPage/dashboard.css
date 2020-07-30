@@ -584,6 +584,10 @@ Transactions Strand
             color: black;
         }
 
+    .filterForm{
+        display: none;
+    }
+
     /*
     Home
     */
@@ -672,6 +676,6 @@ Transactions Strand
     Transactions
     */
     .transactionsList{
-        width: 10%;
+        width: 100%;
     }
 }

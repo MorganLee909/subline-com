@@ -694,4 +694,8 @@ New Transaction
         .orderIngredient{
             color: black;
         }
+
+    #ingredientRecipeList li{
+        color: black;
+    }
 }
