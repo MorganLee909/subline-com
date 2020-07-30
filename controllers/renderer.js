@@ -158,6 +158,7 @@ module.exports = {
                         });
                 }
 
+                console.log("returning merchant");
                 return Promise.all([merchant.save()].concat(promiseArray));
             })
             .then((response)=>{

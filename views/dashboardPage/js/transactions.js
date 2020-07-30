@@ -145,7 +145,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("UNABLE TO DISPLAY THE TRANSACTIONS");
             })
             .finally(()=>{
