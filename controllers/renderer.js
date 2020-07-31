@@ -5,6 +5,8 @@ const Merchant = require("../models/merchant.js");
 const Transaction = require("../models/transaction.js");
 const Activity = require("../models/activity.js");
 
+const helper = require("./helper.js");
+
 module.exports = {
     /*
     GET - Shows the public landing page
@@ -155,6 +157,8 @@ module.exports = {
                             req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
                             return res.redirect("/");
                         });
+                }else if(merchant.pos === "square"){
+                    promiseArray = helper.getSquareData(merchant);
                 }
 
                 return Promise.all([merchant.save()].concat(promiseArray));
