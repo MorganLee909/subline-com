@@ -67,7 +67,6 @@ module.exports = {
             .populate("inventory.ingredient")
             .populate("recipes")
             .then(async (merchant)=>{
-                console.log("merchant found");
                 let promiseArray = [];
                 if(merchant.pos === "clover"){
                     const subscriptionCheck = axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`);
@@ -158,11 +157,9 @@ module.exports = {
                         });
                 }
 
-                console.log("returning merchant");
                 return Promise.all([merchant.save()].concat(promiseArray));
             })
             .then((response)=>{
-                console.log("response after clover stuff");
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
@@ -178,7 +175,6 @@ module.exports = {
                     }}
                 ])
                     .then((transactions)=>{
-                        console.log("found all transactions");
                         response[0]._id = undefined;
                         response[0].posAccessToken = undefined;
                         response[0].lastUpdatedTime = undefined;
@@ -186,10 +182,9 @@ module.exports = {
 
                         return res.render("dashboardPage/dashboard", {merchant: response[0], transactions: transactions});
                     })
-                    .catch((err)=>{console.log(err)});
+                    .catch((err)=>{});
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
                 return res.redirect("/");
             });

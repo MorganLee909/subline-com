@@ -34,7 +34,10 @@ module.exports = {
         for(let i = 0; i < categories.length; i++){
             let categoryDiv = categoryTemplate.cloneNode(true);
             categoryDiv.children[0].children[0].innerText = categories[i].name;
-            categoryDiv.children[0].children[1].onclick = ()=>{this.toggleCategory(categoryDiv.children[1], categoryDiv.children[0].children[1])};
+            
+            categoryDiv.children[0].children[1].onclick = ()=>{
+                this.toggleCategory(categoryDiv.children[1], categoryDiv.children[0].children[1]);
+            };
             categoryDiv.children[1].style.display = "none";
             ingredientStrand.appendChild(categoryDiv);
 
