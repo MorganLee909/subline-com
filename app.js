@@ -8,6 +8,7 @@ const app = express();
 mongoose.connect(process.env.SUBLINE_DB, {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.set("view engine", "ejs");
+app.set("subdomain offset", 1);
 
 function requireHTTPS(req, res, next) {
     if (!req.secure && req.get('x-forwarded-proto') !== 'https' && process.env.NODE_ENV !== "development") {
