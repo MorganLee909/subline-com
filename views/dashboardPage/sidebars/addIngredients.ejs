@@ -48,11 +48,17 @@
 
     <template id="addIngredientsIngredient">
         <div class="addIngredientsIngredient">
-            <p></p>
+            <div>
+                <p></p>
 
-            <select style="display: none;"></select>
-            
-            <button class="addButton">+</button>
+                <button class="addButton">+</button>
+            </div>
+
+            <div style="display: none;">
+                <input type="number" min="0" step="0.01" placeholder="QUANTITY">
+
+                <select></select>
+            </div>
         </div>
     </template>
 </div>

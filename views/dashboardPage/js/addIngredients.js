@@ -69,8 +69,8 @@ module.exports = {
             
             for(let j = 0; j < categories[i].ingredients.length; j++){
                 let ingredientDiv = ingredientTemplate.content.children[0].cloneNode(true);
-                ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
-                ingredientDiv.children[2].onclick = ()=>{this.addOne(ingredientDiv)};
+                ingredientDiv.children[0].children[0].innerText = categories[i].ingredients[j].ingredient.name;
+                ingredientDiv.children[0].children[1].onclick = ()=>{this.addOne(ingredientDiv)};
                 ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
@@ -109,6 +109,7 @@ module.exports = {
         element.parentElement.removeChild(element);
         document.getElementById("myIngredients").appendChild(element);
         document.getElementById("myIngredientsDiv").style.display = "flex";
+        element.children[1].style.display = "flex";
 
         for(let i = 0; i < this.fakeMerchant.ingredients.length; i++){
             if(this.fakeMerchant.ingredients[i].ingredient === element.ingredient){
@@ -118,15 +119,7 @@ module.exports = {
             }
         }
 
-        let input = document.createElement("input");
-        input.type = "number";
-        input.min = "0";
-        input.step = "0.01";
-        input.placeholder = "QUANTITY";
-        element.insertBefore(input, element.children[1]);
-
-        let select = element.children[2];
-        select.style.display = "block";
+        let select = element.children[1].children[1];
         let units = merchant.units[element.ingredient.unitType];
         for(let i = 0; i < units.length; i++){
             let option = document.createElement("option");
@@ -136,23 +129,21 @@ module.exports = {
             select.appendChild(option);
         }
 
-        element.children[3].innerText = "-";
-        element.children[3].onclick = ()=>{this.removeOne(element)};
+        element.children[0].children[1].innerText = "-";
+        element.children[0].children[1].onclick = ()=>{this.removeOne(element)};
     },
 
     removeOne: function(element){
         element.parentElement.removeChild(element);
+        element.children[1].style.display = "none";
 
-        element.removeChild(element.children[1]);
-
-        let select = element.children[1];
+        let select = element.children[0].children[1];
         while(select.children.length > 0){
             select.removeChild(select.firstChild);
         }
-        select.style.display = "none";
 
-        element.children[2].innerText = "+";
-        element.children[2].onclick = ()=>{this.addOne(element)};
+        element.children[0].children[1].innerText = "+";
+        element.children[0].children[1].onclick = ()=>{this.addOne(element)};
 
         if(document.getElementById("myIngredients").children.length === 0){
             document.getElementById("myIngredientsDiv").style.display = "none";
@@ -177,8 +168,8 @@ module.exports = {
         let fetchable = [];
 
         for(let i = 0; i < ingredients.length; i++){
-            let quantity = ingredients[i].children[1].value;
-            let unit = ingredients[i].children[2].value;
+            let quantity = ingredients[i].children[1].children[0].value;
+            let unit = ingredients[i].children[1].children[1].value;
 
             if(quantity === ""){
                 banner.createError("PLEASE ENTER A QUANTITY FOR EACH INGREDIENT YOU WANT TO ADD TO YOUR INVENTORY");

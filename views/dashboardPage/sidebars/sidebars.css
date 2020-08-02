@@ -281,17 +281,39 @@ Add Ingredients
 
             .addIngredientsIngredient{
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
                 align-items: center;
                 margin: 5px;
+                border: 1px solid black;
+                background: rgb(240, 252, 255);
+                padding: 1px 3px;
+                border-radius: 5px;
             }
+
+                .addIngredientsIngredient div{
+                    display: flex;
+                    width: 100%;
+                    align-items: center;
+                }
+
+                .addIngredientsIngredient div:first-of-type{
+                    justify-content: space-around;
+                }
+
+                .addIngredientsIngredient div:last-of-type > *{
+                    margin: 0 5px;
+                }
+
+                .addIngredientsIngredient div:last-of-type{
+                    justify-content: center;
+                }
 
                 .addIngredientsIngredient input[type=number]{
                     width: 100px;
                 }
 
                 .addIngredientsIngredient select{
-                    width: 60px;
+                    width: 100px;
                 }
 
                 .addButton{
@@ -301,7 +323,7 @@ Add Ingredients
                     font-size: 25px;
                     font-weight: bold;
                     background: none;
-                    border: 1px solid black;
+                    border: none;
                     border-radius: 5px;
                     width: 30px;
                     cursor: pointer;

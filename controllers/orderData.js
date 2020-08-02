@@ -78,7 +78,7 @@ module.exports = {
                     }
                 }
             }},
-            {$sort: {date: 1}}
+            {$sort: {date: -1}}
         ])
             .then((orders)=>{
                 return res.json(orders);

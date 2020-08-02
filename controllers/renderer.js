@@ -43,7 +43,7 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-        let activity = new Activity({
+        new Activity({
             ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
             merchant: req.session.user,
             route: "dashboard",
@@ -142,7 +142,7 @@ module.exports = {
 
                             merchant.lastUpdatedTime = updatedTime;
 
-                            //Remove any existing orders so that they can ber replaced
+                            //Remove any existing orders so that they can be replaced
                             let ids = [];
                             for(let i = 0; i < transactions.length; i++){
                                 ids.push(transactions[i].posId);
@@ -168,7 +168,7 @@ module.exports = {
                         merchant: new ObjectId(req.session.user),
                         date: {$gte: firstDay},
                     }},
-                    {$sort: {date: 1}},
+                    {$sort: {date: -1}},
                     {$project: {
                         date: 1,
                         recipes: 1
