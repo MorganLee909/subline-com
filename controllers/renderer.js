@@ -63,7 +63,8 @@ module.exports = {
                 posAccessToken: 1,
                 lastUpdatedTime: 1,
                 inventory: 1,
-                recipes: 1
+                recipes: 1,
+                squareLocation: 1
             }
         )
             .populate("inventory.ingredient")

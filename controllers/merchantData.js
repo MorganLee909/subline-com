@@ -142,6 +142,7 @@ module.exports = {
                     posAccessToken: req.session.accessToken,
                     lastUpdatedTime: new Date(),
                     createdAt: new Date(),
+                    squareLocation: response.data.merchant.main_location_id,
                     inventory: [],
                     recipes: []
                 });
@@ -159,11 +160,12 @@ module.exports = {
                 });
             })
             .then((response)=>{
+                console.log(response.data.objects);
                 let recipes = [];
                 
                 for(let i = 0; i < response.data.objects.length; i++){
                     let recipe = new Recipe({
-                        posId: response.data.objects[i].item_data.variations[0].item_variation_data.item_id,
+                        posId: response.data.objects[i].id,
                         merchant: merchant._id,
                         name: response.data.objects[i].item_data.name,
                         price: response.data.objects[i].item_data.variations[0].item_variation_data.price_money.amount,
@@ -185,7 +187,6 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("ERROR: UNABLE TO CREATE NEW USER AT THIS TIME");
             });
     },

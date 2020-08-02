@@ -28,6 +28,7 @@ const MerchantSchema = new mongoose.Schema({
         status: String,
         expiration: Date,
     },
+    squareLocation: String,
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,

@@ -144,15 +144,4 @@ module.exports = {
                 return res.redirect("/");
             });
     }
-} 
-
-/*
-{
-  access_token: 'EAAAEM5tPhVM2L2MkxzjgA2ATIeyDKFiZzzZEsvPwSB_YSRKyXVrTVZrg_qHNgXe',
-  token_type: 'bearer',
-  expires_at: '2020-08-29T09:39:11Z',
-  merchant_id: 'MLGGD4TQVAM4G',
-  refresh_token: 'EQAAEOGMweecHJhOnxYyQP95Pj3oP-9KaQP027Ad6RQTSAN3He5A55lN47dXHjV2'
 }
-
-*/
