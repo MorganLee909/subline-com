@@ -7,7 +7,7 @@ let newOrder = {
             let categories = merchant.categorizeIngredients();
             let categoriesList = document.getElementById("newOrderCategories");
             let template = document.getElementById("addIngredientsCategory").content.children[0];
-            let ingredientTemplate = document.getElementById("addIngredientsIngredient").content.children[0];
+            let ingredientTemplate = document.getElementById("newOrderIngredient").content.children[0];
     
             for(let i = 0; i < categories.length; i++){
                 let category = template.cloneNode(true);
@@ -22,8 +22,8 @@ let newOrder = {
                 for(let j = 0; j < categories[i].ingredients.length; j++){
                     let ingredientDiv = ingredientTemplate.cloneNode(true);
     
-                    ingredientDiv.children[0].innerText = categories[i].ingredients[j].ingredient.name;
-                    ingredientDiv.children[2].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
+                    ingredientDiv.children[0].children[0].innerText = categories[i].ingredients[j].ingredient.name;
+                    ingredientDiv.children[0].children[1].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
                     ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
     
                     this.unused.push(categories[i].ingredients[j]);
@@ -45,22 +45,9 @@ let newOrder = {
             }
         }
 
-        let quantityInput = document.createElement("input");
-        quantityInput.type = "number";
-        quantityInput.placeholder = `QUANTITY (${ingredientDiv.ingredient.unit})`;
-        quantityInput.min = "0";
-        quantityInput.step = "0.01";
-        ingredientDiv.insertBefore(quantityInput, ingredientDiv.children[1]);
-
-        let priceInput = document.createElement("input");
-        priceInput.type = "number";
-        priceInput.placeholder = "Price Per Unit";
-        priceInput.min = "0";
-        priceInput.step = "0.01";
-        ingredientDiv.insertBefore(priceInput, ingredientDiv.children[2]);
-
-        ingredientDiv.children[4].innerText = "-";
-        ingredientDiv.children[4].onclick = ()=>{this.removeOne(ingredientDiv, container)};
+        ingredientDiv.children[0].children[1].innerText = "-";
+        ingredientDiv.children[0].children[1].onclick = ()=>{this.removeOne(ingredientDiv, container)};
+        ingredientDiv.children[1].style.display = "flex";
 
         container.removeChild(ingredientDiv);
         document.getElementById("newOrderAdded").appendChild(ingredientDiv);
@@ -69,10 +56,9 @@ let newOrder = {
     removeOne: function(ingredientDiv, container){
         this.unused.push(ingredientDiv.ingredient);
 
-        ingredientDiv.removeChild(ingredientDiv.children[1]);
-        ingredientDiv.removeChild(ingredientDiv.children[1]);
-        ingredientDiv.children[1].innerText = "+";
-        ingredientDiv.children[1].onclick = ()=>{this.addOne(ingredientDiv, container)};
+        ingredientDiv.children[1].style.display = "none";
+        ingredientDiv.children[0].children[1].innerText = "+";
+        ingredientDiv.children[0].children[1].onclick = ()=>{this.addOne(ingredientDiv, container)};
         
         ingredientDiv.parentElement.removeChild(ingredientDiv);
         container.appendChild(ingredientDiv);
