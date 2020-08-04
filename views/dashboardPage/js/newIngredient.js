@@ -1,4 +1,4 @@
-module.exports = {
+let newIngredient = {
     display: function(Ingredient){
         document.getElementById("newIngName").value = "";
         document.getElementById("newIngCategory").value = "";
@@ -61,3 +61,5 @@ module.exports = {
             });
     }
 }
+
+module.exports = newIngredient;

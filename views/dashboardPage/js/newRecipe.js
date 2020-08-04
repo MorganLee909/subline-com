@@ -1,4 +1,4 @@
-module.exports = {
+let newRecipe = {
     display: function(Recipe){
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
         let categories = merchant.categorizeIngredients();
@@ -108,3 +108,5 @@ module.exports = {
             });
     },
 }
+
+module.exports = newRecipe;

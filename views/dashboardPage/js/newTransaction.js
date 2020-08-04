@@ -1,4 +1,4 @@
-module.exports = {
+let newTransaction = {
     display: function(Transaction){
         let recipeList = document.getElementById("newTransactionRecipes");
         let template = document.getElementById("createTransaction").content.children[0];
@@ -80,3 +80,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = newTransaction;

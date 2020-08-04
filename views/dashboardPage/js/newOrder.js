@@ -1,4 +1,4 @@
-module.exports = {
+let newOrder = {
     isPopulated: false,
     unused: [],
 
@@ -168,3 +168,5 @@ module.exports = {
             });
     },
 }
+
+module.exports = newOrder;

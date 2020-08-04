@@ -1,4 +1,4 @@
-module.exports = {
+let home = {
     isPopulated: false,
     graph: {},
 
@@ -215,3 +215,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = home;

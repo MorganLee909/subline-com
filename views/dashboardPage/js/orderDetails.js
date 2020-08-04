@@ -1,4 +1,4 @@
-module.exports = {
+let orderDetails = {
     display: function(order){
         document.getElementById("removeOrderBtn").onclick = ()=>{this.remove(order)};
 
@@ -59,3 +59,5 @@ module.exports = {
             });
     }
 }
+
+module.exports = orderDetails;

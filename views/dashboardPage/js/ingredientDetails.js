@@ -1,4 +1,4 @@
-module.exports = {
+let ingredientDetails = {
     ingredient: {},
     dailyUse: 0,
 
@@ -204,3 +204,5 @@ module.exports = {
             });
     }
 }
+
+module.exports = ingredientDetails;

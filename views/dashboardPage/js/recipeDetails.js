@@ -1,4 +1,4 @@
-module.exports = {
+let recipeDetails = {
     recipe: {},
 
     display: function(recipe){
@@ -171,3 +171,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = recipeDetails;

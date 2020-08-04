@@ -1,4 +1,4 @@
-module.exports = {
+let transactionDetails = {
     transaction: {},
 
     display: function(transaction){
@@ -65,3 +65,5 @@ module.exports = {
             });
     },
 }
+
+module.exports = transactionDetails;

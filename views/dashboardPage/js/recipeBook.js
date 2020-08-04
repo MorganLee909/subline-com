@@ -1,4 +1,4 @@
-module.exports = {
+let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
 
@@ -116,3 +116,5 @@ module.exports = {
             });
     }
 }
+
+module.exports = recipeBook;

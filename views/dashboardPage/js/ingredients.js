@@ -1,4 +1,4 @@
-module.exports = {
+let ingredients = {
     isPopulated: false,
     ingredients: [],
 
@@ -132,3 +132,5 @@ module.exports = {
         this.populateByProperty("category");
     }
 }
+
+module.exports = ingredients;

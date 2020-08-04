@@ -1,5 +1,5 @@
-module.exports = {
-    isPopulated: false, 
+let transactions = {
+    isPopulated: false,
 
     display: function(Transaction){
         if(!this.isPopulated){
@@ -165,3 +165,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = transactions;

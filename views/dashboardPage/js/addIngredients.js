@@ -1,4 +1,4 @@
-module.exports = {
+let addIngredients = {
     isPopulated: false,
     fakeMerchant: {},
     chosenIngredients: [],
@@ -220,3 +220,5 @@ module.exports = {
             });
     }
 }
+
+module.exports = addIngredients;

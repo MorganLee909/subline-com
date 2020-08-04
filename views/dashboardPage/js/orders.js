@@ -1,6 +1,4 @@
-const Order = require("./Order");
-
-module.exports = {
+let orders = {
     isFetched: false,
 
     display: async function(Order){
@@ -188,3 +186,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = orders;
