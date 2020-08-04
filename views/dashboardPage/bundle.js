@@ -1775,8 +1775,8 @@ let newOrder = {
         let ingredients = [];
 
         for(let i = 0; i < categoriesList.children.length; i++){
-            let quantity = categoriesList.children[i].children[1].value;
-            let price = categoriesList.children[i].children[2].value;
+            let quantity = categoriesList.children[i].children[1].children[0].value;
+            let price = categoriesList.children[i].children[1].children[1].value;
 
             let fakeOrder = new Order(undefined, undefined, new Date(), [], undefined);
             if(quantity !== ""  && price !== ""){
