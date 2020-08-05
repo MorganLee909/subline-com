@@ -2,12 +2,12 @@ module.exports = {
     isPopulated: false,
     recipeDivList: [],
 
-    display: function(){
+    display: function(Recipe){
         if(!this.isPopulated){
             this.populateRecipes();
 
-            if(merchant.pos === "clover"){
-                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
+            if(merchant.pos !== "none"){
+                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate(Recipe)};
             }
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
             document.getElementById("recipeClearButton").onclick = ()=>{this.clearSorting()};
@@ -69,11 +69,12 @@ module.exports = {
         this.search();
     },
 
-    posUpdate: function(){
+    posUpdate: function(Recipe){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
+        let url = `/recipe/update/${merchant.pos}`;
 
-        fetch("/recipe/update/clover", {
+        fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
@@ -81,6 +82,7 @@ module.exports = {
         })
             .then(response => response.json())
             .then((response)=>{
+                console.log(response);
                 let newRecipes = [];
                 for(let i = 0; i < response.new.length; i++){
                     newRecipes.push(new Recipe(
@@ -109,6 +111,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
