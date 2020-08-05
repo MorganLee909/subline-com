@@ -6,6 +6,7 @@ const Transaction = require("../models/transaction.js");
 const Activity = require("../models/activity.js");
 
 const helper = require("./helper.js");
+const merchant = require("../models/merchant.js");
 
 module.exports = {
     /*
@@ -163,14 +164,11 @@ module.exports = {
                     transactionPromise = helper.getSquareData(merchant);
                 }
 
-                // const arr = [merchant.save()].concat(promiseArray)
-                console.log(merchant.inventory);
-                merchant.save();
+                await transactionPromise;
 
-                return Promise.all([transactionPromise]);
+                return merchant.save();
             })
-            .then((response)=>{
-                console.log(response[0].inventory);
+            .then((merchant)=>{
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
@@ -186,12 +184,12 @@ module.exports = {
                     }}
                 ])
                     .then((transactions)=>{
-                        response[0]._id = undefined;
-                        response[0].posAccessToken = undefined;
-                        response[0].lastUpdatedTime = undefined;
-                        response[0].accountStatus = undefined;
+                        merchant._id = undefined;
+                        merchant.posAccessToken = undefined;
+                        merchant.lastUpdatedTime = undefined;
+                        merchant.accountStatus = undefined;
 
-                        return res.render("dashboardPage/dashboard", {merchant: response[0], transactions: transactions});
+                        return res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions});
                     })
                     .catch((err)=>{});
             })
