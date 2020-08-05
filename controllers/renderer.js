@@ -70,7 +70,7 @@ module.exports = {
             .populate("inventory.ingredient")
             .populate("recipes")
             .then(async (merchant)=>{
-                let promiseArray = [];
+                let transactionPromise = {};
                 if(merchant.pos === "clover"){
                     const subscriptionCheck = axios.get(`${process.env.CLOVER_ADDRESS}/v3/apps/${process.env.SUBLINE_CLOVER_APPID}/merchants/${merchant.posId}/billing_info?access_token=${merchant.posAccessToken}`);
                     const transactionRetrieval = axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${merchant.posId}/orders?filter=modifiedTime>=${merchant.lastUpdatedTime}&expand=lineItems&expand=payment&access_token=${merchant.posAccessToken}`);
@@ -152,19 +152,25 @@ module.exports = {
                             }
                             Transaction.deleteMany({posId: {$in: ids}});
 
-                            promiseArray.push(Transaction.create(transactions));
+                            transactionPromise = Transaction.create(transactions);
+                            // promiseArray.push(Transaction.create(transactions));
                         })
                         .catch((err)=>{
                             req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
                             return res.redirect("/");
                         });
                 }else if(merchant.pos === "square"){
-                    promiseArray = helper.getSquareData(merchant);
+                    transactionPromise = helper.getSquareData(merchant);
                 }
 
-                return Promise.all([merchant.save()].concat(promiseArray));
+                // const arr = [merchant.save()].concat(promiseArray)
+                console.log(merchant.inventory);
+                merchant.save();
+
+                return Promise.all([transactionPromise]);
             })
             .then((response)=>{
+                console.log(response[0].inventory);
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
@@ -190,6 +196,7 @@ module.exports = {
                     .catch((err)=>{});
             })
             .catch((err)=>{
+                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
                 return res.redirect("/");
             });

@@ -163,16 +163,30 @@ module.exports = {
                 let recipes = [];
                 
                 for(let i = 0; i < response.data.objects.length; i++){
-                    let recipe = new Recipe({
-                        posId: response.data.objects[i].id,
-                        merchant: merchant._id,
-                        name: response.data.objects[i].item_data.name,
-                        price: response.data.objects[i].item_data.variations[0].item_variation_data.price_money.amount,
-                        ingredients: []
-                    });
+                    if(response.data.objects[i].item_data.variations.length > 1){
+                        for(let j = 0; j < response.data.objects[i].item_data.variations.length; j++){
+                            let recipe = new Recipe({
+                                posId: response.data.objects[i].item_data.variations[j].id,
+                                merchant: merchant._id,
+                                name: `${response.data.objects[i].item_data.name} '${response.data.objects[i].item_data.variations[j].item_variation_data.name}'`,
+                                price: response.data.objects[i].item_data.variations[j].item_variation_data.price_money.amount
+                            });
 
-                    recipes.push(recipe);
-                    merchant.recipes.push(recipe);
+                            recipes.push(recipe);
+                            merchant.recipes.push(recipe);
+                        }
+                    }else{
+                        let recipe = new Recipe({
+                            posId: response.data.objects[i].item_data.variations[0].id,
+                            merchant: merchant._id,
+                            name: response.data.objects[i].item_data.name,
+                            price: response.data.objects[i].item_data.variations[0].item_variation_data.price_money.amount,
+                            ingredients: []
+                        });
+
+                        recipes.push(recipe);
+                        merchant.recipes.push(recipe);
+                    }
                 }
 
                 return Recipe.create(recipes);
@@ -219,6 +233,7 @@ module.exports = {
                     })
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },

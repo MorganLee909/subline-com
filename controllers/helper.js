@@ -1,5 +1,8 @@
 const axios = require("axios");
 
+const Transaction = require("../models/transaction.js");
+const { response } = require("express");
+
 module.exports = {
     getSquareData: function(merchant){
         let now = new Date().toISOString();
@@ -7,7 +10,9 @@ module.exports = {
         let before = new Date(merchant.lastUpdatedTime).toISOString();
         before = `${before.substring(0, before.length - 1)}+00:00`;
 
-        axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, {
+        let ingredients = {};
+
+        return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, {
             location_ids: [merchant.squareLocation],
             query: {
                 filter: {
@@ -32,21 +37,60 @@ module.exports = {
             }
         })
             .then((response)=>{
+                console.log(response.data.orders.length);
+                let transactions = [];
+
                 if(response.data.orders){
-                    console.log(response.data.orders[0].line_items);
                     for(let i = 0; i < response.data.orders.length; i++){
-                        for(let j = 0; j < merchant.recipes.length; j++){
-                            if(response.data.orders[i].name === merchant.recipes[j].name){
-                                
-                                break;
+                        let transaction = new Transaction({
+                            merchant: merchant,
+                            date: response.data.orders[i].created_at,
+                            posId: response.data.orders[i].id,
+                            recipes: []
+                        });
+
+                        for(let j = 0; j < response.data.orders[i].line_items.length; j++){
+                            for(let k = 0; k < merchant.recipes.length; k++){
+                                if(response.data.orders[i].line_items[j].catalog_object_id === merchant.recipes[k].posId){
+                                    let quantitySold = parseInt(response.data.orders[i].line_items[j].quantity);
+
+                                    transaction.recipes.push({
+                                        recipe: merchant.recipes[k],
+                                        quantity: quantitySold
+                                    });
+
+                                    for(let l = 0; l < merchant.recipes[k].ingredients.length; l++){
+                                        let ingredient = merchant.recipes[k].ingredients[l];
+                                        let quantity = quantitySold * ingredient.quantity
+                                        ingredients[ingredient.ingredient] = ingredients[ingredient.ingredient] + quantity || quantity;
+                                    }
+
+                                    break;
+                                }
                             }
+                        }
+
+                        transactions.push(transaction);
+                    }
+                }
+
+                return Transaction.create(transactions);
+            })
+            .then((transactions)=>{
+                const keys = Object.keys(ingredients);
+                for(let i = 0; i < keys.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(keys[i] === merchant.inventory[j].ingredient._id.toString()){
+                            merchant.inventory[j].quantity -= ingredients[keys[i]];
+                            break;
                         }
                     }
                 }
+
+                return transactions;
             })
             .catch((err)=>{
-                console.log(err);
-                // console.log(err.response.data.errors);
+                return "ERROR: UNABLE TO UPDATE TRANSACTION DATA";
             });
     }
 }

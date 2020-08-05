@@ -1,3 +1,5 @@
+const merchant = require("../../../models/merchant");
+
 module.exports = {
     recipe: {},
 
@@ -35,7 +37,9 @@ module.exports = {
         document.getElementById("recipeUpdate").style.display = "none";
 
         document.getElementById("editRecipeBtn").onclick = ()=>{this.edit()};
-        document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
+        if(merchant.pos === "none"){
+            document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
+        }
         document.getElementById("addRecIng").onclick = ()=>{this.displayAddIngredient()};
         document.getElementById("recipeUpdate").onclick = ()=>{this.update()};
     },
@@ -120,11 +124,12 @@ module.exports = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editRecipes([this.recipe]);
+                    window.merchant.editRecipes([this.recipe]);
                     banner.createNotification("RECIPE UPDATE");
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -155,7 +160,7 @@ module.exports = {
         template.name = "new";
         document.getElementById("recipeIngredientList").appendChild(template);
 
-        let categories = merchant.categorizeIngredients();
+        let categories = window.merchant.categorizeIngredients();
 
         for(let i = 0; i < categories.length; i++){
             let optGroup = document.createElement("optgroup");
