@@ -35,7 +35,9 @@ let transactionDetails = {
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
         document.getElementById("totalPrice").innerText = `$${(totalPrice / 100).toFixed(2)}`;
 
-        document.getElementById("removeTransBtn").onclick = ()=>{this.remove()};
+        if(merchant.pos === "none"){
+            document.getElementById("removeTransBtn").onclick = ()=>{this.remove()};
+        }
     },
 
     remove: function(){
