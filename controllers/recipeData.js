@@ -240,6 +240,7 @@ module.exports = {
         let newRecipes = [];
 
         Merchant.findOne({_id: req.session.user})
+            .populate("recipes")
             .then((fetchedMerchant)=>{
                 merchant = fetchedMerchant;
                 return axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
@@ -250,7 +251,7 @@ module.exports = {
                     }
                 });
             })
-            .then(async (response)=>{
+            .then((response)=>{
                 merchantRecipes = merchant.recipes.slice();
 
                 
@@ -260,12 +261,7 @@ module.exports = {
                         let isFound = false;
 
                         for(let k = 0; k < merchantRecipes.length; k++){
-                            merchantRecipes[k] = merchantRecipes[k].toString();
-                            //I'm comparing posId to recipe id
-                            console.log(itemData.variations[j].id);
-                            console.log(merchantRecipes[k]);
-                            console.log();
-                            if(itemData.variations[j].id === merchantRecipes[k]){
+                            if(itemData.variations[j].id === merchantRecipes[k].posId){
                                 merchantRecipes.splice(k, 1);
                                 k--;
                                 isFound = true;
@@ -294,17 +290,24 @@ module.exports = {
                     }
                 }
 
+                let ids = [];
                 for(let i = 0; i < merchantRecipes.length; i++){
+                    ids.push(merchantRecipes[i]._id);
                     for(let j = 0; j < merchant.recipes.length; j++){
-                        if(merchantRecipes[i] === merchant.recipes[j]._id.toString()){
+                        if(merchantRecipes[i]._id.toString() === merchant.recipes[j]._id.toString()){
                             merchant.recipes.splice(j, 1);
+                            j--;
                             break;
                         }
                     }
                 }
 
+                if(newRecipes.length > 0){
+                    Recipe.create(newRecipes);
+                }
+
                 if(merchantRecipes.length > 0){
-                    Recipe.deleteMany({_id: {$in: merchantRecipes}});
+                    Recipe.deleteMany({_id: {$in: ids}});
                 }
 
                 return merchant.save();
@@ -313,7 +316,6 @@ module.exports = {
                 return res.json({new: newRecipes, removed: merchantRecipes});
             })
             .catch((err)=>{
-                console.log(err);
                 return "ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE";
             });
     }

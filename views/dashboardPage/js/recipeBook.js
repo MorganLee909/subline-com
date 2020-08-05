@@ -82,7 +82,6 @@ module.exports = {
         })
             .then(response => response.json())
             .then((response)=>{
-                console.log(response);
                 let newRecipes = [];
                 for(let i = 0; i < response.new.length; i++){
                     newRecipes.push(new Recipe(
@@ -111,7 +110,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
