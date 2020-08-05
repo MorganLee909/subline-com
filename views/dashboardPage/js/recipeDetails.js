@@ -35,7 +35,9 @@ let recipeDetails = {
         document.getElementById("recipeUpdate").style.display = "none";
 
         document.getElementById("editRecipeBtn").onclick = ()=>{this.edit()};
-        document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
+        if(merchant.pos === "none"){
+            document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
+        }
         document.getElementById("addRecIng").onclick = ()=>{this.displayAddIngredient()};
         document.getElementById("recipeUpdate").onclick = ()=>{this.update()};
     },
@@ -120,7 +122,7 @@ let recipeDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editRecipes([this.recipe]);
+                    window.merchant.editRecipes([this.recipe]);
                     banner.createNotification("RECIPE UPDATE");
                 }
             })
@@ -155,7 +157,7 @@ let recipeDetails = {
         template.name = "new";
         document.getElementById("recipeIngredientList").appendChild(template);
 
-        let categories = merchant.categorizeIngredients();
+        let categories = window.merchant.categorizeIngredients();
 
         for(let i = 0; i < categories.length; i++){
             let optGroup = document.createElement("optgroup");

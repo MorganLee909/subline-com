@@ -16,6 +16,7 @@ module.exports = function(app){
     //Merchant
     app.post("/merchant/create/none", merchantData.createMerchantNone);
     app.get("/merchant/create/clover", merchantData.createMerchantClover);
+    app.get("/merchant/create/square", merchantData.createMerchantSquare);
     app.delete("/merchant/recipes/remove/:id", merchantData.removeRecipe);
     app.post("/merchant/ingredients/add", merchantData.addMerchantIngredient);
     app.delete("/merchant/ingredients/remove/:id", merchantData.removeMerchantIngredient);
@@ -31,6 +32,7 @@ module.exports = function(app){
     app.post("/recipe/create", recipeData.createRecipe);
     app.put("/recipe/update", recipeData.updateRecipe);
     app.get("/recipe/update/clover", recipeData.updateRecipesClover);
+    app.get("/recipe/update/square", recipeData.updateRecipesSquare);
 
     //Orders
     app.get("/order", orderData.getOrders);
@@ -48,5 +50,7 @@ module.exports = function(app){
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
     app.get("/cloverlogin", otherData.cloverRedirect);
-    app.get("/cloverauth*", otherData.cloverAuth);   
+    app.get("/squarelogin", otherData.squareRedirect);
+    app.get("/cloverauth*", otherData.cloverAuth);
+    app.get("/squareauth", otherData.squareAuth);
 }

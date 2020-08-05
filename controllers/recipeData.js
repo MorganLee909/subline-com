@@ -1,9 +1,10 @@
+const axios = require("axios");
+
 const Recipe = require("../models/recipe.js");
 const Merchant = require("../models/merchant.js");
 const RecipeChange = require("../models/recipeChange.js");
 const Validator = require("./validator.js");
-
-const axios = require("axios");
+const merchant = require("../models/merchant.js");
 
 module.exports = {
     /*
@@ -224,6 +225,98 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO RETRIEVE MERCHANT DATA");
+            });
+    },
+
+    updateRecipesSquare: function(req, res){
+        
+        if(!req.session.user){
+            req.session.error = "Must be logged in to do that";
+            return res.redirect("/");
+        }
+
+        let merchant = {};
+        let merchantRecipes = [];
+        let newRecipes = [];
+
+        Merchant.findOne({_id: req.session.user})
+            .populate("recipes")
+            .then((fetchedMerchant)=>{
+                merchant = fetchedMerchant;
+                return axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
+                    object_types: ["ITEM"]
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${merchant.posAccessToken}`
+                    }
+                });
+            })
+            .then((response)=>{
+                merchantRecipes = merchant.recipes.slice();
+
+                
+                for(let i = 0; i < response.data.objects.length; i++){
+                    let itemData = response.data.objects[i].item_data;
+                    for(let j = 0; j < itemData.variations.length; j++){
+                        let isFound = false;
+
+                        for(let k = 0; k < merchantRecipes.length; k++){
+                            if(itemData.variations[j].id === merchantRecipes[k].posId){
+                                merchantRecipes.splice(k, 1);
+                                k--;
+                                isFound = true;
+                                break;
+                            }
+                        }
+
+                        if(!isFound){
+                            let newRecipe = new Recipe({
+                                posId: itemData.variations[j].id,
+                                merchant: merchant._id,
+                                name: "",
+                                price: itemData.variations[j].item_variation_data.price_money.amount,
+                                ingredients: []
+                            });
+
+                            if(itemData.variations.length > 1){
+                                newRecipe.name = `${itemData.name} '${itemData.variations[j].item_variation_data.name}'`;
+                            }else{
+                                newRecipe.name = itemData.name;
+                            }
+
+                            newRecipes.push(newRecipe);
+                            merchant.recipes.push(newRecipe);
+                        }
+                    }
+                }
+
+                let ids = [];
+                for(let i = 0; i < merchantRecipes.length; i++){
+                    ids.push(merchantRecipes[i]._id);
+                    for(let j = 0; j < merchant.recipes.length; j++){
+                        if(merchantRecipes[i]._id.toString() === merchant.recipes[j]._id.toString()){
+                            merchant.recipes.splice(j, 1);
+                            j--;
+                            break;
+                        }
+                    }
+                }
+
+                if(newRecipes.length > 0){
+                    Recipe.create(newRecipes);
+                }
+
+                if(merchantRecipes.length > 0){
+                    Recipe.deleteMany({_id: {$in: ids}});
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return res.json({new: newRecipes, removed: merchantRecipes});
+            })
+            .catch((err)=>{
+                return "ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE";
             });
     }
 }

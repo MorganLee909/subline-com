@@ -124,6 +124,86 @@ module.exports = {
             });
     },
 
+    createMerchantSquare: function(req, res){
+        let merchant = {}
+
+        axios.get(`${process.env.SQUARE_ADDRESS}/v2/merchants/${req.session.merchantId}`, {
+            headers: {
+                Authorization: `Bearer ${req.session.accessToken}`
+            }
+        })
+            .then((response)=>{
+                req.session.merchantId = undefined;
+
+                return new Merchant({
+                    name: response.data.merchant.business_name,
+                    pos: "square",
+                    posId: response.data.merchant.id,
+                    posAccessToken: req.session.accessToken,
+                    lastUpdatedTime: new Date(),
+                    createdAt: new Date(),
+                    squareLocation: response.data.merchant.main_location_id,
+                    inventory: [],
+                    recipes: []
+                });
+            })
+            .then((newMerchant)=>{
+                req.session.accessToken = undefined;
+                merchant = newMerchant;
+                
+                return axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
+                    object_types: ["ITEM"]
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${merchant.posAccessToken}`
+                    }
+                });
+            })
+            .then((response)=>{
+                let recipes = [];
+                
+                for(let i = 0; i < response.data.objects.length; i++){
+                    if(response.data.objects[i].item_data.variations.length > 1){
+                        for(let j = 0; j < response.data.objects[i].item_data.variations.length; j++){
+                            let recipe = new Recipe({
+                                posId: response.data.objects[i].item_data.variations[j].id,
+                                merchant: merchant._id,
+                                name: `${response.data.objects[i].item_data.name} '${response.data.objects[i].item_data.variations[j].item_variation_data.name}'`,
+                                price: response.data.objects[i].item_data.variations[j].item_variation_data.price_money.amount
+                            });
+
+                            recipes.push(recipe);
+                            merchant.recipes.push(recipe);
+                        }
+                    }else{
+                        let recipe = new Recipe({
+                            posId: response.data.objects[i].item_data.variations[0].id,
+                            merchant: merchant._id,
+                            name: response.data.objects[i].item_data.name,
+                            price: response.data.objects[i].item_data.variations[0].item_variation_data.price_money.amount,
+                            ingredients: []
+                        });
+
+                        recipes.push(recipe);
+                        merchant.recipes.push(recipe);
+                    }
+                }
+
+                return Recipe.create(recipes);
+            })
+            .then((recipes)=>{
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                req.session.user = merchant._id;
+
+                return res.redirect("/dashboard");
+            })
+            .catch((err)=>{
+                banner.createError("ERROR: UNABLE TO CREATE NEW USER AT THIS TIME");
+            });
+    },
+
     //DELETE - removes a single recipe from the merchant
     removeRecipe: function(req, res){
         if(!req.session.user){

@@ -52,7 +52,7 @@ controller = {
             case "recipeBook":
                 activeButton = document.getElementById("recipeBookBtn");
                 document.getElementById("recipeBookStrand").style.display = "flex";
-                recipeBook.display();
+                recipeBook.display(Recipe);
                 break;
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
