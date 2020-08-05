@@ -233,7 +233,6 @@ module.exports = {
                     })
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },
