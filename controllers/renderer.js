@@ -53,6 +53,7 @@ module.exports = {
             .save()
             .catch(()=>{});
 
+        let merchant2 = {};
         Merchant.findOne(
             {_id: req.session.user},
             {
@@ -69,6 +70,7 @@ module.exports = {
             .populate("inventory.ingredient")
             .populate("recipes")
             .then(async (merchant)=>{
+                merchant2 = merchant;
                 if(merchant.pos === "clover"){
                     await helper.getCloverData(merchant);
                 }else if(merchant.pos === "square"){
@@ -80,10 +82,13 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
+                if(merchant){
+                    merchant2 = merchant;
+                }
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
-                Transaction.aggregate([
+                return Transaction.aggregate([
                     {$match: {
                         merchant: new ObjectId(req.session.user),
                         date: {$gte: firstDay},
@@ -93,16 +98,15 @@ module.exports = {
                         date: 1,
                         recipes: 1
                     }}
-                ])
-                    .then((transactions)=>{
-                        merchant._id = undefined;
-                        merchant.posAccessToken = undefined;
-                        merchant.lastUpdatedTime = undefined;
-                        merchant.accountStatus = undefined;
+                ]);      
+            })
+            .then((transactions)=>{
+                merchant2._id = undefined;
+                merchant2.posAccessToken = undefined;
+                merchant2.lastUpdatedTime = undefined;
+                merchant2.accountStatus = undefined;
 
-                        return res.render("dashboardPage/dashboard", {merchant: merchant, transactions: transactions});
-                    })
-                    .catch((err)=>{});
+                return res.render("dashboardPage/dashboard", {merchant: merchant2, transactions: transactions});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
