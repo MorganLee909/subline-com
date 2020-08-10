@@ -54,7 +54,7 @@ module.exports = {
 
     //GET - Redirects user to Square OAuth page
     squareRedirect: function(req, res){
-        return res.redirect(`https://connect.squareupsandbox.com/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
+        return res.redirect(`${process.env.SQUARE_ADDRESS}/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
     },
 
     //GET - Get access token from clover and  redirect to merchant creation
