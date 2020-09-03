@@ -59,6 +59,7 @@ module.exports = {
 
     //GET - Get access token from clover and  redirect to merchant creation
     cloverAuth: function(req, res){
+        console.log("running");
         let dataArr = req.url.slice(req.url.indexOf("?") + 1).split("&");
         let authorizationCode = "";
         let merchantId = "";
