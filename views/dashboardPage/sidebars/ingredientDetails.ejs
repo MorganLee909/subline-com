@@ -22,36 +22,42 @@
         </button>
     </div>
 
-    <p></p>
+    <p class="editRemove" id="ingredientDetailsCategory"></p>
+
+    <input class="editAdd" id="detailsCategoryInput" type="text">
     
-    <h1></h1>
+    <h1 class="editRemove" id="ingredientDetailsName"></h1>
+
+    <input class="editAdd" id="ingredientDetailsNameIn" type="text">
 
     <div class="lineBorder"></div>
 
     <label>CURRENT STOCK
-        <p id="ingredientStock"></p>
-        <input id="ingredientInput" type="number" min="0" step="0.01" style="display: none;">
+        <p class="editRemove" id="ingredientStock"></p>
+        <input class="editAdd" id="ingredientInput" type="number" min="0" step="0.01">
     </label>
 
     <div class="lineBorder"></div>
 
-    <label>AVERAGE DAILY USE (30 DAYS)
+    <label class="editRemove">AVERAGE DAILY USE (30 DAYS)
         <p id="dailyUse"></p>
     </label>
 
-    <div class="lineBorder"></div>
+    <div class="lineBorder editRemove"></div>
 
-    <label>RECIPES:
+    <label class="editRemove">RECIPES:
         <ul id="ingredientRecipeList"></ul>
     </label>
 
-    <div class="lineBorder"></div>
+    <div class="lineBorder editRemove"></div>
 
-    <label id="displayUnitLabel">DISPLAY UNIT:</label>
+    <label class="editAdd" id="displayUnitLabel" style="display: none">DISPLAY UNIT:</label>
 
-    <div id="ingredientButtons" class="ingredientButtons"></div>
+    <div class="editAdd" id="ingredientButtons" style="display: none"></div>
 
-    <button id="defaultUnit" class="button">SET DEFAULT</button>
+    <div class="buttonBox editAdd" id="editIngredientButtons" style="display: none">
+        <button id="editSubmitButton" class="button">SAVE</button>
 
-    <button id="editSubmitButton" class="button" style="display: none;">SAVE CHANGES</button>
+        <button id="editCancelButton" class="button">CANCEL</button>
+    </div>
 </div>

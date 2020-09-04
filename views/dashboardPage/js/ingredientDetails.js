@@ -5,17 +5,22 @@ let ingredientDetails = {
     display: function(ingredient){
         this.ingredient = ingredient;
 
-        document.getElementById("editIngBtn").onclick = ()=>{this.edit()};
-        document.getElementById("removeIngBtn").onclick = ()=>{this.remove(merchant)};
+        document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
 
-        document.querySelector("#ingredientDetails p").innerText = ingredient.ingredient.category;
-        document.querySelector("#ingredientDetails h1").innerText = ingredient.ingredient.name;
-        let ingredientStock = document.getElementById("ingredientStock");
-        ingredientStock.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-        ingredientStock.style.display = "block";
-        let ingredientInput = document.getElementById("ingredientInput");
-        ingredientInput.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
-        ingredientInput.style.display = "none";
+        let categoryInput = document.getElementById("detailsCategoryInput");
+        categoryInput.value = "";
+        categoryInput.placeholder = ingredient.ingredient.category;
+
+        document.getElementById("ingredientDetailsName").innerText = ingredient.ingredient.name;
+        
+        let nameInput = document.getElementById("ingredientDetailsNameIn");
+        nameInput.value = "";
+        nameInput.placeholder = ingredient.ingredient.name;
+
+        let stockInput = document.getElementById("ingredientInput");
+        document.getElementById("ingredientStock").innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        stockInput.value = "";
+        stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
 
         let quantities = [];
         let now = new Date();
@@ -36,9 +41,8 @@ let ingredientDetails = {
             sum += quantities[i];
         }
 
-        this.dailyUse = sum / quantities.length;
-
-        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(this.dailyUse).toFixed(2)} ${ingredient.ingredient.unit}`;
+        let dailyUse = sum / quantities.length;
+        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(dailyUse).toFixed(2)} ${ingredient.ingredient.unit}`;
 
         let ul = document.getElementById("ingredientRecipeList");
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
@@ -57,17 +61,9 @@ let ingredientDetails = {
 
         let ingredientButtons = document.getElementById("ingredientButtons");
         let units = [];
-        let unitLabel = document.getElementById("displayUnitLabel");
-        let defaultButton = document.getElementById("defaultUnit");
         if(this.ingredient.ingredient.unitType !== "other"){
             units = merchant.units[this.ingredient.ingredient.unitType];
-            unitLabel.style.display = "block";
-            defaultButton.style.display = "block";
-        }else{
-            unitLabel.style.display = "none";
-            defaultButton.style.display = "none";
         }
-        
         while(ingredientButtons.children.length > 0){
             ingredientButtons.removeChild(ingredientButtons.firstChild);
         }
@@ -83,11 +79,24 @@ let ingredientDetails = {
             }
         }
 
-        document.getElementById("defaultUnit").onclick = ()=>{this.changeUnitDefault()};
+        let add = document.querySelectorAll(".editAdd");
+        let remove = document.querySelectorAll(".editRemove");
+
+        for(let i = 0; i < add.length; i++){
+            add[i].style.display = "none";
+        }
+
+        for(let i = 0; i < remove.length; i++){
+            remove[i].style.display = "block";
+        }
+
         document.getElementById("editSubmitButton").onclick = ()=>{this.editSubmit()};
+        document.getElementById("editCancelButton").onclick = ()=>{this.display(this.ingredient)};
+        document.getElementById("editIngBtn").onclick = ()=>{this.edit()};
+        document.getElementById("removeIngBtn").onclick = ()=>{this.remove()};
     },
 
-    remove: function(merchant){
+    remove: function(){
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
                 if(this.ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){
@@ -119,26 +128,53 @@ let ingredientDetails = {
     },
 
     edit: function(){
-        document.getElementById("ingredientStock").style.display = "none";
-        document.getElementById("ingredientInput").style.display = "block";
-        document.getElementById("editSubmitButton").style.display = "block";
+        let add = document.querySelectorAll(".editAdd");
+        let remove = document.querySelectorAll(".editRemove");
+
+        for(let i = 0; i < add.length; i++){
+            add[i].style.display = "flex";
+        }
+
+        for(let i = 0; i < remove.length; i++){
+            remove[i].style.display = "none";
+        }
     },
 
     editSubmit: function(){
-        this.ingredient.quantity = controller.convertToMain(
-            this.ingredient.ingredient.unit,
-            Number(document.getElementById("ingredientInput").value)
-        );
+        let ingredientButtons = document.querySelectorAll(".unitButton");
+        for(let i = 0; i < ingredientButtons.length; i++){
+            if(ingredientButtons[i].classList.contains("unitActive")){
+                this.ingredient.ingredient.unit = ingredientButtons[i].innerText.toLowerCase();
+                break;
+            }
+        }
+
+        const quantityElem = document.getElementById("ingredientInput");
+        if(quantityElem.value !== ""){
+            this.ingredient.quantity = controller.convertToMain(
+                this.ingredient.ingredient.unit,
+                Number(document.getElementById("ingredientInput").value)
+            );
+        }
+
+        const category = document.getElementById("detailsCategoryInput");
+        this.ingredient.ingredient.category = (category.value === "") ? this.ingredient.ingredient.category : category.value;
+
+        const name = document.getElementById("ingredientDetailsNameIn");
+        this.ingredient.ingredient.name = (name.value === "") ? this.ingredient.ingredient.name : name.value;
         
-        let data = [{
+        let data = {
             id: this.ingredient.ingredient.id,
-            quantity: controller.convertToMain(this.ingredient.ingredient.unit, this.ingredient.quantity)
-        }];
+            name: this.ingredient.ingredient.name,
+            quantity: this.ingredient.quantity,
+            category: this.ingredient.ingredient.category,
+            defaultUnit: this.ingredient.ingredient.unit
+        };
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/merchant/ingredients/update", {
+        fetch("/ingredients/update", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
@@ -151,6 +187,9 @@ let ingredientDetails = {
                     banner.createError(response);
                 }else{
                     merchant.editIngredients([this.ingredient]);
+
+                    this.display(this.ingredient);
+
                     banner.createNotification("INGREDIENT UPDATED");
                 }
             })
@@ -163,18 +202,12 @@ let ingredientDetails = {
     },
 
     changeUnit: function(newActive, unit){
-        this.ingredient.ingredient.unit = unit;
-
         let ingredientButtons = document.querySelectorAll(".unitButton");
         for(let i = 0; i < ingredientButtons.length; i++){
             ingredientButtons[i].classList.remove("unitActive");
         }
 
         newActive.classList.add("unitActive");
-
-        controller.updateData("unit");
-        document.getElementById("ingredientStock").innerText = `${this.ingredient.ingredient.convert(this.ingredient.quantity).toFixed(2)} ${this.ingredient.ingredient.unit.toUpperCase()}`;
-        document.getElementById("dailyUse").innerText = `${this.ingredient.ingredient.convert(this.dailyUse).toFixed(2)} ${this.ingredient.ingredient.unit}`;
     },
 
     changeUnitDefault: function(){

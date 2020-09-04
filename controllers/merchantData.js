@@ -160,7 +160,6 @@ module.exports = {
                 });
             })
             .then((response)=>{
-                console.log(response.data.objects);
                 let recipes = [];
                 
                 for(let i = 0; i < response.data.objects.length; i++){
@@ -329,25 +328,22 @@ module.exports = {
                         date: Date.now(),
                         merchant: req.session.user,
                         ingredient: req.body[i].id,
-                        quantity: req.body[i].quantity - updateIngredient.quantity
+                        quantity: req.body[i].quantity - updateIngredient.quantity,
                     }));
 
                     updateIngredient.quantity = req.body[i].quantity;
                 }
 
-                merchant.save()
-                    .then((newMerchant)=>{
-                        res.json({});
+                return merchant.save();
+            })
+            .then((newMerchant)=>{
+                res.json({});
 
-                        InventoryAdjustment.create(adjustments).catch(()=>{});
-                        return;
-                    })
-                    .catch((err)=>{
-                        return res.json("ERROR: UNABLE TO SAVE DATA");
-                    })
+                InventoryAdjustment.create(adjustments).catch(()=>{});
+                return;
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
+                return res.json("ERROR: UNABLE TO UPDATE DATA");
             });        
     },
 
