@@ -160,6 +160,7 @@ module.exports = {
                 });
             })
             .then((response)=>{
+                console.log(response.data.objects);
                 let recipes = [];
                 
                 for(let i = 0; i < response.data.objects.length; i++){
