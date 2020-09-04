@@ -1150,13 +1150,14 @@ let home = {
         for(let i = 0; i < rands.length; i++){
             let ingredientCheck = template.cloneNode(true);
             let input = ingredientCheck.children[1].children[1];
+            const ingredient = merchant.ingredients[rands[i]];
 
-            ingredientCheck.ingredient = merchant.ingredients[rands[i]];
-            ingredientCheck.children[0].innerText = merchant.ingredients[rands[i]].ingredient.name;
+            ingredientCheck.ingredient = ingredient;
+            ingredientCheck.children[0].innerText = ingredient.ingredient.name;
             ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
-            input.value = merchant.ingredients[rands[i]].quantity.toFixed(2);
+            input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
             ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
-            ingredientCheck.children[2].innerText = merchant.ingredients[rands[i]].ingredient.unit.toUpperCase();
+            ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
 
             ul.appendChild(ingredientCheck);
         }

@@ -262,20 +262,20 @@ Home Strand
     }
 
         .ingredientCheck p:first-of-type{
-            width: 37%;
+            width: 40%;
             font-weight: 300;
             font-size: 15px;
             margin-right: 25px;
         }
 
         .ingredientCheck p:last-of-type{
-            width: 25%
+            width: 15%
         }
 
         .numberInput{
             display: flex;
             justify-content: center;
-            width: 37%;
+            width: 45%;
             margin-right: 25px;
         }
 
@@ -300,7 +300,7 @@ Home Strand
             }
 
             .numberInput input{
-                width: 40%;
+                width: 55%;
                 font-size: 15px;
                 text-align: center;
             }
