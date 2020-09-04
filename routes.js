@@ -18,7 +18,6 @@ module.exports = function(app){
     app.get("/merchant/create/clover", merchantData.createMerchantClover);
     app.get("/merchant/create/square", merchantData.createMerchantSquare);
     app.delete("/merchant/recipes/remove/:id", merchantData.removeRecipe);
-    app.post("/merchant/ingredients/add", merchantData.addMerchantIngredient);
     app.delete("/merchant/ingredients/remove/:id", merchantData.removeMerchantIngredient);
     app.put("/merchant/ingredients/update/:id/:unit", merchantData.ingredientDefaultUnit);
     app.put("/merchant/ingredients/update", merchantData.updateMerchantIngredient);
