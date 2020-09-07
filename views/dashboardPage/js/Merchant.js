@@ -1,6 +1,7 @@
 const Ingredient = require("./Ingredient.js");
 const Recipe = require("./Recipe.js");
 const Transaction = require("./Transaction.js");
+const merchant = require("../../../models/merchant.js");
 
 class Merchant{
     constructor(oldMerchant, transactions){
@@ -156,7 +157,14 @@ class Merchant{
         controller.closeSidebar();
     }
 
-    editTransactions(transaction, remove = false){
+    /*
+    transaction = Transaction Object to add
+    ingredients = The ingredients that need to be updated
+        keys = ingredient ids
+        values = quantity to change in grams
+    remove = If true, removes transaction
+    */
+    editTransactions(transaction, ingredients, remove = false, ){
         let isNew = true;
         for(let i = 0; i < this.transactions.length; i++){
             if(this.transactions[i] === transaction){
@@ -174,6 +182,22 @@ class Merchant{
             this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
         }
 
+        let keys = Object.keys(ingredients);
+        for(let i = 0; i < keys.length; i++){
+            for(let j = 0; j < this.ingredients.length; j++){
+                if(this.ingredients[j].ingredient.id === keys[i]){
+                    if(remove === false){
+                        this.ingredients[j].quantity -= ingredients[keys[i]];
+                    }else{
+                        this.ingredients[j].quantity += ingredients[keys[i]];
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        controller.updateData("ingredient");
         controller.updateData("transaction");
         controller.closeSidebar();
     }

@@ -79,12 +79,11 @@ let newTransaction = {
                             response.recipes,
                             merchant
                         );
-                        merchant.editTransactions(transaction);
-                        banner.createNotification("NEW TRANSACTION CREATED");
+                        merchant.editTransactions(transaction, data.ingredientUpdates);
+                        banner.createNotification("NEW TRANSACTION CREATED, INGREDIENTS UPDATED ACCORDINGLY");
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
                 })
                 .finally(()=>{

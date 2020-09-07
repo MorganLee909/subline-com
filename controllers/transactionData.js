@@ -88,7 +88,6 @@ module.exports = {
                 return res.json(response);
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("ERROR: UNABLE TO CREATE NEW TRANSACTION");
             });
     },
