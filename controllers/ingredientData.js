@@ -1,5 +1,6 @@
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
+const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 const Validator = require("./validator.js");
 
 module.exports = {
@@ -66,6 +67,57 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO CREATE NEW INGREDIENT");
+            });
+    },
+
+    /*
+    POST - Updates data for a single ingredient
+    req.body = {
+        id: id of the ingredient,
+        name: new name of the ingredient,
+        quantity: new quantity of the unit (in grams),
+        category: new category of the unit,
+        defaultUnit: new default unit of the ingredient
+    }
+    */
+    updateIngredient: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Ingredient.findOne({_id: req.body.id})
+            .then((ingredient)=>{
+                ingredient.name = req.body.name,
+                ingredient.category = req.body.category
+
+                return ingredient.save();
+            })
+            .then((ingredient)=>{
+                return Merchant.findOne({_id: req.session.user})
+            })
+            .then((merchant)=>{
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    if(merchant.inventory[i].ingredient.toString() === req.body.id){
+                        merchant.inventory[i].quantity = req.body.quantity;
+                        merchant.inventory[i].defaultUnit = req.body.defaultUnit;
+
+                        new InventoryAdjustment({
+                            date: new Date(),
+                            merchant: req.session.user,
+                            ingredient: req.body.id,
+                            quantity: req.body.quantity - merchant.inventory[i].quantity
+                        }).save().catch(()=>{});
+                    }
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO UPDATE INGREDIENT");
             });
     }
 }
