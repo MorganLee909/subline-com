@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "build": "watchify ./views/dashboardPage/js/dashboard.js -o ./views/dashboardPage/bundle.js",
+    "buildDashboard": "watchify ./views/dashboardPage/js/dashboard.js -o ./views/dashboardPage/bundle.js",
     "nodemon": "nodemon app.js",
-    "dev": "npm run build | npm run nodemon"
+    "dev": "npm run buildDashboard | npm run nodemon"
   },
   "repository": {
     "type": "git",
