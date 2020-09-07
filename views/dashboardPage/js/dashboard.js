@@ -4,7 +4,6 @@ const recipeBook = require("./recipeBook.js");
 const orders = require("./orders.js");
 const transactions = require("./transactions.js");
 
-const addIngredients = require("./addIngredients.js");
 const ingredientDetails = require("./ingredientDetails.js");
 const newIngredient = require("./newIngredient.js");
 const newOrder = require("./newOrder.js");
@@ -221,9 +220,9 @@ controller = {
     updateData: function(item){
         switch(item){
             case "ingredient":
-                home.drawInventoryCheckCard();
+                home.isPopulated = false;
                 ingredients.populateByProperty("category");
-                addIngredients.isPopulated = false;
+                home.isPopulated = false;
                 break;
             case "recipe":
                 transactions.isPopulated = false;
@@ -235,10 +234,6 @@ controller = {
             case "transaction":
                 transactions.isPopulated = false;
                 transactions.display(Transaction);
-                break;
-            case "unit":
-                home.isPopulated = false;
-                ingredients.populateByProperty("category");
                 break;
         }
     }

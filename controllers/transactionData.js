@@ -1,6 +1,8 @@
 const Transaction = require("../models/transaction");
 const Merchant = require("../models/merchant");
 
+const helper = require("./helper.js");
+
 const ObjectId = require("mongoose").Types.ObjectId;
 
 module.exports = {
@@ -58,8 +60,12 @@ module.exports = {
         date: date of the transaction,
         recipes: [{
             recipe: id of the recipe to add,
-            quantity: quantity of the recipe sold
+            quantity: quantity of the recipe sold (in main unit),
         }]
+        ingredientUpdates: an object that contains all of the ingredients that
+            need to be updated as well as the amount to change. 
+            keys = id
+            values = quantity to change in grams
     }
     */
     createTransaction: function(req, res){
@@ -74,6 +80,8 @@ module.exports = {
             device: "none",
             recipes: req.body.recipes
         });
+
+        helper.updateIngredientQuantities(req.body.ingredientUpdates, req.session.user);
 
         newTransaction.save()
             .then((response)=>{

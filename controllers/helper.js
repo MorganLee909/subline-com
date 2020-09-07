@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 const Transaction = require("../models/transaction.js");
+const Merchant = require("../models/merchant.js");
 
 module.exports = {
     getCloverData: async function(merchant){
@@ -180,6 +181,33 @@ module.exports = {
             })
             .catch((err)=>{
                 return "ERROR: UNABLE TO UPDATE TRANSACTION DATA";
+            });
+    },
+
+    /*
+    Updates the quanties of ingredients from a list of transactions
+    ingredients = Object. keys = ingredient ids, values = quantity to change (g)
+    user = id of logged in user
+    */
+    updateIngredientQuantities: function(ingredients, user){
+        Merchant.findOne({_id: user})
+            .then((merchant)=>{
+                let keys = Object.keys(ingredients);
+
+                for(let i = 0; i < keys.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(merchant.inventory[j].ingredient._id.toString() === keys[i]){
+                            merchant.inventory[j].quantity -= ingredients[keys[i]];
+
+                            break;
+                        }
+                    }
+                }
+
+                return merchant.save();
+            })
+            .catch((err)=>{
+                return false;
             });
     }
 }

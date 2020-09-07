@@ -65,14 +65,14 @@ class Merchant{
     editIngredients(ingredients, remove = false, isOrder = false){
         for(let i = 0; i < ingredients.length; i++){
             let isNew = true;
-            for(let j = 0; j < merchant.ingredients.length; j++){
-                if(merchant.ingredients[j].ingredient === ingredients[i].ingredient){
+            for(let j = 0; j < this.ingredients.length; j++){
+                if(this.ingredients[j].ingredient === ingredients[i].ingredient){
                     if(remove){
-                        merchant.ingredients.splice(j, 1);
+                        this.ingredients.splice(j, 1);
                     }else if(!remove && isOrder){
-                        merchant.ingredients[j].quantity += ingredients[i].quantity;
+                        this.ingredients[j].quantity += ingredients[i].quantity;
                     }else{
-                        merchant.ingredients[j].quantity = ingredients[i].quantity;
+                        this.ingredients[j].quantity = ingredients[i].quantity;
                     }
     
                     isNew = false;
@@ -81,7 +81,7 @@ class Merchant{
             }
     
             if(isNew){
-                merchant.ingredients.push({
+                this.ingredients.push({
                     ingredient: ingredients[i].ingredient,
                     quantity: parseFloat(ingredients[i].quantity),
                     defaultUnit: ingredients[i].defaultUnit
@@ -117,7 +117,7 @@ class Merchant{
             }
 
             if(isNew){
-                merchant.recipes.push(recipes[i]);
+                this.recipes.push(recipes[i]);
             }
         }
 
@@ -156,7 +156,14 @@ class Merchant{
         controller.closeSidebar();
     }
 
-    editTransactions(transaction, remove = false){
+    /*
+    transaction = Transaction Object to add
+    ingredients = The ingredients that need to be updated
+        keys = ingredient ids
+        values = quantity to change in grams
+    remove = If true, removes transaction
+    */
+    editTransactions(transaction, ingredients, remove = false, ){
         let isNew = true;
         for(let i = 0; i < this.transactions.length; i++){
             if(this.transactions[i] === transaction){
@@ -174,6 +181,22 @@ class Merchant{
             this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
         }
 
+        let keys = Object.keys(ingredients);
+        for(let i = 0; i < keys.length; i++){
+            for(let j = 0; j < this.ingredients.length; j++){
+                if(this.ingredients[j].ingredient.id === keys[i]){
+                    if(remove === false){
+                        this.ingredients[j].quantity -= ingredients[keys[i]];
+                    }else{
+                        this.ingredients[j].quantity += ingredients[keys[i]];
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        controller.updateData("ingredient");
         controller.updateData("transaction");
         controller.closeSidebar();
     }
