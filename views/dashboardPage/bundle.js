@@ -1792,25 +1792,37 @@ let newTransaction = {
             return;
         }
         
-        let newTransaction = {
+        let data = {
             date: date,
-            recipes: []
+            recipes: [],
+            ingredientUpdates: {}
         };
 
         for(let i = 0; i < recipeDivs.children.length;  i++){
             let quantity = recipeDivs.children[i].children[1].value;
+            const recipe = recipeDivs.children[i].recipe;
             if(quantity !== "" && quantity > 0){
-                newTransaction.recipes.push({
-                    recipe: recipeDivs.children[i].recipe.id,
+                data.recipes.push({
+                    recipe: recipe.id,
                     quantity: quantity
                 });
+
+                for(let j = 0; j < recipe.ingredients.length; j++){
+                    const ingredient = recipe.ingredients[j];
+
+                    if(data.ingredientUpdates[ingredient.ingredient.id]){
+                        data.ingredientUpdates[ingredient.ingredient.id] += ingredient.quantity * quantity;
+                    }else{
+                        data.ingredientUpdates[ingredient.ingredient.id] = ingredient.quantity * quantity;
+                    }
+                }
             }else if(quantity < 0){
                 banner.createError("CANNOT HAVE NEGATIVE VALUES");
                 return;
             }
         }
 
-        if(newTransaction.recipes.length > 0){
+        if(data.recipes.length > 0){
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
 
@@ -1819,7 +1831,7 @@ let newTransaction = {
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"
                 },
-                body: JSON.stringify(newTransaction)
+                body: JSON.stringify(data)
             })
                 .then(response => response.json())
                 .then((response)=>{
@@ -1837,6 +1849,7 @@ let newTransaction = {
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
                 })
                 .finally(()=>{
