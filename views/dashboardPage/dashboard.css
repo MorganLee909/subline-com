@@ -435,6 +435,41 @@ Recipe Book Strand
         overflow-y: auto;
     }
 
+/*
+Analytics Strand
+*/
+.analContent{
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+}
+
+    .itemsList{
+        list-style-type: none;
+        width: 15%;
+    }
+
+        .itemButton{
+            background: rgb(179, 191, 209);
+            color: white;
+            border-radius: 5px;
+            border: 1px solid black;
+            padding: 5px;
+            margin: 1px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .analItemActive{
+
+        }
+
+    .analData{
+        width: 85%;
+        height: 100%;
+        background: red;
+    }
+
 /* 
 Orders Strand 
 */

@@ -1,6 +1,7 @@
 const home = require("./home.js");
 const ingredients = require("./ingredients.js");
 const recipeBook = require("./recipeBook.js");
+const analytics = require("./analytics.js");
 const orders = require("./orders.js");
 const transactions = require("./transactions.js");
 
@@ -52,6 +53,11 @@ controller = {
                 activeButton = document.getElementById("recipeBookBtn");
                 document.getElementById("recipeBookStrand").style.display = "flex";
                 recipeBook.display(Recipe);
+                break;
+            case "analytics":
+                activeButton = document.getElementById("analyticsBtn");
+                document.getElementById("analyticsStrand").style.display = "flex";
+                analytics.display();
                 break;
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
