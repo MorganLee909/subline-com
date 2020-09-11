@@ -604,6 +604,13 @@ let analytics = {
     display: function(){
         const itemsList = document.getElementById("itemsList");
 
+        let now = new Date();
+        let lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(), now.getHours(), now.getMinutes());
+
+        document.getElementById("analStartDate").valueAsDate = lastMonth;
+        document.getElementById("analEndDate").valueAsDate = now;
+        document.getElementById("analDateBtn").onclick = ()=>{this.changeDates()};
+
         while(itemsList.children.length > 0){
             itemsList.removeChild(itemsList.firstChild);
         }
@@ -626,7 +633,7 @@ let analytics = {
         li.classList.add("analItemActive");
 
         let startDate = new Date();
-        startDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 30);
+        startDate = new Date(startDate.getFullYear(), startDate.getMonth() - 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes());
 
         //Get list of recipes that contain the ingredient
         let containingRecipes = [];
@@ -694,6 +701,43 @@ let analytics = {
             sum += quantities[i];
         }
         document.getElementById("analAvgUse").innerText = `${(sum / 30).toFixed(2)} ${ingredient.ingredient.unit}`;        
+    },
+
+    changeDates: function(){
+        let dates = {
+            from: document.getElementById("analStartDate").valueAsDate,
+            to: document.getElementById("analEndDate").valueAsDate
+        }
+
+        if(dates.from > dates.to || dates.from === "" || dates.to === "" || dates.to > new Date()){
+            banner.createError("INVALID DATE");
+            return;
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/transaction/retrieve", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(dates)
+        })
+            .then((response)=>response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response.data);
+                }else{
+                    console.log(response);
+                }
+            })
+            .catch((err)=>{
+                banner.createError("ERROR: UNABLE TO DISPLAY THE DATA");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 
