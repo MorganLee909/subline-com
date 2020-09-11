@@ -1,5 +1,15 @@
+const Transaction = require("./Transaction");
+
 let analytics = {
+    transactions: {},
+    ingredient: {},
+
     display: function(){
+        let startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 1);
+        const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
+
+        this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1]);
         const itemsList = document.getElementById("itemsList");
 
         let now = new Date();
@@ -18,27 +28,29 @@ let analytics = {
             li.classList.add("itemButton");
             li.item = merchant.ingredients[i];
             li.innerText = merchant.ingredients[i].ingredient.name;
-            li.onclick = ()=>{this.ingredientDisplay(merchant.ingredients[i], li)};
+            li.onclick = ()=>{
+                const itemsList = document.getElementById("itemsList");
+                for(let i = 0; i < itemsList.children.length; i++){
+                    itemsList.children[i].classList.remove("analItemActive");
+                }
+
+                li.classList.add("analItemActive");
+
+                this.ingredient = merchant.ingredients[i];
+                this.ingredientDisplay();
+            };
             itemsList.appendChild(li);
         }
     },
 
-    ingredientDisplay: function(ingredient, li){
-        const itemsList = document.getElementById("itemsList");
-        for(let i = 0; i < itemsList.children.length; i++){
-            itemsList.children[i].classList.remove("analItemActive");
-        }
-        li.classList.add("analItemActive");
-
-        let startDate = new Date();
-        startDate = new Date(startDate.getFullYear(), startDate.getMonth() - 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes());
-
+    ingredientDisplay: function(){
+        console.log(this.ingredient);
         //Get list of recipes that contain the ingredient
         let containingRecipes = [];
 
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
-                if(merchant.recipes[i].ingredients[j].ingredient === ingredient.ingredient){
+                if(merchant.recipes[i].ingredients[j].ingredient === this.ingredient.ingredient){
                     containingRecipes.push({
                         recipe: merchant.recipes[i],
                         quantity: merchant.recipes[i].ingredients[j].quantity
@@ -50,28 +62,27 @@ let analytics = {
         }
 
         //Create Graph
-        const dateIndices = merchant.transactionIndices(startDate);
         let quantities = [];
         let dates = [];
-        let currentDate = merchant.transactions[dateIndices[0]].date;
+        let currentDate = this.transactions[0].date;
         let currentQuantity = 0;
 
-        for(let i = dateIndices[0]; i < dateIndices[1]; i++){
-            if(currentDate.getDate() !== merchant.transactions[i].date.getDate()){
-                quantities.push(ingredient.ingredient.convert(currentQuantity));
+        for(let i = 0; i < this.transactions.length; i++){
+            if(currentDate.getDate() !== this.transactions[i].date.getDate()){
+                quantities.push(this.ingredient.ingredient.convert(currentQuantity));
                 dates.push(currentDate);
                 currentQuantity = 0;
-                currentDate = merchant.transactions[i].date;
+                currentDate = this.transactions[i].date;
             }
 
-            for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
+            for(let j = 0; j < this.transactions[i].recipes.length; j++){
                 for(let k = 0; k < containingRecipes.length; k++){
-                    if(merchant.transactions[i].recipes[j].recipe === containingRecipes[k].recipe){
-                        for(let l = 0; l < merchant.transactions[i].recipes[j].recipe.ingredients.length; l++){
-                            const transIngredient = merchant.transactions[i].recipes[j].recipe.ingredients[l];
+                    if(this.transactions[i].recipes[j].recipe === containingRecipes[k].recipe){
+                        for(let l = 0; l < this.transactions[i].recipes[j].recipe.ingredients.length; l++){
+                            const transIngredient = this.transactions[i].recipes[j].recipe.ingredients[l];
 
-                            if(transIngredient.ingredient === ingredient.ingredient){
-                                currentQuantity += transIngredient.quantity * merchant.transactions[i].recipes[j].quantity;
+                            if(transIngredient.ingredient === this.ingredient.ingredient){
+                                currentQuantity += transIngredient.quantity * this.transactions[i].recipes[j].quantity;
 
                                 break;
                             }
@@ -88,7 +99,7 @@ let analytics = {
         }
 
         const layout = {
-            title: ingredient.ingredient.name
+            title: this.ingredient.ingredient.name
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
@@ -98,7 +109,7 @@ let analytics = {
         for(let i = 0; i < quantities.length; i++){
             sum += quantities[i];
         }
-        document.getElementById("analAvgUse").innerText = `${(sum / 30).toFixed(2)} ${ingredient.ingredient.unit}`;        
+        document.getElementById("analAvgUse").innerText = `${(sum / 30).toFixed(2)} ${this.ingredient.ingredient.unit}`;        
     },
 
     changeDates: function(){
@@ -127,10 +138,22 @@ let analytics = {
                 if(typeof(response) === "string"){
                     banner.createError(response.data);
                 }else{
-                    console.log(response);
+                    this.transactions = [];                    
+
+                    for(let i = 0; i < response.length; i++){
+                        this.transactions.push(new Transaction(
+                            response[i]._id,
+                            new Date(response[i].date),
+                            response[i].recipes,
+                            merchant
+                        ));
+                    }
+                    
+                    this.ingredientDisplay();
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("ERROR: UNABLE TO DISPLAY THE DATA");
             })
             .finally(()=>{

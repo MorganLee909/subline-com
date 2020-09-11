@@ -248,39 +248,6 @@ class Merchant{
         controller.closeSidebar();
     }
 
-    /*
-    Gets the indices of two dates from transactions
-    Inputs
-    from: starting date
-    to: ending date (default to now)
-    Output
-    Array containing starting index and ending index
-    Note: Will return false if it cannot find both necessary dates
-    */
-    transactionIndices(from, to = new Date()){
-        let indices = [];
-
-        for(let i = 0; i < this.transactions.length; i++){
-            if(this.transactions[i].date > from){
-                indices.push(i);
-                break;
-            }
-        }
-
-        for(let i = this.transactions.length - 1; i >=0; i--){
-            if(this.transactions[i].date < to){
-                indices.push(i);
-                break;
-            }
-        }
-
-        if(indices.length < 2){
-            return false;
-        }
-
-        return indices;
-    }
-
     revenue(indices){
         let total = 0;
 
@@ -600,8 +567,18 @@ class Transaction{
 
 module.exports = Transaction;
 },{}],6:[function(require,module,exports){
+const Transaction = require("./Transaction");
+
 let analytics = {
+    transactions: {},
+    ingredient: {},
+
     display: function(){
+        let startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 1);
+        const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
+
+        this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1]);
         const itemsList = document.getElementById("itemsList");
 
         let now = new Date();
@@ -620,27 +597,29 @@ let analytics = {
             li.classList.add("itemButton");
             li.item = merchant.ingredients[i];
             li.innerText = merchant.ingredients[i].ingredient.name;
-            li.onclick = ()=>{this.ingredientDisplay(merchant.ingredients[i], li)};
+            li.onclick = ()=>{
+                const itemsList = document.getElementById("itemsList");
+                for(let i = 0; i < itemsList.children.length; i++){
+                    itemsList.children[i].classList.remove("analItemActive");
+                }
+
+                li.classList.add("analItemActive");
+
+                this.ingredient = merchant.ingredients[i];
+                this.ingredientDisplay();
+            };
             itemsList.appendChild(li);
         }
     },
 
-    ingredientDisplay: function(ingredient, li){
-        const itemsList = document.getElementById("itemsList");
-        for(let i = 0; i < itemsList.children.length; i++){
-            itemsList.children[i].classList.remove("analItemActive");
-        }
-        li.classList.add("analItemActive");
-
-        let startDate = new Date();
-        startDate = new Date(startDate.getFullYear(), startDate.getMonth() - 1, startDate.getDate(), startDate.getHours(), startDate.getMinutes());
-
+    ingredientDisplay: function(){
+        console.log(this.ingredient);
         //Get list of recipes that contain the ingredient
         let containingRecipes = [];
 
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
-                if(merchant.recipes[i].ingredients[j].ingredient === ingredient.ingredient){
+                if(merchant.recipes[i].ingredients[j].ingredient === this.ingredient.ingredient){
                     containingRecipes.push({
                         recipe: merchant.recipes[i],
                         quantity: merchant.recipes[i].ingredients[j].quantity
@@ -652,28 +631,27 @@ let analytics = {
         }
 
         //Create Graph
-        const dateIndices = merchant.transactionIndices(startDate);
         let quantities = [];
         let dates = [];
-        let currentDate = merchant.transactions[dateIndices[0]].date;
+        let currentDate = this.transactions[0].date;
         let currentQuantity = 0;
 
-        for(let i = dateIndices[0]; i < dateIndices[1]; i++){
-            if(currentDate.getDate() !== merchant.transactions[i].date.getDate()){
-                quantities.push(ingredient.ingredient.convert(currentQuantity));
+        for(let i = 0; i < this.transactions.length; i++){
+            if(currentDate.getDate() !== this.transactions[i].date.getDate()){
+                quantities.push(this.ingredient.ingredient.convert(currentQuantity));
                 dates.push(currentDate);
                 currentQuantity = 0;
-                currentDate = merchant.transactions[i].date;
+                currentDate = this.transactions[i].date;
             }
 
-            for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
+            for(let j = 0; j < this.transactions[i].recipes.length; j++){
                 for(let k = 0; k < containingRecipes.length; k++){
-                    if(merchant.transactions[i].recipes[j].recipe === containingRecipes[k].recipe){
-                        for(let l = 0; l < merchant.transactions[i].recipes[j].recipe.ingredients.length; l++){
-                            const transIngredient = merchant.transactions[i].recipes[j].recipe.ingredients[l];
+                    if(this.transactions[i].recipes[j].recipe === containingRecipes[k].recipe){
+                        for(let l = 0; l < this.transactions[i].recipes[j].recipe.ingredients.length; l++){
+                            const transIngredient = this.transactions[i].recipes[j].recipe.ingredients[l];
 
-                            if(transIngredient.ingredient === ingredient.ingredient){
-                                currentQuantity += transIngredient.quantity * merchant.transactions[i].recipes[j].quantity;
+                            if(transIngredient.ingredient === this.ingredient.ingredient){
+                                currentQuantity += transIngredient.quantity * this.transactions[i].recipes[j].quantity;
 
                                 break;
                             }
@@ -690,7 +668,7 @@ let analytics = {
         }
 
         const layout = {
-            title: ingredient.ingredient.name
+            title: this.ingredient.ingredient.name
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
@@ -700,7 +678,7 @@ let analytics = {
         for(let i = 0; i < quantities.length; i++){
             sum += quantities[i];
         }
-        document.getElementById("analAvgUse").innerText = `${(sum / 30).toFixed(2)} ${ingredient.ingredient.unit}`;        
+        document.getElementById("analAvgUse").innerText = `${(sum / 30).toFixed(2)} ${this.ingredient.ingredient.unit}`;        
     },
 
     changeDates: function(){
@@ -729,10 +707,22 @@ let analytics = {
                 if(typeof(response) === "string"){
                     banner.createError(response.data);
                 }else{
-                    console.log(response);
+                    this.transactions = [];                    
+
+                    for(let i = 0; i < response.length; i++){
+                        this.transactions.push(new Transaction(
+                            response[i]._id,
+                            new Date(response[i].date),
+                            response[i].recipes,
+                            merchant
+                        ));
+                    }
+                    
+                    this.ingredientDisplay();
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("ERROR: UNABLE TO DISPLAY THE DATA");
             })
             .finally(()=>{
@@ -742,7 +732,7 @@ let analytics = {
 }
 
 module.exports = analytics;
-},{}],7:[function(require,module,exports){
+},{"./Transaction":5}],7:[function(require,module,exports){
 const home = require("./home.js");
 const ingredients = require("./ingredients.js");
 const recipeBook = require("./recipeBook.js");
@@ -987,6 +977,40 @@ controller = {
                 transactions.display(Transaction);
                 break;
         }
+    },
+
+    /*
+    Gets the indices of two dates from transactions
+    Inputs
+    transactions: transaction list to find indices on
+    from: starting date
+    to: ending date (default to now)
+    Output
+    Array containing starting index and ending index
+    Note: Will return false if it cannot find both necessary dates
+    */
+    transactionIndices(transactions, from, to = new Date()){
+        let indices = [];
+
+        for(let i = 0; i < transactions.length; i++){
+            if(transactions[i].date > from){
+                indices.push(i);
+                break;
+            }
+        }
+
+        for(let i = transactions.length - 1; i >=0; i--){
+            if(transactions[i].date < to){
+                indices.push(i);
+                break;
+            }
+        }
+
+        if(indices.length < 2){
+            return false;
+        }
+
+        return indices;
     }
 }
 
@@ -1016,10 +1040,10 @@ let home = {
         let today = new Date();
         let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
+        let lastMonthToDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
-        let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
+        let revenueThisMonth = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfMonth));
+        let revenueLastmonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
 
         document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
@@ -1049,7 +1073,7 @@ let home = {
         let thirtyAgo = new Date(today);
         thirtyAgo.setDate(today.getDate() - 29);
 
-        let data = merchant.graphDailyRevenue(merchant.transactionIndices(thirtyAgo));
+        let data = merchant.graphDailyRevenue(controller.transactionIndices(merchant.transactions, thirtyAgo));
         if(data){
             this.graph.addData(
                 data,
@@ -1112,7 +1136,7 @@ let home = {
         let now = new Date();
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-        let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
+        let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
         if(ingredientList !== false){
             window.ingredientList = [...ingredientList];
             let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;
@@ -1247,7 +1271,7 @@ let ingredientDetails = {
         for(let i = 1; i < 31; i++){
             let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
             let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
-            let indices = merchant.transactionIndices(startDay, endDay);
+            let indices = controller.transactionIndices(merchant.transactions, startDate, endDay);
 
             if(indices === false){
                 quantities.push(0);

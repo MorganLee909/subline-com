@@ -242,6 +242,40 @@ controller = {
                 transactions.display(Transaction);
                 break;
         }
+    },
+
+    /*
+    Gets the indices of two dates from transactions
+    Inputs
+    transactions: transaction list to find indices on
+    from: starting date
+    to: ending date (default to now)
+    Output
+    Array containing starting index and ending index
+    Note: Will return false if it cannot find both necessary dates
+    */
+    transactionIndices(transactions, from, to = new Date()){
+        let indices = [];
+
+        for(let i = 0; i < transactions.length; i++){
+            if(transactions[i].date > from){
+                indices.push(i);
+                break;
+            }
+        }
+
+        for(let i = transactions.length - 1; i >=0; i--){
+            if(transactions[i].date < to){
+                indices.push(i);
+                break;
+            }
+        }
+
+        if(indices.length < 2){
+            return false;
+        }
+
+        return indices;
     }
 }
 

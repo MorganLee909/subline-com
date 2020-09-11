@@ -17,10 +17,10 @@ let home = {
         let today = new Date();
         let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        let lastMonthtoDay = new Date(new Date().setMonth(today.getMonth() - 1));
+        let lastMonthToDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        let revenueThisMonth = merchant.revenue(merchant.transactionIndices(firstOfMonth));
-        let revenueLastmonthToDay = merchant.revenue(merchant.transactionIndices(firstOfLastMonth, lastMonthtoDay));
+        let revenueThisMonth = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfMonth));
+        let revenueLastmonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
 
         document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
@@ -50,7 +50,7 @@ let home = {
         let thirtyAgo = new Date(today);
         thirtyAgo.setDate(today.getDate() - 29);
 
-        let data = merchant.graphDailyRevenue(merchant.transactionIndices(thirtyAgo));
+        let data = merchant.graphDailyRevenue(controller.transactionIndices(merchant.transactions, thirtyAgo));
         if(data){
             this.graph.addData(
                 data,
@@ -113,7 +113,7 @@ let home = {
         let now = new Date();
         let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-        let ingredientList = merchant.ingredientsSold(merchant.transactionIndices(thisMonth));
+        let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
         if(ingredientList !== false){
             window.ingredientList = [...ingredientList];
             let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;

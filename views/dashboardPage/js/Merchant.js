@@ -201,39 +201,6 @@ class Merchant{
         controller.closeSidebar();
     }
 
-    /*
-    Gets the indices of two dates from transactions
-    Inputs
-    from: starting date
-    to: ending date (default to now)
-    Output
-    Array containing starting index and ending index
-    Note: Will return false if it cannot find both necessary dates
-    */
-    transactionIndices(from, to = new Date()){
-        let indices = [];
-
-        for(let i = 0; i < this.transactions.length; i++){
-            if(this.transactions[i].date > from){
-                indices.push(i);
-                break;
-            }
-        }
-
-        for(let i = this.transactions.length - 1; i >=0; i--){
-            if(this.transactions[i].date < to){
-                indices.push(i);
-                break;
-            }
-        }
-
-        if(indices.length < 2){
-            return false;
-        }
-
-        return indices;
-    }
-
     revenue(indices){
         let total = 0;
 
