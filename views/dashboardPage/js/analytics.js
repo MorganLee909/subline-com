@@ -97,7 +97,10 @@ let analytics = {
         let trace = {
             x: dates,
             y: quantities,
-            mode: "lines+markers"
+            mode: "lines+markers",
+            line: {
+                color: "rgb(255, 99, 107)"
+            }
         }
 
         const layout = {

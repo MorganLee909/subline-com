@@ -64,7 +64,10 @@ let home = {
         const trace = {
             x: dates,
             y: revenue,
-            mode: "lines+markers"
+            mode: "lines+markers",
+            line: {
+                color: "rgb(255, 99, 107)"
+            }
         }
 
         const layout = {
@@ -128,38 +131,45 @@ let home = {
 
         let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
         if(ingredientList !== false){
-            window.ingredientList = [...ingredientList];
-            let iterations = (ingredientList.length < 5) ? ingredientList.length : 5;
-            for(let i = 0; i < iterations; i++){
-                try{
-                    let max = ingredientList[0].quantity;
-                    let index = 0;
-                    for(let j = 0; j < ingredientList.length; j++){
-                        if(ingredientList[j].quantity > max){
-                            max = ingredientList[j].quantity;
-                            index = j;
-                        }
-                    }
+            ingredientList.sort((a, b) => a.quantity < b.quantity);
 
-                    dataArray.push({
-                        num: max,
-                        label: ingredientList[index].ingredient.name + ": " +
-                        ingredientList[index].ingredient.convert(ingredientList[index].quantity).toFixed(2) +
-                        " " + ingredientList[index].ingredient.unit
-                    });
-                    ingredientList.splice(index, 1);
-                }catch(err){
-                    break;
+            let quantities = [];
+            let names = [];
+            let labels = [];
+            let colors = [];
+            for(let i = 4; i >= 0; i--){
+                quantities.push(ingredientList[i].quantity);
+                names.push(ingredientList[i].ingredient.name.toUpperCase());
+                labels.push(`${ingredientList[i].ingredient.convert(ingredientList[i].quantity).toFixed(2)} ${ingredientList[i].ingredient.unit.toUpperCase()}`);
+                if(i === 0){
+                    colors.push("rgb(255, 99, 107");
+                }else{
+                    colors.push("rgb(179, 191, 209");
                 }
             }
 
-            let thisCanvas = document.getElementById("popularCanvas");
-            thisCanvas.width = thisCanvas.parentElement.offsetWidth * 0.8;
-            thisCanvas.height = thisCanvas.parentElement.offsetHeight * 0.8;
+            let trace = {
+                x: quantities,
+                y: names,
+                type: "bar",
+                orientation: "h",
+                text: labels,
+                textposition: "auto",
+                hoverinfo: "none",
+                marker: {
+                    color: colors
+                }
+            }
 
-            let HorizontalBarGraph = require("../../shared/graphs.js").HorizontalBarGraph;
-            let popularGraph = new HorizontalBarGraph(thisCanvas);
-            popularGraph.addData(dataArray);
+            let layout = {
+                title: "MOST POPULAR INGREDIENTS",
+                xaxis: {
+                    zeroline: false,
+                    title: "QUANTITY IN GRAMS"
+                }
+            }
+            
+            Plotly.newPlot("popularIngredientsCard", [trace], layout);
         }else{
             document.getElementById("popularCanvas").style.display = "none";
 
