@@ -486,14 +486,14 @@ Analytics Strand
 
         #itemUseGraph{
             padding: 10px;
-            height: 70%;
+            height: 60%;
             flex-grow: 0;
         }
 
         .dataRow{
             display: flex;
             justify-content: space-around;
-            height: 20%;
+            height: 15%;
         }
 
             .analCard{

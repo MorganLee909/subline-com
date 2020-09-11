@@ -5,6 +5,7 @@ let analytics = {
     ingredient: {},
 
     display: function(){
+        console.time("display");
         let startDate = new Date();
         startDate.setMonth(startDate.getMonth() - 1);
         const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
@@ -41,10 +42,11 @@ let analytics = {
             };
             itemsList.appendChild(li);
         }
+        console.timeEnd("display");
     },
 
     ingredientDisplay: function(){
-        console.log(this.ingredient);
+        console.time("load");
         //Get list of recipes that contain the ingredient
         let containingRecipes = [];
 
@@ -104,12 +106,38 @@ let analytics = {
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
 
-        //Create daily use card
+        //Create use cards
         let sum = 0;
+        let max = 0;
+        let min = quantities[0];
         for(let i = 0; i < quantities.length; i++){
             sum += quantities[i];
+            if(quantities[i] > max){
+                max = quantities[i];
+            }else if(quantities[i] < min){
+                min = quantities[i];
+            }
         }
-        document.getElementById("analAvgUse").innerText = `${(sum / 30).toFixed(2)} ${this.ingredient.ingredient.unit}`;        
+        document.getElementById("analMinUse").innerText = `${min.toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analAvgUse").innerText = `${(sum / quantities.length).toFixed(2)} ${this.ingredient.ingredient.unit}`;        
+        document.getElementById("analMaxUse").innerText = `${max.toFixed(2)} ${this.ingredient.ingredient.unit}`;
+
+        let dayUse = [0, 0, 0, 0, 0, 0, 0];
+        let dayCount = [0, 0, 0, 0, 0, 0, 0];
+        for(let i = 0; i < quantities.length; i++){
+            dayUse[dates[i].getDay()] += quantities[i];
+            dayCount[dates[i].getDay()]++;
+        }
+
+        document.getElementById("analDayOne").innerText = `${(dayUse[0] / dayCount[0]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analDayTwo").innerText = `${(dayUse[1] / dayCount[1]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analDayThree").innerText = `${(dayUse[2] / dayCount[2]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analDayFour").innerText = `${(dayUse[3] / dayCount[3]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+
+        console.timeEnd("load");
     },
 
     changeDates: function(){
@@ -153,7 +181,6 @@ let analytics = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("ERROR: UNABLE TO DISPLAY THE DATA");
             })
             .finally(()=>{
