@@ -358,36 +358,6 @@ class Merchant{
 
         return recipeList;
     }
-
-    /*
-    Create revenue data for graphing
-    Input:
-        dateRange: [start index, end index] (this.transactionIndices)
-    Return:
-        [total revenue for each day]
-    */
-    graphDailyRevenue(dateRange){
-        if(!dateRange){
-            return false;
-        }
-
-        let dataList = new Array(30).fill(0);
-        let currentDate = this.transactions[dateRange[0]].date;
-        let arrayIndex = 0;
-
-        for(let i = dateRange[0]; i <= dateRange[1]; i++){
-            if(this.transactions[i].date.getDate() !== currentDate.getDate()){
-                currentDate = this.transactions[i].date;
-                arrayIndex++;
-            }
-
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                dataList[arrayIndex] += (this.transactions[i].recipes[j].recipe.price / 100) * this.transactions[i].recipes[j].quantity;
-            }
-        }
-
-        return dataList;
-    }
     
     /*
     Groups all of the merchant's ingredients by their category
@@ -670,7 +640,7 @@ let analytics = {
         }
 
         const layout = {
-            title: this.ingredient.ingredient.name,
+            title: this.ingredient.ingredient.name.toUpperCase(),
             xaxis: {
                 title: "DATE"
             },
@@ -1093,34 +1063,47 @@ let home = {
     },
 
     drawRevenueGraph: function(){
-        let graphCanvas = document.getElementById("graphCanvas");
-        let today = new Date();
+        let monthAgo = new Date();
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        
+        let dateIndices = controller.transactionIndices(merchant.transactions, monthAgo);
 
-        graphCanvas.height = graphCanvas.parentElement.clientHeight;
-        graphCanvas.width = graphCanvas.parentElement.clientWidth;
+        let revenue = [];
+        let dates = [];
+        let dayRevenue = 0;
+        let currentDate = merchant.transactions[dateIndices[0]].date;
+        for(let i = dateIndices[0]; i < dateIndices[1]; i++){
+            if(merchant.transactions[i].date.getDate() !== currentDate.getDate()){
+                revenue.push(dayRevenue / 100);
+                dayRevenue = 0;
+                dates.push(currentDate);
+                currentDate = merchant.transactions[i].date;
+            }
 
-        let LineGraph = require("../../shared/graphs.js").LineGraph;
-        this.graph = new LineGraph(graphCanvas);
-        this.graph.addTitle("Revenue");
+            for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
+                const recipe = merchant.transactions[i].recipes[j];
 
-        let thirtyAgo = new Date(today);
-        thirtyAgo.setDate(today.getDate() - 29);
-
-        let data = merchant.graphDailyRevenue(controller.transactionIndices(merchant.transactions, thirtyAgo));
-        if(data){
-            this.graph.addData(
-                data,
-                [thirtyAgo, new Date()],
-                "Revenue"
-            );
-        }else{
-            document.getElementById("graphCanvas").style.display = "none";
-            
-            let notice = document.createElement("h1");
-            notice.innerText = "NO DATA YET";
-            notice.classList = "notice";
-            document.getElementById("graphCard").appendChild(notice);
+                dayRevenue += recipe.recipe.price * recipe.quantity;
+            }
         }
+
+        const trace = {
+            x: dates,
+            y: revenue,
+            mode: "lines+markers"
+        }
+
+        const layout = {
+            title: "REVENUE",
+            xaxis: {
+                title: "DATE"
+            },
+            yaxis: {
+                title: "$"
+            }
+        }
+
+        Plotly.newPlot("graphCard", [trace], layout);
     },
 
     drawInventoryCheckCard: function(){

@@ -37,34 +37,47 @@ let home = {
     },
 
     drawRevenueGraph: function(){
-        let graphCanvas = document.getElementById("graphCanvas");
-        let today = new Date();
+        let monthAgo = new Date();
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        
+        let dateIndices = controller.transactionIndices(merchant.transactions, monthAgo);
 
-        graphCanvas.height = graphCanvas.parentElement.clientHeight;
-        graphCanvas.width = graphCanvas.parentElement.clientWidth;
+        let revenue = [];
+        let dates = [];
+        let dayRevenue = 0;
+        let currentDate = merchant.transactions[dateIndices[0]].date;
+        for(let i = dateIndices[0]; i < dateIndices[1]; i++){
+            if(merchant.transactions[i].date.getDate() !== currentDate.getDate()){
+                revenue.push(dayRevenue / 100);
+                dayRevenue = 0;
+                dates.push(currentDate);
+                currentDate = merchant.transactions[i].date;
+            }
 
-        let LineGraph = require("../../shared/graphs.js").LineGraph;
-        this.graph = new LineGraph(graphCanvas);
-        this.graph.addTitle("Revenue");
+            for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
+                const recipe = merchant.transactions[i].recipes[j];
 
-        let thirtyAgo = new Date(today);
-        thirtyAgo.setDate(today.getDate() - 29);
-
-        let data = merchant.graphDailyRevenue(controller.transactionIndices(merchant.transactions, thirtyAgo));
-        if(data){
-            this.graph.addData(
-                data,
-                [thirtyAgo, new Date()],
-                "Revenue"
-            );
-        }else{
-            document.getElementById("graphCanvas").style.display = "none";
-            
-            let notice = document.createElement("h1");
-            notice.innerText = "NO DATA YET";
-            notice.classList = "notice";
-            document.getElementById("graphCard").appendChild(notice);
+                dayRevenue += recipe.recipe.price * recipe.quantity;
+            }
         }
+
+        const trace = {
+            x: dates,
+            y: revenue,
+            mode: "lines+markers"
+        }
+
+        const layout = {
+            title: "REVENUE",
+            xaxis: {
+                title: "DATE"
+            },
+            yaxis: {
+                title: "$"
+            }
+        }
+
+        Plotly.newPlot("graphCard", [trace], layout);
     },
 
     drawInventoryCheckCard: function(){

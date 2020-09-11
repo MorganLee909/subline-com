@@ -311,36 +311,6 @@ class Merchant{
 
         return recipeList;
     }
-
-    /*
-    Create revenue data for graphing
-    Input:
-        dateRange: [start index, end index] (this.transactionIndices)
-    Return:
-        [total revenue for each day]
-    */
-    graphDailyRevenue(dateRange){
-        if(!dateRange){
-            return false;
-        }
-
-        let dataList = new Array(30).fill(0);
-        let currentDate = this.transactions[dateRange[0]].date;
-        let arrayIndex = 0;
-
-        for(let i = dateRange[0]; i <= dateRange[1]; i++){
-            if(this.transactions[i].date.getDate() !== currentDate.getDate()){
-                currentDate = this.transactions[i].date;
-                arrayIndex++;
-            }
-
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                dataList[arrayIndex] += (this.transactions[i].recipes[j].recipe.price / 100) * this.transactions[i].recipes[j].quantity;
-            }
-        }
-
-        return dataList;
-    }
     
     /*
     Groups all of the merchant's ingredients by their category

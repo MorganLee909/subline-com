@@ -101,7 +101,7 @@ let analytics = {
         }
 
         const layout = {
-            title: this.ingredient.ingredient.name,
+            title: this.ingredient.ingredient.name.toUpperCase(),
             xaxis: {
                 title: "DATE"
             },
