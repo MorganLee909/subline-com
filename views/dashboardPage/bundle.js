@@ -619,7 +619,6 @@ let analytics = {
     },
 
     ingredientDisplay: function(ingredient, li){
-        console.time("timing");
         const itemsList = document.getElementById("itemsList");
         for(let i = 0; i < itemsList.children.length; i++){
             itemsList.children[i].classList.remove("analItemActive");
@@ -646,10 +645,7 @@ let analytics = {
         }
 
         //Create Graph
-        console.log(startDate);
         const dateIndices = merchant.transactionIndices(startDate);
-        console.log(dateIndices);
-        console.log(merchant.transactions[dateIndices[0]]);
         let quantities = [];
         let dates = [];
         let currentDate = merchant.transactions[dateIndices[0]].date;
@@ -686,8 +682,11 @@ let analytics = {
             mode: "lines+markers"
         }
 
-        console.timeEnd("timing");
-        Plotly.newPlot("itemUseGraph", [trace]);
+        const layout = {
+            title: ingredient.ingredient.name
+        }
+
+        Plotly.newPlot("itemUseGraph", [trace], layout);
 
         //Create daily use card
         let sum = 0;
@@ -1371,7 +1370,6 @@ let ingredientDetails = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

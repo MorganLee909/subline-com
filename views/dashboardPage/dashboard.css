@@ -40,6 +40,7 @@ Multi-strand use classes
         padding: 10px 50px 0 50px;
         align-items: center;
         box-sizing: border-box;
+        height: 10%;
     }
 
         .strandTitle{
@@ -441,12 +442,16 @@ Analytics Strand
 .analContent{
     display: flex;
     justify-content: space-around;
+    align-items:center;
     padding: 15px;
+    box-sizing: border-box;
+    height: 90%;
 }
 
     .itemsList{
         list-style-type: none;
         width: 15%;
+        max-height: 95%;
         overflow-y: auto;
     }
 
@@ -468,6 +473,7 @@ Analytics Strand
 
         .analItemActive{
             background: rgb(179, 191, 209);
+            cursor: default;
         }
 
     .analData{
@@ -480,8 +486,21 @@ Analytics Strand
 
         #itemUseGraph{
             padding: 10px;
-            height: 50%;
+            height: 70%;
+            flex-grow: 0;
         }
+
+        .dataRow{
+            display: flex;
+            justify-content: space-around;
+            height: 20%;
+        }
+
+            .analCard{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+            }
 
 /* 
 Orders Strand 
