@@ -101,7 +101,13 @@ let analytics = {
         }
 
         const layout = {
-            title: this.ingredient.ingredient.name
+            title: this.ingredient.ingredient.name,
+            xaxis: {
+                title: "DATE"
+            },
+            yaxis: {
+                title: `QUANTITY (${this.ingredient.ingredient.unit.toUpperCase()})`,
+            }
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
