@@ -1,6 +1,5 @@
 let home = {
     isPopulated: false,
-    graph: {},
 
     display: function(){
         if(!this.isPopulated){
@@ -125,9 +124,8 @@ let home = {
     },
 
     drawPopularCard: function(){
-        let dataArray = [];
-        let now = new Date();
-        let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        let thisMonth = new Date();
+        thisMonth.setDate(1);
 
         let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
         if(ingredientList !== false){

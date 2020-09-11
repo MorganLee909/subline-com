@@ -5,7 +5,6 @@ let analytics = {
     ingredient: {},
 
     display: function(){
-        console.time("display");
         let startDate = new Date();
         startDate.setMonth(startDate.getMonth() - 1);
         const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
@@ -42,11 +41,9 @@ let analytics = {
             };
             itemsList.appendChild(li);
         }
-        console.timeEnd("display");
     },
 
     ingredientDisplay: function(){
-        console.time("load");
         //Get list of recipes that contain the ingredient
         let containingRecipes = [];
 
@@ -145,8 +142,6 @@ let analytics = {
         document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
         document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
         document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-
-        console.timeEnd("load");
     },
 
     changeDates: function(){

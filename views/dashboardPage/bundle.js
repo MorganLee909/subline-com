@@ -544,7 +544,6 @@ let analytics = {
     ingredient: {},
 
     display: function(){
-        console.time("display");
         let startDate = new Date();
         startDate.setMonth(startDate.getMonth() - 1);
         const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
@@ -581,11 +580,9 @@ let analytics = {
             };
             itemsList.appendChild(li);
         }
-        console.timeEnd("display");
     },
 
     ingredientDisplay: function(){
-        console.time("load");
         //Get list of recipes that contain the ingredient
         let containingRecipes = [];
 
@@ -684,8 +681,6 @@ let analytics = {
         document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
         document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
         document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-
-        console.timeEnd("load");
     },
 
     changeDates: function(){
@@ -1029,7 +1024,6 @@ controller.openStrand("home");
 },{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./home.js":8,"./ingredientDetails.js":9,"./ingredients.js":10,"./newIngredient.js":11,"./newOrder.js":12,"./newRecipe.js":13,"./newTransaction.js":14,"./orderDetails.js":15,"./orders.js":16,"./recipeBook.js":17,"./recipeDetails.js":18,"./transactionDetails.js":19,"./transactions.js":20}],8:[function(require,module,exports){
 let home = {
     isPopulated: false,
-    graph: {},
 
     display: function(){
         if(!this.isPopulated){
@@ -1154,9 +1148,8 @@ let home = {
     },
 
     drawPopularCard: function(){
-        let dataArray = [];
-        let now = new Date();
-        let thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        let thisMonth = new Date();
+        thisMonth.setDate(1);
 
         let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
         if(ingredientList !== false){
