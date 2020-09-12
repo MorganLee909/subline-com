@@ -470,6 +470,7 @@ Add Recipe
     align-items: center;
     width: 60%;
     border-left: 1px solid black;
+    padding-left: 25px;
 }
 
     #newOrder > label{
@@ -480,7 +481,9 @@ Add Recipe
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 75%;
+        height: 75%;
+        overflow-y: auto;
+        margin-bottom: 10px;
     }
 
         .selectedIngredient{
@@ -490,12 +493,8 @@ Add Recipe
             color: white;
             border-radius: 5px;
             margin: 5px 0;
+            width: 95%;
         }
-
-            .selectedIngredient p{
-                font-weight: bold;
-                font-size: 17px;
-            }
 
             .selectedIngredient > div{
                 margin: 3px;
@@ -503,6 +502,11 @@ Add Recipe
                 justify-content: space-between;
                 align-items: center
             }
+
+                .selectedIngredient p{
+                    font-weight: bold;
+                    font-size: 17px;
+                }
 
                 .newOrderRemove{
                     background: rgb(0, 27, 45);
@@ -519,6 +523,10 @@ Add Recipe
                         background: rgb(201, 201, 201);
                         color: black;
                     }
+
+                .selectedIngredient input{
+                    width: 45%;
+                }
 
 /* New Ingredient */
 #newIngredient{

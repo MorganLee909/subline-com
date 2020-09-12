@@ -1714,7 +1714,15 @@ let newOrder = {
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("newOrderIngredientList").style.display = "flex";
 
+        let selectedList = document.getElementById("selectedIngredientList");
+        while(selectedList.children.length > 0){
+            selectedList.removeChild(selectedList.firstChild);
+        }
+
         let ingredientList = document.getElementById("newOrderIngredients");
+        while(ingredientList.children.length > 0){
+            ingredientList.removeChild(ingredientList.firstChild);
+        }
 
         for(let i = 0; i < merchant.ingredients.length; i++){
             let ingredient = document.createElement("button");
@@ -1723,6 +1731,8 @@ let newOrder = {
             ingredient.onclick = ()=>{this.addIngredient(merchant.ingredients[i].ingredient, ingredient)};
             ingredientList.appendChild(ingredient);
         }
+
+        document.getElementById("submitNewOrder").onclick = ()=>{this.submit()};
     },
 
     addIngredient: function(ingredient, element){
@@ -1739,6 +1749,10 @@ let newOrder = {
     removeIngredient: function(selectedElement, element){
         selectedElement.parentElement.removeChild(selectedElement);
         element.style.display = "block";
+    },
+
+    submit: function(){
+        console.log("something");
     }
 }
 
