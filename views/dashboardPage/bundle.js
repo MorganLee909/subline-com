@@ -776,6 +776,16 @@ let analytics = {
         }
 
         Plotly.newPlot("recipeSalesGraph", [trace], layout);
+
+        let sum = 0;
+        for(let i = 0; i < quantities.length; i++){
+            sum += quantities[i];
+        }
+
+        document.getElementById("recipeAvgUse").innerText = (sum / quantities.length).toFixed(2);
+        console.log(sum / quantities.length);
+        console.log(this.recipe.price);
+        document.getElementById("recipeAvgRevenue").innerText = `$${(((sum / quantities.length) * this.recipe.price) / 100).toFixed(2)}`;
     },
 
     changeDates: function(){
@@ -1282,7 +1292,7 @@ let home = {
                 title: "MOST POPULAR INGREDIENTS",
                 xaxis: {
                     zeroline: false,
-                    title: "QUANTITY IN GRAMS"
+                    title: "QUANTITY"
                 }
             }
             

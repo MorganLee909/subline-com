@@ -534,27 +534,35 @@ Analytics Strand
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        width: 85%;
+        width: 100%;
         height: 100%;
     }
 
         #itemUseGraph{
             padding: 10px;
             height: 60%;
-            flex-grow: 0;
+            flex-basis: 100px;
+            flex-grow: 5;
         }
 
         .dataRow{
             display: flex;
-            justify-content: space-around;
-            height: 15%;
+            justify-content: space-between;
+            flex-basis: 150px;
+            flex-grow: 0;
         }
 
             .analCard{
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
+                margin: 5px;
+                height: inherit;
             }
+
+                .analCard > *{
+                    margin: 0;
+                }
 
 #analRecipeContent{
     display: flex;

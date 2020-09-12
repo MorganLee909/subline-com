@@ -163,7 +163,7 @@ let home = {
                 title: "MOST POPULAR INGREDIENTS",
                 xaxis: {
                     zeroline: false,
-                    title: "QUANTITY IN GRAMS"
+                    title: "QUANTITY"
                 }
             }
             
