@@ -1,11 +1,12 @@
-const Transaction = require("./Transaction");
-
 let analytics = {
+    dateChange: false,
     transactions: [],
     ingredient: {},
     recipe: {},
 
-    display: function(){
+    display: function(Transaction){
+        document.getElementById("analDateBtn").onclick = ()=>{this.changeDates(Transaction)};
+
         if(this.transactions.length === 0){
             let startDate = new Date();
             startDate.setMonth(startDate.getMonth() - 1);
@@ -15,7 +16,7 @@ let analytics = {
         }
 
         let slider = document.getElementById("analSlider");
-        slider.onchange = ()=>{this.display()};
+        slider.onchange = ()=>{this.display(Transaction)};
 
         let ingredientContent = document.getElementById("analIngredientContent");
         let recipeContent = document.getElementById("analRecipeContent");
@@ -33,13 +34,6 @@ let analytics = {
 
     displayIngredients: function(){
         const itemsList = document.getElementById("itemsList");
-
-        let now = new Date();
-        let lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(), now.getHours(), now.getMinutes());
-
-        document.getElementById("analStartDate").valueAsDate = lastMonth;
-        document.getElementById("analEndDate").valueAsDate = now;
-        document.getElementById("analDateBtn").onclick = ()=>{this.changeDates()};
 
         while(itemsList.children.length > 0){
             itemsList.removeChild(itemsList.firstChild);
@@ -63,6 +57,11 @@ let analytics = {
             };
             itemsList.appendChild(li);
         }
+
+        if(this.dateChange && Object.keys(this.ingredient).length !== 0){
+            this.ingredientDisplay();
+        }
+        this.dateChange = false;
     },
 
     displayRecipes: function(){
@@ -89,6 +88,11 @@ let analytics = {
 
             recipeList.appendChild(li);
         }
+
+        if(this.dateChange  && Object.keys(this.recipe).length !== 0){
+            this.recipeDisplay();
+        }
+        this.dateChange = false;
     },
 
     ingredientDisplay: function(){
@@ -242,12 +246,10 @@ let analytics = {
         }
 
         document.getElementById("recipeAvgUse").innerText = (sum / quantities.length).toFixed(2);
-        console.log(sum / quantities.length);
-        console.log(this.recipe.price);
         document.getElementById("recipeAvgRevenue").innerText = `$${(((sum / quantities.length) * this.recipe.price) / 100).toFixed(2)}`;
     },
 
-    changeDates: function(){
+    changeDates: function(Transaction){
         let dates = {
             from: document.getElementById("analStartDate").valueAsDate,
             to: document.getElementById("analEndDate").valueAsDate
@@ -273,7 +275,7 @@ let analytics = {
                 if(typeof(response) === "string"){
                     banner.createError(response.data);
                 }else{
-                    this.transactions = [];                    
+                    this.transactions = [];
 
                     for(let i = 0; i < response.length; i++){
                         this.transactions.push(new Transaction(
@@ -283,8 +285,15 @@ let analytics = {
                             merchant
                         ));
                     }
+
+                    let isRecipe = document.getElementById("analSlider").checked;
+                    if(isRecipe && Object.keys(this.recipe).length !== 0){
+                        this.recipeDisplay();
+                    }else if(!isRecipe && Object.keys(this.ingredient).length !== 0){
+                        this.ingredientDisplay();
+                    }
                     
-                    this.ingredientDisplay();
+                    this.dateChange = true;
                 }
             })
             .catch((err)=>{

@@ -57,7 +57,7 @@ controller = {
             case "analytics":
                 activeButton = document.getElementById("analyticsBtn");
                 document.getElementById("analyticsStrand").style.display = "flex";
-                analytics.display();
+                analytics.display(Transaction);
                 break;
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
