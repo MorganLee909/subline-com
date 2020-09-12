@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="/dashboardPage/dashboard.css">
         <link rel="stylesheet" href="/dashboardPage/sidebars/sidebars.css">
         <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     <body>
         <div id="menu" class="menu">
@@ -29,7 +30,7 @@
                 <button id="menuShifter2" onclick="controller.changeMenu()">&#8801;</button>
             </div>
         
-            <button class="menuButton active" id="homeBtn" class="active" onclick="controller.openStrand('home')">
+            <button class="menuButton active" id="homeBtn" onclick="controller.openStrand('home')">
                 <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -52,6 +53,14 @@
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                 </svg>
                 <p>RECIPE BOOK</p>
+            </button>
+
+            <button class="menuButton" id="analyticsBtn" onclick="controller.openStrand('analytics')">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                    <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+                <p>ANALYTICS</p>
             </button>
         
             <button class="menuButton" id="ordersBtn" onclick="controller.openStrand('orders')">
@@ -110,9 +119,7 @@
                         </div>
                     </div>
 
-                    <div id="graphCard" class="card">
-                        <canvas id="graphCanvas">
-                    </div>
+                    <div id="graphCard" class="card"></div>
                 </div>
 
                 <div class="flexRow">
@@ -124,11 +131,7 @@
                         <button id="inventoryCheck" class="button">Update</button>
                     </div>
 
-                    <div id=popularIngredientsCard class="card">
-                        <p>Most Popular Ingredients (month)</p>
-
-                        <canvas id="popularCanvas"></canvas>
-                    </div>
+                    <div id=popularIngredientsCard class="card"></div>
                 </div>
 
                 <template id="ingredientCheck">
@@ -244,6 +247,123 @@
                         <p></p>
                     </div>
                 </template>
+            </div>
+
+            <div id="analyticsStrand" class="strand">
+                <div class="strandHead">
+                    <h1 class="strandTitle">ANALYTICS</h1>
+
+                    <label class="switch">
+                        <input id="analSlider" type="checkbox">
+                        <span class="slider"><p>INGREDIENTS</p><p>RECIPES</p></span>
+                    </label>
+
+                    <div>
+                        <label>FROM:
+                            <input id="analStartDate" type="date">
+                        </label>
+    
+                        <label>TO:
+                            <input id="analEndDate" type="date">
+                        </label>
+    
+                        <button id="analDateBtn" class="button">SUBMIT</button>
+                    </div>
+                </div>
+
+                <div id="analIngredientContent" class="analContent">
+                    <ul id="itemsList" class="itemsList"></ul>
+
+                    <div class="analData">
+                        <div id="itemUseGraph" class="card analCard"></div>
+
+                        <div class="dataRow">
+                            <div class="card analCard">
+                                <p>MINIMUM DAILY USE</p>
+
+                                <h1 id="analMinUse"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>AVERAGE DAILY USE</p>
+
+                                <h1 id="analAvgUse"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>MAXIMUM DAILY USE</p>
+
+                                <h1 id="analMaxUse"></h1>
+                            </div>
+                        </div>
+
+                        <div class="dataRow">
+                            <div class="card analCard">
+                                <p>Sunday Average</p>
+
+                                <h1 id="analDayOne"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>Monday Average</p>
+
+                                <h1 id="analDayTwo"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>Tuesday Average</p>
+
+                                <h1 id="analDayThree"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>Wednesday Average</p>
+
+                                <h1 id="analDayFour"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>Thursday Average</p>
+
+                                <h1 id="analDayFive"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>Friday Average</p>
+
+                                <h1 id="analDaySix"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>Saturday Average</p>
+
+                                <h1 id="analDaySeven"></h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="analRecipeContent">
+                    <ul id="analRecipeList" class="itemsList"></ul>
+
+                    <div class="analData">
+                        <div id="recipeSalesGraph" class="card analCard"></div>
+
+                        <div class="dataRow">
+                            <div class="card analCard">
+                                <p>Average Daily Sales</p>
+
+                                <h1 id="recipeAvgUse"></h1>
+                            </div>
+
+                            <div class="card analCard">
+                                <p>Average Daily Revenue</p>
+
+                                <h1 id="recipeAvgRevenue"></h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div id="ordersStrand" class="strand">

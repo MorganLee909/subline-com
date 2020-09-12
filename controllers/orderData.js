@@ -96,7 +96,7 @@ module.exports = {
         ingredients: [{
             ingredient: id of the ingredient
             quantity: amount of the ingredient purchased
-            price: price per unit for ingredient
+            price: price for ingredient
         }]
     } 
     */ 

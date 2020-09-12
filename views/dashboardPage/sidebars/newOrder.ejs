@@ -1,4 +1,4 @@
-<div id="newOrder">
+<div id="newOrderIngredientList">
     <div class="sidebarIconButtons">
         <button class="iconButton" onclick="controller.closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -8,45 +8,43 @@
         </button>
     </div>
 
+    <h1>INGREDIENTS</h1>
+
+    <div id="newOrderIngredients"></div>
+</div>
+
+<div id="newOrder">
     <h1>NEW ORDER</h1>
 
-    <label>ID/NAME:
-        <input id="orderName" type="text">
+    <label>NAME/ID:
+        <input id="newOrderName" type="text">
     </label>
 
-    <label>Date:
-        <input id="orderDate" type="date">
+    <label>DATE:
+        <input id="newOrderDate" type="date">
     </label>
 
-    <label>Time:
-        <input id="orderTime" type="time">
+    <label>TIME:
+        <input id="newOrderTime" type="time">
     </label>
-    
 
-    <div id=newOrderCategories></div>
-
-    <div class="lineBorder"></div>
-
-    <h2>INGREDIENTS</h2>
-
-    <div id="newOrderAdded"></div>
-
-    <div class="lineBorder"></div>
+    <div id="selectedIngredientList"></div>
 
     <button id="submitNewOrder" class="button">CREATE</button>
 
-    <template id="newOrderIngredient">
-        <div class="addIngredientsIngredient">
+    <template id="selectedIngredient">
+        <div class="selectedIngredient">
             <div>
                 <p></p>
 
-                <button class="addButton">+</button>
+                <button class="newOrderRemove">REMOVE</button>
             </div>
+            
 
-            <div style="display: none;">
+            <div>
                 <input type="number" min="0" step="0.01" placeholder="QUANTITY">
 
-                <input type="number" min="0" step="0.01" placeholder="PRICE PER UNIT">
+                <input type="number" min="0" step="0.01" placeholder="TOTAL PRICE">
             </div>
         </div>
     </template>

@@ -27,7 +27,7 @@ let ingredientDetails = {
         for(let i = 1; i < 31; i++){
             let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
             let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
-            let indices = merchant.transactionIndices(startDay, endDay);
+            let indices = controller.transactionIndices(merchant.transactions, startDay, endDay);
 
             if(indices === false){
                 quantities.push(0);
@@ -194,7 +194,6 @@ let ingredientDetails = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

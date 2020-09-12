@@ -1,158 +1,118 @@
 let newOrder = {
-    isPopulated: false,
-    unused: [],
-
     display: function(Order){
-        if(!this.isPopulated){
-            let categories = merchant.categorizeIngredients();
-            let categoriesList = document.getElementById("newOrderCategories");
-            let template = document.getElementById("addIngredientsCategory").content.children[0];
-            let ingredientTemplate = document.getElementById("newOrderIngredient").content.children[0];
-    
-            for(let i = 0; i < categories.length; i++){
-                let category = template.cloneNode(true);
-    
-                category.children[0].children[0].innerText = categories[i].name;
-                category.children[0].children[1].onclick = ()=>{this.toggleAddIngredient(category)};
-                category.children[0].children[1].children[1].style.display = "none";
-                category.children[1].style.display = "none";
-                
-                categoriesList.appendChild(category);
-    
-                for(let j = 0; j < categories[i].ingredients.length; j++){
-                    let ingredientDiv = ingredientTemplate.cloneNode(true);
-    
-                    ingredientDiv.children[0].children[0].innerText = categories[i].ingredients[j].ingredient.name;
-                    ingredientDiv.children[0].children[1].onclick = ()=>{this.addOne(ingredientDiv, category.children[1])};
-                    ingredientDiv.ingredient = categories[i].ingredients[j].ingredient;
-    
-                    this.unused.push(categories[i].ingredients[j]);
-                    category.children[1].appendChild(ingredientDiv);
-                }
-            }
+        document.getElementById("sidebarDiv").classList.add("sidebarWide");
+        document.getElementById("newOrderIngredientList").style.display = "flex";
 
-            document.getElementById("submitNewOrder").onclick = ()=>{this.submit(Order)};
-
-            this.isPopulated = true;
-        }
-    },
-
-    addOne: function(ingredientDiv, container){
-        for(let i = 0; i < this.unused.length; i++){
-            if(this.unused[i] === ingredientDiv){
-                this.unused.splice(i, 1);
-                break;
-            }
+        let selectedList = document.getElementById("selectedIngredientList");
+        while(selectedList.children.length > 0){
+            selectedList.removeChild(selectedList.firstChild);
         }
 
-        ingredientDiv.children[0].children[1].innerText = "-";
-        ingredientDiv.children[0].children[1].onclick = ()=>{this.removeOne(ingredientDiv, container)};
-        ingredientDiv.children[1].style.display = "flex";
-
-        container.removeChild(ingredientDiv);
-        document.getElementById("newOrderAdded").appendChild(ingredientDiv);
-    },
-
-    removeOne: function(ingredientDiv, container){
-        this.unused.push(ingredientDiv.ingredient);
-
-        ingredientDiv.children[1].style.display = "none";
-        ingredientDiv.children[0].children[1].innerText = "+";
-        ingredientDiv.children[0].children[1].onclick = ()=>{this.addOne(ingredientDiv, container)};
-        
-        ingredientDiv.parentElement.removeChild(ingredientDiv);
-        container.appendChild(ingredientDiv);
-    },
-
-    toggleAddIngredient: function(categoryElement){
-        let button = categoryElement.children[0].children[1];
-        let ingredientDisplay = categoryElement.children[1];
-
-        if(ingredientDisplay.style.display === "none"){
-            ingredientDisplay.style.display = "flex";
-
-            button.children[0].style.display = "none";
-            button.children[1].style.display = "block";
-        }else{
-            ingredientDisplay.style.display = "none";
-
-            button.children[0].style.display = "block";
-            button.children[1].style.display = "none";
+        let ingredientList = document.getElementById("newOrderIngredients");
+        while(ingredientList.children.length > 0){
+            ingredientList.removeChild(ingredientList.firstChild);
         }
+
+        for(let i = 0; i < merchant.ingredients.length; i++){
+            let ingredient = document.createElement("button");
+            ingredient.classList = "newOrderIngredient";
+            ingredient.innerText = merchant.ingredients[i].ingredient.name;
+            ingredient.onclick = ()=>{this.addIngredient(merchant.ingredients[i].ingredient, ingredient)};
+            ingredientList.appendChild(ingredient);
+        }
+
+        document.getElementById("submitNewOrder").onclick = ()=>{this.submit(Order)};
+    },
+
+    addIngredient: function(ingredient, element){
+        element.style.display = "none";
+
+        let div = document.getElementById("selectedIngredient").content.children[0].cloneNode(true);
+        div.ingredient = ingredient;
+        div.children[0].children[0].innerText = `${ingredient.name} (${ingredient.unit.toUpperCase()})`;
+        div.children[0].children[1].onclick = ()=>{this.removeIngredient(div, element)};
+        document.getElementById("selectedIngredientList").appendChild(div);
+    },
+
+    removeIngredient: function(selectedElement, element){
+        selectedElement.parentElement.removeChild(selectedElement);
+        element.style.display = "block";
     },
 
     submit: function(Order){
-        let categoriesList = document.getElementById("newOrderAdded");
-        let ingredients = [];
+        let date = document.getElementById("newOrderDate").value;
+        let time = document.getElementById("newOrderTime").value;
+        let ingredients = document.getElementById("selectedIngredientList").children;
 
-        for(let i = 0; i < categoriesList.children.length; i++){
-            let quantity = categoriesList.children[i].children[1].children[0].value;
-            let price = categoriesList.children[i].children[1].children[1].value;
-
-            let fakeOrder = new Order(undefined, undefined, new Date(), [], undefined);
-            if(quantity !== ""  && price !== ""){
-                ingredients.push({
-                    ingredient: categoriesList.children[i].ingredient.id,
-                    quantity: controller.convertToMain(categoriesList.children[i].ingredient.unit, parseFloat(quantity)),
-                    price: categoriesList.children[i].ingredient.convert(parseInt(price * 100))
-                });
-            }
+        if(date === ""){
+            banner.createError("DATE IS REQUIRED FOR ORDERS");
+            return;
         }
-
-        let time = document.getElementById("orderTime").value;
-        let date = document.getElementById("orderDate").value;
-        let dateTime = "";
-        if(time === "" && date === ""){
-            dateTime = undefined;
-        }else if(time === "" && date !== ""){
-            dateTime = date;
-        }else if(time !== "" && date === ""){
-            banner.createError("PLEASE ADD A DATE IF YOU WISH TO HAVE A TIME");
-        }else{
-            dateTime = `${date}T${time}:00`
+        
+        if(time !== ""){
+            date = `${date}T${time}`;
         }
 
         let data = {
-            name: document.getElementById("orderName").value,
-            date: dateTime,
-            ingredients: ingredients
-        };
+            name: document.getElementById("newOrderName").value,
+            date: date,
+            ingredients: []
+        }
+
+        for(let i = 0; i < ingredients.length; i++){
+            let quantity = ingredients[i].children[1].children[0].value;
+            let price = ingredients[i].children[1].children[1].value;
+
+            if(quantity === "" || price === ""){
+                banner.createError("MUST PROVIDE QUANTITY AND PRICE PER UNIT FOR ALL INGREDIENTS");
+                return;
+            }
+
+            if(quantity < 0 || price < 0){
+                banner.createError("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS");
+            }
+
+            data.ingredients.push({
+                ingredient: ingredients[i].ingredient.id,
+                quantity: controller.convertToMain(ingredients[i].ingredient.unit, quantity),
+                price: price * 100
+            });
+        }
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
-        
+
         fetch("/order/create", {
-            method: "POST",
+            method: "post",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.json())
+            .then((response)=>response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
                     let order = new Order(
-                       response._id,
-                       response.name,
-                       response.date,
-                       response.ingredients,
-                       merchant 
-                    )
+                        response._id,
+                        response.name,
+                        response.date,
+                        response.ingredients,
+                        merchant
+                    );
 
                     merchant.editOrders([order]);
                     merchant.editIngredients(order.ingredients, false, true);
-                    banner.createNotification("ORDER CREATED");
                 }
             })
             .catch((err)=>{
-                banner.createError("SOEMTHING WENT WRONG. PLEASE REFRESH THE PAGE");
+                banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
                 loader.style.display = "none";
             });
-    },
+    }
 }
 
 module.exports = newOrder;

@@ -14,6 +14,8 @@ class Order{
                         quantity: ingredients[i].quantity,
                         price: ingredients[i].price
                     });
+
+                    break;
                 }
             }
         }

@@ -79,11 +79,11 @@ let orders = {
             let totalCost = 0;
             
             for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                totalCost += merchant.orders[i].ingredients[j].quantity * merchant.orders[i].ingredients[j].price;
+                totalCost += merchant.orders[i].ingredients[j].price;
             }
 
             row.children[0].innerText = merchant.orders[i].name;
-            row.children[1].innerText = `${merchant.orders[i].ingredients.length} items`;
+            row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
             row.children[3].innerText = `$${(totalCost / 100).toFixed(2)}`;
             row.order = merchant.orders[i];

@@ -201,39 +201,6 @@ class Merchant{
         controller.closeSidebar();
     }
 
-    /*
-    Gets the indices of two dates from transactions
-    Inputs
-    from: starting date
-    to: ending date (default to now)
-    Output
-    Array containing starting index and ending index
-    Note: Will return false if it cannot find both necessary dates
-    */
-    transactionIndices(from, to = new Date()){
-        let indices = [];
-
-        for(let i = 0; i < this.transactions.length; i++){
-            if(this.transactions[i].date > from){
-                indices.push(i);
-                break;
-            }
-        }
-
-        for(let i = this.transactions.length - 1; i >=0; i--){
-            if(this.transactions[i].date < to){
-                indices.push(i);
-                break;
-            }
-        }
-
-        if(indices.length < 2){
-            return false;
-        }
-
-        return indices;
-    }
-
     revenue(indices){
         let total = 0;
 
@@ -343,36 +310,6 @@ class Merchant{
         }
 
         return recipeList;
-    }
-
-    /*
-    Create revenue data for graphing
-    Input:
-        dateRange: [start index, end index] (this.transactionIndices)
-    Return:
-        [total revenue for each day]
-    */
-    graphDailyRevenue(dateRange){
-        if(!dateRange){
-            return false;
-        }
-
-        let dataList = new Array(30).fill(0);
-        let currentDate = this.transactions[dateRange[0]].date;
-        let arrayIndex = 0;
-
-        for(let i = dateRange[0]; i <= dateRange[1]; i++){
-            if(this.transactions[i].date.getDate() !== currentDate.getDate()){
-                currentDate = this.transactions[i].date;
-                arrayIndex++;
-            }
-
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                dataList[arrayIndex] += (this.transactions[i].recipes[j].recipe.price / 100) * this.transactions[i].recipes[j].quantity;
-            }
-        }
-
-        return dataList;
     }
     
     /*
