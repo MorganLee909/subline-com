@@ -224,8 +224,6 @@ let home = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        
-
                         merchant.editIngredients(changes);
                         banner.createNotification("INGREDIENTS UPDATED");
                     }
