@@ -75,7 +75,7 @@ let newOrder = {
             data.ingredients.push({
                 ingredient: ingredients[i].ingredient.id,
                 quantity: controller.convertToMain(ingredients[i].ingredient.unit, quantity),
-                price: price
+                price: price * 100
             });
         }
 
