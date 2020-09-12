@@ -556,6 +556,15 @@ Analytics Strand
                 justify-content: space-around;
             }
 
+#analRecipeContent{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px;
+    box-sizing: border-box;
+    height: 90%;
+}
+
 /* 
 Orders Strand 
 */

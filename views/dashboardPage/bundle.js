@@ -542,15 +542,37 @@ module.exports = Transaction;
 const Transaction = require("./Transaction");
 
 let analytics = {
-    transactions: {},
+    transactions: [],
     ingredient: {},
+    recipe: {},
 
     display: function(){
-        let startDate = new Date();
-        startDate.setMonth(startDate.getMonth() - 1);
-        const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
+        if(this.transactions.length === 0){
+            let startDate = new Date();
+            startDate.setMonth(startDate.getMonth() - 1);
+            const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
 
-        this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1]);
+            this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1]);
+        }
+
+        let slider = document.getElementById("analSlider");
+        slider.onchange = ()=>{this.display()};
+
+        let ingredientContent = document.getElementById("analIngredientContent");
+        let recipeContent = document.getElementById("analRecipeContent");
+
+        if(slider.checked){
+            ingredientContent.style.display = "none";
+            recipeContent.style.display = "flex";
+            this.displayRecipes();
+        }else{
+            ingredientContent.style.display = "flex";
+            recipeContent.style.display = "none"
+            this.displayIngredients();
+        }
+    },
+
+    displayIngredients: function(){
         const itemsList = document.getElementById("itemsList");
 
         let now = new Date();
@@ -581,6 +603,32 @@ let analytics = {
                 this.ingredientDisplay();
             };
             itemsList.appendChild(li);
+        }
+    },
+
+    displayRecipes: function(){
+        let recipeList = document.getElementById("analRecipeList");
+        while(recipeList.children.length > 0){
+            recipeList.removeChild(recipeList.firstChild);
+        }
+
+        for(let i = 0; i < merchant.recipes.length; i++){
+            let li = document.createElement("li");
+            li.classList.add("itemButton");
+            li.recipe = merchant.recipes[i];
+            li.innerText = merchant.recipes[i].name;
+            li.onclick = ()=>{
+                let recipeList = document.getElementById("analRecipeList");
+                for(let i = 0; i < recipeList.children.length; i++){
+                    recipeList.children[i].classList.remove("analItemActive");
+                }
+                li.classList.add("analItemActive");
+
+                this.recipe = merchant.recipes[i];
+                this.recipeDisplay();
+            }
+
+            recipeList.appendChild(li);
         }
     },
 
@@ -683,6 +731,51 @@ let analytics = {
         document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
         document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
         document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+    },
+
+    recipeDisplay: function(){
+        let quantities = [];
+        let dates = [];
+        let currentDate = this.transactions[0].date;
+        let quantity = 0;
+
+        for(let i = 0; i < this.transactions.length; i++){
+            if(currentDate.getDate() !== this.transactions[i].date.getDate()){
+                quantities.push(quantity);
+                quantity = 0;
+                dates.push(currentDate);
+                currentDate = this.transactions[i].date;
+            }
+
+            for(let j = 0; j < this.transactions[i].recipes.length; j++){
+                const recipe = this.transactions[i].recipes[j];
+
+                if(recipe.recipe === this.recipe){
+                    quantity += recipe.quantity;
+                }
+            }
+        }
+
+        const trace = {
+            x: dates,
+            y: quantities,
+            mode: "lines+markers",
+            line: {
+                color: "rgb(255, 99, 107"
+            }
+        }
+
+        const layout = {
+            title: this.recipe.name.toUpperCase(),
+            xaxis: {
+                title: "DATE"
+            },
+            yaxis: {
+                title: "Quantity"
+            }
+        }
+
+        Plotly.newPlot("recipeSalesGraph", [trace], layout);
     },
 
     changeDates: function(){
