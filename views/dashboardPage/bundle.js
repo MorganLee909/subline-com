@@ -2055,13 +2055,13 @@ let orderDetails = {
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredientDiv = template.cloneNode(true);
-            let price = (order.ingredients[i].quantity * order.ingredients[i].price) / 100;
+            let price = order.ingredients[i].price / 100;
             grandTotal += price;
 
             let ingredient = order.ingredients[i].ingredient;
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
             ingredientDiv.children[1].innerText = `${ingredient.convert(order.ingredients[i].quantity).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
-            ingredientDiv.children[2].innerText = `$${(order.ingredients[i].price / 100).toFixed(2)}`;
+            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
 
             ingredientList.appendChild(ingredientDiv);
         }
