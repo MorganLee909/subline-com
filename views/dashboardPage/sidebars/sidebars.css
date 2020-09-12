@@ -147,6 +147,10 @@
     box-shadow: -1px 0px 10px gray;
 }
 
+.sidebarWide{
+    width: 40vw;
+}
+
 .sidebarHide{
     width: 0;
     transition: width 0.2s;
@@ -429,28 +433,92 @@ Add Recipe
     }
 
 /* New Order */
+#newOrderIngredientList{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+}
+
+    #newOrderIngredients{
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        overflow-y: auto;
+    }
+
+        .newOrderIngredient{
+            background: rgb(0, 27, 45);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 1px 0;
+            cursor: pointer;
+        }
+
+            .newOrderIngredient:hover{
+                background: rgb(201, 201, 201);
+                color: black;
+            }
+
 #newOrder{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 60%;
+    border-left: 1px solid black;
 }
 
-    #newOrderCategories{
+    #newOrder > label{
+        margin: 5px;
+    }
+
+    #selectedIngredientList{
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 100%;
-        margin-bottom: 25px;
-        max-height: 25%;
-        overflow: auto;
+        width: 75%;
     }
 
-    #newOrderAdded{
-        max-height: 25%;
-        width: 100%;
-        overflow: auto;
-    }
+        .selectedIngredient{
+            display: flex;
+            flex-direction: column;
+            background: rgb(0, 27, 45);
+            color: white;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+            .selectedIngredient p{
+                font-weight: bold;
+                font-size: 17px;
+            }
+
+            .selectedIngredient > div{
+                margin: 3px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+            }
+
+                .newOrderRemove{
+                    background: rgb(0, 27, 45);
+                    border: 1px solid white;
+                    color: white;
+                    border-radius: 5px;
+                    font-size: 13px;
+                    font-weight: bold;
+                    padding: 5px;
+                    cursor: pointer;
+                }
+
+                    .newOrderRemove:hover{
+                        background: rgb(201, 201, 201);
+                        color: black;
+                    }
 
 /* New Ingredient */
 #newIngredient{
