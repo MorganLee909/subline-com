@@ -79,14 +79,12 @@ let orders = {
             let totalCost = 0;
             
             for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                console.log(merchant.orders[i].ingredients[j].price);
                 totalCost += merchant.orders[i].ingredients[j].price;
             }
 
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            console.log(totalCost);
             row.children[3].innerText = `$${(totalCost / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};

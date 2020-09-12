@@ -19,12 +19,9 @@ let orderDetails = {
             grandTotal += price;
 
             let ingredient = order.ingredients[i].ingredient;
-            let priceText = ingredient.convert(order.ingredients[i].quantity).toFixed(2) + " " + 
-                ingredient.unit.toUpperCase() + " x $" +
-                (order.convertPrice(ingredient.unitType, ingredient.unit, order.ingredients[i].price) / 100).toFixed(2);
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[1].innerText = priceText;
-            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
+            ingredientDiv.children[1].innerText = `${ingredient.convert(order.ingredients[i].quantity).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+            ingredientDiv.children[2].innerText = `$${(order.ingredients[i].price / 100).toFixed(2)}`;
 
             ingredientList.appendChild(ingredientDiv);
         }

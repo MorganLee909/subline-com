@@ -1818,7 +1818,6 @@ let newOrder = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2060,12 +2059,9 @@ let orderDetails = {
             grandTotal += price;
 
             let ingredient = order.ingredients[i].ingredient;
-            let priceText = ingredient.convert(order.ingredients[i].quantity).toFixed(2) + " " + 
-                ingredient.unit.toUpperCase() + " x $" +
-                (order.convertPrice(ingredient.unitType, ingredient.unit, order.ingredients[i].price) / 100).toFixed(2);
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[1].innerText = priceText;
-            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
+            ingredientDiv.children[1].innerText = `${ingredient.convert(order.ingredients[i].quantity).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+            ingredientDiv.children[2].innerText = `$${(order.ingredients[i].price / 100).toFixed(2)}`;
 
             ingredientList.appendChild(ingredientDiv);
         }
@@ -2184,14 +2180,12 @@ let orders = {
             let totalCost = 0;
             
             for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                console.log(merchant.orders[i].ingredients[j].price);
                 totalCost += merchant.orders[i].ingredients[j].price;
             }
 
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            console.log(totalCost);
             row.children[3].innerText = `$${(totalCost / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
