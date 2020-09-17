@@ -1962,7 +1962,7 @@ let newRecipe = {
             }
         }
 
-        document.getElementById("ingredientCount").onclick = ()=>{this.changeRecipeCount()};
+        document.getElementById("ingredientCount").onchange = ()=>{this.changeRecipeCount()};
         document.getElementById("submitNewRecipe").onclick = ()=>{this.submit(Recipe)};
     },
 
