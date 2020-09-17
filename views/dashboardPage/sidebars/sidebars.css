@@ -267,10 +267,14 @@ Ingredient Details
         }
 
     #ingredientRecipeList{
+        /* display: flex;
+        flex-direction: column;
+        align-items: center; */
+        text-align: center;
         list-style: none;
         overflow: auto;
         max-height: 150px;
-        width: 90%;
+        width: 100%;
         margin-left: auto;
     }
 
@@ -279,10 +283,11 @@ Ingredient Details
         padding: 10px;
         border-radius: 5px;
         font-weight: bold;
+        width: 75%;
         background: rgb(240, 252, 255);
         border: 1px solid black;
         cursor: pointer;
-        margin: 1px 0;
+        margin: 1px auto;
     }
 
         #ingredientRecipeList > li:hover{
