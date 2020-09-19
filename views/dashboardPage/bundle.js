@@ -1250,9 +1250,16 @@ let home = {
 
             ingredientCheck.ingredient = ingredient;
             ingredientCheck.children[0].innerText = ingredient.ingredient.name;
-            ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
+            ingredientCheck.children[1].children[0].onclick = ()=>{
+                input.value--;
+                input.changed = true;
+            };
             input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
-            ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
+            ingredientCheck.children[1].children[2].onclick = ()=>{
+                input.value++;
+                input.changed = true;
+            }
+            input.onchange = ()=>{input.changed = true};
             ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
 
             ul.appendChild(ingredientCheck);
@@ -1326,9 +1333,9 @@ let home = {
             if(lis[i].children[1].children[1].value >= 0){
                 let merchIngredient = lis[i].ingredient;
 
-                let value = parseFloat(lis[i].children[1].children[1].value);
+                if(lis[i].children[1].children[1].changed === true){
+                    let value = controller.convertToMain(merchIngredient.ingredient.unit, parseFloat(lis[i].children[1].children[1].value));
 
-                if(value !== merchIngredient.quantity){
                     changes.push({
                         id: merchIngredient.ingredient.id,
                         ingredient: merchIngredient.ingredient,
@@ -1339,17 +1346,19 @@ let home = {
                         id: merchIngredient.ingredient.id,
                         quantity: value
                     });
+
+                    lis[i].children[1].children[1].changed = false;
                 }
             }else{
                 banner.createError("CANNOT HAVE NEGATIVE INGREDIENTS");
                 return;
             }
         }
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
         
         if(fetchData.length > 0){
+            let loader = document.getElementById("loaderContainer");
+            loader.style.display = "flex";
+
             fetch("/merchant/ingredients/update", {
                 method: "PUT",
                 headers: {
