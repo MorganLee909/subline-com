@@ -18,7 +18,6 @@ let home = {
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthToDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        console.log("here");
         let revenueThisMonth = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfMonth));
         let revenueLastMonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
 
