@@ -79,7 +79,8 @@ let orders = {
             let totalCost = 0;
             
             for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                totalCost += merchant.orders[i].ingredients[j].price;
+                const ingredient = merchant.orders[i].ingredients[j];
+                totalCost += ingredient.pricePerUnit * ingredient.quantity;
             }
 
             row.children[0].innerText = merchant.orders[i].name;

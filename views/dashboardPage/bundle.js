@@ -130,8 +130,7 @@ class Merchant{
             if(isNew){
                 this.ingredients.push({
                     ingredient: ingredients[i].ingredient,
-                    quantity: parseFloat(ingredients[i].quantity),
-                    defaultUnit: ingredients[i].defaultUnit
+                    quantity: parseFloat(ingredients[i].quantity)
                 });
             }
         }
@@ -999,10 +998,6 @@ controller = {
     },
 
     convertToMain: function(unit, quantity){
-        console.log(unit);
-        console.log(quantity);
-        console.log(typeof(quantity));
-        console.log(quantity / 3.2808);
         let converted = 0;
     
         if(merchant.units.mass.includes(unit)){
@@ -1100,7 +1095,7 @@ controller = {
     },
 
     /*
-    Converts the price of a unit to $/g
+    Converts the price of a unit to $/main unit
     unitType = type of the unit (i.e. mass, volume)
     unit = exact unit to convert from
     price = price of the ingredient per unit in cents
@@ -1137,7 +1132,46 @@ controller = {
         }
 
         return price;
-    }
+    },
+
+    /*
+    Converts the price of unit back to the price per default unit
+    unitType = type of the unit (i.e. mass, volume)
+    unit = exact unit to convert to
+    price = price of the ingredient per unit in cents
+    */
+    reconvertPrice(unitType, unit, price){
+        if(unitType === "mass"){
+            switch(unit){
+                case "g": break;
+                case "kg": price *= 1000; break;
+                case "oz":  price *= 28.3495; break;
+                case "lb":  price *= 453.5924; break;
+            }
+        }else if(unitType === "volume"){
+            switch(unit){
+                case "ml": price /= 1000; break;
+                case "l": break;
+                case "tsp": price /= 202.8842; break;
+                case "tbsp": price /= 67.6278; break;
+                case "ozfl": price /= 33.8141; break;
+                case "cup": price /= 4.1667; break;
+                case "pt": price /= 2.1134; break;
+                case "qt": price /= 1.0567; break;
+                case "gal": price *= 3.7854; break;
+            }
+        }else if(unitType === "length"){
+            switch(unit){
+                case "mm": price /= 1000; break;
+                case "cm": price /= 100; break;
+                case "m": break;
+                case "in": price /= 39.3701; break;
+                case "ft": price /= 3.2808; break;
+            }
+        }
+
+    return price;
+}
 }
 
 if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
@@ -2189,18 +2223,22 @@ let orderDetails = {
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredientDiv = template.cloneNode(true);
-            let price = order.ingredients[i].price / 100;
+            let price = order.ingredients[i].pricePerUnit * order.ingredients[i].quantity;
             grandTotal += price;
 
-            let ingredient = order.ingredients[i].ingredient;
+            console.log(order.ingredients[i])
+            const ingredient = order.ingredients[i].ingredient;
+            const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
+            const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);
+            
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[1].innerText = `${ingredient.convert(order.ingredients[i].quantity).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
-            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
+            ingredientDiv.children[1].innerText = `${convertedQuantity.toFixed(2)} ${ingredient.unit.toUpperCase()} x $${(convertedPrice / 100).toFixed(2)}`;
+            ingredientDiv.children[2].innerText = `$${(price / 100).toFixed(2)}`;
 
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
+        document.querySelector("#orderTotalPrice p").innerText = `$${(grandTotal / 100).toFixed(2)}`;
     },
 
     remove: function(order){
@@ -2314,7 +2352,8 @@ let orders = {
             let totalCost = 0;
             
             for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                totalCost += merchant.orders[i].ingredients[j].price;
+                const ingredient = merchant.orders[i].ingredients[j];
+                totalCost += ingredient.pricePerUnit * ingredient.quantity;
             }
 
             row.children[0].innerText = merchant.orders[i].name;

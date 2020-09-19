@@ -15,18 +15,22 @@ let orderDetails = {
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredientDiv = template.cloneNode(true);
-            let price = order.ingredients[i].price / 100;
+            let price = order.ingredients[i].pricePerUnit * order.ingredients[i].quantity;
             grandTotal += price;
 
-            let ingredient = order.ingredients[i].ingredient;
+            console.log(order.ingredients[i])
+            const ingredient = order.ingredients[i].ingredient;
+            const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
+            const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);
+            
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[1].innerText = `${ingredient.convert(order.ingredients[i].quantity).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
-            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
+            ingredientDiv.children[1].innerText = `${convertedQuantity.toFixed(2)} ${ingredient.unit.toUpperCase()} x $${(convertedPrice / 100).toFixed(2)}`;
+            ingredientDiv.children[2].innerText = `$${(price / 100).toFixed(2)}`;
 
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
+        document.querySelector("#orderTotalPrice p").innerText = `$${(grandTotal / 100).toFixed(2)}`;
     },
 
     remove: function(order){

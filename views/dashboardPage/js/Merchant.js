@@ -83,8 +83,7 @@ class Merchant{
             if(isNew){
                 this.ingredients.push({
                     ingredient: ingredients[i].ingredient,
-                    quantity: parseFloat(ingredients[i].quantity),
-                    defaultUnit: ingredients[i].defaultUnit
+                    quantity: parseFloat(ingredients[i].quantity)
                 });
             }
         }
