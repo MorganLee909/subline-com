@@ -1071,17 +1071,19 @@ controller = {
     Note: Will return false if it cannot find both necessary dates
     */
     transactionIndices(transactions, from, to = new Date()){
+        console.log(from);
+        console.log(to);
         let indices = [];
 
         for(let i = 0; i < transactions.length; i++){
-            if(transactions[i].date > from){
+            if(transactions[i].date < to){
                 indices.push(i);
                 break;
             }
         }
 
-        for(let i = transactions.length - 1; i >=0; i--){
-            if(transactions[i].date < to){
+        for(let i = transactions.length - 1; i >= 0; i--){
+            if(transactions[i].date > from){
                 indices.push(i);
                 break;
             }
@@ -1091,6 +1093,7 @@ controller = {
             return false;
         }
 
+        console.log(indices);
         return indices;
     },
 
@@ -1201,12 +1204,13 @@ let home = {
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthToDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
+        console.log("here");
         let revenueThisMonth = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfMonth));
-        let revenueLastmonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
+        let revenueLastMonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
 
         document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
-        let revenueChange = ((revenueThisMonth - revenueLastmonthToDay) / revenueLastmonthToDay) * 100;
+        let revenueChange = ((revenueThisMonth - revenueLastMonthToDay) / revenueLastMonthToDay) * 100;
         
         let img = "";
         if(revenueChange >= 0){
