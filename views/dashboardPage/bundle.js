@@ -60,7 +60,7 @@ class Merchant{
         this.units = {
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
-            length: ["mm", "cm", "m", "in", "foot"],
+            length: ["mm", "cm", "m", "in", "ft"],
             other: ["each"]
         }
         
@@ -447,46 +447,13 @@ class Order{
                     this.ingredients.push({
                         ingredient: parent.ingredients[j].ingredient,
                         quantity: ingredients[i].quantity,
-                        price: ingredients[i].price
+                        pricePerUnit: ingredients[i].pricePerUnit
                     });
 
                     break;
                 }
             }
         }
-    }
-
-    convertPrice(unitType, unit, price){
-        if(unitType === "mass"){
-            switch(unit){
-                case "g": break;
-                case "kg": price *= 1000; break;
-                case "oz":  price *= 28.3495; break;
-                case "lb":  price *= 453.5924; break;
-            }
-        }else if(unitType === "volume"){
-            switch(unit){
-                case "ml": price /= 1000; break;
-                case "l": break;
-                case "tsp": price /= 202.8842; break;
-                case "tbsp": price /= 67.6278; break;
-                case "ozfl": price /= 33.8141; break;
-                case "cup": price /= 4.1667; break;
-                case "pt": price /= 2.1134; break;
-                case "qt": price /= 1.0567; break;
-                case "gal": price *= 3.7854; break;
-            }
-        }else if(unitType === "length"){
-            switch(unit){
-                case "mm": price /= 1000; break;
-                case "cm": price /= 100; break;
-                case "m": break;
-                case "in": price /= 39.3701; break;
-                case "ft": price /= 3.2808; break;
-            }
-        }
-
-        return price;
     }
 }
 
@@ -1032,6 +999,10 @@ controller = {
     },
 
     convertToMain: function(unit, quantity){
+        console.log(unit);
+        console.log(quantity);
+        console.log(typeof(quantity));
+        console.log(quantity / 3.2808);
         let converted = 0;
     
         if(merchant.units.mass.includes(unit)){
@@ -1126,6 +1097,46 @@ controller = {
         }
 
         return indices;
+    },
+
+    /*
+    Converts the price of a unit to $/g
+    unitType = type of the unit (i.e. mass, volume)
+    unit = exact unit to convert from
+    price = price of the ingredient per unit in cents
+    */
+    convertPrice(unitType, unit, price){
+
+        if(unitType === "mass"){
+            switch(unit){
+                case "g": break;
+                case "kg": price /= 1000; break;
+                case "oz":  price /= 28.3495; break;
+                case "lb":  price /= 453.5924; break;
+            }
+        }else if(unitType === "volume"){
+            switch(unit){
+                case "ml": price *= 1000; break;
+                case "l": break;
+                case "tsp": price *= 202.8842; break;
+                case "tbsp": price *= 67.6278; break;
+                case "ozfl": price *= 33.8141; break;
+                case "cup": price *= 4.1667; break;
+                case "pt": price *= 2.1134; break;
+                case "qt": price *= 1.0567; break;
+                case "gal": price /= 3.7854; break;
+            }
+        }else if(unitType === "length"){
+            switch(unit){
+                case "mm": price *= 1000; break;
+                case "cm": price *= 100; break;
+                case "m": break;
+                case "in": price *= 39.3701; break;
+                case "ft": price *= 3.2808; break;
+            }
+        }
+
+        return price;
     }
 }
 
@@ -1904,10 +1915,11 @@ let newOrder = {
                 banner.createError("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS");
             }
 
+            
             data.ingredients.push({
                 ingredient: ingredients[i].ingredient.id,
                 quantity: controller.convertToMain(ingredients[i].ingredient.unit, quantity),
-                price: price * 100
+                pricePerUnit: controller.convertPrice(ingredients[i].ingredient.unitType, ingredients[i].ingredient.unit, price * 100)
             });
         }
 
@@ -1936,6 +1948,7 @@ let newOrder = {
 
                     merchant.editOrders([order]);
                     merchant.editIngredients(order.ingredients, false, true);
+                    banner.createNotification("NEW ORDER CREATED");
                 }
             })
             .catch((err)=>{

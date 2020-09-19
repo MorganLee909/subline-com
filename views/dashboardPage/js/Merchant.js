@@ -13,7 +13,7 @@ class Merchant{
         this.units = {
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
-            length: ["mm", "cm", "m", "in", "foot"],
+            length: ["mm", "cm", "m", "in", "ft"],
             other: ["each"]
         }
         

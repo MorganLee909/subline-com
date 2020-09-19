@@ -72,10 +72,11 @@ let newOrder = {
                 banner.createError("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS");
             }
 
+            
             data.ingredients.push({
                 ingredient: ingredients[i].ingredient.id,
                 quantity: controller.convertToMain(ingredients[i].ingredient.unit, quantity),
-                price: price * 100
+                pricePerUnit: controller.convertPrice(ingredients[i].ingredient.unitType, ingredients[i].ingredient.unit, price * 100)
             });
         }
 
@@ -104,6 +105,7 @@ let newOrder = {
 
                     merchant.editOrders([order]);
                     merchant.editIngredients(order.ingredients, false, true);
+                    banner.createNotification("NEW ORDER CREATED");
                 }
             })
             .catch((err)=>{

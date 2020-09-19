@@ -96,7 +96,7 @@ module.exports = {
         ingredients: [{
             ingredient: id of the ingredient
             quantity: amount of the ingredient purchased
-            price: price for ingredient
+            pricePerUnit: price per gram
         }]
     } 
     */ 
@@ -131,7 +131,7 @@ module.exports = {
                     }
                 }
 
-                return merchant.save()
+                return merchant.save();
             })
             .then((merchant)=>{
                 return;

@@ -310,7 +310,6 @@ module.exports = {
                 return res.json(validation);
             }
         }
-        console.log(req.body);
 
         let adjustments = [];
 

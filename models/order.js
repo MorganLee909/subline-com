@@ -23,7 +23,7 @@ const OrderSchema = new mongoose.Schema({
             required: true,
             min: 0
         },
-        price: {
+        pricePerUnit: {
             type: Number,
             min: 0
         }
