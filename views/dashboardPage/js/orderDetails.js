@@ -18,7 +18,6 @@ let orderDetails = {
             let price = order.ingredients[i].pricePerUnit * order.ingredients[i].quantity;
             grandTotal += price;
 
-            console.log(order.ingredients[i])
             const ingredient = order.ingredients[i].ingredient;
             const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
             const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);

@@ -224,7 +224,7 @@ class Merchant{
 
         if(isNew){
             this.transactions.push(transaction);
-            this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
+            this.transactions.sort((a, b) => a.date > b.date ? -1 : 1);
         }
 
         let keys = Object.keys(ingredients);
@@ -2239,7 +2239,6 @@ let orderDetails = {
             let price = order.ingredients[i].pricePerUnit * order.ingredients[i].quantity;
             grandTotal += price;
 
-            console.log(order.ingredients[i])
             const ingredient = order.ingredients[i].ingredient;
             const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
             const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);

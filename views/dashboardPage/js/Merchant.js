@@ -177,7 +177,7 @@ class Merchant{
 
         if(isNew){
             this.transactions.push(transaction);
-            this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
+            this.transactions.sort((a, b) => a.date > b.date ? -1 : 1);
         }
 
         let keys = Object.keys(ingredients);
