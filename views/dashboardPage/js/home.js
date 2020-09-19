@@ -136,16 +136,27 @@ let home = {
 
         let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
         if(ingredientList !== false){
-            ingredientList.sort((a, b) => a.quantity < b.quantity);
+            ingredientList.sort((a, b)=>{
+                if(a.quantity < b.quantity){
+                    return 1;
+                }
+                if(a.quantity > b.quantity){
+                    return -1;
+                }
+
+                return 0;
+            });
 
             let quantities = [];
-            let names = [];
             let labels = [];
             let colors = [];
             for(let i = 4; i >= 0; i--){
+                const ingredientName = ingredientList[i].ingredient.name;
+                const ingredientQuantity = ingredientList[i].ingredient.convert(ingredientList[i].quantity);
+                const unitName = ingredientList[i].ingredient.unit;
+
                 quantities.push(ingredientList[i].quantity);
-                names.push(ingredientList[i].ingredient.name.toUpperCase());
-                labels.push(`${ingredientList[i].ingredient.convert(ingredientList[i].quantity).toFixed(2)} ${ingredientList[i].ingredient.unit.toUpperCase()}`);
+                labels.push(`${ingredientName}: ${ingredientQuantity.toFixed(2)} ${unitName.toUpperCase()}`);
                 if(i === 0){
                     colors.push("rgb(255, 99, 107");
                 }else{
@@ -155,7 +166,6 @@ let home = {
 
             let trace = {
                 x: quantities,
-                y: names,
                 type: "bar",
                 orientation: "h",
                 text: labels,
@@ -171,6 +181,9 @@ let home = {
                 xaxis: {
                     zeroline: false,
                     title: "QUANTITY"
+                },
+                yaxis: {
+                    showticklabels: false
                 }
             }
             
