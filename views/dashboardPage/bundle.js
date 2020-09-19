@@ -1071,8 +1071,6 @@ controller = {
     Note: Will return false if it cannot find both necessary dates
     */
     transactionIndices(transactions, from, to = new Date()){
-        console.log(from);
-        console.log(to);
         let indices = [];
 
         for(let i = 0; i < transactions.length; i++){
@@ -1093,7 +1091,6 @@ controller = {
             return false;
         }
 
-        console.log(indices);
         return indices;
     },
 
