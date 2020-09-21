@@ -25,6 +25,7 @@ let newIngredient = {
     submit: function(Ingredient){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
+        const quantityValue = document.getElementById("newIngQuantity").value;
 
         let unit = unitSelector.value;
 
@@ -34,7 +35,7 @@ let newIngredient = {
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: controller.convertToMain(unit, document.getElementById("newIngQuantity").value),
+            quantity: controller.convertToMain(unit, quantityValue),
             defaultUnit: unit
         }
 
@@ -47,6 +48,7 @@ let newIngredient = {
             newIngredient.ingredient.unitSize = bottleSize;
             newIngredient.defaultUnit = bottleUnit;
             newIngredient.ingredient.specialUnit = unit;
+            newIngredient.quantity = quantityValue * bottleSize;
         }
     
         let loader = document.getElementById("loaderContainer");

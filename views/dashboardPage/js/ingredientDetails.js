@@ -22,7 +22,7 @@ let ingredientDetails = {
         let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
         if(ingredient.ingredient.unitSize){
-            let quantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
+            let quantity = ingredient.ingredient.convert(ingredient.quantity);
 
             stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
             stockInput.placeholder = quantity.toFixed(2);
@@ -168,7 +168,7 @@ let ingredientDetails = {
             if(this.ingredient.ingredient.specialUnit === "bottle"){
                 let quantInMain = controller.convertToMain(
                     this.ingredient.ingredient.unit,
-                    Number(quantityElem.value)
+                    quantityElem.value * this.ingredient.ingredient.unitSize
                 );
 
                 this.ingredient.quantity = quantInMain / this.ingredient.ingredient.unitSize;

@@ -105,6 +105,7 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
+        console.log(req.body);
 
         let validation = Validator.order(req.body);
         if(validation !== true){
@@ -126,13 +127,11 @@ module.exports = {
                 for(let i = 0; i < req.body.ingredients.length; i++){
                     for(let j = 0; j < merchant.inventory.length; j++){
                         if(req.body.ingredients[i].ingredient === merchant.inventory[j].ingredient.toString()){
-                            if(merchant.inventory[j])
                             merchant.inventory[j].quantity += parseFloat(req.body.ingredients[i].quantity);
                         }
                     }
                 }
 
-                return;
                 return merchant.save();
             })
             .then((merchant)=>{

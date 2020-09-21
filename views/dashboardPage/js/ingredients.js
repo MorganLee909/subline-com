@@ -50,8 +50,8 @@ let ingredients = {
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 
-                if(ingredient.ingredient.unitSize){
-                    const showQuantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
+                if(ingredient.ingredient.specialUnit === "bottle"){
+                    const showQuantity = ingredient.ingredient.convert(ingredient.quantity);
                     ingredientDiv.children[2].innerText = `${showQuantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 }else{
                     ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;

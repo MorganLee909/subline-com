@@ -1474,7 +1474,7 @@ let ingredientDetails = {
         let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
         if(ingredient.ingredient.unitSize){
-            let quantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
+            let quantity = ingredient.ingredient.convert(ingredient.quantity);
 
             stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
             stockInput.placeholder = quantity.toFixed(2);
@@ -1620,7 +1620,7 @@ let ingredientDetails = {
             if(this.ingredient.ingredient.specialUnit === "bottle"){
                 let quantInMain = controller.convertToMain(
                     this.ingredient.ingredient.unit,
-                    Number(quantityElem.value)
+                    quantityElem.value * this.ingredient.ingredient.unitSize
                 );
 
                 this.ingredient.quantity = quantInMain / this.ingredient.ingredient.unitSize;
@@ -1767,8 +1767,8 @@ let ingredients = {
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 
-                if(ingredient.ingredient.unitSize){
-                    const showQuantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
+                if(ingredient.ingredient.specialUnit === "bottle"){
+                    const showQuantity = ingredient.ingredient.convert(ingredient.quantity);
                     ingredientDiv.children[2].innerText = `${showQuantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 }else{
                     ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
@@ -1885,6 +1885,7 @@ let newIngredient = {
     submit: function(Ingredient){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
+        const quantityValue = document.getElementById("newIngQuantity").value;
 
         let unit = unitSelector.value;
 
@@ -1894,7 +1895,7 @@ let newIngredient = {
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type"),
             },
-            quantity: controller.convertToMain(unit, document.getElementById("newIngQuantity").value),
+            quantity: controller.convertToMain(unit, quantityValue),
             defaultUnit: unit
         }
 
@@ -1907,6 +1908,7 @@ let newIngredient = {
             newIngredient.ingredient.unitSize = bottleSize;
             newIngredient.defaultUnit = bottleUnit;
             newIngredient.ingredient.specialUnit = unit;
+            newIngredient.quantity = quantityValue * bottleSize;
         }
     
         let loader = document.getElementById("loaderContainer");
@@ -2049,6 +2051,8 @@ let newOrder = {
                 });
             }
         }
+
+        console.log(data);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
