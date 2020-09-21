@@ -1,10 +1,14 @@
 let newIngredient = {
     display: function(Ingredient){
+        const selector = document.getElementById("unitSelector");
+
         document.getElementById("newIngName").value = "";
         document.getElementById("newIngCategory").value = "";
         document.getElementById("newIngQuantity").value = 0;
+        document.getElementById("bottleSizeLabel").style.display = "none";
+        selector.value = "g";
 
-        document.getElementById("unitSelector").onchange = ()=>{this.unitChange()};
+        selector.onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
     },
 

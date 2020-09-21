@@ -4,6 +4,7 @@ let ingredientDetails = {
 
     display: function(ingredient){
         this.ingredient = ingredient;
+        console.log(ingredient);
 
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
 
@@ -17,10 +18,20 @@ let ingredientDetails = {
         nameInput.value = "";
         nameInput.placeholder = ingredient.ingredient.name;
 
+        //Display the stock quantity (and the edit input) based on the unit type
         let stockInput = document.getElementById("ingredientInput");
-        document.getElementById("ingredientStock").innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
-        stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+        if(ingredient.ingredient.unitSize){
+            let quantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
+
+            stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockInput.placeholder = quantity.toFixed(2);
+        }else{
+            stockDisplay.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+        }
+
 
         let quantities = [];
         let now = new Date();

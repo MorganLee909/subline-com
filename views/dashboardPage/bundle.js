@@ -1455,6 +1455,7 @@ let ingredientDetails = {
 
     display: function(ingredient){
         this.ingredient = ingredient;
+        console.log(ingredient);
 
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
 
@@ -1468,10 +1469,20 @@ let ingredientDetails = {
         nameInput.value = "";
         nameInput.placeholder = ingredient.ingredient.name;
 
+        //Display the stock quantity (and the edit input) based on the unit type
         let stockInput = document.getElementById("ingredientInput");
-        document.getElementById("ingredientStock").innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
-        stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+        if(ingredient.ingredient.unitSize){
+            let quantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
+
+            stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockInput.placeholder = quantity.toFixed(2);
+        }else{
+            stockDisplay.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+        }
+
 
         let quantities = [];
         let now = new Date();
@@ -1744,7 +1755,6 @@ let ingredients = {
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 
                 if(ingredient.ingredient.unitSize){
-                    console.log("bottling");
                     const showQuantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
                     ingredientDiv.children[2].innerText = `${showQuantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 }else{
@@ -1837,11 +1847,15 @@ module.exports = ingredients;
 },{}],11:[function(require,module,exports){
 let newIngredient = {
     display: function(Ingredient){
+        const selector = document.getElementById("unitSelector");
+
         document.getElementById("newIngName").value = "";
         document.getElementById("newIngCategory").value = "";
         document.getElementById("newIngQuantity").value = 0;
+        document.getElementById("bottleSizeLabel").style.display = "none";
+        selector.value = "g";
 
-        document.getElementById("unitSelector").onchange = ()=>{this.unitChange()};
+        selector.onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
     },
 

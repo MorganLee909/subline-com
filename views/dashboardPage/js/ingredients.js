@@ -51,7 +51,6 @@ let ingredients = {
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 
                 if(ingredient.ingredient.unitSize){
-                    console.log("bottling");
                     const showQuantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
                     ingredientDiv.children[2].innerText = `${showQuantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 }else{
