@@ -2320,12 +2320,23 @@ let orderDetails = {
             grandTotal += price;
 
             const ingredient = order.ingredients[i].ingredient;
-            const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
-            const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);
+            
             
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[1].innerText = `${convertedQuantity.toFixed(2)} ${ingredient.unit.toUpperCase()} x $${(convertedPrice / 100).toFixed(2)}`;
             ingredientDiv.children[2].innerText = `$${(price / 100).toFixed(2)}`;
+            
+            const ingredientDisplay = ingredientDiv.children[1];
+            if(ingredient.specialUnit === "bottle"){
+                const quantSold = order.ingredients[i].quantity / ingredient.unitSize;
+                const ppu = (order.ingredients[i].pricePerUnit * order.ingredients[i].quantity) / quantSold;
+
+                ingredientDisplay.innerText = `${quantSold.toFixed(0)} bottles x $${(ppu / 100).toFixed(2)}`;
+            }else{
+                const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
+                const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);
+
+                ingredientDisplay.innerText = `${convertedQuantity.toFixed(2)} ${ingredient.unit.toUpperCase()} x $${(convertedPrice / 100).toFixed(2)}`;
+            }
 
             ingredientList.appendChild(ingredientDiv);
         }
