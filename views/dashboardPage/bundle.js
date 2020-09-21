@@ -1,13 +1,14 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 class Ingredient{
-    constructor(id, name, category, unitType, unit, parent, unitSize = undefined){
+    constructor(id, name, category, unitType, unit, parent, specialUnit = undefined, unitSize = undefined){
         this.id = id;
         this.name = name;
         this.category = category;
         this.unitType = unitType;
         this.unit = unit;
         this.parent = parent;
-        if(unitSize){
+        if(specialUnit){
+            this.specialUnit = specialUnit;
             this.unitSize = unitSize;
         }
         
@@ -78,6 +79,7 @@ class Merchant{
                     oldMerchant.inventory[i].ingredient.unitType,
                     oldMerchant.inventory[i].defaultUnit,
                     this,
+                    oldMerchant.inventory[i].ingredient.specialUnit,
                     oldMerchant.inventory[i].ingredient.unitSize
                 ),
                 quantity: oldMerchant.inventory[i].quantity
@@ -1455,7 +1457,6 @@ let ingredientDetails = {
 
     display: function(ingredient){
         this.ingredient = ingredient;
-        console.log(ingredient);
 
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
 
@@ -1885,6 +1886,7 @@ let newIngredient = {
             defaultUnit: unit
         }
 
+        //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
             const bottleUnit = document.getElementById("bottleUnits").value;
             const bottleSize = controller.convertToMain(bottleUnit, document.getElementById("bottleSize").value);
@@ -1892,6 +1894,7 @@ let newIngredient = {
             newIngredient.ingredient.unitType = "volume";
             newIngredient.ingredient.unitSize = bottleSize;
             newIngredient.defaultUnit = bottleUnit;
+            newIngredient.ingredient.specialUnit = unit;
         }
     
         let loader = document.getElementById("loaderContainer");
@@ -1917,6 +1920,7 @@ let newIngredient = {
                             response.ingredient.unitType,
                             response.defaultUnit,
                             merchant,
+                            response.ingredient.specialUnit,
                             response.ingredient.unitSize
                         ),
                         quantity: response.quantity

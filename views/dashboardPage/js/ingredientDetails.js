@@ -4,7 +4,6 @@ let ingredientDetails = {
 
     display: function(ingredient){
         this.ingredient = ingredient;
-        console.log(ingredient);
 
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
 

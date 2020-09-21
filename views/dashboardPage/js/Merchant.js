@@ -27,6 +27,7 @@ class Merchant{
                     oldMerchant.inventory[i].ingredient.unitType,
                     oldMerchant.inventory[i].defaultUnit,
                     this,
+                    oldMerchant.inventory[i].ingredient.specialUnit,
                     oldMerchant.inventory[i].ingredient.unitSize
                 ),
                 quantity: oldMerchant.inventory[i].quantity

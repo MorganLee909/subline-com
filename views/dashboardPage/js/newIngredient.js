@@ -38,6 +38,7 @@ let newIngredient = {
             defaultUnit: unit
         }
 
+        //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
             const bottleUnit = document.getElementById("bottleUnits").value;
             const bottleSize = controller.convertToMain(bottleUnit, document.getElementById("bottleSize").value);
@@ -45,6 +46,7 @@ let newIngredient = {
             newIngredient.ingredient.unitType = "volume";
             newIngredient.ingredient.unitSize = bottleSize;
             newIngredient.defaultUnit = bottleUnit;
+            newIngredient.ingredient.specialUnit = unit;
         }
     
         let loader = document.getElementById("loaderContainer");
@@ -70,6 +72,7 @@ let newIngredient = {
                             response.ingredient.unitType,
                             response.defaultUnit,
                             merchant,
+                            response.ingredient.specialUnit,
                             response.ingredient.unitSize
                         ),
                         quantity: response.quantity

@@ -8,11 +8,16 @@ const IngredientSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        minlength: 3
+        minlength: 3,
+        required: true
     },
     unitType: {
         type: String,
         required: true
+    },
+    specialUnit: {
+        type: String,
+        required: false
     },
     unitSize:{
         type: Number,
