@@ -1739,12 +1739,17 @@ let ingredients = {
                 let ingredientDiv = ingredientTemplate.cloneNode(true);
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
-                ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 ingredientDiv.onclick = ()=>{controller.openSidebar("ingredientDetails", ingredient)};
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
 
-                console.log(ingredient);
+                if(ingredient.ingredient.unitSize){
+                    console.log("bottling");
+                    const showQuantity = ingredient.ingredient.convert(ingredient.quantity * ingredient.ingredient.unitSize);
+                    ingredientDiv.children[2].innerText = `${showQuantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+                }else{
+                    ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+                }
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
                 this.ingredients.push(ingredientDiv);
