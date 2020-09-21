@@ -1505,7 +1505,7 @@ let ingredientDetails = {
         }
 
         let dailyUse = sum / quantities.length;
-        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(dailyUse).toFixed(2)} ${ingredient.ingredient.unit}`;
+        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(dailyUse).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
 
         let ul = document.getElementById("ingredientRecipeList");
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
@@ -1604,20 +1604,33 @@ let ingredientDetails = {
     },
 
     editSubmit: function(){
+        //Update the ingredient unit depending on the type of unit
         let ingredientButtons = document.querySelectorAll(".unitButton");
         for(let i = 0; i < ingredientButtons.length; i++){
             if(ingredientButtons[i].classList.contains("unitActive")){
-                this.ingredient.ingredient.unit = ingredientButtons[i].innerText.toLowerCase();
+                const unit = ingredientButtons[i].innerText.toLowerCase();
+                this.ingredient.ingredient.unit = unit;
+
                 break;
             }
         }
 
+        //Update the ingredient quantity depending on the type of unit
         const quantityElem = document.getElementById("ingredientInput");
         if(quantityElem.value !== ""){
-            this.ingredient.quantity = controller.convertToMain(
-                this.ingredient.ingredient.unit,
-                Number(document.getElementById("ingredientInput").value)
-            );
+            if(this.ingredient.ingredient.specialUnit === "bottle"){
+                let quantInMain = controller.convertToMain(
+                    this.ingredient.ingredient.unit,
+                    Number(quantityElem.value)
+                );
+
+                this.ingredient.quantity = quantInMain / this.ingredient.ingredient.unitSize;
+            }else{
+                this.ingredient.quantity = controller.convertToMain(
+                    this.ingredient.ingredient.unit,
+                    Number(quantityElem.value)
+                );
+            }
         }
 
         const category = document.getElementById("detailsCategoryInput");
