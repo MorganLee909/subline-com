@@ -285,7 +285,6 @@ controller = {
     price = price of the ingredient per unit in cents
     */
     convertPrice(unitType, unit, price){
-
         if(unitType === "mass"){
             switch(unit){
                 case "g": break;

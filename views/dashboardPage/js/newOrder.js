@@ -29,8 +29,15 @@ let newOrder = {
 
         let div = document.getElementById("selectedIngredient").content.children[0].cloneNode(true);
         div.ingredient = ingredient;
-        div.children[0].children[0].innerText = `${ingredient.name} (${ingredient.unit.toUpperCase()})`;
         div.children[0].children[1].onclick = ()=>{this.removeIngredient(div, element)};
+
+        //Display units depending on the whether it is a special unit
+        if(ingredient.specialUnit === "bottle"){
+            div.children[0].children[0].innerText = `${ingredient.name} (BOTTLES)`;
+        }else{
+            div.children[0].children[0].innerText = `${ingredient.name} (${ingredient.unit.toUpperCase()})`;
+        }
+
         document.getElementById("selectedIngredientList").appendChild(div);
     },
 
@@ -72,12 +79,21 @@ let newOrder = {
                 banner.createError("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS");
             }
 
-            
-            data.ingredients.push({
-                ingredient: ingredients[i].ingredient.id,
-                quantity: controller.convertToMain(ingredients[i].ingredient.unit, quantity),
-                pricePerUnit: controller.convertPrice(ingredients[i].ingredient.unitType, ingredients[i].ingredient.unit, price * 100)
-            });
+            if(ingredients[i].ingredient.specialUnit === "bottle"){
+                const ppu = controller.convertPrice("volume", ingredients[i].ingredient.unit, (price * 100) / (ingredients[i].ingredient.convert(ingredients[i].ingredient.unitSize)));
+
+                data.ingredients.push({
+                    ingredient: ingredients[i].ingredient.id,
+                    quantity: quantity * ingredients[i].ingredient.unitSize,
+                    pricePerUnit: ppu,
+                });
+            }else{
+                data.ingredients.push({
+                    ingredient: ingredients[i].ingredient.id,
+                    quantity: controller.convertToMain(ingredients[i].ingredient.unit, quantity),
+                    pricePerUnit: controller.convertPrice(ingredients[i].ingredient.unitType, ingredients[i].ingredient.unit, price * 100)
+                });
+            }
         }
 
         let loader = document.getElementById("loaderContainer");
