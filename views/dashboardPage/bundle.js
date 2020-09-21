@@ -78,7 +78,7 @@ class Merchant{
                     oldMerchant.inventory[i].ingredient.unitType,
                     oldMerchant.inventory[i].defaultUnit,
                     this,
-                    oldMerchant.inventory[i].ingredient.bottleSize
+                    oldMerchant.inventory[i].ingredient.unitSize
                 ),
                 quantity: oldMerchant.inventory[i].quantity
             });
@@ -1876,7 +1876,7 @@ let newIngredient = {
             const bottleSize = controller.convertToMain(bottleUnit, document.getElementById("bottleSize").value);
 
             newIngredient.ingredient.unitType = "volume";
-            newIngredient.ingredient.bottleSize = bottleSize;
+            newIngredient.ingredient.unitSize = bottleSize;
             newIngredient.defaultUnit = bottleUnit;
         }
     
@@ -1902,7 +1902,8 @@ let newIngredient = {
                             response.ingredient.category,
                             response.ingredient.unitType,
                             response.defaultUnit,
-                            merchant
+                            merchant,
+                            response.ingredient.unitSize
                         ),
                         quantity: response.quantity
                     }]);

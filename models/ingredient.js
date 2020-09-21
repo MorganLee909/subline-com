@@ -14,7 +14,10 @@ const IngredientSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    bottleSize: Number
+    unitSize:{
+        type: Number,
+        required: false
+    }
 });
 
 module.exports = mongoose.model("Ingredient", IngredientSchema);

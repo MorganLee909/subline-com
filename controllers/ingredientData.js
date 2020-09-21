@@ -45,7 +45,7 @@ module.exports = {
         if(validation !== true){
             return res.json(validation);
         }
-        validation = Validator.quantity(req.body.ingredient.bottleSize);
+        validation = Validator.quantity(req.body.ingredient.unitSize);
         if(validation !== true){
             return res.json(validation);
         }

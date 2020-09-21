@@ -39,7 +39,7 @@ let newIngredient = {
             const bottleSize = controller.convertToMain(bottleUnit, document.getElementById("bottleSize").value);
 
             newIngredient.ingredient.unitType = "volume";
-            newIngredient.ingredient.bottleSize = bottleSize;
+            newIngredient.ingredient.unitSize = bottleSize;
             newIngredient.defaultUnit = bottleUnit;
         }
     
@@ -65,7 +65,8 @@ let newIngredient = {
                             response.ingredient.category,
                             response.ingredient.unitType,
                             response.defaultUnit,
-                            merchant
+                            merchant,
+                            response.ingredient.unitSize
                         ),
                         quantity: response.quantity
                     }]);
