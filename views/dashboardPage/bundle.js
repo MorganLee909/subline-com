@@ -1834,8 +1834,11 @@ let newIngredient = {
 
     unitChange: function(){
         const select = document.getElementById("unitSelector");
+        const bottleLabel = document.getElementById("bottleSizeLabel");
         if(select.value === "bottle"){
-            document.getElementById("bottleSizeLabel").style.display = "block";
+            bottleLabel.style.display = "block";
+        }else{
+            bottleLabel.style.display = "none";
         }
     },
 
@@ -1855,10 +1858,15 @@ let newIngredient = {
             defaultUnit: unit
         }
 
-        if(unitSelector.value = "bottle"){
-            newIngredient.ingredient.bottleSize = document.getElementById("bottleSize").value;
-        }
+        if(unit === "bottle"){
+            const bottleUnit = document.getElementById("bottleUnits").value;
+            const bottleSize = controller.convertToMain(bottleUnit, document.getElementById("bottleSize").value);
 
+            newIngredient.ingredient.unitType = "volume";
+            newIngredient.ingredient.bottleSize = bottleSize;
+            newIngredient.defaultUnit = bottleUnit;
+        }
+    
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 

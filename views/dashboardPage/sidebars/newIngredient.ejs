@@ -22,10 +22,6 @@
         <input id="newIngQuantity" type="number" min="0" step="0.01">
     </label>
 
-    <label id="bottleSizeLabel" style="display: none">BOTTLE SIZE(LITERS):
-        <input id="bottleSize" type="number" min="0" step="0.01">
-    </label>
-
     <label>UNIT:
         <select id="unitSelector">
             <optgroup label="MASS/WEIGHT">
@@ -59,6 +55,21 @@
                 <option type="other" value="each">EACH</option>
                 <option type="other" value="bottle">BOTTLE</option>
             </optgroup>
+        </select>
+    </label>
+
+    <label id="bottleSizeLabel" style="display: none">BOTTLE SIZE:
+        <input id="bottleSize" type="number" min="0" step="0.01">
+        <select id="bottleUnits">
+            <option value="ml">ML</option>
+            <option value="l">L</option>
+            <option value="tsp">TSP</option>
+            <option value="tbsp">TBSP</option>
+            <option value="ozfl">OZ. FL</option>
+            <option value="cup">CUP</option>
+            <option value="pt">PT</option>
+            <option value="qt">QT</option>
+            <option value="gal">GAL</option>
         </select>
     </label>
 
