@@ -105,7 +105,6 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-        console.log(req.body);
 
         let validation = Validator.order(req.body);
         if(validation !== true){
