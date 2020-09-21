@@ -18,6 +18,7 @@ class Merchant{
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
+
             this.ingredients.push({
                 ingredient: new Ingredient(
                     oldMerchant.inventory[i].ingredient._id,
@@ -25,7 +26,8 @@ class Merchant{
                     oldMerchant.inventory[i].ingredient.category,
                     oldMerchant.inventory[i].ingredient.unitType,
                     oldMerchant.inventory[i].defaultUnit,
-                    this
+                    this,
+                    oldMerchant.inventory[i].ingredient.bottleSize
                 ),
                 quantity: oldMerchant.inventory[i].quantity
             });

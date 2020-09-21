@@ -1,12 +1,16 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 class Ingredient{
-    constructor(id, name, category, unitType, unit, parent){
+    constructor(id, name, category, unitType, unit, parent, unitSize = undefined){
         this.id = id;
         this.name = name;
         this.category = category;
         this.unitType = unitType;
         this.unit = unit;
         this.parent = parent;
+        if(unitSize){
+            this.unitSize = unitSize;
+        }
+        
     }
 
     convert(quantity){
@@ -65,6 +69,7 @@ class Merchant{
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
+
             this.ingredients.push({
                 ingredient: new Ingredient(
                     oldMerchant.inventory[i].ingredient._id,
@@ -72,7 +77,8 @@ class Merchant{
                     oldMerchant.inventory[i].ingredient.category,
                     oldMerchant.inventory[i].ingredient.unitType,
                     oldMerchant.inventory[i].defaultUnit,
-                    this
+                    this,
+                    oldMerchant.inventory[i].ingredient.bottleSize
                 ),
                 quantity: oldMerchant.inventory[i].quantity
             });
@@ -1737,6 +1743,8 @@ let ingredients = {
                 ingredientDiv.onclick = ()=>{controller.openSidebar("ingredientDetails", ingredient)};
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
+
+                console.log(ingredient);
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
                 this.ingredients.push(ingredientDiv);

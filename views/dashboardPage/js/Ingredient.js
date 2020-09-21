@@ -1,11 +1,15 @@
 class Ingredient{
-    constructor(id, name, category, unitType, unit, parent){
+    constructor(id, name, category, unitType, unit, parent, unitSize = undefined){
         this.id = id;
         this.name = name;
         this.category = category;
         this.unitType = unitType;
         this.unit = unit;
         this.parent = parent;
+        if(unitSize){
+            this.unitSize = unitSize;
+        }
+        
     }
 
     convert(quantity){
