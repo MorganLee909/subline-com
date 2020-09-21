@@ -45,6 +45,10 @@ module.exports = {
         if(validation !== true){
             return res.json(validation);
         }
+        validation = Validator.quantity(req.body.ingredient.bottleSize);
+        if(validation !== true){
+            return res.json(validation);
+        }
 
         let ingredientPromise = Ingredient.create((req.body.ingredient));
         let merchantPromise = Merchant.findOne({_id: req.session.user});

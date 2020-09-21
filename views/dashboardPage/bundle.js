@@ -61,7 +61,7 @@ class Merchant{
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
             length: ["mm", "cm", "m", "in", "ft"],
-            other: ["each"]
+            other: ["each", "bottle"]
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
@@ -1828,7 +1828,15 @@ let newIngredient = {
         document.getElementById("newIngCategory").value = "";
         document.getElementById("newIngQuantity").value = 0;
 
+        document.getElementById("unitSelector").onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
+    },
+
+    unitChange: function(){
+        const select = document.getElementById("unitSelector");
+        if(select.value === "bottle"){
+            document.getElementById("bottleSizeLabel").style.display = "block";
+        }
     },
 
     submit: function(Ingredient){
@@ -1845,6 +1853,10 @@ let newIngredient = {
             },
             quantity: controller.convertToMain(unit, document.getElementById("newIngQuantity").value),
             defaultUnit: unit
+        }
+
+        if(unitSelector.value = "bottle"){
+            newIngredient.ingredient.bottleSize = document.getElementById("bottleSize").value;
         }
 
         let loader = document.getElementById("loaderContainer");

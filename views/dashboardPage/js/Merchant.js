@@ -14,7 +14,7 @@ class Merchant{
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
             length: ["mm", "cm", "m", "in", "ft"],
-            other: ["each"]
+            other: ["each", "bottle"]
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
