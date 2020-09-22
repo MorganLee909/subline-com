@@ -5,6 +5,7 @@ const otherData = require("./controllers/otherData");
 const transactionData = require("./controllers/transactionData");
 const recipeData = require("./controllers/recipeData");
 const orderData = require("./controllers/orderData.js");
+const informationPages = require("./controllers/informationPages.js");
 
 module.exports = function(app){
     //Render page
@@ -54,4 +55,7 @@ module.exports = function(app){
     app.get("/squarelogin", otherData.squareRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
     app.get("/squareauth", otherData.squareAuth);
+
+    //Information Pages
+    app.get("/privacy", informationPages.privacy);
 }
