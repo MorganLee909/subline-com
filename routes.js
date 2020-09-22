@@ -58,4 +58,5 @@ module.exports = function(app){
 
     //Information Pages
     app.get("/privacy", informationPages.privacy);
+    app.get("/terms", informationPages.terms);
 }
