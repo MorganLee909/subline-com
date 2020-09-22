@@ -10,13 +10,7 @@
         <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div class="header">
-            <a class="logo" href="/">
-                <img src="/shared/images/logo.png" alt="The Subline">
-
-                <div class="header-logo">THE SUBLINE</div>
-            </a>
-        </div>
+        <% include ../shared/header %>
 
         <div class="content">
             <h1>The Subline, LLC Privacy Policy</h1>
@@ -206,6 +200,9 @@
             <p class="contactInfo last">www.thesubline.com</p>
         </div>
 
-        
+        <script>
+            document.getElementById("termsLink").classList.remove("headerHide");
+            document.getElementById("helpLink").classList.remove("headerHide");
+        </script>
     </body>
 </html>

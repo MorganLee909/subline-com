@@ -232,46 +232,42 @@ form{
     height: 75px;
 }
 
-    .header .logo{
+    .headerHide{
+        display: none;
+    }
+
+    .headerStart{
         display: flex;
-        align-items: center;
+        align-items:center;
         text-decoration: none;
-        margin-left: 20px;
+        margin-left: 25px;
+        width: 275px;
     }
 
-    .header-logo{
-        display: inline-block;
-        color: rgb(255, 99, 107);
-        font-size: 25px;
-        font-weight: 600;
-    }
+        .headerStart img{
+            max-height: 75%;
+        }
 
-    .header img{
-        display: inline-block;
-        max-height: 40px;
-        margin: 15px;
-        text-align: center;
-    }
+        .headerLogo{
+            color: white;
+            font-size: 25px;
+            margin-left: 10px;
+        }
 
-    .header h1{
-        display: inline-block;
-        color: rgb(255, 99, 107);
-    }
-
-    .header .logout{
+    .headerEnd{
         display: flex;
         align-items: center;
-        color: rgb(255, 99, 107);
-        float: right;
+        justify-content: flex-end;
         margin-right: 25px;
-        text-decoration: none;
     }
 
-    .button-join {
-        font-size: medium;
-        color:white;
-        text-decoration: blink;
-    }
+        .headerEnd > *{
+            margin-left: 15px;
+        }
+
+        .headerEnd a{
+            color: white;
+        }
 
 /* Banner partial */
 .banner{
