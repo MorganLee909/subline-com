@@ -58,7 +58,12 @@ let orderDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    for(let i = 0; i < order.ingredients.length; i++){
+                        order.ingredients[i].quantity = -order.ingredients[i].quantity;
+                    }
+
                     merchant.editOrders([order], true);
+                    merchant.editIngredients(order.ingredients, false, true);
                     banner.createNotification("ORDER REMOVED");
                 }
             })
