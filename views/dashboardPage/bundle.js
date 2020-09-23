@@ -2004,21 +2004,20 @@ let newOrder = {
 
     submit: function(Order){
         let date = document.getElementById("newOrderDate").value;
-        let time = document.getElementById("newOrderTime").value;
+        let taxes = document.getElementById("orderTaxes").value * 100;
+        let fees = document.getElementById("orderFees").value * 100;
         let ingredients = document.getElementById("selectedIngredientList").children;
 
         if(date === ""){
             banner.createError("DATE IS REQUIRED FOR ORDERS");
             return;
         }
-        
-        if(time !== ""){
-            date = `${date}T${time}`;
-        }
 
         let data = {
             name: document.getElementById("newOrderName").value,
             date: date,
+            taxes: taxes,
+            fees: fees,
             ingredients: []
         }
 
