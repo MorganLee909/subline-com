@@ -442,6 +442,24 @@ Add Recipe
     width: 40%;
 }
 
+    .newOrderLabels{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+        .newOrderLabels label{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .newOrderLabels input{
+            width: 50%;
+        }
+
     #newOrderIngredients{
         display: flex;
         flex-direction: column;
