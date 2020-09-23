@@ -561,6 +561,15 @@ Add Recipe
     width: 100%;
 }
 
+    .orderDiv{
+        width: 50%;
+    }
+
+        .subOrderDiv{
+            display: flex;
+            justify-content: space-between;
+        }
+
     #orderIngredients{
         width: 90%;
         overflow: auto;

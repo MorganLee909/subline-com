@@ -2310,7 +2310,8 @@ let orderDetails = {
 
         document.getElementById("orderDetailName").innerText = order.name;
         document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
-        document.getElementById("orderDetailTime").innerText = order.date.toLocaleTimeString("en-US");
+        document.getElementById("orderDetailTax").innerText = `$${(order.taxes / 100).toFixed(2)}`;
+        document.getElementById("orderDetailFee").innerText = `$${(order.fees / 100).toFixed(2)}`;
 
         let ingredientList = document.getElementById("orderIngredients");
         while(ingredientList.children.length > 0){
@@ -2325,7 +2326,6 @@ let orderDetails = {
             grandTotal += price;
 
             const ingredient = order.ingredients[i].ingredient;
-            
             
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
             ingredientDiv.children[2].innerText = `$${(price / 100).toFixed(2)}`;
@@ -2346,7 +2346,8 @@ let orderDetails = {
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.querySelector("#orderTotalPrice p").innerText = `$${(grandTotal / 100).toFixed(2)}`;
+        document.getElementById("orderDetailTotal").innerText = `$${(grandTotal / 100).toFixed(2)}`;
+        document.querySelector("#orderTotalPrice p").innerText = `$${((grandTotal + order.taxes + order.fees) / 100).toFixed(2)}`;
     },
 
     remove: function(order){
