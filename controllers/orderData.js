@@ -166,7 +166,6 @@ module.exports = {
 
                 for(let i = 0; i < order.ingredients.length; i++){
                     for(let j = 0; j < merchant.inventory.length; j++){
-                        
                         if(order.ingredients[i].ingredient.toString() === merchant.inventory[j].ingredient.toString()){
                             merchant.inventory[j].quantity -= order.ingredients[i].quantity;
                             break;

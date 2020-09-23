@@ -2929,7 +2929,17 @@ let transactionDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editTransactions(this.transaction, true);
+                    let ingredients = {};
+                    for(let i = 0; i < this.transaction.recipes.length; i++){
+                        let recipe = this.transaction.recipes[i];
+                        for(let j = 0; j < recipe.recipe.ingredients.length; j++){
+                            ingredient = recipe.recipe.ingredients[j];
+
+                            ingredients[ingredient.ingredient.id] = ingredient.quantity * recipe.quantity;
+                        }
+                    }
+
+                    merchant.editTransactions(this.transaction, ingredients, true);
                     banner.createNotification("TRANSACTION REMOVED");
                 }
             })
