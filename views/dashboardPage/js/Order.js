@@ -1,5 +1,5 @@
 class Order{
-    constructor(id, name, date, ingredients, parent){
+    constructor(id, name, date, taxes, fees, ingredients, parent){
         this.id = id;
         this.name = name;
         this.date = new Date(date);

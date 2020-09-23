@@ -23,6 +23,8 @@ let orders = {
                                 response[i]._id,
                                 response[i].name,
                                 response[i].date,
+                                response[i].taxes,
+                                response[i].fees,
                                 response[i].ingredients,
                                 merchant
                             ));
@@ -148,6 +150,8 @@ let orders = {
                             response[i]._id,
                             response[i].name,
                             response[i].date,
+                            response[i].taxes,
+                            response[i].fees,
                             response[i].ingredients,
                             merchant
                         );

@@ -115,6 +115,8 @@ let newOrder = {
                         response._id,
                         response.name,
                         response.date,
+                        response.taxes,
+                        response.fees,
                         response.ingredients,
                         merchant
                     );

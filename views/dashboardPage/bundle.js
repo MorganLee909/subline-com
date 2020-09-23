@@ -441,7 +441,7 @@ class Merchant{
 module.exports = Merchant;
 },{"./Ingredient.js":1,"./Recipe.js":4,"./Transaction.js":5}],3:[function(require,module,exports){
 class Order{
-    constructor(id, name, date, ingredients, parent){
+    constructor(id, name, date, taxes, fees, ingredients, parent){
         this.id = id;
         this.name = name;
         this.date = new Date(date);
@@ -2071,6 +2071,8 @@ let newOrder = {
                         response._id,
                         response.name,
                         response.date,
+                        response.taxes,
+                        response.fees,
                         response.ingredients,
                         merchant
                     );
@@ -2406,6 +2408,8 @@ let orders = {
                                 response[i]._id,
                                 response[i].name,
                                 response[i].date,
+                                response[i].taxes,
+                                response[i].fees,
                                 response[i].ingredients,
                                 merchant
                             ));
@@ -2531,6 +2535,8 @@ let orders = {
                             response[i]._id,
                             response[i].name,
                             response[i].date,
+                            response[i].taxes,
+                            response[i].fees,
                             response[i].ingredients,
                             merchant
                         );

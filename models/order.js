@@ -12,6 +12,14 @@ const OrderSchema = new mongoose.Schema({
         default: Date.now,
         required: true
     },
+    taxes: {
+        type: Number,
+        required: true
+    },
+    fees: {
+        type: Number,
+        required: true
+    },
     ingredients: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
