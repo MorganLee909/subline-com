@@ -32,6 +32,8 @@ module.exports = {
             {$project: {
                 name: 1,
                 date: 1,
+                taxes: 1,
+                fees: 1,
                 ingredients: 1
             }}
         ])

@@ -3,6 +3,8 @@ class Order{
         this.id = id;
         this.name = name;
         this.date = new Date(date);
+        this.taxes = taxes;
+        this.fees = fees;
         this.ingredients = [];
         this.parent = parent;
 
