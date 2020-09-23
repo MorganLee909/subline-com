@@ -109,10 +109,11 @@ class Merchant{
     /*
     Updates all specified item in the merchant's inventory and updates the page
     If ingredient doesn't exist, add it
-    ingredients = [{
+    ingredients = {
         ingredient: Ingredient object,
         quantity: new quantity,
-    }]
+        defaultUnit: the default unit to be displayed
+    }
     remove = set true if removing
     isOrder = set true if this is coming from an order
     */
@@ -121,7 +122,7 @@ class Merchant{
             let isNew = true;
             for(let j = 0; j < this.ingredients.length; j++){
                 if(this.ingredients[j].ingredient === ingredients[i].ingredient){
-                    if(remove && !isOrder){
+                    if(remove){
                         this.ingredients.splice(j, 1);
                     }else if(!remove && isOrder){
                         this.ingredients[j].quantity += ingredients[i].quantity;
