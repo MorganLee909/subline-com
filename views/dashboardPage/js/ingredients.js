@@ -1,3 +1,5 @@
+const { populate } = require("./orders");
+
 let ingredients = {
     isPopulated: false,
     ingredients: [],
@@ -9,6 +11,8 @@ let ingredients = {
             document.getElementById("ingredientSearch").oninput = ()=>{this.search()};
             document.getElementById("ingredientClearButton").onclick = ()=>{this.clearSorting()};
             document.getElementById("ingredientSelect").onchange = ()=>{this.sort()};
+
+            this.populateByProperty();
 
             this.isPopulated = true;
         }

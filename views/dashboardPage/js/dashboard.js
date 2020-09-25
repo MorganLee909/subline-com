@@ -20,9 +20,31 @@ const Recipe = require("./Recipe.js");
 const Order = require("./Order.js");
 const Transaction = require("./Transaction.js");
 
-merchant = new Merchant(data.merchant, data.transactions);
+merchant = new Merchant(data.merchant, data.transactions, {
+    home: home,
+    ingredients: ingredients,
+    transactions: transactions,
+    recipeBook: recipeBook,
+    analytics: analytics,
+    orders: orders,
+    Ingredient: Ingredient,
+    Recipe: Recipe,
+    Transaction: Transaction
+});
 
 controller = {
+    sanitaryString: function(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; j++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
+    },
+
     openStrand: function(strand){
         this.closeSidebar();
 
@@ -228,7 +250,6 @@ controller = {
             case "ingredient":
                 home.isPopulated = false;
                 ingredients.populateByProperty("category");
-                home.isPopulated = false;
                 break;
             case "recipe":
                 transactions.isPopulated = false;

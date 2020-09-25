@@ -1,4 +1,5 @@
 let orders = {
+    isPopulated: false,
     isFetched: false,
 
     display: async function(Order){
@@ -42,6 +43,11 @@ let orders = {
                 .finally(()=>{
                     loader.style.display = "none";
                 });
+        }
+
+        if(!this.isPopulated){
+            this.populate();
+            this.isPopulated = true;
         }
     },
 

@@ -1,16 +1,13 @@
-const Ingredient = require("./Ingredient.js");
-const Recipe = require("./Recipe.js");
-const Transaction = require("./Transaction.js");
-
 class Merchant{
-    constructor(oldMerchant, transactions){
-        this.name = oldMerchant.name;
-        this.pos = oldMerchant.pos;
-        this.ingredients = [];
-        this.recipes = [];
-        this.transactions = [];
-        this.orders = [];
-        this.units = {
+    constructor(oldMerchant, transactions, modules){
+        this._modules = modules;
+        this._name = oldMerchant.name;
+        this._pos = oldMerchant.pos;
+        this._ingredients = [];
+        this._recipes = [];
+        this._transactions = [];
+        this._orders = [];
+        this._units = {
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
             length: ["mm", "cm", "m", "in", "ft"],
@@ -18,9 +15,8 @@ class Merchant{
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
-
             this.ingredients.push({
-                ingredient: new Ingredient(
+                ingredient: new modules.Ingredient(
                     oldMerchant.inventory[i].ingredient._id,
                     oldMerchant.inventory[i].ingredient.name,
                     oldMerchant.inventory[i].ingredient.category,
@@ -35,7 +31,7 @@ class Merchant{
         }
 
         for(let i = 0; i < oldMerchant.recipes.length; i++){
-            this.recipes.push(new Recipe(
+            this.recipes.push(new modules.Recipe(
                 oldMerchant.recipes[i]._id,
                 oldMerchant.recipes[i].name,
                 oldMerchant.recipes[i].price,
@@ -45,7 +41,7 @@ class Merchant{
         }
 
         for(let i = 0; i < transactions.length; i++){
-            this.transactions.push(new Transaction(
+            this.transactions.push(new modules.Transaction(
                 transactions[i]._id,
                 transactions[i].date,
                 transactions[i].recipes,
@@ -54,152 +50,121 @@ class Merchant{
         }
     }
 
-    /*
-    Updates all specified item in the merchant's inventory and updates the page
-    If ingredient doesn't exist, add it
-    ingredients = [{
-        ingredient: Ingredient object,
-        quantity: new quantity,
-    }]
-    remove = set true if removing
-    isOrder = set true if this is coming from an order
-    */
-    editIngredients(ingredients, remove = false, isOrder = false){
-        for(let i = 0; i < ingredients.length; i++){
-            let isNew = true;
-            for(let j = 0; j < this.ingredients.length; j++){
-                if(this.ingredients[j].ingredient === ingredients[i].ingredient){
-                    if(remove && !isOrder){
-                        this.ingredients.splice(j, 1);
-                    }else if(!remove && isOrder){
-                        this.ingredients[j].quantity += ingredients[i].quantity;
-                    }else{
-                        this.ingredients[j].quantity = ingredients[i].quantity;
-                    }
-    
-                    isNew = false;
-                    break;
-                }
-            }
-    
-            if(isNew){
-                this.ingredients.push({
-                    ingredient: ingredients[i].ingredient,
-                    quantity: parseFloat(ingredients[i].quantity)
-                });
-            }
-        }
-    
-        controller.updateData("ingredient");
-        controller.closeSidebar();
+    get name(){
+        return this._name;
     }
 
-    /*
-    Updates a recipe in the merchants list of recipes
-    Can create, edit or remove
-    recipe = [Recipe object]
-    remove = will remove recipe when true
-    */
-    editRecipes(recipes, remove = false){
-        let isNew = true;
-
-        for(let i = 0; i < recipes.length; i++){
-            for(let j = 0; j < this.recipes.length; j++){
-                if(recipes[i] === this.recipes[j]){
-                    if(remove){
-                        this.recipes.splice(j, 1);
-                    }else{
-                        this.recipes[j] = recipes[i];
-                    }
-
-                    isNew = false;
-                    break;
-                }
-            }
-
-            if(isNew){
-                this.recipes.push(recipes[i]);
-            }
+    set name(name){
+        if(sanitaryString(name)){
+            this._name = name;
         }
-
-        controller.updateData("recipe");
-        controller.closeSidebar();
+        return false;
     }
 
-    /*
-    Updates a list of orders in the merchants list of orders
-    Create/edit/remove
-    orders = [Order object]
-    remove = will remove order when true
-    */
-    editOrders(orders, remove = false){
-        for(let i = 0; i < orders.length; i++){
-            let isNew = true;
-            for(let j = 0; j < this.orders.length; j++){
-                if(orders[i] === this.orders[j]){
-                    if(remove){
-                        this.orders.splice(j, 1);
-                    }else{
-                        this.orders[j] = orders[i];
-                    }
-
-                    isNew = false;
-                    break;
-                }
-            }
-
-            if(isNew){
-                this.orders.push(orders[i]);
-            }
-        }
-
-        controller.updateData("order");
-        controller.closeSidebar();
+    get pos(){
+        return this._pos;
     }
 
-    /*
-    transaction = Transaction Object to add
-    ingredients = The ingredients that need to be updated
-        keys = ingredient ids
-        values = quantity to change in grams
-    remove = If true, removes transaction
-    */
-    editTransactions(transaction, ingredients, remove = false, ){
-        let isNew = true;
-        for(let i = 0; i < this.transactions.length; i++){
-            if(this.transactions[i] === transaction){
-                if(remove){
-                    this.transactions.splice(i, 1);
-                }
+    get ingredients(){
+        return this._ingredients;
+    }
 
-                isNew = false;
-                break;
-            }
+    addIngredient(ingredient){
+        if(ingredient.quantity <  0 || ingredient.quantity === undefined){
+            return false;
         }
 
-        if(isNew){
-            this.transactions.push(transaction);
-            this.transactions.sort((a, b) => a.date > b.date ? -1 : 1);
+        this.ingredients.push(ingredient);
+
+        this._modules.home.isPopulated = false;
+        this._modules.ingredients.isPopulated = false;
+    }
+
+    removeIngredient(ingredient){
+        const index = this._ingredients.indexOf(ingredient);
+        if(index === undefined){
+            return false;
         }
 
-        let keys = Object.keys(ingredients);
-        for(let i = 0; i < keys.length; i++){
-            for(let j = 0; j < this.ingredients.length; j++){
-                if(this.ingredients[j].ingredient.id === keys[i]){
-                    if(remove === false){
-                        this.ingredients[j].quantity -= ingredients[keys[i]];
-                    }else{
-                        this.ingredients[j].quantity += ingredients[keys[i]];
-                    }
+        this._ingredients.splice(index, 1);
 
-                    break;
-                }
-            }
+        this._modules.home.isPopulated = false;
+        this._modules.ingredients.isPopulated = false;
+    }
+
+    get recipes(){
+        return this._recipes;
+    }
+
+    addRecipe(recipe){
+        this._recipes.push(recipe);
+
+        this._modules.transactions.isPopulated = false;
+        this._modules.recipeBook.isPopulated = false;
+    }
+
+    removeRecipe(recipe){
+        const index = this._recipes.indexOf(recipe);
+        if(index === undefined){
+            return false;
         }
 
-        controller.updateData("ingredient");
-        controller.updateData("transaction");
-        controller.closeSidebar();
+        this._recipes.splice(index, 1);
+
+        this._modules.transactions.isPopulated = false;
+        this._modules.recipeBook.isPopulated = false;
+    }
+
+    get transactions(){
+        return this._transactions;
+    }
+
+    addTransaction(transaction){
+        this._transactions.push(transaction);
+
+        this._modules.home.isPopulated = false;
+        this._modules.ingredients.isPopulated = false;
+        this._modules.transactions.isPopulated = false;
+        this._modules.analytics.newData = true;
+    }
+
+    removeTransaction(transaction){
+        const index = this._transactions.indexOf(transaction);
+        if(index === undefined){
+            return false;
+        }
+
+        this._transactions.splice(index, 1);
+
+        this._modules.home.isPopulated = false;
+        this._modules.ingredients.isPopulated = false;
+        this._modules.transactions.isPopulated = false;
+        this._modules.analytics.newData = true;
+    }
+
+    get orders(){
+        return this._orders;
+    }
+
+    addOrder(order){
+        this._orders.push(order);
+
+        this._modules.orders.isPopulated = false;
+    }
+
+    removeOrder(order){
+        const index = this._orders.indexOf(order);
+        if(index === undefined){
+            return false;
+        }
+
+        this._orders.splice(index, 1);
+
+        this._modules.orders.isPopulated = false;
+    }
+
+    get units(){
+        return this._units;
     }
 
     revenue(indices){

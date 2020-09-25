@@ -12,6 +12,8 @@ let recipeBook = {
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
             document.getElementById("recipeClearButton").onclick = ()=>{this.clearSorting()};
 
+            this.populateRecipes();
+
             this.isPopulated = true;
         }
     },
