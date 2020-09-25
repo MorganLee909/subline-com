@@ -350,8 +350,9 @@ class Merchant{
 
         for(let i = 0; i < this.ingredients.length; i++){
             let unitExists = false;
+            const innerIngredient = this.ingredients[i].ingredient;
             for(let j = 0; j < ingredientsByUnit.length; j++){
-                if(this.ingredients[i].ingredient.unit === ingredientsByUnit[j].name){
+                if(innerIngredient.unit === ingredientsByUnit[j].name || innerIngredient.specialUnit === ingredientsByUnit[j].name){
                     ingredientsByUnit[j].ingredients.push(this.ingredients[i]);
 
                     unitExists = true;
@@ -360,8 +361,15 @@ class Merchant{
             }
 
             if(!unitExists){
+                let unit = "";
+                if(innerIngredient.specialUnit === "bottle"){
+                    unit = "bottle";
+                }else{
+                    unit = innerIngredient.unit;
+                }
+
                 ingredientsByUnit.push({
-                    name: this.ingredients[i].ingredient.unit,
+                    name: unit,
                     ingredients: [this.ingredients[i]]
                 });
             }

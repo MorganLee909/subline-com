@@ -14,7 +14,6 @@ let ingredientDetails = {
                 border.parentElement.removeChild(border);
             }catch(err){}
         }
-        console.log("something");
 
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
 
@@ -32,9 +31,7 @@ let ingredientDetails = {
         let stockInput = document.getElementById("ingredientInput");
         let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
-        console.log(ingredient);
         if(ingredient.ingredient.specialUnit === "bottle"){
-            console.log("bottle");
             let quantity = ingredient.ingredient.convert(ingredient.quantity);
 
             stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
