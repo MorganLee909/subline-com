@@ -240,6 +240,7 @@ controller = {
             case "transaction":
                 transactions.isPopulated = false;
                 transactions.display(Transaction);
+                analytics.newData = true;
                 break;
         }
     },

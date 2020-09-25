@@ -1,4 +1,5 @@
 let analytics = {
+    newData: false,
     dateChange: false,
     transactions: [],
     ingredient: {},
@@ -7,12 +8,12 @@ let analytics = {
     display: function(Transaction){
         document.getElementById("analDateBtn").onclick = ()=>{this.changeDates(Transaction)};
 
-        if(this.transactions.length === 0){
+        if(this.transactions.length === 0 || this.newData === true){
             let startDate = new Date();
             startDate.setMonth(startDate.getMonth() - 1);
             const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
 
-            this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1]);
+            this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1] + 1);
         }
 
         let slider = document.getElementById("analSlider");
@@ -141,6 +142,11 @@ let analytics = {
                     }
                 }
             }
+
+            if(i === this.transactions.length - 1){
+                quantities.push(this.ingredient.ingredient.convert(currentQuantity));
+                dates.push(currentDate);
+            }
         }
 
         let trace = {
@@ -216,6 +222,11 @@ let analytics = {
                 if(recipe.recipe === this.recipe){
                     quantity += recipe.quantity;
                 }
+            }
+
+            if(i === this.transactions.length - 1){
+                quantities.push(quantity);
+                dates.push(currentDate);
             }
         }
 
