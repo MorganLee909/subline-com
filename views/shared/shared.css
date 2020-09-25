@@ -259,6 +259,7 @@ form{
         align-items: center;
         justify-content: flex-end;
         margin-right: 25px;
+        
     }
 
         .headerEnd > *{
@@ -266,7 +267,7 @@ form{
         }
 
         .headerEnd a{
-            color: white;
+            color: rgb(255, 99, 107);
         }
 
 /* Banner partial */

@@ -127,8 +127,11 @@
         <script src="/landingPage/register.js"></script>
         <script src="/landingPage/controller.js"></script>
         <script>
-            document.getElementById("logInButton").classList.remove("headerHide");
-            document.getElementById("joinButton").classList.remove("headerHide");
+            let links = document.querySelector(".headerEnd").children;
+
+            for(let i = 0; i < links.length; i++){
+                links[i].classList.remove("headerHide");
+            }
         </script>
     </body>
 </html>
