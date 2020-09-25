@@ -1341,7 +1341,8 @@ let home = {
             let quantities = [];
             let labels = [];
             let colors = [];
-            for(let i = 4; i >= 0; i--){
+            let count = (ingredientList.length < 5) ? ingredientList.length - 1 : 4;
+            for(let i = count; i >= 0; i--){
                 const ingredientName = ingredientList[i].ingredient.name;
                 const ingredientQuantity = ingredientList[i].ingredient.convert(ingredientList[i].quantity);
                 const unitName = ingredientList[i].ingredient.unit;
