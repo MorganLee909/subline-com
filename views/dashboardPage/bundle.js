@@ -1616,6 +1616,29 @@ let ingredientDetails = {
         for(let i = 0; i < remove.length; i++){
             remove[i].style.display = "none";
         }
+
+        if(this.ingredient.ingredient.specialUnit === "bottle"){
+            const mainDiv = document.getElementById("ingredientDetails");
+            const displayUnits = document.getElementById("displayUnitLabel");
+
+            let label = document.createElement("label");
+            label.innerText = `BOTTLE SIZE (${this.ingredient.ingredient.unit})`;
+            mainDiv.insertBefore(label, displayUnits);
+
+            const convQuant = this.ingredient.ingredient.convert(this.ingredient.ingredient.unitSize.toUpperCase());
+
+            let input = document.createElement("input");
+            input.type = "number";
+            input.value = convQuant.toFixed(2);
+            input.id = "ingredientUnitSizeIn";
+            input.min = "0";
+            input.step = "0.01";
+            label.appendChild(input);
+
+            let border = document.createElement("div");
+            border.classList.add("lineBorder");
+            mainDiv.insertBefore(border, displayUnits);
+        }
     },
 
     editSubmit: function(){
