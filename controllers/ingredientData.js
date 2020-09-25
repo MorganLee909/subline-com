@@ -123,5 +123,34 @@ module.exports = {
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO UPDATE INGREDIENT");
             });
-    }
+    },
+
+    //POST - Removes an ingredient from the merchant's inventory
+    removeIngredient: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    if(req.params.id === merchant.inventory[i].ingredient._id.toString()){
+                        merchant.inventory.splice(i, 1);
+                        break;
+                    }
+                }
+
+                return merchant.save()
+            })
+            .then((merchant)=>{
+                return Ingredient.deleteOne({_id: req.params.id});
+            })
+            .then((ingredient)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
+            });
+    },
 }

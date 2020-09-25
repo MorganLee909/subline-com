@@ -119,7 +119,7 @@ let ingredientDetails = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch(`/merchant/ingredients/remove/${this.ingredient.ingredient.id}`, {
+        fetch(`/ingredients/remove/${this.ingredient.ingredient.id}`, {
             method: "DELETE",
         })
             .then((response) => response.json())
