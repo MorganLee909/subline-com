@@ -21,10 +21,11 @@ let ingredientDetails = {
         let stockInput = document.getElementById("ingredientInput");
         let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
-        if(ingredient.ingredient.unitSize){
+        if(ingredient.ingredient.specialUnit = "bottle"){
             let quantity = ingredient.ingredient.convert(ingredient.quantity);
 
             stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockDisplay.innerText = `${(ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2)} BOTTLES`;
             stockInput.placeholder = quantity.toFixed(2);
         }else{
             stockDisplay.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
