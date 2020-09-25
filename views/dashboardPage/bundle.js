@@ -1307,13 +1307,21 @@ let home = {
                 input.value--;
                 input.changed = true;
             };
-            input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+            if(ingredient.ingredient.specialUnit === "bottle"){
+                input.value = (ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2);
+                ingredientCheck.children[2].innerText = "BOTTLES";
+            }else{
+                input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+                ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
+            }
+
+            
             ingredientCheck.children[1].children[2].onclick = ()=>{
                 input.value++;
                 input.changed = true;
             }
             input.onchange = ()=>{input.changed = true};
-            ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
+            
 
             ul.appendChild(ingredientCheck);
         }
@@ -1401,10 +1409,15 @@ let home = {
                 let merchIngredient = lis[i].ingredient;
 
                 if(lis[i].children[1].children[1].changed === true){
-                    let value = controller.convertToMain(merchIngredient.ingredient.unit, parseFloat(lis[i].children[1].children[1].value));
+                    let value = 0;
+                    if(merchIngredient.ingredient.specialUnit === "bottle"){
+                        value = parseFloat(lis[i].children[1].children[1].value) * merchIngredient.ingredient.unitSize;
+                    }else{
+                        value = controller.convertToMain(merchIngredient.ingredient.unit, parseFloat(lis[i].children[1].children[1].value));
+                    }
+                    
 
                     changes.push({
-                        id: merchIngredient.ingredient.id,
                         ingredient: merchIngredient.ingredient,
                         quantity: value
                     });
