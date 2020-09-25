@@ -94,6 +94,9 @@ module.exports = {
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
                 ingredient.category = req.body.category
+                if(ingredient.specialUnit = "bottle"){
+                    ingredient.unitSize = req.body.unitSize;
+                }
 
                 return ingredient.save();
             })
