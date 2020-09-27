@@ -240,6 +240,7 @@ controller = {
             case "transaction":
                 transactions.isPopulated = false;
                 transactions.display(Transaction);
+                analytics.newData = true;
                 break;
         }
     },
@@ -258,14 +259,14 @@ controller = {
         let indices = [];
 
         for(let i = 0; i < transactions.length; i++){
-            if(transactions[i].date > from){
+            if(transactions[i].date < to){
                 indices.push(i);
                 break;
             }
         }
 
-        for(let i = transactions.length - 1; i >=0; i--){
-            if(transactions[i].date < to){
+        for(let i = transactions.length - 1; i >= 0; i--){
+            if(transactions[i].date > from){
                 indices.push(i);
                 break;
             }
@@ -276,7 +277,85 @@ controller = {
         }
 
         return indices;
-    }
+    },
+
+    /*
+    Converts the price of a unit to $/main unit
+    unitType = type of the unit (i.e. mass, volume)
+    unit = exact unit to convert from
+    price = price of the ingredient per unit in cents
+    */
+    convertPrice(unitType, unit, price){
+        if(unitType === "mass"){
+            switch(unit){
+                case "g": break;
+                case "kg": price /= 1000; break;
+                case "oz":  price /= 28.3495; break;
+                case "lb":  price /= 453.5924; break;
+            }
+        }else if(unitType === "volume"){
+            switch(unit){
+                case "ml": price *= 1000; break;
+                case "l": break;
+                case "tsp": price *= 202.8842; break;
+                case "tbsp": price *= 67.6278; break;
+                case "ozfl": price *= 33.8141; break;
+                case "cup": price *= 4.1667; break;
+                case "pt": price *= 2.1134; break;
+                case "qt": price *= 1.0567; break;
+                case "gal": price /= 3.7854; break;
+            }
+        }else if(unitType === "length"){
+            switch(unit){
+                case "mm": price *= 1000; break;
+                case "cm": price *= 100; break;
+                case "m": break;
+                case "in": price *= 39.3701; break;
+                case "ft": price *= 3.2808; break;
+            }
+        }
+
+        return price;
+    },
+
+    /*
+    Converts the price of unit back to the price per default unit
+    unitType = type of the unit (i.e. mass, volume)
+    unit = exact unit to convert to
+    price = price of the ingredient per unit in cents
+    */
+    reconvertPrice(unitType, unit, price){
+        if(unitType === "mass"){
+            switch(unit){
+                case "g": break;
+                case "kg": price *= 1000; break;
+                case "oz":  price *= 28.3495; break;
+                case "lb":  price *= 453.5924; break;
+            }
+        }else if(unitType === "volume"){
+            switch(unit){
+                case "ml": price /= 1000; break;
+                case "l": break;
+                case "tsp": price /= 202.8842; break;
+                case "tbsp": price /= 67.6278; break;
+                case "ozfl": price /= 33.8141; break;
+                case "cup": price /= 4.1667; break;
+                case "pt": price /= 2.1134; break;
+                case "qt": price /= 1.0567; break;
+                case "gal": price *= 3.7854; break;
+            }
+        }else if(unitType === "length"){
+            switch(unit){
+                case "mm": price /= 1000; break;
+                case "cm": price /= 100; break;
+                case "m": break;
+                case "in": price /= 39.3701; break;
+                case "ft": price /= 3.2808; break;
+            }
+        }
+
+    return price;
+}
 }
 
 if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){

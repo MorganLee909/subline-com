@@ -16,17 +16,23 @@
 <div id="newOrder">
     <h1>NEW ORDER</h1>
 
-    <label>NAME/ID:
-        <input id="newOrderName" type="text">
-    </label>
+    <div class="newOrderLabels">
+        <label>DATE:
+            <input id="newOrderDate" type="date">
+        </label>
 
-    <label>DATE:
-        <input id="newOrderDate" type="date">
-    </label>
+        <label>NAME/ID:
+            <input id="newOrderName" type="text">
+        </label>
 
-    <label>TIME:
-        <input id="newOrderTime" type="time">
-    </label>
+        <label>TAXES:
+            <input id="orderTaxes" type="number" min="0" step="0.01">
+        </label>
+
+        <label>OTHER FEES:
+            <input id="orderFees" type="number" min="0" step="0.01">
+        </label>
+    </div>
 
     <div id="selectedIngredientList"></div>
 
@@ -44,7 +50,7 @@
             <div>
                 <input type="number" min="0" step="0.01" placeholder="QUANTITY">
 
-                <input type="number" min="0" step="0.01" placeholder="TOTAL PRICE">
+                <input type="number" min="0" step="0.01" placeholder="PRICE PER UNIT($)">
             </div>
         </div>
     </template>

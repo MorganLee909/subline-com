@@ -224,6 +224,9 @@ Ingredient Details
     }
 
     #ingredientDetails label{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         font-size: 20px;
         text-align: center;
         margin: 0;
@@ -267,10 +270,11 @@ Ingredient Details
         }
 
     #ingredientRecipeList{
+        text-align: center;
         list-style: none;
         overflow: auto;
         max-height: 150px;
-        width: 90%;
+        width: 100%;
         margin-left: auto;
     }
 
@@ -279,10 +283,11 @@ Ingredient Details
         padding: 10px;
         border-radius: 5px;
         font-weight: bold;
+        width: 75%;
         background: rgb(240, 252, 255);
         border: 1px solid black;
         cursor: pointer;
-        margin: 1px 0;
+        margin: 1px auto;
     }
 
         #ingredientRecipeList > li:hover{
@@ -440,6 +445,24 @@ Add Recipe
     width: 40%;
 }
 
+    .newOrderLabels{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+        .newOrderLabels label{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .newOrderLabels input{
+            width: 50%;
+        }
+
     #newOrderIngredients{
         display: flex;
         flex-direction: column;
@@ -558,6 +581,15 @@ Add Recipe
     align-items: center;
     width: 100%;
 }
+
+    .orderDiv{
+        width: 50%;
+    }
+
+        .subOrderDiv{
+            display: flex;
+            justify-content: space-between;
+        }
 
     #orderIngredients{
         width: 90%;

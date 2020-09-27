@@ -45,6 +45,10 @@ module.exports = {
         if(validation !== true){
             return res.json(validation);
         }
+        validation = Validator.quantity(req.body.ingredient.unitSize);
+        if(validation !== true){
+            return res.json(validation);
+        }
 
         let ingredientPromise = Ingredient.create((req.body.ingredient));
         let merchantPromise = Merchant.findOne({_id: req.session.user});
@@ -90,6 +94,9 @@ module.exports = {
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
                 ingredient.category = req.body.category
+                if(ingredient.specialUnit = "bottle"){
+                    ingredient.unitSize = req.body.unitSize;
+                }
 
                 return ingredient.save();
             })
@@ -119,5 +126,34 @@ module.exports = {
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO UPDATE INGREDIENT");
             });
-    }
+    },
+
+    //POST - Removes an ingredient from the merchant's inventory
+    removeIngredient: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    if(req.params.id === merchant.inventory[i].ingredient._id.toString()){
+                        merchant.inventory.splice(i, 1);
+                        break;
+                    }
+                }
+
+                return merchant.save()
+            })
+            .then((merchant)=>{
+                return Ingredient.deleteOne({_id: req.params.id});
+            })
+            .then((ingredient)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
+            });
+    },
 }

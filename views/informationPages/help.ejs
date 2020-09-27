@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <title>The Subline</title>
+        <link rel="icon" type="img/png" href="/shared/images/logo.png">
+        <link rel="stylesheet" href="/shared/shared.css">
+        <link rel="stylesheet" href="/informationPages/information.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <% include ../shared/header %>
+
+        <div class="helpMenu">
+            <ul>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#ingredients">Ingredients</a>
+                    <ul class="indent">
+                        <li><a href="#ingredientsNew">New Ingredients</a>
+                            <ul class="indent">
+                                <li><a href="#ingredientsNewBottles">Bottle Unit</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#ingredientsDetails">Ingredient Details</a></li>
+                    </ul>
+                </li>
+                <li><a href="#recipeBook">Recipe Book</a>
+                    <ul class="indent">
+                        <li><a href="#recipeBookDetails">Recipe Details</a></li>
+                        <li><a href="#recipeBookNew">New Recipes</a></li>
+                    </ul>
+                </li>
+                <li><a href="#analytics">Analytics</a>
+                    <ul class="indent">
+                        <li><a href="#analyticsIngredients">IngredientAnalytics</a></li>
+                        <li><a href="#analyticsRecipes">Recipe Analytics</a></li>
+                    </ul>
+                </li>
+                <li><a href="#orders">Orders</a>
+                    <ul class="indent">
+                        <li><a href="#ordersDetails">Order Details</a></li>
+                        <li><a href="#ordersNew">New Orders</a></li>
+                    </ul>
+                </li>
+                <li><a href="#transactions">Transactions</a>
+                    <ul class="indent">
+                        <li><a href="#transactionsDetails">Transaction Details</a></li>
+                        <li><a href="#transactionsNew">New Transactions</a></li>
+                    </ul>
+                </li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </div>
+
+        <div class="helpContent">
+            <h2 id="menu">MENU</h2>
+            
+            <p>After logging in, you will see the menu on the left side of the screen.  This menu will help you to navigate the website and view all of your content.If at any time you feel that the menu is taking up too much screen space, then simply click on the three horizontal bars in the top-right of the menu and it will shrink down to take up less space.</p>
+
+            <p>There are seven different options for you to choose on the menu. "DASHBOARD", "INGREDIENTS", "RECIPE BOOK", "ANALYTICS", "ORDERS", "TRANSACTIONS", and "LOGOUT".  The first six options will take you to the different pages on the website, which are discussed below.  The final option, "LOGOUT", will log you out of the website and take you back to the home page.</p>
+
+            <h2 id="dashboard">DASHBOARD</h2>
+
+            <p>The dashboard page is the main page that you will see after you have logged in to your account.  There are a number of elements on the page that are designed to get you some of the most important information right off the bat</p>
+
+            <p>In the top left of the page, you will will see total revenue for the month.  This revenue is calculated from the sales of recipes from the first day of the month to the current day.  Below the revenue you can see a comparison to last month.  This shows whether your revenue is more or less than the same period from last month and by what percent.  This compares the same time period.  So if today is September 15th, it will compare be comparing September 1 - September 15 to October 1 - October 15</p>
+
+            <p>To the right of the revenue, you can see a graph of the revenue.  This graph displays the revenue per day for the last 30 days so that you can get an idea of which days you are selling more or less.</p>
+
+            <p>In the bottom left is the "Inventory Check".  These are some ingredients that are recommend to be checked to ensure that your actual stock matches the estimated stock.  If you need to update any of them, then you can simply enter in the new number and then click "UPDATE" and the ingredients will automatically be updated</p>
+
+            <p>The final part of the dashboard page is the most popular ingredients in the bottom right.  This shows a simple chart of the five most popular ingredients that you have on in your restaurant along with the amount that you have sold.</p>
+
+            <h2 id="ingredients">INGREDIENTS</h2>
+            <p>The ingredients page is where you will find all of the information about each of your individual ingredients.  By default, your ingredients are sorted according to their category.  If you click on the arrow to the right of the category, it will expand and you can see all of the ingredients within that category and your stock of each one.</p>
+
+            <p>Near the top of the page, on the left, is a filter option.  Here you can search for specific ingredients.  Start typing in the ingredient or ingredients that you want to search for and an uncategorized list of ingredients matching your search will appear.  click the red "X" to clear the filter.</p>
+
+            <p>Near the top of the page and on the right is a "sort by" option.  If you click on this then a dropdown will appear with several options.  The "Ingredient" option will display an uncategorized list of all ingredients in alphabetical order.  The "Category" option will show a categorized list, which is the default display.  The "Unit of Measurement" option will categorize your ingredients based on their measurement units, similar to "Category".  Click on the red "X" at any time to revert to the default.</p>
+
+            <h3 id="ingredientsNew">NEW INGREDIENTS</h3>
+            <p>There is a button in the top right of the ingredients page labeled "NEW".  Clicking on this will open a sidebar on the right that allows you to create a new ingredient.  There are 4 fields that you need to fill out in order to create a new ingredient.  The name is whatever you want to call the ingredient and the category can be used to group it together with other similar ingredients.  The quantity is the number amount that you have in stock of that particular ingredient.  Match this with a unit in the next field.  When choosing a unit, keep in mind that you will be able to freely change the unit in the future.  However, you can only change units with the same type.  For example, you can change LB (mass), to KG (mass), but you cannot change LB (mass) to GAL(volume).</p>
+
+            <h4 id="ingredientsNewBottles">BOTTLE UNIT</h4>
+            <p>One of the special type of ingredients that can choose is the bottle type.  Bottles, obviously, are for things that purchase as bottles (i.e. liquour, wine) but tend to sell as smaller units(i.e. shots, glasses).  If you choose the bottle option, then another field will appear asking for bottle size.  Here you need to choose the unit (volume) that the bottle is measured in and then the quantity of each bottle.  The unit for the bottle can be changed at any time.  When creating recipes for bottle items, which is discussed further down, you will add in the volume that the recipe has and it will update the amount of the ingredient in bottles automatically</p>
+
+            <h3 id="ingredientsDetails">INGREDIENT DETAILS</h3>
+            <p>You can click on any of the ingredients to get more details on it.  After clicking on an ingredient, a sidebar should appear to the right.  At the top of this is the category and name of the ingredient.  Next is the current stock that you should have for this item.  After that is the average daily use for the past 30 days.  As the name suggests, this show how much you use this ingredient every day, on average.  Last is the recipes.  This simply shows all of your recipes that contain this ingredient.  You can click on the recipes to get further information on that recipe.  We discuss recipes further down.</p>
+
+            <p>At the top of the sidebar are three icons.  The arrow on the left will close the sidebar.  The trash can on the right will delete the ingredient.  In order to delete an ingredient, it must first be removed from all recipes that contain the ingredient.  Be careful, this cannot be undone.  The pencil icon in the center will allow you to edit the ingredient.  You can update the name, category and current stock of the current ingredient.  Also, you can change the units that want to use.  So, if you use pounds for an ingredient, but decide to switch over to metric, then your can change it to kilograms.  Or the other way around.  Click save to make the changes, or cancel to cancel them.</p>
+
+            <h2 id="recipeBook">RECIPE BOOK</h2>
+            <p>The third option on the menu is the "RECIPE BOOK".  Here you will find all of the information that you need about all of your recipes.  The recipes are displayed individual with the price of that recipe.</p>
+
+            <p>Above the recipes and on the left is a filter option.  This works similarly to the ingredients filter.  If you start typing in this box, then the list will be filtered to show only the ingredients that match what you have typed in.</p>
+
+            <h3 id="recipeBookDetails">RECIPE DETAILS</h3>
+            <p>Clicking on any of your recipes will open a sidebar on the right that will display all of the details for that specific ingredient.  At the top of the sidebar is the name of the ingredient.  Below that is a list of the ingredients contained within the recipe.  Below that is the price of the recipe.</p>
+
+            <p>Above the name of the recipe are three icons.  The arrow icon on the left will close the sidebar.  The trash can icon on the right will delete the recipe.  Be careful, deleting a recipe cannot be undone.</p>
+
+            <p>The pencil icon in the center is for editing the recipe.  If you click on this, you will be able to change the name of the recipe, add/remove/edit ingredients in the recipe, and change the price.  To edit the quantity of an ingredient within that recipe, simply change the number in the box to the right of the ingredient. To add an ingredient to the recipe, click on the "+" icon.  A dropdown will appear with ingredients for you to choose from.  Choose the ingredient you want to add, then the enter the quantity of the ingredient within the recipe in the box to the right.  To remove an ingredient from the recipe, click on the trash can to the right of the ingredient.  This will only remove the ingredient from the recipe, not from your ingredient list.  When finished, click the update button to save all changes</p>
+
+            <h3 id="recipeBookNew">New Recipes</h3>
+            <p>Click on the "NEW" button on the top left of the recipe book page will open a sidebar on the right for you to create a new recipe.  The box at the top contains three fields: name, price and # of ingredients.  First enter the name and the price that you sell the recipe for.  In "# of ingredients" enter the number of ingredients that you have in the recipe.  You can update this number any time.  After that, you should see an appropriate number of boxes below "INGREDIENTS".  In each box, choose the ingredient and the quantity of that ingredient that is used in that recipe.  When finished, click on "CREATE" at the bottom to save the new recipe.</p>
+
+            <h2 id="analytics">ANALYTICS</h2>
+            <p>The analytics page is the place where you can find detailed information about both your ingredients and your recipes.  There are many data points for you to explore on this page.  By default you will see ingredients first.</p>
+
+            <p>At the top right of the page you can see the option to select two dates.  This allows you to get data between any two time periods. Enter the first day that you would like to see in "From" and the last day in "To".  Then click on submit once you are done to retrieve that data.  Depending on the amount of data, this may take up to minute.  Updating the dates will apply to both ingredients and recipes.  By default, the page displays the last 30 days of data until you choose different dates.</p>
+
+            <h3 id="analyticsIngredients">INGREDIENT ANALYTICS</h3>
+            <p>The ingredients part of analytics is displayed when first visiting the analytics page.  This is indicated by the selector at the top-center of the page.  At first you will see not data until you choose an ingredient.  All of your ingredients are listed on the left side of the page.  Choose an ingredient to see the data for that specific ingredient.</p>
+
+            <p>The largest box at the top of the page shows a graph for the selected ingredient.  It shows the quantity sold for the ingredient day by day.  It is an interactive graph and you can zoom in, zoom out and many other things to better visualize your data.</p>
+
+            <p>The row below the graph has three different metrics.  "Minimum Daily Use" displays the minimum amount of that ingredient that you used during the selected time period.  "Average Daily Use" displays the average amount that is used each day for the selected time period.  "Maximum Daily Use" will display the maximum amount that you used in a single day.</p>
+
+            <p>The bottom row displays the average quantity of the ingredient that was used for each day of the week during the selected time period.</p>
+
+            <h3 id="analyticsRecipes">RECIPE ANALYTICS</h3>
+            <p>To switch to recipe analytics, click on the "Recipes" part of the selector at the top of the page.  By default, no recipe will be displayed at first.  On the left side of the page you will see a list of all of your recipes.  Once you choose one of your recipes, you will be shown the data for that recipe.</p>
+
+            <p>The main part of the page is the graph.  This displays all the quantity of that recipe sold day by day for your selected time period.  As with the ingredient graph, it is interactive and you can change it to better display your data.</p>
+
+            <p>At the bottom of the page are two data points.  On the left is average daily sales.  This display the average times that this recipe was sold each day for the selected time period.  On the right is the average daily revenue.  This is the average revenue, per day, for that specific recipe.</p>
+
+            <h2 id="orders">ORDERS</h2>
+            <p>The orders page displays all of the information about your orders.  You can search and view information about every time that you have purchased ingredients, as well as create new orders when you purchase more ingredients.</p>
+
+            <p>In the center of the page you will see a list of all of your orders.  It displays the name or ID of the order, the number of unique ingredients purchased, the date, and the total cost of the order.  By default, your 100 most recent orders are displayed.</p>
+
+            <p>Above the list of your orders is a search option.  Clicking on "Dates" will open a dropdown that allows you to select two dates to search between.  Clicking on "Ingredients" will open a dropdown with a list of all of your ingredients.  Check the box next to each ingredient to search for any orders that contain that ingredient.  Leaving all boxes unchecked will get all orders between the dates that you selected.  Finally, click on "Submit" to retrieve the orders.  Depending on the number of orders that must be retrieved, this could take several moments.</p>
+
+            <h3 id="ordersDetails">ORDER DETAILS</h3>
+            <p>Clicking on any specific order on the orders page will open a sidebar on the right with detailed information about the order.  At the top is the order name/ID, followed by the date.  Below this will be a list of all ingredients purchased in this order.  The ingredients list will show their name, the quantity purchased, the unit price and the total price for that ingredient.  At the bottom is displayed the total price of all ingredients within that order.</p>
+
+            <p>At the top of the sidebar are two icons.  The arrow icon on the left will close the sidebar.  The trash can icon on the right will delete the order.  Be careful, deleting an order cannot be undone.  It is not possible to edit orders.  If you find that you have made a mistake when entering an order, then you will have to delete it and create a new one.</p>
+
+            <h3 id="ordersNew">NEW ORDERS</h3>
+            <p>At the top-right of the orders page is the "NEW" button to create a new order.  Clicking on this will open a sidebar on the right.  On the left side of this sidebar is a list of all of your ingredients.  On the right is the data for the order.</p>
+
+            <p>To create a new order, start by entering a name/ID for the order.  This can be anything you want, it is only for your reference and convenience.  Then enter the date that the order was created.</p>
+
+            <p>To add ingredients to the order, go through your list of ingredients and click on any that were purchased with this order.  Once you click on the ingredient it will be added to the order on the right.  Each ingredient has two boxes.  The box on the left is the quantity of the ingredient that was purchased in this order.  On the left is the price per unit of the ingredient.  Be sure to enter the price per unit (i.e. $/LB or $/GAL) and not the total price for the ingredient.  If you have accidently added an ingredient that is not part of this order, then click on the "remove" button at the top-right of the ingredient.  This will remove the ingredient from the order.</p>
+
+            <p>Once you have finished adding all of the ingredients you purchased to this order, click on the "CREATE" button at the bottom of the sidebar.  This will create the new order with all of the specified ingredients.  When a new order is created, the stock for all of your ingredients will be automatically updated.  If you go back to the recipe page then you can see that all of the ingredients in the order have been updated accordingly.</p>
+
+            <h2 id="transactions">TRANSACTIONS</h2>
+            <p>The transactions page is the place where you can find all of the sales that you have made.  In the center is a list of the 100 most recent transactions.  Each transaction displays the date and/or time of the transaction, the total number of recipes sold in the transaction, and the revenue from the transaction.</p>
+
+            <p>Above the transaction list is a search bar similar to the orders page.  Clicking on "Dates" will open a dropdown with two date fields.  Enter a start and end date to find your orders.  Clicking on "Recipes" will open a dropdown with all of your recipes.  Click on the checkbox next to each recipe that you want to search for.  Choosing a recipe will search for any transactions that contain that recipe.  If you don't check any recipes, your will recieve a list of all transactions between the previously specified dates.  Click on submit to recieve the transactions that you chose.  Depending on the number of transactions, this could take several moments.</p>
+
+            <h3 id="transactionsDetails">TRANSACTION DETAILS</h3>
+            <p>On the transactions page, clicking on any transaction will open a sidebar display detailed information for that particular transaction.  At the top, you will see the date and maybe the time of the transaction.  Below this will be a list of recipes that were sold in this transaction.  Each recipe in this list will show the name of the recipe, the number sold, the cost of the recipe and the total revenue from that specific recipe within the transaction.  Below this will be your totals for the transaction.  It will show the total number of recipes sold and the total revenue for the transaction.</p>
+
+            <p>At the top of the sidebar are two icons.  The arrow icon on the left will close the sidebar.  The trash can icon on the right will delete the transaction.  Be careful, deleting a transaction cannot be undone.  Editing transactions is not available.  If you find that you have made a mistake when creating a transaction, you will have to delete it and then recreate that transaction.</p>
+
+            <h3 id="transactionsNew">NEW TRANSACTIONS</h3>
+            <p>At the top-right of the transactions page is the "NEW" button for creating new transactions.  Clicking on this button will open a sidebar on the right.</p>
+
+            <p>Creating a transaction is pretty simple.  First, choose the date of the transaction at the top.  Below that you will a list of all of your recipes.  For each recipe enter the number sold in the box to the right of the recipe name.  for recipes that were not sold in the transaction, simply leave the field blank.  Since it is impractical to enter every single transaction from your business, we recommend creating one transaction per day for all recipes sold.</p>
+
+            <p>When finished entering in all information, click the "CREATE" button at the bottom of the sidebar.  This will add your new transaction.  Also, all of your ingredients will be automatically updated based on the quantity of recipes sold, and the quantity of each ingredient within the recipe.  You can return to the ingredients page after creating a new transaction to find that the quantities of your ingredients have already been updated.</p>
+
+            <h2 id="contact">CONTACT US</h2>
+            <p>If you have found any problems with the site, or need help that is not covered here, please reach out to us.</p>
+
+            <p>This site is constantly being updated to provide a better experience to our users and better meet their needs.</p>
+
+            <a href="mailto:lee@thesubline.com">lee@thesubline.com</a>
+        </div>
+
+        <script>
+            document.getElementById("privacyPolicyLink").classList.remove("headerHide");
+            document.getElementById("termsLink").classList.remove("headerHide");
+        </script>
+    </body>
+</html>

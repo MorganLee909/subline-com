@@ -6,6 +6,7 @@
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
         <link rel="stylesheet" href="/landingPage/landing.css">
         <link rel="stylesheet" href="/shared/shared.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
     </head>
     <body>
         <% include ../shared/header %>
@@ -70,8 +71,8 @@
                         <span class="checkmark"></span>
         
                         <p style="padding-top: 5px; padding-left: 7px;">I agree to the 
-                            <a class="link" href="/information">Privacy Policy</a> and the 
-                            <a class="link" href="/information">Terms and Conditions</a>
+                            <a class="link" href="/privacy">Privacy Policy</a> and the 
+                            <a class="link" href="/terms">Terms and Conditions</a>
                         </p>
                     </label>   
                 </div>
@@ -125,5 +126,12 @@
         <script src="/landingPage/login.js"></script>
         <script src="/landingPage/register.js"></script>
         <script src="/landingPage/controller.js"></script>
+        <script>
+            let links = document.querySelector(".headerEnd").children;
+
+            for(let i = 0; i < links.length; i++){
+                links[i].classList.remove("headerHide");
+            }
+        </script>
     </body>
 </html>

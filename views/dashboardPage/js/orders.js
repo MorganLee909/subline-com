@@ -23,6 +23,8 @@ let orders = {
                                 response[i]._id,
                                 response[i].name,
                                 response[i].date,
+                                response[i].taxes,
+                                response[i].fees,
                                 response[i].ingredients,
                                 merchant
                             ));
@@ -79,13 +81,14 @@ let orders = {
             let totalCost = 0;
             
             for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                totalCost += merchant.orders[i].ingredients[j].price;
+                const ingredient = merchant.orders[i].ingredients[j];
+                totalCost += ingredient.pricePerUnit * ingredient.quantity;
             }
 
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            row.children[3].innerText = `$${(totalCost / 100).toFixed(2)}`;
+            row.children[3].innerText = `$${((totalCost / 100) + (merchant.orders[i].taxes / 100) + (merchant.orders[i].fees / 100)).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);
@@ -147,6 +150,8 @@ let orders = {
                             response[i]._id,
                             response[i].name,
                             response[i].date,
+                            response[i].taxes,
+                            response[i].fees,
                             response[i].ingredients,
                             merchant
                         );

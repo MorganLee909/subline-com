@@ -101,13 +101,46 @@ module.exports = {
             return res.redirect("/");
         }
 
-        Transaction.deleteOne({_id: req.params.id})
+        let merchant = {};
+        let transaction = {};
+        Merchant.findOne({_id: req.session.user})
             .then((response)=>{
-                return res.json({});
+                merchant = response;
+                return Transaction.findOne({_id: req.params.id}).populate("recipes.recipe");
+            })
+            .then((response)=>{
+                transaction = response;
+                return Transaction.deleteOne({_id: req.params.id});
+            })
+            .then((response)=>{
+                res.json({});
+
+                for(let i = 0; i < transaction.recipes.length; i++){
+                    const recipe = transaction.recipes[i].recipe;
+                    for(let j = 0; j < recipe.ingredients.length; j++){
+                        const ingredient = recipe.ingredients[i].ingredient;
+                        for(let k = 0; k < merchant.inventory.length; k++){
+                            if(ingredient.toString() == merchant.inventory[i].ingredient.toString()){
+                                merchant.inventory[i].quantity += recipe.ingredients[i].quantity * transaction.recipes[i].quantity;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return merchant.save();
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO DELETE TRANSACTION");
-            });
+                return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
+            })
+
+        // Transaction.deleteOne({_id: req.params.id})
+        //     .then((response)=>{
+        //         return res.json({});
+        //     })
+        //     .catch((err)=>{
+        //         return res.json("ERROR: UNABLE TO DELETE TRANSACTION");
+        //     });
     },
 
     getTransactionsByDate: function(req, res){

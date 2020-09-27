@@ -13,11 +13,12 @@ class Merchant{
         this.units = {
             mass: ["g", "kg", "oz", "lb"],
             volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
-            length: ["mm", "cm", "m", "in", "foot"],
-            other: ["each"]
+            length: ["mm", "cm", "m", "in", "ft"],
+            other: ["each", "bottle"]
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
+
             this.ingredients.push({
                 ingredient: new Ingredient(
                     oldMerchant.inventory[i].ingredient._id,
@@ -25,7 +26,9 @@ class Merchant{
                     oldMerchant.inventory[i].ingredient.category,
                     oldMerchant.inventory[i].ingredient.unitType,
                     oldMerchant.inventory[i].defaultUnit,
-                    this
+                    this,
+                    oldMerchant.inventory[i].ingredient.specialUnit,
+                    oldMerchant.inventory[i].ingredient.unitSize
                 ),
                 quantity: oldMerchant.inventory[i].quantity
             });
@@ -54,11 +57,10 @@ class Merchant{
     /*
     Updates all specified item in the merchant's inventory and updates the page
     If ingredient doesn't exist, add it
-    ingredients = {
+    ingredients = [{
         ingredient: Ingredient object,
         quantity: new quantity,
-        defaultUnit: the default unit to be displayed
-    }
+    }]
     remove = set true if removing
     isOrder = set true if this is coming from an order
     */
@@ -67,7 +69,7 @@ class Merchant{
             let isNew = true;
             for(let j = 0; j < this.ingredients.length; j++){
                 if(this.ingredients[j].ingredient === ingredients[i].ingredient){
-                    if(remove){
+                    if(remove && !isOrder){
                         this.ingredients.splice(j, 1);
                     }else if(!remove && isOrder){
                         this.ingredients[j].quantity += ingredients[i].quantity;
@@ -83,8 +85,7 @@ class Merchant{
             if(isNew){
                 this.ingredients.push({
                     ingredient: ingredients[i].ingredient,
-                    quantity: parseFloat(ingredients[i].quantity),
-                    defaultUnit: ingredients[i].defaultUnit
+                    quantity: parseFloat(ingredients[i].quantity)
                 });
             }
         }
@@ -178,7 +179,7 @@ class Merchant{
 
         if(isNew){
             this.transactions.push(transaction);
-            this.transactions.sort((a, b) => a.date > b.date ? 1 : -1);
+            this.transactions.sort((a, b) => a.date > b.date ? -1 : 1);
         }
 
         let keys = Object.keys(ingredients);
@@ -349,8 +350,9 @@ class Merchant{
 
         for(let i = 0; i < this.ingredients.length; i++){
             let unitExists = false;
+            const innerIngredient = this.ingredients[i].ingredient;
             for(let j = 0; j < ingredientsByUnit.length; j++){
-                if(this.ingredients[i].ingredient.unit === ingredientsByUnit[j].name){
+                if(innerIngredient.unit === ingredientsByUnit[j].name || innerIngredient.specialUnit === ingredientsByUnit[j].name){
                     ingredientsByUnit[j].ingredients.push(this.ingredients[i]);
 
                     unitExists = true;
@@ -359,8 +361,15 @@ class Merchant{
             }
 
             if(!unitExists){
+                let unit = "";
+                if(innerIngredient.specialUnit === "bottle"){
+                    unit = "bottle";
+                }else{
+                    unit = innerIngredient.unit;
+                }
+
                 ingredientsByUnit.push({
-                    name: this.ingredients[i].ingredient.unit,
+                    name: unit,
                     ingredients: [this.ingredients[i]]
                 });
             }

@@ -105,6 +105,14 @@ module.exports = {
             return "Date cannot be in the future";
         }
 
+        if(this.quantity(order.taxes) !== true){
+            return "TAXES MUST BE A NON NEGATIVE NUMBER";
+        }
+
+        if(this.quantity(order.fees) !== true){
+            return "FEES MUST BE A NON NEGATIVE NUMBER";
+        }
+
         for(let i = 0; i < order.ingredients; i++){
             let quantityCheck = this.quantity(order.ingredients[i].quantity);
             if(quantityCheck !== true){

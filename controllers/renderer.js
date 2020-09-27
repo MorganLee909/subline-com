@@ -93,7 +93,7 @@ module.exports = {
                         merchant: new ObjectId(req.session.user),
                         date: {$gte: firstDay},
                     }},
-                    {$sort: {date: 1}},
+                    {$sort: {date: -1}},
                     {$project: {
                         date: 1,
                         recipes: 1

@@ -1,12 +1,18 @@
 <div class="header">
-    <a class="logo" href="/" >
+    <a class="headerStart" href="/" >
         <img src="/shared/images/logo.png" alt="Subline">
-        <div class='header-logo'> SUBLINE </div>
+        <div class='headerLogo'>THE SUBLINE</div>
     </a>
 
-    <div class="public-buttons">
-        <button id="logInButton" class="button" onclick="loginObj.display()"> Log In </button>
+    <div class="headerEnd">
+        <a id="helpLink" class="headerHide" href="/help">HELP</a>
 
-        <a id="joinButton" class="button-join link" onclick="registerObj.display()"> Or Join </a>
+        <a id="privacyPolicyLink" class="headerHide" href="/privacy">PRIVACY POLICY</a>
+
+        <a id="termsLink" class="headerHide" href="/terms">TERMS AND CONDITIONS</a>
+
+        <button id="logInButton" class="button headerHide" onclick="loginObj.display()">LOG IN</button>
+
+        <button id="joinButton" class="button headerHide" onclick="registerObj.display()">JOIN</button>
     </div>
 </div>

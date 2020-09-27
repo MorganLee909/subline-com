@@ -4,7 +4,8 @@ let orderDetails = {
 
         document.getElementById("orderDetailName").innerText = order.name;
         document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
-        document.getElementById("orderDetailTime").innerText = order.date.toLocaleTimeString("en-US");
+        document.getElementById("orderDetailTax").innerText = `$${(order.taxes / 100).toFixed(2)}`;
+        document.getElementById("orderDetailFee").innerText = `$${(order.fees / 100).toFixed(2)}`;
 
         let ingredientList = document.getElementById("orderIngredients");
         while(ingredientList.children.length > 0){
@@ -15,18 +16,32 @@ let orderDetails = {
         let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredientDiv = template.cloneNode(true);
-            let price = order.ingredients[i].price / 100;
+            let price = order.ingredients[i].pricePerUnit * order.ingredients[i].quantity;
             grandTotal += price;
 
-            let ingredient = order.ingredients[i].ingredient;
+            const ingredient = order.ingredients[i].ingredient;
+            
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[1].innerText = `${ingredient.convert(order.ingredients[i].quantity).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
-            ingredientDiv.children[2].innerText = `$${price.toFixed(2)}`;
+            ingredientDiv.children[2].innerText = `$${(price / 100).toFixed(2)}`;
+            
+            const ingredientDisplay = ingredientDiv.children[1];
+            if(ingredient.specialUnit === "bottle"){
+                const quantSold = order.ingredients[i].quantity / ingredient.unitSize;
+                const ppu = (order.ingredients[i].pricePerUnit * order.ingredients[i].quantity) / quantSold;
+
+                ingredientDisplay.innerText = `${quantSold.toFixed(0)} bottles x $${(ppu / 100).toFixed(2)}`;
+            }else{
+                const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
+                const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);
+
+                ingredientDisplay.innerText = `${convertedQuantity.toFixed(2)} ${ingredient.unit.toUpperCase()} x $${(convertedPrice / 100).toFixed(2)}`;
+            }
 
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.querySelector("#orderTotalPrice p").innerText = `$${grandTotal.toFixed(2)}`;
+        document.getElementById("orderDetailTotal").innerText = `$${(grandTotal / 100).toFixed(2)}`;
+        document.querySelector("#orderTotalPrice p").innerText = `$${((grandTotal + order.taxes + order.fees) / 100).toFixed(2)}`;
     },
 
     remove: function(order){
@@ -44,7 +59,12 @@ let orderDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    for(let i = 0; i < order.ingredients.length; i++){
+                        order.ingredients[i].quantity = -order.ingredients[i].quantity;
+                    }
+
                     merchant.editOrders([order], true);
+                    merchant.editIngredients(order.ingredients, false, true);
                     banner.createNotification("ORDER REMOVED");
                 }
             })

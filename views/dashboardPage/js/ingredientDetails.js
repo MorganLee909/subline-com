@@ -5,6 +5,16 @@ let ingredientDetails = {
     display: function(ingredient){
         this.ingredient = ingredient;
 
+        if(this.ingredient.ingredient.specialUnit === "bottle"){
+            try{
+                let label = document.getElementById("ingredientUnitSizeLabel");
+                label.parentElement.removeChild(label);
+
+                let border = document.getElementById("bottleBorder");
+                border.parentElement.removeChild(border);
+            }catch(err){}
+        }
+
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
 
         let categoryInput = document.getElementById("detailsCategoryInput");
@@ -17,10 +27,21 @@ let ingredientDetails = {
         nameInput.value = "";
         nameInput.placeholder = ingredient.ingredient.name;
 
+        //Display the stock quantity (and the edit input) based on the unit type
         let stockInput = document.getElementById("ingredientInput");
-        document.getElementById("ingredientStock").innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
-        stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+        if(ingredient.ingredient.specialUnit === "bottle"){
+            let quantity = ingredient.ingredient.convert(ingredient.quantity);
+
+            stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockDisplay.innerText = `${(ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2)} BOTTLES`;
+            stockInput.placeholder = quantity.toFixed(2);
+        }else{
+            stockDisplay.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+        }
+
 
         let quantities = [];
         let now = new Date();
@@ -42,7 +63,7 @@ let ingredientDetails = {
         }
 
         let dailyUse = sum / quantities.length;
-        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(dailyUse).toFixed(2)} ${ingredient.ingredient.unit}`;
+        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(dailyUse).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
 
         let ul = document.getElementById("ingredientRecipeList");
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
@@ -109,7 +130,7 @@ let ingredientDetails = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch(`/merchant/ingredients/remove/${this.ingredient.ingredient.id}`, {
+        fetch(`/ingredients/remove/${this.ingredient.ingredient.id}`, {
             method: "DELETE",
         })
             .then((response) => response.json())
@@ -138,23 +159,61 @@ let ingredientDetails = {
         for(let i = 0; i < remove.length; i++){
             remove[i].style.display = "none";
         }
+
+        if(this.ingredient.ingredient.specialUnit === "bottle"){
+            const mainDiv = document.getElementById("ingredientDetails");
+            const displayUnits = document.getElementById("displayUnitLabel");
+
+            let label = document.createElement("label");
+            label.innerText = `BOTTLE SIZE (${this.ingredient.ingredient.unit.toUpperCase()})`;
+            label.id = "ingredientUnitSizeLabel";
+            mainDiv.insertBefore(label, displayUnits);
+
+            const convQuant = this.ingredient.ingredient.convert(this.ingredient.ingredient.unitSize);
+
+            let input = document.createElement("input");
+            input.type = "number";
+            input.value = convQuant.toFixed(2);
+            input.id = "ingredientUnitSizeIn";
+            input.min = "0";
+            input.step = "0.01";
+            label.appendChild(input);
+
+            let border = document.createElement("div");
+            border.classList.add("lineBorder");
+            border.id="bottleBorder";
+            mainDiv.insertBefore(border, displayUnits);
+        }
     },
 
     editSubmit: function(){
+        //Update the ingredient unit depending on the type of unit
         let ingredientButtons = document.querySelectorAll(".unitButton");
         for(let i = 0; i < ingredientButtons.length; i++){
             if(ingredientButtons[i].classList.contains("unitActive")){
-                this.ingredient.ingredient.unit = ingredientButtons[i].innerText.toLowerCase();
+                const unit = ingredientButtons[i].innerText.toLowerCase();
+                this.ingredient.ingredient.unit = unit;
+
                 break;
             }
         }
 
+        //Update the ingredient quantity depending on the type of unit
         const quantityElem = document.getElementById("ingredientInput");
         if(quantityElem.value !== ""){
-            this.ingredient.quantity = controller.convertToMain(
-                this.ingredient.ingredient.unit,
-                Number(document.getElementById("ingredientInput").value)
-            );
+            if(this.ingredient.ingredient.specialUnit === "bottle"){
+                let quantInMain = controller.convertToMain(
+                    this.ingredient.ingredient.unit,
+                    quantityElem.value * this.ingredient.ingredient.unitSize
+                );
+
+                this.ingredient.quantity = quantInMain / this.ingredient.ingredient.unitSize;
+            }else{
+                this.ingredient.quantity = controller.convertToMain(
+                    this.ingredient.ingredient.unit,
+                    Number(quantityElem.value)
+                );
+            }
         }
 
         const category = document.getElementById("detailsCategoryInput");
@@ -162,7 +221,7 @@ let ingredientDetails = {
 
         const name = document.getElementById("ingredientDetailsNameIn");
         this.ingredient.ingredient.name = (name.value === "") ? this.ingredient.ingredient.name : name.value;
-        
+
         let data = {
             id: this.ingredient.ingredient.id,
             name: this.ingredient.ingredient.name,
@@ -170,6 +229,12 @@ let ingredientDetails = {
             category: this.ingredient.ingredient.category,
             defaultUnit: this.ingredient.ingredient.unit
         };
+
+        if(this.ingredient.ingredient.specialUnit === "bottle"){
+            const unitSize = document.getElementById("ingredientUnitSizeIn").value;
+            this.ingredient.ingredient.unitSize = controller.convertToMain(this.ingredient.ingredient.unit, unitSize);
+            data.unitSize = this.ingredient.ingredient.unitSize;
+        }
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";

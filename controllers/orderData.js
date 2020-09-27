@@ -1,5 +1,6 @@
 const Order = require("../models/order.js");
 const Merchant = require("../models/merchant.js");
+
 const ObjectId = require("mongoose").Types.ObjectId;
 const Validator = require("./validator.js");
 
@@ -31,6 +32,8 @@ module.exports = {
             {$project: {
                 name: 1,
                 date: 1,
+                taxes: 1,
+                fees: 1,
                 ingredients: 1
             }}
         ])
@@ -96,7 +99,7 @@ module.exports = {
         ingredients: [{
             ingredient: id of the ingredient
             quantity: amount of the ingredient purchased
-            price: price for ingredient
+            pricePerUnit: price per gram
         }]
     } 
     */ 
@@ -131,7 +134,7 @@ module.exports = {
                     }
                 }
 
-                return merchant.save()
+                return merchant.save();
             })
             .then((merchant)=>{
                 return;
@@ -148,9 +151,31 @@ module.exports = {
             return res.redirect("/");
         }
 
-        Order.deleteOne({_id: req.params.id})
+        let merchant = {};
+        let order = {}
+        Merchant.findOne({_id: req.session.user})
             .then((response)=>{
-                return res.json({});
+                merchant = response;
+                return Order.findOne({_id: req.params.id});
+            })
+            .then((response)=>{
+                order = response;
+
+                return Order.deleteOne({_id: req.params.id})
+            })
+            .then((response)=>{
+                res.json({});
+
+                for(let i = 0; i < order.ingredients.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(order.ingredients[i].ingredient.toString() === merchant.inventory[j].ingredient.toString()){
+                            merchant.inventory[j].quantity -= order.ingredients[i].quantity;
+                            break;
+                        }
+                    }
+                }
+
+                return merchant.save();
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO REMOVE ORDER");

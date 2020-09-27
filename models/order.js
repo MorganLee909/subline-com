@@ -12,6 +12,14 @@ const OrderSchema = new mongoose.Schema({
         default: Date.now,
         required: true
     },
+    taxes: {
+        type: Number,
+        required: true
+    },
+    fees: {
+        type: Number,
+        required: true
+    },
     ingredients: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
@@ -23,7 +31,7 @@ const OrderSchema = new mongoose.Schema({
             required: true,
             min: 0
         },
-        price: {
+        pricePerUnit: {
             type: Number,
             min: 0
         }

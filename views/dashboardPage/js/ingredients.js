@@ -33,7 +33,7 @@ let ingredients = {
 
         for(let i = 0; i < categories.length; i++){
             let categoryDiv = categoryTemplate.cloneNode(true);
-            categoryDiv.children[0].children[0].innerText = categories[i].name;
+            categoryDiv.children[0].children[0].innerText = categories[i].name.toUpperCase();
             
             categoryDiv.children[0].children[1].onclick = ()=>{
                 this.toggleCategory(categoryDiv.children[1], categoryDiv.children[0].children[1]);
@@ -46,10 +46,16 @@ let ingredients = {
                 let ingredientDiv = ingredientTemplate.cloneNode(true);
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
-                ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 ingredientDiv.onclick = ()=>{controller.openSidebar("ingredientDetails", ingredient)};
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
+
+                
+                if(ingredient.ingredient.specialUnit === "bottle"){
+                    ingredientDiv.children[2].innerText = `${(ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2)} BOTTLES`
+                }else{
+                    ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+                }
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
                 this.ingredients.push(ingredientDiv);

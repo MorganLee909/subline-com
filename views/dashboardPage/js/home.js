@@ -19,11 +19,11 @@ let home = {
         let lastMonthToDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
         let revenueThisMonth = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfMonth));
-        let revenueLastmonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
+        let revenueLastMonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
 
         document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
 
-        let revenueChange = ((revenueThisMonth - revenueLastmonthToDay) / revenueLastmonthToDay) * 100;
+        let revenueChange = ((revenueThisMonth - revenueLastMonthToDay) / revenueLastMonthToDay) * 100;
         
         let img = "";
         if(revenueChange >= 0){
@@ -112,10 +112,25 @@ let home = {
 
             ingredientCheck.ingredient = ingredient;
             ingredientCheck.children[0].innerText = ingredient.ingredient.name;
-            ingredientCheck.children[1].children[0].onclick = ()=>{input.value--};
-            input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
-            ingredientCheck.children[1].children[2].onclick = ()=>{input.value++}
-            ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
+            ingredientCheck.children[1].children[0].onclick = ()=>{
+                input.value--;
+                input.changed = true;
+            };
+            if(ingredient.ingredient.specialUnit === "bottle"){
+                input.value = (ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2);
+                ingredientCheck.children[2].innerText = "BOTTLES";
+            }else{
+                input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+                ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
+            }
+
+            
+            ingredientCheck.children[1].children[2].onclick = ()=>{
+                input.value++;
+                input.changed = true;
+            }
+            input.onchange = ()=>{input.changed = true};
+            
 
             ul.appendChild(ingredientCheck);
         }
@@ -129,16 +144,28 @@ let home = {
 
         let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
         if(ingredientList !== false){
-            ingredientList.sort((a, b) => a.quantity < b.quantity);
+            ingredientList.sort((a, b)=>{
+                if(a.quantity < b.quantity){
+                    return 1;
+                }
+                if(a.quantity > b.quantity){
+                    return -1;
+                }
+
+                return 0;
+            });
 
             let quantities = [];
-            let names = [];
             let labels = [];
             let colors = [];
-            for(let i = 4; i >= 0; i--){
+            let count = (ingredientList.length < 5) ? ingredientList.length - 1 : 4;
+            for(let i = count; i >= 0; i--){
+                const ingredientName = ingredientList[i].ingredient.name;
+                const ingredientQuantity = ingredientList[i].ingredient.convert(ingredientList[i].quantity);
+                const unitName = ingredientList[i].ingredient.unit;
+
                 quantities.push(ingredientList[i].quantity);
-                names.push(ingredientList[i].ingredient.name.toUpperCase());
-                labels.push(`${ingredientList[i].ingredient.convert(ingredientList[i].quantity).toFixed(2)} ${ingredientList[i].ingredient.unit.toUpperCase()}`);
+                labels.push(`${ingredientName}: ${ingredientQuantity.toFixed(2)} ${unitName.toUpperCase()}`);
                 if(i === 0){
                     colors.push("rgb(255, 99, 107");
                 }else{
@@ -148,7 +175,6 @@ let home = {
 
             let trace = {
                 x: quantities,
-                y: names,
                 type: "bar",
                 orientation: "h",
                 text: labels,
@@ -164,6 +190,9 @@ let home = {
                 xaxis: {
                     zeroline: false,
                     title: "QUANTITY"
+                },
+                yaxis: {
+                    showticklabels: false
                 }
             }
             
@@ -188,11 +217,16 @@ let home = {
             if(lis[i].children[1].children[1].value >= 0){
                 let merchIngredient = lis[i].ingredient;
 
-                let value = parseFloat(lis[i].children[1].children[1].value);
+                if(lis[i].children[1].children[1].changed === true){
+                    let value = 0;
+                    if(merchIngredient.ingredient.specialUnit === "bottle"){
+                        value = parseFloat(lis[i].children[1].children[1].value) * merchIngredient.ingredient.unitSize;
+                    }else{
+                        value = controller.convertToMain(merchIngredient.ingredient.unit, parseFloat(lis[i].children[1].children[1].value));
+                    }
+                    
 
-                if(value !== merchIngredient.quantity){
                     changes.push({
-                        id: merchIngredient.ingredient.id,
                         ingredient: merchIngredient.ingredient,
                         quantity: value
                     });
@@ -201,17 +235,19 @@ let home = {
                         id: merchIngredient.ingredient.id,
                         quantity: value
                     });
+
+                    lis[i].children[1].children[1].changed = false;
                 }
             }else{
                 banner.createError("CANNOT HAVE NEGATIVE INGREDIENTS");
                 return;
             }
         }
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
         
         if(fetchData.length > 0){
+            let loader = document.getElementById("loaderContainer");
+            loader.style.display = "flex";
+
             fetch("/merchant/ingredients/update", {
                 method: "PUT",
                 headers: {

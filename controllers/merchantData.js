@@ -237,35 +237,6 @@ module.exports = {
             });
     },
 
-    //POST - Removes an ingredient from the merchant's inventory
-    removeMerchantIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(req.params.id === merchant.inventory[i].ingredient._id.toString()){
-                        merchant.inventory.splice(i, 1);
-                        break;
-                    }
-                }
-
-                merchant.save()
-                    .then((merchant)=>{
-                        return res.json({});
-                    })
-                    .catch((err)=>{
-                        return res.json("ERROR: UNABLE TO SAVE USER DATA");
-                    });
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
-            });
-    },
-
     //PUT - Update the default unit for a single ingredient
     ingredientDefaultUnit: function(req, res){
         if(!req.session.user){

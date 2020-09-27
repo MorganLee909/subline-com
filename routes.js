@@ -5,6 +5,7 @@ const otherData = require("./controllers/otherData");
 const transactionData = require("./controllers/transactionData");
 const recipeData = require("./controllers/recipeData");
 const orderData = require("./controllers/orderData.js");
+const informationPages = require("./controllers/informationPages.js");
 
 module.exports = function(app){
     //Render page
@@ -18,7 +19,6 @@ module.exports = function(app){
     app.get("/merchant/create/clover", merchantData.createMerchantClover);
     app.get("/merchant/create/square", merchantData.createMerchantSquare);
     app.delete("/merchant/recipes/remove/:id", merchantData.removeRecipe);
-    app.delete("/merchant/ingredients/remove/:id", merchantData.removeMerchantIngredient);
     app.put("/merchant/ingredients/update/:id/:unit", merchantData.ingredientDefaultUnit);
     app.put("/merchant/ingredients/update", merchantData.updateMerchantIngredient); //also updates some data in ingredients
     app.post("/merchant/password", merchantData.updatePassword);
@@ -27,6 +27,7 @@ module.exports = function(app){
     app.get("/ingredients", ingredientData.getIngredients);
     app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", ingredientData.updateIngredient);
+    app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
 
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);
@@ -54,4 +55,9 @@ module.exports = function(app){
     app.get("/squarelogin", otherData.squareRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
     app.get("/squareauth", otherData.squareAuth);
+
+    //Information Pages
+    app.get("/privacy", informationPages.privacy);
+    app.get("/terms", informationPages.terms);
+    app.get("/help", informationPages.help);
 }
