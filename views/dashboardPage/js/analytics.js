@@ -114,7 +114,7 @@ let analytics = {
         //Create Graph
         let quantities = [];
         let dates = [];
-        let currentDate = this.transactions[0].date;
+        let currentDate = (this.transactions.length > 0) ? this.transactions[0].date : undefined;
         let currentQuantity = 0;
 
         for(let i = 0; i < this.transactions.length; i++){
@@ -171,7 +171,7 @@ let analytics = {
         //Create use cards
         let sum = 0;
         let max = 0;
-        let min = quantities[0];
+        let min = (quantities.length > 0) ? quantities[0] : 0;
         for(let i = 0; i < quantities.length; i++){
             sum += quantities[i];
             if(quantities[i] > max){

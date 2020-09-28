@@ -1,3 +1,5 @@
+const ingredients = require("./ingredients");
+
 let newIngredient = {
     display: function(Ingredient){
         const selector = document.getElementById("unitSelector");
@@ -50,8 +52,6 @@ let newIngredient = {
             newIngredient.ingredient.specialUnit = unit;
             newIngredient.quantity = quantityValue * bottleSize;
         }
-
-        console.log(newIngredient);
     
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
@@ -80,11 +80,14 @@ let newIngredient = {
                     )
 
                     merchant.addIngredient(ingredient, response.quantity);
+                    ingredients.display();
+                    controller.closeSidebar();
 
                     banner.createNotification("INGREDIENT CREATED");
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

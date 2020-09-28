@@ -128,8 +128,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.ingredients.display();
-        controller.closeSidebar();
     }
 
     removeIngredient(ingredient){
@@ -169,6 +167,8 @@ class Merchant{
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
+        this._modules.recipeBook.display();
+        controller.closeSidebar();
     }
 
     removeRecipe(recipe){
@@ -181,6 +181,8 @@ class Merchant{
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
+        this._modules.recipeBook.display();
+        controller.closeSidebar();
     }
 
     getTransactions(from = 0, to = new Date()){
@@ -228,6 +230,8 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
         this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
+        this._modeules.transactions.display();
+        controller.closeSidebar();
     }
 
     removeTransaction(transaction){
@@ -264,6 +268,8 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
         this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
+        this._modules.transactions.display();
+        controller.closeSidebar();
     }
 
     get orders(){
@@ -286,6 +292,8 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
+        this._modules.orders.display();
+        controller.closeSidebar();
     }
 
     removeOrder(order){
@@ -306,6 +314,8 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
+        this._modules.orders.display();
+        controller.closeSidebar();
     }
 
     get units(){
@@ -729,7 +739,7 @@ let analytics = {
         //Create Graph
         let quantities = [];
         let dates = [];
-        let currentDate = this.transactions[0].date;
+        let currentDate = (this.transactions.length > 0) ? this.transactions[0].date : undefined;
         let currentQuantity = 0;
 
         for(let i = 0; i < this.transactions.length; i++){
@@ -786,7 +796,7 @@ let analytics = {
         //Create use cards
         let sum = 0;
         let max = 0;
-        let min = quantities[0];
+        let min = (quantities.length > 0) ? quantities[0] : 0;
         for(let i = 0; i < quantities.length; i++){
             sum += quantities[i];
             if(quantities[i] > max){
@@ -2045,6 +2055,8 @@ let ingredients = {
 
 module.exports = ingredients;
 },{"./orders":16}],11:[function(require,module,exports){
+const ingredients = require("./ingredients");
+
 let newIngredient = {
     display: function(Ingredient){
         const selector = document.getElementById("unitSelector");
@@ -2097,8 +2109,6 @@ let newIngredient = {
             newIngredient.ingredient.specialUnit = unit;
             newIngredient.quantity = quantityValue * bottleSize;
         }
-
-        console.log(newIngredient);
     
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
@@ -2127,11 +2137,14 @@ let newIngredient = {
                     )
 
                     merchant.addIngredient(ingredient, response.quantity);
+                    ingredients.display();
+                    controller.closeSidebar();
 
                     banner.createNotification("INGREDIENT CREATED");
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2141,7 +2154,7 @@ let newIngredient = {
 }
 
 module.exports = newIngredient;
-},{}],12:[function(require,module,exports){
+},{"./ingredients":10}],12:[function(require,module,exports){
 let newOrder = {
     display: function(Order){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");

@@ -76,8 +76,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.ingredients.display();
-        controller.closeSidebar();
     }
 
     removeIngredient(ingredient){
@@ -117,6 +115,8 @@ class Merchant{
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
+        this._modules.recipeBook.display();
+        controller.closeSidebar();
     }
 
     removeRecipe(recipe){
@@ -129,6 +129,8 @@ class Merchant{
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
+        this._modules.recipeBook.display();
+        controller.closeSidebar();
     }
 
     getTransactions(from = 0, to = new Date()){
@@ -176,6 +178,8 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
         this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
+        this._modeules.transactions.display();
+        controller.closeSidebar();
     }
 
     removeTransaction(transaction){
@@ -212,6 +216,8 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
         this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
+        this._modules.transactions.display();
+        controller.closeSidebar();
     }
 
     get orders(){
@@ -234,6 +240,8 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
+        this._modules.orders.display();
+        controller.closeSidebar();
     }
 
     removeOrder(order){
@@ -254,6 +262,8 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
+        this._modules.orders.display();
+        controller.closeSidebar();
     }
 
     get units(){
