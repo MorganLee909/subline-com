@@ -45,9 +45,12 @@ module.exports = {
         if(validation !== true){
             return res.json(validation);
         }
-        validation = Validator.quantity(req.body.ingredient.unitSize);
-        if(validation !== true){
-            return res.json(validation);
+
+        if(req.body.ingredient.unitSize){
+            validation = Validator.quantity(req.body.ingredient.unitSize);
+            if(validation !== true){
+                return res.json(validation);
+            }
         }
 
         let ingredientPromise = Ingredient.create((req.body.ingredient));
@@ -94,7 +97,7 @@ module.exports = {
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
                 ingredient.category = req.body.category
-                if(ingredient.specialUnit = "bottle"){
+                if(ingredient.specialUnit === "bottle"){
                     ingredient.unitSize = req.body.unitSize;
                 }
 

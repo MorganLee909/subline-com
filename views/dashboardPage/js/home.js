@@ -43,6 +43,7 @@ let home = {
         let dates = [];
         let dayRevenue = 0;
         const transactions = merchant.getTransactions(monthAgo);
+        let currentDate = (transactions.length > 0) ? transactions[0].date : undefined;
         for(let i = 0; i < transactions.length; i++){
             if(transactions[i].date.getDate() !== currentDate.getDate()){
                 revenue.push(dayRevenue / 100);

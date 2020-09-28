@@ -50,6 +50,8 @@ let newIngredient = {
             newIngredient.ingredient.specialUnit = unit;
             newIngredient.quantity = quantityValue * bottleSize;
         }
+
+        console.log(newIngredient);
     
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";

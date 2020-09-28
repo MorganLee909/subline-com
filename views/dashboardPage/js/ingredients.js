@@ -6,13 +6,11 @@ let ingredients = {
 
     display: function(){
         if(!this.isPopulated){
-            this.populateByProperty("category");
-
             document.getElementById("ingredientSearch").oninput = ()=>{this.search()};
             document.getElementById("ingredientClearButton").onclick = ()=>{this.clearSorting()};
             document.getElementById("ingredientSelect").onchange = ()=>{this.sort()};
 
-            this.populateByProperty();
+            this.populateByProperty("category");
 
             this.isPopulated = true;
         }

@@ -17,7 +17,7 @@ class Merchant{
         }
         
         for(let i = 0; i < oldMerchant.inventory.length; i++){
-            this.ingredients.push({
+            this._ingredients.push({
                 ingredient: new modules.Ingredient(
                     oldMerchant.inventory[i].ingredient._id,
                     oldMerchant.inventory[i].ingredient.name,
@@ -33,7 +33,7 @@ class Merchant{
         }
 
         for(let i = 0; i < oldMerchant.recipes.length; i++){
-            this.recipes.push(new modules.Recipe(
+            this._recipes.push(new modules.Recipe(
                 oldMerchant.recipes[i]._id,
                 oldMerchant.recipes[i].name,
                 oldMerchant.recipes[i].price,
@@ -43,7 +43,7 @@ class Merchant{
         }
 
         for(let i = 0; i < transactions.length; i++){
-            this.transactions.push(new modules.Transaction(
+            this._transactions.push(new modules.Transaction(
                 transactions[i]._id,
                 transactions[i].date,
                 transactions[i].recipes,
@@ -76,6 +76,8 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
+        this._modules.ingredients.display();
+        controller.closeSidebar();
     }
 
     removeIngredient(ingredient){
@@ -88,11 +90,13 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
+        this._modules.ingredients.display();
+        controller.closeSidebar();
     }
 
     updateIngredient(ingredient, quantity){
         const index = this._ingredients.indexOf(ingredient);
-        if(index = undefined){
+        if(index === undefined){
             return false;
         }
 
@@ -100,6 +104,8 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
+        this._modules.ingredients.display()
+        controller.closeSidebar();
     }
 
     get recipes(){
@@ -126,17 +132,13 @@ class Merchant{
     }
 
     getTransactions(from = 0, to = new Date()){
-        if(from > end){
-            return false;
-        }
-
         if(from === 0){
-            from = this.transactions[0].date;
+            from = this._transactions[0].date;
         }
 
-        const {from, to} = this.getTransactionIndices(from, to);
+        const {start, end} = this.getTransactionIndices(from, to);
 
-        return this.transactions.slice(from, to);
+        return this._transactions.slice(start, end);
     }
 
     addTransaction(transaction){
@@ -260,17 +262,17 @@ class Merchant{
 
     getRevenue(from, to = new Date()){
         if(from === 0){
-            from = this.transactions[0].date;
+            from = this._transactions[0].date;
         }
 
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
         for(let i = start; i <= end; i++){
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
+            for(let j = 0; j < this._transactions[i].recipes.length; j++){
                 for(let k = 0; k < this.recipes.length; k++){
-                    if(this.transactions[i].recipes[j].recipe === this.recipes[k]){
-                        total += this.transactions[i].recipes[j].quantity * this.recipes[k].price;
+                    if(this._transactions[i].recipes[j].recipe === this.recipes[k]){
+                        total += this._transactions[i].recipes[j].quantity * this.recipes[k].price;
                     }
                 }
             }
@@ -464,15 +466,15 @@ class Merchant{
     }
 
     getTransactionIndices(from, to){
-        for(let i = 0; i < this.transactions.length; i++){
-            if(this.transactions[i].date >= from){
+        for(let i = 0; i < this._transactions.length; i++){
+            if(this._transactions[i].date >= from){
                 from = i;
                 break;
             }
         }
         
-        for(let i = this.transactions.length - 1; i >= 0; i--){
-            if(transactions[i].date <= to){
+        for(let i = this._transactions.length - 1; i >= 0; i--){
+            if(this._transactions[i].date <= to){
                 to = i;
                 break;
             }
