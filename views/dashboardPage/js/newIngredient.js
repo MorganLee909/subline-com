@@ -66,19 +66,18 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editIngredients([{
-                        ingredient: new Ingredient(
-                            response.ingredient._id,
-                            response.ingredient.name,
-                            response.ingredient.category,
-                            response.ingredient.unitType,
-                            response.defaultUnit,
-                            merchant,
-                            response.ingredient.specialUnit,
-                            response.ingredient.unitSize
-                        ),
-                        quantity: response.quantity
-                    }]);
+                    const ingredient = new Ingredient(
+                        response.ingredient._id,
+                        response.ingredient.name,
+                        response.ingredient.category,
+                        response.ingredient.unitType,
+                        response.defaultUnit,
+                        merchant,
+                        response.ingredient.specialUnit,
+                        response.ingredient.unitSize
+                    )
+
+                    merchant.addIngredient(ingredient, response.quantity);
 
                     banner.createNotification("INGREDIENT CREATED");
                 }

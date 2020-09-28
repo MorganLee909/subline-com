@@ -18,9 +18,8 @@ let orders = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        let newOrders = [];
                         for(let i = 0; i < response.length; i++){
-                            newOrders.push(new Order(
+                            const order = new Order(
                                 response[i]._id,
                                 response[i].name,
                                 response[i].date,
@@ -28,12 +27,12 @@ let orders = {
                                 response[i].fees,
                                 response[i].ingredients,
                                 merchant
-                            ));
+                            );
+
+                            merchant.addOrder(order);
                         }
-                        merchant.editOrders(newOrders);
 
                         document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
-
                         this.isFetched = true;
                     }
                 })

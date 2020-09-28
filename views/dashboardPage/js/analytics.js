@@ -11,9 +11,7 @@ let analytics = {
         if(this.transactions.length === 0 || this.newData === true){
             let startDate = new Date();
             startDate.setMonth(startDate.getMonth() - 1);
-            const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
-
-            this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1] + 1);
+            this.transactions = merchant.getTransactions(startDate);
         }
 
         let slider = document.getElementById("analSlider");

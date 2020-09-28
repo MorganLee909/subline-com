@@ -88,7 +88,7 @@ let newRecipe = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    let recipe = new Recipe(
+                    const recipe = new Recipe(
                         response._id,
                         response.name,
                         response.price,
@@ -96,7 +96,7 @@ let newRecipe = {
                         merchant,
                     );
                     
-                    merchant.editRecipes([recipe]);
+                    merchant.addRecipe(recipe);
                     banner.createNotification("RECIPE CREATED");
                 }
             })

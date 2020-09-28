@@ -1,3 +1,5 @@
+const transactions = require("./transactions");
+
 class Merchant{
     constructor(oldMerchant, transactions, modules){
         this._modules = modules;
@@ -69,12 +71,8 @@ class Merchant{
         return this._ingredients;
     }
 
-    addIngredient(ingredient){
-        if(ingredient.quantity <  0 || ingredient.quantity === undefined){
-            return false;
-        }
-
-        this.ingredients.push(ingredient);
+    addIngredient(ingredient, quantity){
+        this.ingredients.push({ingredient, quantity});
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
@@ -87,6 +85,18 @@ class Merchant{
         }
 
         this._ingredients.splice(index, 1);
+
+        this._modules.home.isPopulated = false;
+        this._modules.ingredients.isPopulated = false;
+    }
+
+    updateIngredient(ingredient, quantity){
+        const index = this._ingredients.indexOf(ingredient);
+        if(index = undefined){
+            return false;
+        }
+
+        this._ingredients[index].quantity = quantity;
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
@@ -115,12 +125,50 @@ class Merchant{
         this._modules.recipeBook.isPopulated = false;
     }
 
-    get transactions(){
-        return this._transactions;
+    getTransactions(from = 0, to = new Date()){
+        if(from > end){
+            return false;
+        }
+
+        if(from === 0){
+            from = this.transactions[0].date;
+        }
+
+        const {from, to} = this.getTransactionIndices(from, to);
+
+        return this.transactions.slice(from, to);
     }
 
     addTransaction(transaction){
         this._transactions.push(transaction);
+        this._transactions.sort((a, b)=>{
+            if(a.date > b.date){
+                return -1;
+            }
+            return 1;
+        });
+
+        let ingredients = {};
+        for(let i = 0; i < transaction.recipes.length; i++){
+            const recipe = transaction.recipes[i];
+            for(let j = 0; j < recipe.recipe.ingredients.length; j++){
+                const ingredient = recipe.ingredients[i];
+                if(ingredients[ingredient.ingredient.id]){
+                    ingredients[ingredient.ingredient.id] += recipe.quantity * ingredient.quantity;
+                }else{
+                    ingredients[ingredient.ingredient.id] = recipe.quantity * ingredient.quantity;
+                }
+            } 
+        }
+
+        const keys = Object.keys(ingredients);
+        for(let i = 0; i < keys.length; i++){
+            for(let j = 0; j < this._ingredients.length; j++){
+                if(keys[i] === this._ingredients[j].ingredient.id){
+                    this._ingredients.quantity -= ingredients[keys[i]];
+                }
+            }
+        }
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
@@ -136,6 +184,28 @@ class Merchant{
 
         this._transactions.splice(index, 1);
 
+        let ingredients = {};
+        for(let i = 0; i < transaction.recipes.length; i++){
+            const recipe = transaction.recipes[i];
+            for(let j = 0; j < recipe.recipe.ingredients.length; j++){
+                const ingredient = recipe.recipe.ingredients[i];
+                if(ingredients[ingredient.ingredient.id]){
+                    ingredients[ingredient.ingredient.id] += ingredient.quantity * recipe.quantity;
+                }else{
+                    ingredients[ingredient.ingredient.id] = ingredient.quantity * recipe.quantity;
+                }
+            }
+        }
+
+        const keys = Object.keys(ingredients);
+        for(let i = 0; i < keys.length; i++){
+            for(let j = 0; j < this._ingredients.length; j++){
+                if(keys[i] === this._ingredients[j].ingredient.id){
+                    this._ingredients.quantity += ingredients[keys[i]];
+                }
+            }
+        }
+
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
         this._modules.transactions.isPopulated = false;
@@ -146,9 +216,21 @@ class Merchant{
         return this._orders;
     }
 
-    addOrder(order){
+    addOrder(order, isNew = false){
         this._orders.push(order);
 
+        if(isNew){
+            for(let i = 0; i < order.ingredients.length; i++){
+                for(let j = 0; j < this._ingredients.length; j++){
+                    if(order.ingredients[i] === this._ingredients[j].ingredient){
+                        this._ingredients[j].quantity += order.ingredients[i].quantity;
+                        break;
+                    }
+                }
+            }
+        }
+
+        this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
     }
 
@@ -160,6 +242,15 @@ class Merchant{
 
         this._orders.splice(index, 1);
 
+        for(let i = 0; i < order.ingredients.length; i++){
+            for(let j = 0; j < this._ingredients.length; j++){
+                if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
+                    this._ingredients[j].quantity -= order.ingredients[i].quantity;
+                }
+            }
+        }
+
+        this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
     }
 
@@ -167,10 +258,15 @@ class Merchant{
         return this._units;
     }
 
-    revenue(indices){
-        let total = 0;
+    getRevenue(from, to = new Date()){
+        if(from === 0){
+            from = this.transactions[0].date;
+        }
 
-        for(let i = indices[0]; i <= indices[1]; i++){
+        const {start, end} = this.getTransactionIndices(from, to);
+
+        let total = 0;
+        for(let i = start; i <= end; i++){
             for(let j = 0; j < this.transactions[i].recipes.length; j++){
                 for(let k = 0; k < this.recipes.length; k++){
                     if(this.transactions[i].recipes[j].recipe === this.recipes[k]){
@@ -193,12 +289,12 @@ class Merchant{
             quantity: quantity of ingredient sold
         }]
     */
-    ingredientsSold(dateRange){
-        if(!dateRange){
-            return false;
+    getIngredientsSold(from = 0, to = new Date()){
+        if(from = 0){
+            from = this._ingredients[0].date;
         }
         
-        let recipes = this.recipesSold(dateRange);
+        let recipes = this.getRecipesSold(from, to);
         let ingredientList = [];
 
         for(let i = 0; i < recipes.length; i++){
@@ -225,14 +321,19 @@ class Merchant{
         return ingredientList;
     }
 
-    singleIngredientSold(dateRange, ingredient){
-        let total = 0;
+    getSingleIngredientSold(ingredient, from = 0, to = new Date()){
+        if(from === 0){
+            from = this._transactions[0].date;
+        }
 
-        for(let i = dateRange[0]; i < dateRange[1]; i++){
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                for(let k = 0; k < this.transactions[i].recipes[j].recipe.ingredients.length; k++){
-                    if(this.transactions[i].recipes[j].recipe.ingredients[k].ingredient === ingredient.ingredient){
-                        total += this.transactions[i].recipes[j].recipe.ingredients[k].quantity;
+        const {start, end} = this.getTransactionIndices(from, to);
+
+        let total = 0;
+        for(let i = start; i < end; i++){
+            for(let j = 0; j < this._transactions[i].recipes.length; j++){
+                for(let k = 0; k < this._transactions[i].recipes[j].recipe.ingredients.length; k++){
+                    if(this._transactions[i].recipes[j].recipe.ingredients[k].ingredient === ingredient.ingredient){
+                        total += this._transactions[i].recipes[j].recipe.ingredients[k].quantity;
                         break;
                     }
                 }
@@ -252,24 +353,29 @@ class Merchant{
             quantity: quantity of the recipe sold
         }]
     */
-    recipesSold(dateRange){
-        let recipeList = [];
+    getRecipesSold(from = 0, to = new Date()){
+        if(from = 0){
+            from = this._transactions[0].date;
+        }
 
-        for(let i = dateRange[0]; i <= dateRange[1]; i++){
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
+        const {start, end} = this.getTransactionIndices(from, to);
+
+        let recipeList = [];
+        for(let i = start; i <= end; i++){
+            for(let j = 0; j < this._transactions[i].recipes.length; j++){
                 let exists = false;
                 for(let k = 0; k < recipeList.length; k++){
-                    if(recipeList[k].recipe === this.transactions[i].recipes[j].recipe){
+                    if(recipeList[k].recipe === this._transactions[i].recipes[j].recipe){
                         exists = true;
-                        recipeList[k].quantity += this.transactions[i].recipes[j].quantity;
+                        recipeList[k].quantity += this._transactions[i].recipes[j].quantity;
                         break;
                     }
                 }
 
                 if(!exists){
                     recipeList.push({
-                        recipe: this.transactions[i].recipes[j].recipe,
-                        quantity: this.transactions[i].recipes[j].quantity
+                        recipe: this._transactions[i].recipes[j].recipe,
+                        quantity: this._transactions[i].recipes[j].quantity
                     });
                 }
             }
@@ -346,15 +452,33 @@ class Merchant{
     getRecipesForIngredient(ingredient){
         let recipes = [];
 
-        for(let i = 0; i < this.recipes.length; i++){
-            for(let j = 0; j < this.recipes[i].ingredients.length; j++){
-                if(this.recipes[i].ingredients[j].ingredient === ingredient){
-                    recipes.push(this.recipes[i]);
+        for(let i = 0; i < this._recipes.length; i++){
+            for(let j = 0; j < this._recipes[i].ingredients.length; j++){
+                if(this._recipes[i].ingredients[j].ingredient === ingredient){
+                    recipes.push(this._recipes[i]);
                 }
             }
         }
 
         return recipes;
+    }
+
+    getTransactionIndices(from, to){
+        for(let i = 0; i < this.transactions.length; i++){
+            if(this.transactions[i].date >= from){
+                from = i;
+                break;
+            }
+        }
+        
+        for(let i = this.transactions.length - 1; i >= 0; i--){
+            if(transactions[i].date <= to){
+                to = i;
+                break;
+            }
+        }
+
+        return {from: from, to: to};
     }
 }
 

@@ -84,31 +84,28 @@ let recipeBook = {
         })
             .then(response => response.json())
             .then((response)=>{
-                let newRecipes = [];
                 for(let i = 0; i < response.new.length; i++){
-                    newRecipes.push(new Recipe(
+                    const recipe = new Recipe(
                         response.new[i]._id,
                         response.new[i].name,
                         response.new[i].price,
                         merchant,
                         []
-                    ));
-                }
-                if(newRecipes.length > 0){
-                    merchant.editRecipes(newRecipes);
+                    );
+
+                    merchant.addRecipe(recipe);
                 }
 
-                let removeRecipes = [];
                 for(let i = 0; i < response.removed.length; i++){
-                    for(let j = 0; j < merchant.recipes.length; j++){
-                        if(response.removed[i]._id === merchant.recipes[j].id){
-                            removeRecipes.push(merchant.recipes[j], true);
-                            break;
-                        }
-                    }
-                }
-                if(removeRecipes.length > 0){
-                    merchant.editRecipes(removeRecipes, true);
+                    const recipe = new Recipe(
+                        response.removed[i]._id,
+                        response.removed[i].name,
+                        response.removed[i].price,
+                        merchant,
+                        []
+                    );
+
+                    merchant.removeRecipe(recipe);
                 }
             })
             .catch((err)=>{

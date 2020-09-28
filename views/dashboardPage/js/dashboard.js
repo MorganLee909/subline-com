@@ -245,26 +245,26 @@ controller = {
     Use for when any data is changed
     item = whatever is being updated
     */
-    updateData: function(item){
-        switch(item){
-            case "ingredient":
-                home.isPopulated = false;
-                ingredients.populateByProperty("category");
-                break;
-            case "recipe":
-                transactions.isPopulated = false;
-                recipeBook.populateRecipes();
-                break;
-            case "order":
-                orders.populate();
-                break;
-            case "transaction":
-                transactions.isPopulated = false;
-                transactions.display(Transaction);
-                analytics.newData = true;
-                break;
-        }
-    },
+    // updateData: function(item){
+    //     switch(item){
+    //         case "ingredient":
+    //             home.isPopulated = false;
+    //             ingredients.populateByProperty("category");
+    //             break;
+    //         case "recipe":
+    //             transactions.isPopulated = false;
+    //             recipeBook.populateRecipes();
+    //             break;
+    //         case "order":
+    //             orders.populate();
+    //             break;
+    //         case "transaction":
+    //             transactions.isPopulated = false;
+    //             transactions.display(Transaction);
+    //             analytics.newData = true;
+    //             break;
+    //     }
+    // },
 
     /*
     Gets the indices of two dates from transactions
@@ -276,29 +276,29 @@ controller = {
     Array containing starting index and ending index
     Note: Will return false if it cannot find both necessary dates
     */
-    transactionIndices(transactions, from, to = new Date()){
-        let indices = [];
+    // transactionIndices(transactions, from, to = new Date()){
+    //     let indices = [];
 
-        for(let i = 0; i < transactions.length; i++){
-            if(transactions[i].date < to){
-                indices.push(i);
-                break;
-            }
-        }
+    //     for(let i = 0; i < transactions.length; i++){
+    //         if(transactions[i].date < to){
+    //             indices.push(i);
+    //             break;
+    //         }
+    //     }
 
-        for(let i = transactions.length - 1; i >= 0; i--){
-            if(transactions[i].date > from){
-                indices.push(i);
-                break;
-            }
-        }
+    //     for(let i = transactions.length - 1; i >= 0; i--){
+    //         if(transactions[i].date > from){
+    //             indices.push(i);
+    //             break;
+    //         }
+    //     }
 
-        if(indices.length < 2){
-            return false;
-        }
+    //     if(indices.length < 2){
+    //         return false;
+    //     }
 
-        return indices;
-    },
+    //     return indices;
+    // },
 
     /*
     Converts the price of a unit to $/main unit

@@ -120,8 +120,8 @@ let newOrder = {
                         merchant
                     );
 
-                    merchant.editOrders([order]);
-                    merchant.editIngredients(order.ingredients, false, true);
+                    merchant.addOrder(order, true);
+                    
                     banner.createNotification("NEW ORDER CREATED");
                 }
             })

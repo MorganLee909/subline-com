@@ -48,13 +48,8 @@ let ingredientDetails = {
         for(let i = 1; i < 31; i++){
             let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
             let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
-            let indices = controller.transactionIndices(merchant.transactions, startDay, endDay);
 
-            if(indices === false){
-                quantities.push(0);
-            }else{
-                quantities.push(merchant.singleIngredientSold(indices, ingredient));
-            }
+            quantities.push(merchant.getSingleIngredientSold(startDay, endDay, ingredient));
         }
 
         let sum = 0;
@@ -138,8 +133,8 @@ let ingredientDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    merchant.removeIngredient(this.ingredient);
                     banner.createNotification("INGREDIENT REMOVED");
-                    merchant.editIngredients([this.ingredient], true);
                 }
             })
             .catch((err)=>{})
@@ -251,7 +246,8 @@ let ingredientDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editIngredients([this.ingredient]);
+                    merchant.updateIngredient(this.ingredient, this.ingredient.quantity);
+                    //ingredient updates
 
                     this.display(this.ingredient);
 

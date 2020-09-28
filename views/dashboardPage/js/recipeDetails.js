@@ -122,7 +122,7 @@ let recipeDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    window.merchant.editRecipes([this.recipe]);
+                    //Edit Recipe here
                     banner.createNotification("RECIPE UPDATE");
                 }
             })
@@ -143,7 +143,7 @@ let recipeDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editRecipes([this.recipe], true);
+                    merchant.removeRecipe(this.recipe);
                     banner.createNotification("RECIPE REMOVED");
                 }
             })
@@ -157,7 +157,7 @@ let recipeDetails = {
         template.name = "new";
         document.getElementById("recipeIngredientList").appendChild(template);
 
-        let categories = window.merchant.categorizeIngredients();
+        let categories = merchant.categorizeIngredients();
 
         for(let i = 0; i < categories.length; i++){
             let optGroup = document.createElement("optgroup");
