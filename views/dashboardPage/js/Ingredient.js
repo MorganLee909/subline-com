@@ -1,14 +1,14 @@
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent, specialUnit = undefined, unitSize = undefined){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             banner.createError("NAME CONTAINS ILLEGAL CHARCTERS");
             return false;
         }
-        if(!controller.sanitaryString(category)){
+        if(!this.isSanitaryString(category)){
             banner.createError("CATEGORY CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
-        
+
         this._id = id;
         this._name = name;
         this._category = category;
@@ -30,7 +30,7 @@ class Ingredient{
     }
 
     set name(name){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             return false;
         }
 
@@ -42,7 +42,7 @@ class Ingredient{
     }
 
     set category(category){
-        if(!controller.sanitaryString(category)){
+        if(!this.isSanitaryString(category)){
             return false;
         }
 
@@ -79,6 +79,18 @@ class Ingredient{
         }
 
         this._unitSize = unitSize;
+    }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

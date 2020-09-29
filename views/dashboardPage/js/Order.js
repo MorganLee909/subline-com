@@ -63,7 +63,7 @@ class OrderIngredient{
 
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
@@ -122,6 +122,18 @@ class Order{
 
     get ingredients(){
         return this._ingredients;
+    }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

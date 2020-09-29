@@ -33,18 +33,6 @@ merchant = new Merchant(data.merchant, data.transactions, {
 });
 
 controller = {
-    sanitaryString: function(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; j++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
-    },
-
     openStrand: function(strand){
         this.closeSidebar();
 

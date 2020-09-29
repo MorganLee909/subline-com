@@ -1,15 +1,15 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent, specialUnit = undefined, unitSize = undefined){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             banner.createError("NAME CONTAINS ILLEGAL CHARCTERS");
             return false;
         }
-        if(!controller.sanitaryString(category)){
+        if(!this.isSanitaryString(category)){
             banner.createError("CATEGORY CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
-        
+
         this._id = id;
         this._name = name;
         this._category = category;
@@ -31,7 +31,7 @@ class Ingredient{
     }
 
     set name(name){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             return false;
         }
 
@@ -43,7 +43,7 @@ class Ingredient{
     }
 
     set category(category){
-        if(!controller.sanitaryString(category)){
+        if(!this.isSanitaryString(category)){
             return false;
         }
 
@@ -81,6 +81,18 @@ class Ingredient{
 
         this._unitSize = unitSize;
     }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 module.exports = Ingredient;
@@ -91,7 +103,7 @@ class MerchantIngredient{
             banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
             return false;
         }
-        
+
         this._ingredient = ingredient;
         this._quantity = this.convertToBase(quantity);
     }
@@ -239,7 +251,7 @@ class Merchant{
     }
 
     set name(name){
-        if(sanitaryString(name)){
+        if(this.isSanitaryString(name)){
             this._name = name;
         }
         return false;
@@ -675,6 +687,18 @@ class Merchant{
 
         return {from: from, to: to};
     }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 module.exports = Merchant;
@@ -744,7 +768,7 @@ class OrderIngredient{
 
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
@@ -803,6 +827,18 @@ class Order{
 
     get ingredients(){
         return this._ingredients;
+    }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
@@ -886,7 +922,7 @@ class Recipe{
             banner.createError("PRICE CANNOT BE A NEGATIVE NUMBER");
             return false;
         }
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
@@ -907,7 +943,6 @@ class Recipe{
 
         this._parent.modules.recipeBook.isPopulated = false;
         this._parent.modules.analytics.isPopulated = false;
-        this._parent.modules.recipeBook.display();
     }
 
     get id(){
@@ -919,7 +954,7 @@ class Recipe{
     }
 
     set name(name){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             return false;
         }
 
@@ -974,6 +1009,18 @@ class Recipe{
         const index = this._ingredients.indoxOf(ingredient);
 
         this._ingredients[index].quantity = quantity;
+    }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
@@ -1396,18 +1443,6 @@ merchant = new Merchant(data.merchant, data.transactions, {
 });
 
 controller = {
-    sanitaryString: function(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; j++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
-    },
-
     openStrand: function(strand){
         this.closeSidebar();
 
@@ -2186,7 +2221,6 @@ let ingredientDetails = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2467,7 +2501,6 @@ let newIngredient = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

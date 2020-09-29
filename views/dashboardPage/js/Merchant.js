@@ -4,7 +4,7 @@ class MerchantIngredient{
             banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
             return false;
         }
-        
+
         this._ingredient = ingredient;
         this._quantity = this.convertToBase(quantity);
     }
@@ -152,7 +152,7 @@ class Merchant{
     }
 
     set name(name){
-        if(sanitaryString(name)){
+        if(this.isSanitaryString(name)){
             this._name = name;
         }
         return false;
@@ -587,6 +587,18 @@ class Merchant{
         }
 
         return {from: from, to: to};
+    }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

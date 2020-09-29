@@ -76,7 +76,7 @@ class Recipe{
             banner.createError("PRICE CANNOT BE A NEGATIVE NUMBER");
             return false;
         }
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
@@ -97,7 +97,6 @@ class Recipe{
 
         this._parent.modules.recipeBook.isPopulated = false;
         this._parent.modules.analytics.isPopulated = false;
-        this._parent.modules.recipeBook.display();
     }
 
     get id(){
@@ -109,7 +108,7 @@ class Recipe{
     }
 
     set name(name){
-        if(!controller.sanitaryString(name)){
+        if(!this.isSanitaryString(name)){
             return false;
         }
 
@@ -164,6 +163,18 @@ class Recipe{
         const index = this._ingredients.indoxOf(ingredient);
 
         this._ingredients[index].quantity = quantity;
+    }
+
+    isSanitaryString(str){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < disallowed.length; i++){
+            if(str.includes(disallowed[i])){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
