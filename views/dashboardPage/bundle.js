@@ -1,56 +1,161 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent, specialUnit = undefined, unitSize = undefined){
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.unitType = unitType;
-        this.unit = unit;
-        this.parent = parent;
-        if(specialUnit){
-            this.specialUnit = specialUnit;
-            this.unitSize = unitSize;
+        if(!controller.sanitaryString(name)){
+            banner.createError("NAME CONTAINS ILLEGAL CHARCTERS");
+            return false;
+        }
+        if(!controller.sanitaryString(category)){
+            banner.createError("CATEGORY CONTAINS ILLEGAL CHARACTERS");
+            return false;
         }
         
+        this._id = id;
+        this._name = name;
+        this._category = category;
+        this._unitType = unitType;
+        this._unit = unit;
+        this._parent = parent;
+        if(specialUnit){
+            this._specialUnit = specialUnit;
+            this._unitSize = unitSize;
+        }
     }
 
-    convert(quantity){
-        if(this.unitType === "mass"){
-            switch(this.unit){
-                case "g": break;
-                case "kg": quantity /= 1000; break;
-                case "oz":  quantity /= 28.3495; break;
-                case "lb":  quantity /= 453.5924; break;
-            }
-        }else if(this.unitType === "volume"){
-            switch(this.unit){
-                case "ml": quantity *= 1000; break;
-                case "l": break;
-                case "tsp": quantity *= 202.8842; break;
-                case "tbsp": quantity *= 67.6278; break;
-                case "ozfl": quantity *= 33.8141; break;
-                case "cup": quantity *= 4.1667; break;
-                case "pt": quantity *= 2.1134; break;
-                case "qt": quantity *= 1.0567; break;
-                case "gal": quantity /= 3.7854; break;
-            }
-        }else if(this.unitType === "length"){
-            switch(this.unit){
-                case "mm": quantity *= 1000; break;
-                case "cm": quantity *= 100; break;
-                case "m": break;
-                case "in": quantity *= 39.3701; break;
-                case "ft": quantity *= 3.2808; break;
-            }
+    get id(){
+        return this._id;
+    }
+
+    get name(){
+        return this._name;
+    }
+
+    set name(name){
+        if(!controller.sanitaryString(name)){
+            return false;
         }
 
-        return quantity;
+        this._name = name;
+    }
+
+    get category(){
+        return this._category;
+    }
+
+    set category(category){
+        if(!controller.sanitaryString(category)){
+            return false;
+        }
+
+        this._category = category;
+    }
+
+    get unitType(){
+        return this._unitType;
+    }
+
+    get unit(){
+        return this._unit;
+    }
+
+    set unit(unit){
+        this._unit = unit;
+    }
+
+    get parent(){
+        return this._parent;
+    }
+
+    get specialUnit(){
+        return this._specialUnit;
+    }
+
+    get unitSize(){
+        return this._unitSize;
+    }
+
+    set unitSize(unitSize){
+        if(unitSize < 0){
+            return false;
+        }
+
+        this._unitSize = unitSize;
     }
 }
 
 module.exports = Ingredient;
 },{}],2:[function(require,module,exports){
-const transactions = require("./transactions");
+class MerchantIngredient{
+    constructor(ingredient, quantity){
+        if(quantity < 0){
+            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            return false;
+        }
+        
+        this._ingredient = ingredient;
+        this._quantity = this.convertToBase(quantity);
+    }
+
+    get ingredient(){
+        return this._ingredient;
+    }
+
+    get quantity(){
+        switch(this._ingredient.unit){
+            case "g":return this._quantity; 
+            case "kg": return this._quantity * 1000;
+            case "oz": return this._quantity * 28.3495;
+            case "lb": return this._quantity * 453.5924;
+            case "ml": return this._quantity / 1000;
+            case "l": return this._quantity;
+            case "tsp": return this._quantity / 202.8842;
+            case "tbsp": return this._quantity / 67.6278;
+            case "ozfl": return this._quantity / 33.8141;
+            case "cup": return this._quantity / 4.1667;
+            case "pt": return this._quantity / 2.1134;
+            case "qt": return this._quantity / 1.0567;
+            case "gal": return this._quantity * 3.7854;
+            case "mm": return this._quantity / 1000;
+            case "cm": return this._quantity / 100;
+            case "m": return this._quantity;
+            case "in": return this._quantity / 39.3701;
+            case "ft": return this._quantity / 3.2808;
+            default: return this._quantity;
+        }
+    }
+
+    set quantity(quantity){
+        if(quantity < 0){
+            return false;
+        }
+
+        this._quantity = this.convertToBase(quantity);
+    }
+
+    convertToBase(quantity){
+        switch(this._ingredient.unit){
+            case "g": return quantity;
+            case "kg": return quantity / 1000; 
+            case "oz":  return quantity / 28.3495; 
+            case "lb":  return quantity / 453.5924;
+            case "ml": return quantity *= 1000; 
+            case "l": return quantity;
+            case "tsp": return quantity * 202.8842; 
+            case "tbsp": return quantity * 67.6278; 
+            case "ozfl": return quantity * 33.8141; 
+            case "cup": return quantity * 4.1667; 
+            case "pt": return quantity * 2.1134; 
+            case "qt": return quantity * 1.0567; 
+            case "gal": return quantity / 3.7854;
+            case "mm": return quantity * 1000; 
+            case "cm": return quantity * 100; 
+            case "m": return quantity;
+            case "in": return quantity * 39.3701; 
+            case "ft": return quantity * 3.2808;
+            default: return quantity;
+        }
+    }
+}
 
 class Merchant{
     constructor(oldMerchant, transactions, modules){
@@ -68,32 +173,53 @@ class Merchant{
             other: ["each", "bottle"]
         }
         
+        //populate ingredients
         for(let i = 0; i < oldMerchant.inventory.length; i++){
-            this._ingredients.push({
-                ingredient: new modules.Ingredient(
-                    oldMerchant.inventory[i].ingredient._id,
-                    oldMerchant.inventory[i].ingredient.name,
-                    oldMerchant.inventory[i].ingredient.category,
-                    oldMerchant.inventory[i].ingredient.unitType,
-                    oldMerchant.inventory[i].defaultUnit,
-                    this,
-                    oldMerchant.inventory[i].ingredient.specialUnit,
-                    oldMerchant.inventory[i].ingredient.unitSize
-                ),
-                quantity: oldMerchant.inventory[i].quantity
-            });
+            const ingredient = new modules.Ingredient(
+                oldMerchant.inventory[i].ingredient._id,
+                oldMerchant.inventory[i].ingredient.name,
+                oldMerchant.inventory[i].ingredient.category,
+                oldMerchant.inventory[i].ingredient.unitType,
+                oldMerchant.inventory[i].defaultUnit,
+                this,
+                oldMerchant.inventory[i].ingredient.specialUnit,
+                oldMerchant.inventory[i].ingredient.unitSize
+            );
+
+            const merchantIngredient = new MerchantIngredient(
+                ingredient,
+                oldMerchant.inventory[i].quantity
+            );
+
+            this._ingredients.push(merchantIngredient);
         }
 
+        //populate recipes
         for(let i = 0; i < oldMerchant.recipes.length; i++){
-            this._recipes.push(new modules.Recipe(
+            let ingredients = [];
+            for(let j = 0; j < oldMerchant.recipes[i].ingredients.length; j++){
+                const ingredient = oldMerchant.recipes[i].ingredients[j];
+                for(let k = 0; k < this._ingredients.length; k++){
+                    if(ingredient.ingredient === this._ingredients[k].ingredient.id){
+                        ingredients.push({
+                            ingredient: this._ingredients[k].ingredient,
+                            quantity: ingredient.quantity
+                        });
+                        break;
+                    }
+                }
+            }
+
+            this._recipes.push(new this._modules.Recipe(
                 oldMerchant.recipes[i]._id,
                 oldMerchant.recipes[i].name,
                 oldMerchant.recipes[i].price,
-                oldMerchant.recipes[i].ingredients,
+                ingredients,
                 this
             ));
         }
 
+        //populate transactions
         for(let i = 0; i < transactions.length; i++){
             this._transactions.push(new modules.Transaction(
                 transactions[i]._id,
@@ -102,6 +228,10 @@ class Merchant{
                 this
             ));
         }
+    }
+
+    get modules(){
+        return this._modules;
     }
 
     get name(){
@@ -124,7 +254,8 @@ class Merchant{
     }
 
     addIngredient(ingredient, quantity){
-        this.ingredients.push({ingredient, quantity});
+        const MerchantIngredient = new MerchantIngredient(ingredient, quantity);
+        this._ingredients.push(merchantIngredient);
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
@@ -284,7 +415,7 @@ class Merchant{
                 for(let j = 0; j < this._ingredients.length; j++){
                     if(order.ingredients[i] === this._ingredients[j].ingredient){
                         this._ingredients[j].quantity += order.ingredients[i].quantity;
-                        break;
+                        
                     }
                 }
             }
@@ -369,7 +500,7 @@ class Merchant{
                     if(ingredientList[k].ingredient === recipes[i].recipe.ingredients[j].ingredient){
                         exists = true;
                         ingredientList[k].quantity += recipes[i].quantity * recipes[i].recipe.ingredients[j].quantity;
-                        break;
+                        
                     }
                 }
 
@@ -398,7 +529,7 @@ class Merchant{
                 for(let k = 0; k < this._transactions[i].recipes[j].recipe.ingredients.length; k++){
                     if(this._transactions[i].recipes[j].recipe.ingredients[k].ingredient === ingredient.ingredient){
                         total += this._transactions[i].recipes[j].recipe.ingredients[k].quantity;
-                        break;
+                        
                     }
                 }
             }
@@ -432,7 +563,7 @@ class Merchant{
                     if(recipeList[k].recipe === this._transactions[i].recipes[j].recipe){
                         exists = true;
                         recipeList[k].quantity += this._transactions[i].recipes[j].quantity;
-                        break;
+                        
                     }
                 }
 
@@ -465,7 +596,7 @@ class Merchant{
                     ingredientsByCategory[j].ingredients.push(this.ingredients[i]);
 
                     categoryExists = true;
-                    break;
+                    
                 }
             }
 
@@ -491,7 +622,7 @@ class Merchant{
                     ingredientsByUnit[j].ingredients.push(this.ingredients[i]);
 
                     unitExists = true;
-                    break;
+                    
                 }
             }
 
@@ -531,14 +662,14 @@ class Merchant{
         for(let i = 0; i < this._transactions.length; i++){
             if(this._transactions[i].date >= from){
                 from = i;
-                break;
+                
             }
         }
         
         for(let i = this._transactions.length - 1; i >= 0; i--){
             if(this._transactions[i].date <= to){
                 to = i;
-                break;
+                
             }
         }
 
@@ -547,77 +678,366 @@ class Merchant{
 }
 
 module.exports = Merchant;
-},{"./transactions":20}],3:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+class OrderIngredient{
+    constructor(ingredient, quantity){
+        if(quantity < 0){
+            banner.createError = "QUANTITY CANNOT BE A NEGATIVE NUBMER";
+            return false;
+        }
+        this._ingredient = ingredient;
+        this.quantity = this.convertToBase(quantity);
+    }
+
+    get ingredient(){
+        return this._ingredient;
+    }
+
+    get quantity(){
+        switch(unit){
+            case "g":return this._quantity;
+            case "kg": return this._quantity * 1000;
+            case "oz": return this._quantity * 28.3495;
+            case "lb": return this._quantity * 453.5924;
+            case "ml": return this._quantity / 1000;
+            case "l": return this._quantity;
+            case "tsp": return this._quantity / 202.8842;
+            case "tbsp": return this._quantity / 67.6278;
+            case "ozfl": return this._quantity / 33.8141;
+            case "cup": return this._quantity / 4.1667;
+            case "pt": return this._quantity / 2.1134;
+            case "qt": return this._quantity / 1.0567;
+            case "gal": return this._quantity * 3.7854;
+            case "mm": return this._quantity / 1000;
+            case "cm": return this._quantity / 100;
+            case "m": return this._quantity;
+            case "in": return this._quantity / 39.3701;
+            case "ft": return this._quantity / 3.2808;
+            default: return this._quantity;
+        }
+    }
+
+    convertToBase(quantity){
+        switch(this._ingredient.unit){
+            case "g": return quantity;
+            case "kg": return quantity / 1000; 
+            case "oz":  return quantity / 28.3495; 
+            case "lb":  return quantity / 453.5924;
+            case "ml": return quantity *= 1000; 
+            case "l": return quantity;
+            case "tsp": return quantity * 202.8842; 
+            case "tbsp": return quantity * 67.6278; 
+            case "ozfl": return quantity * 33.8141; 
+            case "cup": return quantity * 4.1667; 
+            case "pt": return quantity * 2.1134; 
+            case "qt": return quantity * 1.0567; 
+            case "gal": return quantity / 3.7854;
+            case "mm": return quantity * 1000; 
+            case "cm": return quantity * 100; 
+            case "m": return quantity;
+            case "in": return quantity * 39.3701; 
+            case "ft": return quantity * 3.2808;
+            default: return quantity;
+        }
+    }
+}
+
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
-        this.id = id;
-        this.name = name;
-        this.date = new Date(date);
-        this.taxes = taxes;
-        this.fees = fees;
-        this.ingredients = [];
-        this.parent = parent;
+        if(!controller.sanitaryString(name)){
+            banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
+            return false;
+        }
+        if(taxes < 0){
+            banner.createError("TAXES CANNOT BE A NEGATIVE NUMBER");
+        }
+
+        this._id = id;
+        this._name = name;
+        this._date = new Date(date);
+        this._taxes = taxes;
+        this._fees = fees;
+        this._ingredients = [];
+        this._parent = parent;
+
+        if(date > new Date()){
+            banner.createError("CANNOT SET A DATE IN THE FUTURE");
+            return false;
+        }
 
         for(let i = 0; i < ingredients.length; i++){
-            for(let j = 0; j < parent.ingredients.length; j++){
-                if(ingredients[i].ingredient === parent.ingredients[j].ingredient.id){
-                    this.ingredients.push({
-                        ingredient: parent.ingredients[j].ingredient,
-                        quantity: ingredients[i].quantity,
-                        pricePerUnit: ingredients[i].pricePerUnit
-                    });
+            const orderIngredient = new OrderIngredient(
+                ingredients[i].ingredient,
+                ingredients[i].quantity
+            )
 
-                    break;
-                }
-            }
+            this._ingredients.push(orderIngredient);
         }
+
+        this._parent.modules.ingredients.isPopulated = false;
+    }
+
+    get id(){
+        return this._id;
+    }
+
+    get name(){
+        return this._name;
+    }
+
+    get date(){
+        return this._date;
+    }
+
+    get taxes(){
+        return this._taxes;
+    }
+
+    get fees(){
+        return this._fees;
+    }
+
+    get parent(){
+        return this._parent;
+    }
+
+    get ingredients(){
+        return this._ingredients;
     }
 }
 
 module.exports = Order;
 },{}],4:[function(require,module,exports){
+class RecipeIngredient{
+    constructor(ingredient, quantity){
+        if(quantity < 0){
+            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            return false;
+        }
+        this._ingredient = ingredient;
+        this._quantity = this.convertToBase(quantity);
+    }
+
+    get ingredient(){
+        return this._ingredient;
+    }
+
+    get quantity(){
+        switch(unit){
+            case "g":return this._quantity;
+            case "kg": return this._quantity * 1000;
+            case "oz": return this._quantity * 28.3495;
+            case "lb": return this._quantity * 453.5924;
+            case "ml": return this._quantity / 1000;
+            case "l": return this._quantity;
+            case "tsp": return this._quantity / 202.8842;
+            case "tbsp": return this._quantity / 67.6278;
+            case "ozfl": return this._quantity / 33.8141;
+            case "cup": return this._quantity / 4.1667;
+            case "pt": return this._quantity / 2.1134;
+            case "qt": return this._quantity / 1.0567;
+            case "gal": return this._quantity * 3.7854;
+            case "mm": return this._quantity / 1000;
+            case "cm": return this._quantity / 100;
+            case "m": return this._quantity;
+            case "in": return this._quantity / 39.3701;
+            case "ft": return this._quantity / 3.2808;
+            default: return this._quantity;
+        }
+    }
+
+    set quantity(quantity){
+        if(quantity < 0){
+            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            return false;
+        }
+
+        this_quantity = this.convertToBase(quantity);
+    }
+
+    convertToBase(quantity){
+        switch(this._ingredient.unit){
+            case "g": return quantity;
+            case "kg": return quantity / 1000; 
+            case "oz":  return quantity / 28.3495; 
+            case "lb":  return quantity / 453.5924;
+            case "ml": return quantity *= 1000; 
+            case "l": return quantity;
+            case "tsp": return quantity * 202.8842; 
+            case "tbsp": return quantity * 67.6278; 
+            case "ozfl": return quantity * 33.8141; 
+            case "cup": return quantity * 4.1667; 
+            case "pt": return quantity * 2.1134; 
+            case "qt": return quantity * 1.0567; 
+            case "gal": return quantity / 3.7854;
+            case "mm": return quantity * 1000; 
+            case "cm": return quantity * 100; 
+            case "m": return quantity;
+            case "in": return quantity * 39.3701; 
+            case "ft": return quantity * 3.2808;
+            default: return quantity;
+        }
+    }
+}
+
 class Recipe{
     constructor(id, name, price, ingredients, parent){
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.parent = parent;
-        this.ingredients = [];
+        if(price < 0){
+            banner.createError("PRICE CANNOT BE A NEGATIVE NUMBER");
+            return false;
+        }
+        if(!controller.sanitaryString(name)){
+            banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
+            return false;
+        }
+        this._id = id;
+        this._name = name;
+        this._price = price;
+        this._parent = parent;
+        this._ingredients = [];
 
         for(let i = 0; i < ingredients.length; i++){
-            for(let j = 0; j < parent.ingredients.length; j++){
-                if(ingredients[i].ingredient === parent.ingredients[j].ingredient.id){
-                    this.ingredients.push({
-                        ingredient: parent.ingredients[j].ingredient,
-                        quantity: ingredients[i].quantity
-                    });
-                    break;
-                }
-            }
+            const recipeIngredient = new RecipeIngredient(
+                ingredients[i].ingredient,
+                ingredients[i].quantity
+            );
+
+            this._ingredients.push(recipeIngredient);
         }
+
+        this._parent.modules.recipeBook.isPopulated = false;
+        this._parent.modules.analytics.isPopulated = false;
+        this._parent.modules.recipeBook.display();
+    }
+
+    get id(){
+        return this._id;
+    }
+
+    get name(){
+        return this._name;
+    }
+
+    set name(name){
+        if(!controller.sanitaryString(name)){
+            return false;
+        }
+
+        this._name = name;
+    }
+
+    get price(){
+        return this._price;
+    }
+
+    set price(price){
+        if(price < 0){
+            return false;
+        }
+
+        this._price = price;
+    }
+
+    get parent(){
+        return this._parent;
+    }
+
+    get ingredients(){
+        return this._ingredients;
+    }
+
+    addIngredient(ingredient, quantity){
+        if(quantity < 0){
+            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            return false;
+        }
+
+        let recipeIngredient = new RecipeIngredient(ingredient, quantity);
+        this._ingredients.push(recipeIngredient);
+
+        this._parent.modules.recipeBook.isPopulated = false;
+        this._parent.modules.analytics.isPopulated = false;
+        this._parent.modules.recipeBook.display();
+    }
+
+    removeIngredient(ingredient){
+        const index = this._ingredients.indexOf(ingredient);
+
+        this._ingredients.splice(index, 1);
+    }
+
+    updateIngredient(ingredient, quantity){
+        if(quantity < 0){
+            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            return false;
+        }
+        const index = this._ingredients.indoxOf(ingredient);
+
+        this._ingredients[index].quantity = quantity;
     }
 }
 
 module.exports = Recipe;
 },{}],5:[function(require,module,exports){
+class TransactionRecipe{
+    constructor(recipe, quantity){
+        if(quantity < 0){
+            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            return false;
+        }
+        if(quantity % 1 !== 0){
+            banner.createError("RECIPES WITHIN A TRANSACTION MUST BE WHOLE NUMBERS");
+            return false;
+        }
+        this._recipe = recipe;
+        this._quantity = quantity;
+    }
+
+    get recipe(){
+        return this._recipe;
+    }
+
+    get quantity(){
+        return this._quantity;
+    }
+}
+
 class Transaction{
     constructor(id, date, recipes, parent){
-        this.id = id;
-        this.parent = parent;
-        this.date = new Date(date);
-        this.recipes = [];
+        date = new Date(date);
+        if(date > new Date()){
+            banner.createError("DATE CANNOT BE SET TO THE FUTURE");
+            return false;
+        }
+        this._id = id;
+        this._parent = parent;
+        this._date = date;
+        this._recipes = [];
 
         for(let i = 0; i < recipes.length; i++){
-            for(let j = 0; j < parent.recipes.length; j++){
-                if(recipes[i].recipe === parent.recipes[j].id){
-                    this.recipes.push({
-                        recipe: parent.recipes[j],
-                        quantity: recipes[i].quantity
-                    });
-                    break;
-                }
-            }
+            const transactionRecipe = new TransactionRecipe(
+                recipes[i].recipe,
+                recipes[i].quantity
+            )
+
+            this._recipes.push(transactionRecipe);
         }
+    }
+
+    get id(){
+        return this._id;
+    }
+
+    get parent(){
+        return this._parent;
+    }
+
+    get date(){
+        return this._date;
+    }
+
+    get recipes(){
+        return this._recipes;
     }
 }
 
@@ -1145,103 +1565,6 @@ controller = {
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
     },
-
-    convertToMain: function(unit, quantity){
-        let converted = 0;
-    
-        if(merchant.units.mass.includes(unit)){
-            switch(unit){
-                case "g": converted = quantity; break;
-                case "kg": converted = quantity * 1000; break;
-                case "oz": converted = quantity * 28.3495; break;
-                case "lb": converted = quantity * 453.5924; break;
-            }
-        }else if(merchant.units.volume.includes(unit)){
-            switch(unit){
-                case "ml": converted = quantity / 1000; break;
-                case "l": converted = quantity; break;
-                case "tsp": converted = quantity / 202.8842; break;
-                case "tbsp": converted = quantity / 67.6278; break;
-                case "ozfl": converted = quantity / 33.8141; break;
-                case "cup": converted = quantity / 4.1667; break;
-                case "pt": converted = quantity / 2.1134; break;
-                case "qt": converted = quantity / 1.0567; break;
-                case "gal": converted = quantity * 3.7854; break;
-            }
-        }else if(merchant.units.length.includes(unit)){
-            switch(unit){
-                case "mm": converted = quantity / 1000; break;
-                case "cm": converted = quantity / 100; break;
-                case "m": converted = quantity; break;
-                case "in": converted = quantity / 39.3701; break;
-                case "ft": converted = quantity / 3.2808; break;
-            }
-        }else{
-            converted = quantity;
-        }
-    
-        return converted;
-    },
-
-    /*
-    Sets certain strands to repopulate everything the next time it is opened
-    Use for when any data is changed
-    item = whatever is being updated
-    */
-    // updateData: function(item){
-    //     switch(item){
-    //         case "ingredient":
-    //             home.isPopulated = false;
-    //             ingredients.populateByProperty("category");
-    //             break;
-    //         case "recipe":
-    //             transactions.isPopulated = false;
-    //             recipeBook.populateRecipes();
-    //             break;
-    //         case "order":
-    //             orders.populate();
-    //             break;
-    //         case "transaction":
-    //             transactions.isPopulated = false;
-    //             transactions.display(Transaction);
-    //             analytics.newData = true;
-    //             break;
-    //     }
-    // },
-
-    /*
-    Gets the indices of two dates from transactions
-    Inputs
-    transactions: transaction list to find indices on
-    from: starting date
-    to: ending date (default to now)
-    Output
-    Array containing starting index and ending index
-    Note: Will return false if it cannot find both necessary dates
-    */
-    // transactionIndices(transactions, from, to = new Date()){
-    //     let indices = [];
-
-    //     for(let i = 0; i < transactions.length; i++){
-    //         if(transactions[i].date < to){
-    //             indices.push(i);
-    //             break;
-    //         }
-    //     }
-
-    //     for(let i = transactions.length - 1; i >= 0; i--){
-    //         if(transactions[i].date > from){
-    //             indices.push(i);
-    //             break;
-    //         }
-    //     }
-
-    //     if(indices.length < 2){
-    //         return false;
-    //     }
-
-    //     return indices;
-    // },
 
     /*
     Converts the price of a unit to $/main unit
