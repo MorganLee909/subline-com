@@ -475,8 +475,8 @@ class Merchant{
 
     /*
     Gets the quantity of each ingredient sold between two dates (dateRange)
-    Inputs
-    dateRange: list containing a start date and an end date
+    Inputs:
+        dateRange: list containing a start date and an end date
     Return:
         [{
             ingredient: Ingredient object,
@@ -514,6 +514,14 @@ class Merchant{
         return ingredientList;
     }
 
+    /*
+    Gets the quantity of a single ingredient sold between two dates
+    Inputs:
+        ingredient = MerchantIngredient object to find
+        from = start Date
+        to = end Date
+    return: quantity sold in default unit
+    */
     getSingleIngredientSold(ingredient, from = 0, to = new Date()){
         if(from === 0){
             from = this._transactions[0].date;
@@ -850,7 +858,7 @@ class RecipeIngredient{
             return false;
         }
         this._ingredient = ingredient;
-        this._quantity = this.convertToBase(quantity);
+        this._quantity = quantity;
     }
 
     get ingredient(){
@@ -864,23 +872,23 @@ class RecipeIngredient{
 
         switch(this._ingredient.unit){
             case "g":return this._quantity;
-            case "kg": return this._quantity * 1000;
-            case "oz": return this._quantity * 28.3495;
-            case "lb": return this._quantity * 453.5924;
-            case "ml": return this._quantity / 1000;
+            case "kg": return this._quantity / 1000;
+            case "oz": return this._quantity / 28.3495;
+            case "lb": return this._quantity / 453.5924;
+            case "ml": return this._quantity * 1000;
             case "l": return this._quantity;
-            case "tsp": return this._quantity / 202.8842;
-            case "tbsp": return this._quantity / 67.6278;
-            case "ozfl": return this._quantity / 33.8141;
-            case "cup": return this._quantity / 4.1667;
-            case "pt": return this._quantity / 2.1134;
-            case "qt": return this._quantity / 1.0567;
-            case "gal": return this._quantity * 3.7854;
-            case "mm": return this._quantity / 1000;
-            case "cm": return this._quantity / 100;
+            case "tsp": return this._quantity * 202.8842;
+            case "tbsp": return this._quantity * 67.6278;
+            case "ozfl": return this._quantity * 33.8141;
+            case "cup": return this._quantity * 4.1667;
+            case "pt": return this._quantity * 2.1134;
+            case "qt": return this._quantity * 1.0567;
+            case "gal": return this._quantity / 3.7854;
+            case "mm": return this._quantity * 1000;
+            case "cm": return this._quantity * 100;
             case "m": return this._quantity;
-            case "in": return this._quantity / 39.3701;
-            case "ft": return this._quantity / 3.2808;
+            case "in": return this._quantity * 39.3701;
+            case "ft": return this._quantity * 3.2808;
             default: return this._quantity;
         }
     }
@@ -2010,8 +2018,7 @@ let ingredientDetails = {
         if(ingredient.ingredient.specialUnit === "bottle"){
             let quantity = ingredient.quantity;
 
-            stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-            stockDisplay.innerText = `${(ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2)} BOTTLES`;
+            stockDisplay.innerText = `${ingredient.quantity.toFixed(2)} BOTTLES`;
             stockInput.placeholder = quantity.toFixed(2);
         }else{
             stockDisplay.innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
@@ -2033,9 +2040,16 @@ let ingredientDetails = {
             sum += quantities[i];
         }
 
+        //Calculate daily use
         let dailyUse = sum / quantities.length;
-        document.getElementById("dailyUse").innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        const dailyUseDiv = document.getElementById("dailyUse");
+        if(ingredient.ingredient.specialUnit === "bottle"){
+            dailyUseDiv.innerText = `${dailyUse.toFixed(2)} BOTTLES`;
+        }else{
+            dailyUseDiv.innerText = `${dailyUse.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        }
 
+        //Show recipes that this ingredient is a part of
         let ul = document.getElementById("ingredientRecipeList");
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
         while(ul.children.length > 0){

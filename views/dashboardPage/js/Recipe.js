@@ -5,7 +5,7 @@ class RecipeIngredient{
             return false;
         }
         this._ingredient = ingredient;
-        this._quantity = this.convertToBase(quantity);
+        this._quantity = quantity;
     }
 
     get ingredient(){
@@ -19,23 +19,23 @@ class RecipeIngredient{
 
         switch(this._ingredient.unit){
             case "g":return this._quantity;
-            case "kg": return this._quantity * 1000;
-            case "oz": return this._quantity * 28.3495;
-            case "lb": return this._quantity * 453.5924;
-            case "ml": return this._quantity / 1000;
+            case "kg": return this._quantity / 1000;
+            case "oz": return this._quantity / 28.3495;
+            case "lb": return this._quantity / 453.5924;
+            case "ml": return this._quantity * 1000;
             case "l": return this._quantity;
-            case "tsp": return this._quantity / 202.8842;
-            case "tbsp": return this._quantity / 67.6278;
-            case "ozfl": return this._quantity / 33.8141;
-            case "cup": return this._quantity / 4.1667;
-            case "pt": return this._quantity / 2.1134;
-            case "qt": return this._quantity / 1.0567;
-            case "gal": return this._quantity * 3.7854;
-            case "mm": return this._quantity / 1000;
-            case "cm": return this._quantity / 100;
+            case "tsp": return this._quantity * 202.8842;
+            case "tbsp": return this._quantity * 67.6278;
+            case "ozfl": return this._quantity * 33.8141;
+            case "cup": return this._quantity * 4.1667;
+            case "pt": return this._quantity * 2.1134;
+            case "qt": return this._quantity * 1.0567;
+            case "gal": return this._quantity / 3.7854;
+            case "mm": return this._quantity * 1000;
+            case "cm": return this._quantity * 100;
             case "m": return this._quantity;
-            case "in": return this._quantity / 39.3701;
-            case "ft": return this._quantity / 3.2808;
+            case "in": return this._quantity * 39.3701;
+            case "ft": return this._quantity * 3.2808;
             default: return this._quantity;
         }
     }

@@ -34,8 +34,7 @@ let ingredientDetails = {
         if(ingredient.ingredient.specialUnit === "bottle"){
             let quantity = ingredient.quantity;
 
-            stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-            stockDisplay.innerText = `${(ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2)} BOTTLES`;
+            stockDisplay.innerText = `${ingredient.quantity.toFixed(2)} BOTTLES`;
             stockInput.placeholder = quantity.toFixed(2);
         }else{
             stockDisplay.innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
@@ -57,9 +56,16 @@ let ingredientDetails = {
             sum += quantities[i];
         }
 
+        //Calculate daily use
         let dailyUse = sum / quantities.length;
-        document.getElementById("dailyUse").innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        const dailyUseDiv = document.getElementById("dailyUse");
+        if(ingredient.ingredient.specialUnit === "bottle"){
+            dailyUseDiv.innerText = `${dailyUse.toFixed(2)} BOTTLES`;
+        }else{
+            dailyUseDiv.innerText = `${dailyUse.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        }
 
+        //Show recipes that this ingredient is a part of
         let ul = document.getElementById("ingredientRecipeList");
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
         while(ul.children.length > 0){

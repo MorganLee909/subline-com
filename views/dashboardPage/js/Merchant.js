@@ -376,8 +376,8 @@ class Merchant{
 
     /*
     Gets the quantity of each ingredient sold between two dates (dateRange)
-    Inputs
-    dateRange: list containing a start date and an end date
+    Inputs:
+        dateRange: list containing a start date and an end date
     Return:
         [{
             ingredient: Ingredient object,
@@ -415,6 +415,14 @@ class Merchant{
         return ingredientList;
     }
 
+    /*
+    Gets the quantity of a single ingredient sold between two dates
+    Inputs:
+        ingredient = MerchantIngredient object to find
+        from = start Date
+        to = end Date
+    return: quantity sold in default unit
+    */
     getSingleIngredientSold(ingredient, from = 0, to = new Date()){
         if(from === 0){
             from = this._transactions[0].date;
