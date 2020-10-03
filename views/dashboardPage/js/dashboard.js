@@ -102,7 +102,7 @@ controller = {
 
         switch(sidebar){
             case "ingredientDetails":
-                ingredientDetails.display(data);
+                ingredientDetails.display(data, ingredients);
                 break;
             case "addIngredients":
                 addIngredients.display(Merchant);

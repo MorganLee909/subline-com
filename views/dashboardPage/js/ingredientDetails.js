@@ -2,7 +2,7 @@ let ingredientDetails = {
     ingredient: {},
     dailyUse: 0,
 
-    display: function(ingredient){
+    display: function(ingredient, ingredientsStrand){
         this.ingredient = ingredient;
 
         if(this.ingredient.ingredient.specialUnit === "bottle"){
@@ -115,10 +115,10 @@ let ingredientDetails = {
         document.getElementById("editSubmitButton").onclick = ()=>{this.editSubmit()};
         document.getElementById("editCancelButton").onclick = ()=>{this.display(this.ingredient)};
         document.getElementById("editIngBtn").onclick = ()=>{this.edit()};
-        document.getElementById("removeIngBtn").onclick = ()=>{this.remove()};
+        document.getElementById("removeIngBtn").onclick = ()=>{this.remove(ingredientsStrand)};
     },
 
-    remove: function(){
+    remove: function(ingredientsStrand){
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
                 if(this.ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){
@@ -140,6 +140,7 @@ let ingredientDetails = {
                     banner.createError(response);
                 }else{
                     merchant.removeIngredient(this.ingredient);
+                    ingredientsStrand.display();
                     banner.createNotification("INGREDIENT REMOVED");
                 }
             })
