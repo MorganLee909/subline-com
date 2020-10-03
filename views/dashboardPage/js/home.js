@@ -21,7 +21,7 @@ let home = {
         const revenueThisMonth = merchant.getRevenue(firstOfMonth);
         const revenueLastMonthToDay = merchant.getRevenue(firstOfLastMonth, lastMonthToDay);
 
-        document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
+        document.getElementById("revenue").innerText = `$${revenueThisMonth.toFixed(2)}`;
 
         let revenueChange = ((revenueThisMonth - revenueLastMonthToDay) / revenueLastMonthToDay) * 100;
         
@@ -116,10 +116,10 @@ let home = {
                 input.changed = true;
             };
             if(ingredient.ingredient.specialUnit === "bottle"){
-                input.value = (ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2);
+                input.value = ingredient.quantity.toFixed(2);
                 ingredientCheck.children[2].innerText = "BOTTLES";
             }else{
-                input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+                input.value = ingredient.quantity.toFixed(2);
                 ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
             }
 
@@ -160,7 +160,7 @@ let home = {
             let count = (ingredientList.length < 5) ? ingredientList.length - 1 : 4;
             for(let i = count; i >= 0; i--){
                 const ingredientName = ingredientList[i].ingredient.name;
-                const ingredientQuantity = ingredientList[i].ingredient.convert(ingredientList[i].quantity);
+                const ingredientQuantity = ingredientList[i].quantity;
                 const unitName = ingredientList[i].ingredient.unit;
 
                 quantities.push(ingredientList[i].quantity);
@@ -206,6 +206,8 @@ let home = {
         }
     },
 
+    //Need to change the updating of ingredients
+    //should update the ingredient directly, then send that.  Maybe...
     submitInventoryCheck: function(){
         let lis = document.querySelectorAll("#inventoryCheckCard li");
 

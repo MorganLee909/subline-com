@@ -1,12 +1,16 @@
 class MerchantIngredient{
-    constructor(ingredient, quantity){
+    constructor(ingredient, quantity, isBase = false){
         if(quantity < 0){
             banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
             return false;
         }
+        if(isBase){
+            this._quantity = quantity;
+        }else{
+            this._quantity = this.convertToBase(quantity);
+        }
 
         this._ingredient = ingredient;
-        this._quantity = this.convertToBase(quantity);
     }
 
     get ingredient(){
@@ -14,25 +18,29 @@ class MerchantIngredient{
     }
 
     get quantity(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return this._quantity / this._ingredient.unitSize;
+        }
+
         switch(this._ingredient.unit){
             case "g":return this._quantity; 
-            case "kg": return this._quantity * 1000;
-            case "oz": return this._quantity * 28.3495;
-            case "lb": return this._quantity * 453.5924;
-            case "ml": return this._quantity / 1000;
+            case "kg": return this._quantity / 1000;
+            case "oz": return this._quantity / 28.3495;
+            case "lb": return this._quantity / 453.5924;
+            case "ml": return this._quantity * 1000;
             case "l": return this._quantity;
-            case "tsp": return this._quantity / 202.8842;
-            case "tbsp": return this._quantity / 67.6278;
-            case "ozfl": return this._quantity / 33.8141;
-            case "cup": return this._quantity / 4.1667;
-            case "pt": return this._quantity / 2.1134;
-            case "qt": return this._quantity / 1.0567;
-            case "gal": return this._quantity * 3.7854;
-            case "mm": return this._quantity / 1000;
-            case "cm": return this._quantity / 100;
+            case "tsp": return this._quantity * 202.8842;
+            case "tbsp": return this._quantity * 67.6278;
+            case "ozfl": return this._quantity * 33.8141;
+            case "cup": return this._quantity * 4.1667;
+            case "pt": return this._quantity * 2.1134;
+            case "qt": return this._quantity * 1.0567;
+            case "gal": return this._quantity / 3.7854;
+            case "mm": return this._quantity * 1000;
+            case "cm": return this._quantity * 100;
             case "m": return this._quantity;
-            case "in": return this._quantity / 39.3701;
-            case "ft": return this._quantity / 3.2808;
+            case "in": return this._quantity * 39.3701;
+            case "ft": return this._quantity * 3.2808;
             default: return this._quantity;
         }
     }
@@ -101,7 +109,8 @@ class Merchant{
 
             const merchantIngredient = new MerchantIngredient(
                 ingredient,
-                oldMerchant.inventory[i].quantity
+                oldMerchant.inventory[i].quantity,
+                true
             );
 
             this._ingredients.push(merchantIngredient);
@@ -184,8 +193,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.ingredients.display();
-        controller.closeSidebar();
     }
 
     updateIngredient(ingredient, quantity){
@@ -198,8 +205,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.ingredients.display()
-        controller.closeSidebar();
     }
 
     get recipes(){
@@ -211,8 +216,6 @@ class Merchant{
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
-        this._modules.recipeBook.display();
-        controller.closeSidebar();
     }
 
     removeRecipe(recipe){
@@ -225,8 +228,6 @@ class Merchant{
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
-        this._modules.recipeBook.display();
-        controller.closeSidebar();
     }
 
     getTransactions(from = 0, to = new Date()){
@@ -274,8 +275,6 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
         this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
-        this._modeules.transactions.display();
-        controller.closeSidebar();
     }
 
     removeTransaction(transaction){
@@ -312,8 +311,6 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
         this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
-        this._modules.transactions.display();
-        controller.closeSidebar();
     }
 
     get orders(){
@@ -336,8 +333,6 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
-        this._modules.orders.display();
-        controller.closeSidebar();
     }
 
     removeOrder(order){
@@ -358,8 +353,6 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
-        this._modules.orders.display();
-        controller.closeSidebar();
     }
 
     get units(){
@@ -370,7 +363,6 @@ class Merchant{
         if(from === 0){
             from = this._transactions[0].date;
         }
-
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
@@ -394,7 +386,7 @@ class Merchant{
     Return:
         [{
             ingredient: Ingredient object,
-            quantity: quantity of ingredient sold
+            quantity: quantity of ingredient sold in default unit
         }]
     */
     getIngredientsSold(from = 0, to = new Date()){
@@ -413,7 +405,6 @@ class Merchant{
                     if(ingredientList[k].ingredient === recipes[i].recipe.ingredients[j].ingredient){
                         exists = true;
                         ingredientList[k].quantity += recipes[i].quantity * recipes[i].recipe.ingredients[j].quantity;
-                        
                     }
                 }
 
@@ -442,7 +433,7 @@ class Merchant{
                 for(let k = 0; k < this._transactions[i].recipes[j].recipe.ingredients.length; k++){
                     if(this._transactions[i].recipes[j].recipe.ingredients[k].ingredient === ingredient.ingredient){
                         total += this._transactions[i].recipes[j].recipe.ingredients[k].quantity;
-                        
+                        break;
                     }
                 }
             }
@@ -476,7 +467,7 @@ class Merchant{
                     if(recipeList[k].recipe === this._transactions[i].recipes[j].recipe){
                         exists = true;
                         recipeList[k].quantity += this._transactions[i].recipes[j].quantity;
-                        
+                        break;
                     }
                 }
 
@@ -509,7 +500,7 @@ class Merchant{
                     ingredientsByCategory[j].ingredients.push(this.ingredients[i]);
 
                     categoryExists = true;
-                    
+                    break;
                 }
             }
 
@@ -535,7 +526,7 @@ class Merchant{
                     ingredientsByUnit[j].ingredients.push(this.ingredients[i]);
 
                     unitExists = true;
-                    
+                    break;
                 }
             }
 
@@ -564,6 +555,7 @@ class Merchant{
             for(let j = 0; j < this._recipes[i].ingredients.length; j++){
                 if(this._recipes[i].ingredients[j].ingredient === ingredient){
                     recipes.push(this._recipes[i]);
+                    break;
                 }
             }
         }
@@ -572,21 +564,29 @@ class Merchant{
     }
 
     getTransactionIndices(from, to){
-        for(let i = 0; i < this._transactions.length; i++){
+        let start, end;
+        to.setDate(to.getDate() + 1);
+
+        for(let i = this._transactions.length - 1; i >= 0; i--){
             if(this._transactions[i].date >= from){
-                from = i;
-                
+                start = i;
+                break;
             }
         }
         
-        for(let i = this._transactions.length - 1; i >= 0; i--){
-            if(this._transactions[i].date <= to){
-                to = i;
-                
+        for(let i = 0; i < this._transactions.length; i++){
+            if(this._transactions[i].date < to){
+                end = i;
+                break;
             }
         }
 
-        return {from: from, to: to};
+        if(start === undefined){
+            return false;
+        }
+
+        //these are switched due to the order of the transactions in the merchant
+        return {start: end, end: start};
     }
 
     isSanitaryString(str){

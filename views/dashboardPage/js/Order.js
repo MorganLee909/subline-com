@@ -13,6 +13,10 @@ class OrderIngredient{
     }
 
     get quantity(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return this._quantity / this._ingredient.unitSize;
+        }
+
         switch(unit){
             case "g":return this._quantity;
             case "kg": return this._quantity * 1000;

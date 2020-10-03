@@ -13,7 +13,11 @@ class RecipeIngredient{
     }
 
     get quantity(){
-        switch(unit){
+        if(this._ingredient.specialUnit === "bottle"){
+            return this._quantity / this._ingredient.unitSize;
+        }
+
+        switch(this._ingredient.unit){
             case "g":return this._quantity;
             case "kg": return this._quantity * 1000;
             case "oz": return this._quantity * 28.3495;
@@ -146,7 +150,6 @@ class Recipe{
 
         this._parent.modules.recipeBook.isPopulated = false;
         this._parent.modules.analytics.isPopulated = false;
-        this._parent.modules.recipeBook.display();
     }
 
     removeIngredient(ingredient){

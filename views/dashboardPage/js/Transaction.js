@@ -34,12 +34,18 @@ class Transaction{
         this._recipes = [];
 
         for(let i = 0; i < recipes.length; i++){
-            const transactionRecipe = new TransactionRecipe(
-                recipes[i].recipe,
-                recipes[i].quantity
-            )
+            for(let j = 0; j < parent.recipes.length; j++){
+                if(recipes[i].recipe === parent.recipes[j].id){
+                    const transactionRecipe = new TransactionRecipe(
+                        parent.recipes[j],
+                        recipes[i].quantity
+                    )
+        
+                    this._recipes.push(transactionRecipe);
 
-            this._recipes.push(transactionRecipe);
+                    break;
+                }
+            }
         }
     }
 
