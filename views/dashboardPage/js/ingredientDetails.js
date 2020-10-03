@@ -32,14 +32,14 @@ let ingredientDetails = {
         let stockDisplay = document.getElementById("ingredientStock");
         stockInput.value = "";
         if(ingredient.ingredient.specialUnit === "bottle"){
-            let quantity = ingredient.ingredient.convert(ingredient.quantity);
+            let quantity = ingredient.quantity;
 
             stockDisplay.innerText = `${quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
             stockDisplay.innerText = `${(ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2)} BOTTLES`;
             stockInput.placeholder = quantity.toFixed(2);
         }else{
-            stockDisplay.innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-            stockInput.placeholder = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+            stockDisplay.innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+            stockInput.placeholder = ingredient.quantity.toFixed(2);
         }
 
 
@@ -49,7 +49,7 @@ let ingredientDetails = {
             let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
             let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
 
-            quantities.push(merchant.getSingleIngredientSold(startDay, endDay, ingredient));
+            quantities.push(merchant.getSingleIngredientSold(ingredient, startDay, endDay));
         }
 
         let sum = 0;
@@ -58,7 +58,7 @@ let ingredientDetails = {
         }
 
         let dailyUse = sum / quantities.length;
-        document.getElementById("dailyUse").innerText = `${ingredient.ingredient.convert(dailyUse).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+        document.getElementById("dailyUse").innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
 
         let ul = document.getElementById("ingredientRecipeList");
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);

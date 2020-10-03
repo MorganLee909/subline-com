@@ -27,7 +27,7 @@ let newIngredient = {
     submit: function(Ingredient){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
-        const quantityValue = document.getElementById("newIngQuantity").value;
+        const quantityValue = parseFloat(document.getElementById("newIngQuantity").value);
 
         let unit = unitSelector.value;
 
@@ -35,22 +35,19 @@ let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
                 category: document.getElementById("newIngCategory").value,
-                unitType: options[unitSelector.selectedIndex].getAttribute("type"),
+                unitType: options[unitSelector.selectedIndex].getAttribute("type")
             },
-            quantity: controller.convertToMain(unit, quantityValue),
+            quantity: quantityValue,
             defaultUnit: unit
         }
 
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
-            const bottleUnit = document.getElementById("bottleUnits").value;
-            const bottleSize = controller.convertToMain(bottleUnit, document.getElementById("bottleSize").value);
-
             newIngredient.ingredient.unitType = "volume";
-            newIngredient.ingredient.unitSize = bottleSize;
-            newIngredient.defaultUnit = bottleUnit;
+            newIngredient.ingredient.unitSize = document.getElementById("bottleSize").value
+            newIngredient.defaultUnit = document.getElementById("bottleUnits").value;
             newIngredient.ingredient.specialUnit = unit;
-            newIngredient.quantity = quantityValue * bottleSize;
+            newIngredient.quantity = quantityValue;
         }
     
         let loader = document.getElementById("loaderContainer");

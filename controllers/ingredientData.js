@@ -1,6 +1,8 @@
 const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment.js");
+
+const Helper = require("./helper.js");
 const Validator = require("./validator.js");
 
 module.exports = {
@@ -53,16 +55,33 @@ module.exports = {
             }
         }
 
-        let ingredientPromise = Ingredient.create((req.body.ingredient));
+        let newIngredient = {};
+        if(req.body.ingredient.specialUnit === "bottle"){
+            newIngredient = new Ingredient({
+                name: req.body.ingredient.name,
+                category: req.body.ingredient.category,
+                unitType: req.body.ingredient.unitType,
+                specialUnit: req.body.ingredient.specialUnit,
+                unitSize: Helper.convertQuantityToBaseUnit(req.body.ingredient.unitSize, req.body.defaultUnit)
+            });
+        }else{
+            newIngredient = new Ingredient(req.body.ingredient);
+        }
+
+        let ingredientPromise = newIngredient.save();
         let merchantPromise = Merchant.findOne({_id: req.session.user});
-        let newIngredient;
 
         Promise.all([ingredientPromise, merchantPromise])
             .then((response)=>{
                 newIngredient = {
                     ingredient: response[0],
-                    quantity: req.body.quantity,
                     defaultUnit: req.body.defaultUnit
+                }
+
+                if(response[0].specialUnit === "bottle"){
+                    newIngredient.quantity = req.body.quantity;
+                }else{
+                    newIngredient.quantity = Helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
                 }
 
                 response[1].inventory.push(newIngredient);

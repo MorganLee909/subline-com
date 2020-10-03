@@ -1,15 +1,11 @@
 class MerchantIngredient{
-    constructor(ingredient, quantity, isBase = false){
+    constructor(ingredient, quantity){
         if(quantity < 0){
             banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
             return false;
         }
-        if(isBase){
-            this._quantity = quantity;
-        }else{
-            this._quantity = this.convertToBase(quantity);
-        }
-
+        
+        this._quantity = quantity;
         this._ingredient = ingredient;
     }
 
@@ -59,7 +55,7 @@ class MerchantIngredient{
             case "kg": return quantity / 1000; 
             case "oz":  return quantity / 28.3495; 
             case "lb":  return quantity / 453.5924;
-            case "ml": return quantity *= 1000; 
+            case "ml": return quantity * 1000; 
             case "l": return quantity;
             case "tsp": return quantity * 202.8842; 
             case "tbsp": return quantity * 67.6278; 
@@ -110,7 +106,6 @@ class Merchant{
             const merchantIngredient = new MerchantIngredient(
                 ingredient,
                 oldMerchant.inventory[i].quantity,
-                true
             );
 
             this._ingredients.push(merchantIngredient);
@@ -176,7 +171,7 @@ class Merchant{
     }
 
     addIngredient(ingredient, quantity){
-        const MerchantIngredient = new MerchantIngredient(ingredient, quantity);
+        const merchantIngredient = new MerchantIngredient(ingredient, quantity);
         this._ingredients.push(merchantIngredient);
 
         this._modules.home.isPopulated = false;
