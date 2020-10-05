@@ -134,7 +134,7 @@ class MerchantIngredient{
 
     get quantity(){
         if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient.unitSize;
+            return this._quantity / this._ingredient._unitSize;
         }
 
         switch(this._ingredient.unit){
@@ -165,36 +165,36 @@ class MerchantIngredient{
             return false;
         }
 
-        this._quantity = this.convertToBase(quantity);
+        this._quantity = quantity;
     }
 
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
-            case "kg": return quantity / 1000; 
-            case "oz":  return quantity / 28.3495; 
-            case "lb":  return quantity / 453.5924;
-            case "ml": return quantity * 1000; 
+            case "kg": return quantity * 1000; 
+            case "oz":  return quantity * 28.3495; 
+            case "lb":  return quantity * 453.5924;
+            case "ml": return quantity / 1000; 
             case "l": return quantity;
-            case "tsp": return quantity * 202.8842; 
-            case "tbsp": return quantity * 67.6278; 
-            case "ozfl": return quantity * 33.8141; 
-            case "cup": return quantity * 4.1667; 
-            case "pt": return quantity * 2.1134; 
-            case "qt": return quantity * 1.0567; 
-            case "gal": return quantity / 3.7854;
-            case "mm": return quantity * 1000; 
-            case "cm": return quantity * 100; 
+            case "tsp": return quantity / 202.8842; 
+            case "tbsp": return quantity / 67.6278; 
+            case "ozfl": return quantity / 33.8141; 
+            case "cup": return quantity / 4.1667; 
+            case "pt": return quantity / 2.1134; 
+            case "qt": return quantity / 1.0567; 
+            case "gal": return quantity * 3.7854;
+            case "mm": return quantity / 1000; 
+            case "cm": return quantity / 100; 
             case "m": return quantity;
-            case "in": return quantity * 39.3701; 
-            case "ft": return quantity * 3.2808;
+            case "in": return quantity / 39.3701; 
+            case "ft": return quantity / 3.2808;
             default: return quantity;
         }
     }
 
     getQuantityDisplay(){
         if(this._ingredient.specialUnit === "bottle"){
-            return `${this.quantity.toFixed(2)} ${this._ingredient.specialUnit.toUpperCase()}`;
+            return `${this.quantity.toFixed(2)} BOTTLES`;
         }
 
         return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
@@ -317,7 +317,7 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
     }
 
-    updateIngredient(ingredient, quantity){
+    updateIngredient(ingredient, quantity, unit){
         const index = this._ingredients.indexOf(ingredient);
         if(index === undefined){
             return false;
@@ -1732,6 +1732,8 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 
 controller.openStrand("home");
 },{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./home.js":9,"./ingredientDetails.js":10,"./ingredients.js":11,"./newIngredient.js":12,"./newOrder.js":13,"./newRecipe.js":14,"./newTransaction.js":15,"./orderDetails.js":16,"./orders.js":17,"./recipeBook.js":18,"./recipeDetails.js":19,"./transactionDetails.js":20,"./transactions.js":21}],8:[function(require,module,exports){
+const Ingredient = require("./Ingredient");
+
 let editIngredient = {
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");
@@ -1748,6 +1750,7 @@ let editIngredient = {
         document.getElementById("editIngName").value = ingredient.ingredient.name;
         document.getElementById("editIngCategory").value = ingredient.ingredient.category;
         quantLabel.innerText = `CURRENT STOCK (${ingredient.ingredient.unit.toUpperCase()})`;
+        document.getElementById("editIngSubmit").onclick = ()=>{this.submit(ingredient)};
 
         //Populate the unit buttons
         const units = merchant.units[ingredient.ingredient.unitType];
@@ -1776,8 +1779,10 @@ let editIngredient = {
             sizeInput.type = "number";
             sizeInput.min = "0";
             sizeInput.step = "0.01";
-            sizeInput.value = ingredient.ingredient.unitSize;
+            sizeInput.value = ingredient.ingredient.unitSize.toFixed(2);
             specialLabel.appendChild(sizeInput);
+        }else{
+            specialLabel.style.display = "none";
         }
 
         let quantInput = document.createElement("input");
@@ -1799,12 +1804,69 @@ let editIngredient = {
         button.classList.add("unitActive");
     },
 
-    submit(){
+    submit(ingredient){
+        const quantity = parseFloat(document.getElementById("editIngQuantityLabel").children[0].value);
+
+        let data = {
+            id: ingredient.ingredient.id,
+            name: document.getElementById("editIngName").value,
+            category: document.getElementById("editIngCategory").value
+        }
+
+        //Add data based on unit type
+        if(ingredient.ingredient.specialUnit === "bottle"){
+            let unitSize = ingredient.convertToBase(parseFloat(document.getElementById("editSpecialLabel").children[0].value));
+            data.quantity = quantity * unitSize;
+            data.unitSize = unitSize;
+        }else{
+            data.quantity = ingredient.convertToBase(quantity);
+        }
+
+        //Get the measurement unit
+        let units = document.getElementById("unitButtons");
+        for(let i = 0; i < units.children.length; i++){
+            if(units.children[i].classList.contains("unitActive")){
+                data.unit = units.children[i].innerText.toLowerCase();
+                break;
+            }
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/ingredients/update", {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then((response)=>{
+            if(typeof(response) === "string"){
+                banner.createError(response);
+            }else{
+                ingredient.ingredient.name = response.ingredient.name;
+                ingredient.ingredient.category = response.ingredient.category;
+                ingredient.ingredient.unitSize = response.ingredient.unitSize;
+                ingredient.ingredient.unit = response.unit;
+
+                merchant.updateIngredient(ingredient, response.quantity);
+                controller.openStrand("ingredients");
+                banner.createNotification("INGREDIENT UPDATED");
+            }
+        })
+        .catch((err)=>{
+            banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
+        })
+        .finally(()=>{
+            loader.style.display = "none";
+        });
     }
 }
 
 module.exports = editIngredient;
-},{}],9:[function(require,module,exports){
+},{"./Ingredient":1}],9:[function(require,module,exports){
 let home = {
     isPopulated: false,
 
@@ -2063,7 +2125,7 @@ let home = {
                 },
                 body: JSON.stringify(fetchData)
             })
-                .then((response) => response.json())
+                .then(response => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
                         banner.createError(response);

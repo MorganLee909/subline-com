@@ -15,7 +15,7 @@ class MerchantIngredient{
 
     get quantity(){
         if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient.unitSize;
+            return this._quantity / this._ingredient._unitSize;
         }
 
         switch(this._ingredient.unit){
@@ -46,36 +46,36 @@ class MerchantIngredient{
             return false;
         }
 
-        this._quantity = this.convertToBase(quantity);
+        this._quantity = quantity;
     }
 
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
-            case "kg": return quantity / 1000; 
-            case "oz":  return quantity / 28.3495; 
-            case "lb":  return quantity / 453.5924;
-            case "ml": return quantity * 1000; 
+            case "kg": return quantity * 1000; 
+            case "oz":  return quantity * 28.3495; 
+            case "lb":  return quantity * 453.5924;
+            case "ml": return quantity / 1000; 
             case "l": return quantity;
-            case "tsp": return quantity * 202.8842; 
-            case "tbsp": return quantity * 67.6278; 
-            case "ozfl": return quantity * 33.8141; 
-            case "cup": return quantity * 4.1667; 
-            case "pt": return quantity * 2.1134; 
-            case "qt": return quantity * 1.0567; 
-            case "gal": return quantity / 3.7854;
-            case "mm": return quantity * 1000; 
-            case "cm": return quantity * 100; 
+            case "tsp": return quantity / 202.8842; 
+            case "tbsp": return quantity / 67.6278; 
+            case "ozfl": return quantity / 33.8141; 
+            case "cup": return quantity / 4.1667; 
+            case "pt": return quantity / 2.1134; 
+            case "qt": return quantity / 1.0567; 
+            case "gal": return quantity * 3.7854;
+            case "mm": return quantity / 1000; 
+            case "cm": return quantity / 100; 
             case "m": return quantity;
-            case "in": return quantity * 39.3701; 
-            case "ft": return quantity * 3.2808;
+            case "in": return quantity / 39.3701; 
+            case "ft": return quantity / 3.2808;
             default: return quantity;
         }
     }
 
     getQuantityDisplay(){
         if(this._ingredient.specialUnit === "bottle"){
-            return `${this.quantity.toFixed(2)} ${this._ingredient.specialUnit.toUpperCase()}`;
+            return `${this.quantity.toFixed(2)} BOTTLES`;
         }
 
         return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
@@ -198,7 +198,7 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
     }
 
-    updateIngredient(ingredient, quantity){
+    updateIngredient(ingredient, quantity, unit){
         const index = this._ingredients.indexOf(ingredient);
         if(index === undefined){
             return false;

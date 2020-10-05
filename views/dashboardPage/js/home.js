@@ -256,7 +256,7 @@ let home = {
                 },
                 body: JSON.stringify(fetchData)
             })
-                .then((response) => response.json())
+                .then(response => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
                         banner.createError(response);

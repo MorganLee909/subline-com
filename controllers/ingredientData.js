@@ -103,7 +103,8 @@ module.exports = {
         name: new name of the ingredient,
         quantity: new quantity of the unit (in grams),
         category: new category of the unit,
-        defaultUnit: new default unit of the ingredient
+        unit: new default unit of the ingredient,
+        unitSize: unit size for special unit, if any
     }
     */
     updateIngredient: function(req, res){
@@ -112,6 +113,12 @@ module.exports = {
             return res.redirect("/");
         }
 
+        const ingredientCheck = Validator.ingredient(req.body);
+        if(ingredientCheck !== true){
+            return res.json(ingredientCheck);
+        }
+
+        let updatedIngredient = {};
         Ingredient.findOne({_id: req.body.id})
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
@@ -123,27 +130,36 @@ module.exports = {
                 return ingredient.save();
             })
             .then((ingredient)=>{
-                return Merchant.findOne({_id: req.session.user})
+                updatedIngredient.ingredient = ingredient;
+                return Merchant.findOne({_id: req.session.user});
             })
             .then((merchant)=>{
                 for(let i = 0; i < merchant.inventory.length; i++){
                     if(merchant.inventory[i].ingredient.toString() === req.body.id){
-                        merchant.inventory[i].quantity = req.body.quantity;
-                        merchant.inventory[i].defaultUnit = req.body.defaultUnit;
+                        merchant.inventory[i].defaultUnit = req.body.unit;
 
-                        new InventoryAdjustment({
-                            date: new Date(),
-                            merchant: req.session.user,
-                            ingredient: req.body.id,
-                            quantity: req.body.quantity - merchant.inventory[i].quantity
-                        }).save().catch(()=>{});
+                        if(merchant.inventory[i].quantity !== req.body.quantity){
+                            new InventoryAdjustment({
+                                date: new Date(),
+                                merchant: req.session.user,
+                                ingredient: req.body.id,
+                                quantity: req.body.quantity - merchant.inventory[i].quantity
+                            }).save().catch(()=>{});
+
+                            merchant.inventory[i].quantity = req.body.quantity;
+                        }
+
+                        updatedIngredient.quantity = req.body.quantity;
+                        updatedIngredient.unit = req.body.unit;
+                        
+                        break;
                     }
                 }
 
                 return merchant.save();
             })
             .then((merchant)=>{
-                return res.json({});
+                return res.json(updatedIngredient);
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO UPDATE INGREDIENT");

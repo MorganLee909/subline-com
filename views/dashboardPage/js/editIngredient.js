@@ -1,3 +1,5 @@
+const Ingredient = require("./Ingredient");
+
 let editIngredient = {
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");
@@ -14,6 +16,7 @@ let editIngredient = {
         document.getElementById("editIngName").value = ingredient.ingredient.name;
         document.getElementById("editIngCategory").value = ingredient.ingredient.category;
         quantLabel.innerText = `CURRENT STOCK (${ingredient.ingredient.unit.toUpperCase()})`;
+        document.getElementById("editIngSubmit").onclick = ()=>{this.submit(ingredient)};
 
         //Populate the unit buttons
         const units = merchant.units[ingredient.ingredient.unitType];
@@ -42,8 +45,10 @@ let editIngredient = {
             sizeInput.type = "number";
             sizeInput.min = "0";
             sizeInput.step = "0.01";
-            sizeInput.value = ingredient.ingredient.unitSize;
+            sizeInput.value = ingredient.ingredient.unitSize.toFixed(2);
             specialLabel.appendChild(sizeInput);
+        }else{
+            specialLabel.style.display = "none";
         }
 
         let quantInput = document.createElement("input");
@@ -65,7 +70,64 @@ let editIngredient = {
         button.classList.add("unitActive");
     },
 
-    submit(){
+    submit(ingredient){
+        const quantity = parseFloat(document.getElementById("editIngQuantityLabel").children[0].value);
+
+        let data = {
+            id: ingredient.ingredient.id,
+            name: document.getElementById("editIngName").value,
+            category: document.getElementById("editIngCategory").value
+        }
+
+        //Add data based on unit type
+        if(ingredient.ingredient.specialUnit === "bottle"){
+            let unitSize = ingredient.convertToBase(parseFloat(document.getElementById("editSpecialLabel").children[0].value));
+            data.quantity = quantity * unitSize;
+            data.unitSize = unitSize;
+        }else{
+            data.quantity = ingredient.convertToBase(quantity);
+        }
+
+        //Get the measurement unit
+        let units = document.getElementById("unitButtons");
+        for(let i = 0; i < units.children.length; i++){
+            if(units.children[i].classList.contains("unitActive")){
+                data.unit = units.children[i].innerText.toLowerCase();
+                break;
+            }
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/ingredients/update", {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then((response)=>{
+            if(typeof(response) === "string"){
+                banner.createError(response);
+            }else{
+                ingredient.ingredient.name = response.ingredient.name;
+                ingredient.ingredient.category = response.ingredient.category;
+                ingredient.ingredient.unitSize = response.ingredient.unitSize;
+                ingredient.ingredient.unit = response.unit;
+
+                merchant.updateIngredient(ingredient, response.quantity);
+                controller.openStrand("ingredients");
+                banner.createNotification("INGREDIENT UPDATED");
+            }
+        })
+        .catch((err)=>{
+            banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
+        })
+        .finally(()=>{
+            loader.style.display = "none";
+        });
     }
 }
 

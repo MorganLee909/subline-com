@@ -60,9 +60,31 @@ module.exports = {
         return true;
     },
 
+    /*
+    ingredient = {
+        name: required,
+        category: required,
+        unit: required,
+        quantity: required,
+        specialUnit: optional,
+        unitSize: optional
+    }
+    */
     ingredient: function(ingredient){
         if(!this.isSanitary([ingredient.name, ingredient.category])){
             return "Ingredient contains illegal characters";
+        }
+
+        let quantityCheck = this.quantity(ingredient.quantity);
+            if(quantityCheck !== true){
+                return quantityCheck;
+            }
+
+        if(ingredient.specialUnit === "bottle"){
+            let quantityCheck = this.quantity(ingredient.unitSize);
+            if(quantityCheck !== true){
+                return "BOTTLE SIZE MUST BE A NON-NEGATIVE NUMBER";
+            }
         }
 
         return true;
