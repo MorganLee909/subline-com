@@ -311,6 +311,18 @@ EDIT INGREDIENT
     width: 100%;
 }
 
+    #editIngredient label{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .unitbuttons{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+
 /* 
 Recipe Details 
 */

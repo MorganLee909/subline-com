@@ -18,15 +18,17 @@
         <input id="editIngCategory" type="text">
     </label>
 
-    <label>CURRENT STOCK:
-        <input id="editIngQuantity" type="number" min="0" step="0.01">
-    </label>
+    <label id="editIngQuantityLabel"></label>
 
-    <label id="editBottleLabel" style="display: none;">
-        <input type="text">
-    </label>
+    <label id="editSpecialLabel" style="display: none;"></label>
 
     <div class="lineBorder"></div>
 
-    <h3>DISPLAY UNIT</h3>
+    <h3>MEASUREMENT UNIT</h3>
+
+    <div id="unitButtons"></div>
+
+    <div class="lineBorder"></div>
+
+    <button id="editIngSubmit" class="button">SUBMIT</button>
 </div>

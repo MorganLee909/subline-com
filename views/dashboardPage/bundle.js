@@ -71,7 +71,27 @@ class Ingredient{
     }
 
     get unitSize(){
-        return this._unitSize;
+        switch(this._unit){
+            case "g":return this._unitSize; 
+            case "kg": return this._unitSize / 1000;
+            case "oz": return this._unitSize / 28.3495;
+            case "lb": return this._unitSize / 453.5924;
+            case "ml": return this._unitSize * 1000;
+            case "l": return this._unitSize;
+            case "tsp": return this._unitSize * 202.8842;
+            case "tbsp": return this._unitSize * 67.6278;
+            case "ozfl": return this._unitSize * 33.8141;
+            case "cup": return this._unitSize * 4.1667;
+            case "pt": return this._unitSize * 2.1134;
+            case "qt": return this._unitSize * 1.0567;
+            case "gal": return this._unitSize / 3.7854;
+            case "mm": return this._unitSize * 1000;
+            case "cm": return this._unitSize * 100;
+            case "m": return this._unitSize;
+            case "in": return this._unitSize * 39.3701;
+            case "ft": return this._unitSize * 3.2808;
+            default: return this._unitSize;
+        }
     }
 
     set unitSize(unitSize){
@@ -1714,7 +1734,72 @@ controller.openStrand("home");
 },{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./home.js":9,"./ingredientDetails.js":10,"./ingredients.js":11,"./newIngredient.js":12,"./newOrder.js":13,"./newRecipe.js":14,"./newTransaction.js":15,"./orderDetails.js":16,"./orders.js":17,"./recipeBook.js":18,"./recipeDetails.js":19,"./transactionDetails.js":20,"./transactions.js":21}],8:[function(require,module,exports){
 let editIngredient = {
     display: function(ingredient){
-        console.log("edit ingredient");
+        let buttonList = document.getElementById("unitButtons");
+        let quantLabel = document.getElementById("editIngQuantityLabel");
+        let specialLabel = document.getElementById("editSpecialLabel");
+
+        //Clear any existing data
+        while(buttonList.children.length > 0){
+            buttonList.removeChild(buttonList.firstChild);
+        }
+
+        //Populate basic fields
+        document.getElementById("editIngTitle").innerText = ingredient.ingredient.name;
+        document.getElementById("editIngName").value = ingredient.ingredient.name;
+        document.getElementById("editIngCategory").value = ingredient.ingredient.category;
+        quantLabel.innerText = `CURRENT STOCK (${ingredient.ingredient.unit.toUpperCase()})`;
+
+        //Populate the unit buttons
+        const units = merchant.units[ingredient.ingredient.unitType];
+
+        for(let i = 0; i < units.length; i++){
+            let button = document.createElement("button");
+            button.classList.add("unitButton");
+            button.innerText = units[i].toUpperCase();
+            button.onclick = ()=>{this.changeUnit(button)};
+            buttonList.appendChild(button);
+
+            if(units[i] === ingredient.ingredient.unit){
+                button.classList.add("unitActive");
+            }
+        }
+        
+        //Make any changes for special ingredients
+        if(ingredient.ingredient.specialUnit === "bottle"){
+            quantLabel.innerText = "CURRENT STOCK (BOTTLES):";
+
+            specialLabel.style.display = "flex";
+            specialLabel.innerText = `BOTTLE SIZE (${ingredient.ingredient.unit.toUpperCase()}):`;
+            
+            let sizeInput = document.createElement("input");
+            sizeInput.id = "editIngSpecialSize";
+            sizeInput.type = "number";
+            sizeInput.min = "0";
+            sizeInput.step = "0.01";
+            sizeInput.value = ingredient.ingredient.unitSize;
+            specialLabel.appendChild(sizeInput);
+        }
+
+        let quantInput = document.createElement("input");
+        quantInput.id = "editIngQuantity";
+        quantInput.type = "number";
+        quantInput.min = "0";
+        quantInput.step = "0.01";
+        quantInput.value = ingredient.quantity.toFixed(2);
+        quantLabel.appendChild(quantInput);
+    },
+
+    changeUnit(button){
+        let buttons = document.getElementById("unitButtons");
+
+        for(let i = 0; i < buttons.children.length; i++){
+            buttons.children[i].classList.remove("unitActive");
+        }
+
+        button.classList.add("unitActive");
+    },
+
+    submit(){
     }
 }
 
