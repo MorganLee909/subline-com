@@ -302,6 +302,15 @@ Ingredient Details
         margin-top: 50px;
     }
 
+/*
+EDIT INGREDIENT
+*/
+#editIngredient{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 /* 
 Recipe Details 
 */

@@ -72,6 +72,14 @@ class MerchantIngredient{
             default: return quantity;
         }
     }
+
+    getQuantityDisplay(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return `${this.quantity.toFixed(2)} ${this._ingredient.specialUnit.toUpperCase()}`;
+        }
+
+        return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
+    }
 }
 
 class Merchant{

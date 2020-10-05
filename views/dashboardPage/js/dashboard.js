@@ -7,6 +7,7 @@ const transactions = require("./transactions.js");
 
 const ingredientDetails = require("./ingredientDetails.js");
 const newIngredient = require("./newIngredient.js");
+const editIngredient = require("./editIngredient.js");
 const newOrder = require("./newOrder.js");
 const newRecipe = require("./newRecipe.js");
 const newTransaction = require("./newTransaction.js");
@@ -104,11 +105,11 @@ controller = {
             case "ingredientDetails":
                 ingredientDetails.display(data, ingredients);
                 break;
-            case "addIngredients":
-                addIngredients.display(Merchant);
-                break;
             case "newIngredient":
                 newIngredient.display(Ingredient);
+                break;
+            case "editIngredient":
+                editIngredient.display(data);
                 break;
             case "recipeDetails":
                 recipeDetails.display(data);

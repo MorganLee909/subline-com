@@ -171,6 +171,14 @@ class MerchantIngredient{
             default: return quantity;
         }
     }
+
+    getQuantityDisplay(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return `${this.quantity.toFixed(2)} ${this._ingredient.specialUnit.toUpperCase()}`;
+        }
+
+        return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
+    }
 }
 
 class Merchant{
@@ -1433,6 +1441,7 @@ const transactions = require("./transactions.js");
 
 const ingredientDetails = require("./ingredientDetails.js");
 const newIngredient = require("./newIngredient.js");
+const editIngredient = require("./editIngredient.js");
 const newOrder = require("./newOrder.js");
 const newRecipe = require("./newRecipe.js");
 const newTransaction = require("./newTransaction.js");
@@ -1530,11 +1539,11 @@ controller = {
             case "ingredientDetails":
                 ingredientDetails.display(data, ingredients);
                 break;
-            case "addIngredients":
-                addIngredients.display(Merchant);
-                break;
             case "newIngredient":
                 newIngredient.display(Ingredient);
+                break;
+            case "editIngredient":
+                editIngredient.display(data);
                 break;
             case "recipeDetails":
                 recipeDetails.display(data);
@@ -1702,7 +1711,15 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./home.js":8,"./ingredientDetails.js":9,"./ingredients.js":10,"./newIngredient.js":11,"./newOrder.js":12,"./newRecipe.js":13,"./newTransaction.js":14,"./orderDetails.js":15,"./orders.js":16,"./recipeBook.js":17,"./recipeDetails.js":18,"./transactionDetails.js":19,"./transactions.js":20}],8:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./home.js":9,"./ingredientDetails.js":10,"./ingredients.js":11,"./newIngredient.js":12,"./newOrder.js":13,"./newRecipe.js":14,"./newTransaction.js":15,"./orderDetails.js":16,"./orders.js":17,"./recipeBook.js":18,"./recipeDetails.js":19,"./transactionDetails.js":20,"./transactions.js":21}],8:[function(require,module,exports){
+let editIngredient = {
+    display: function(ingredient){
+        console.log("edit ingredient");
+    }
+}
+
+module.exports = editIngredient;
+},{}],9:[function(require,module,exports){
 let home = {
     isPopulated: false,
 
@@ -1981,51 +1998,19 @@ let home = {
 }
 
 module.exports = home;
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 let ingredientDetails = {
     ingredient: {},
     dailyUse: 0,
 
-    display: function(ingredient, ingredientsStrand){
-        this.ingredient = ingredient;
-
-        if(this.ingredient.ingredient.specialUnit === "bottle"){
-            try{
-                let label = document.getElementById("ingredientUnitSizeLabel");
-                label.parentElement.removeChild(label);
-
-                let border = document.getElementById("bottleBorder");
-                border.parentElement.removeChild(border);
-            }catch(err){}
-        }
-
+    display: function(ingredient){
+        document.getElementById("editIngBtn").onclick = ()=>{controller.openSidebar("editIngredient", ingredient)};
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
-
-        let categoryInput = document.getElementById("detailsCategoryInput");
-        categoryInput.value = "";
-        categoryInput.placeholder = ingredient.ingredient.category;
-
         document.getElementById("ingredientDetailsName").innerText = ingredient.ingredient.name;
-        
-        let nameInput = document.getElementById("ingredientDetailsNameIn");
-        nameInput.value = "";
-        nameInput.placeholder = ingredient.ingredient.name;
-
-        //Display the stock quantity (and the edit input) based on the unit type
-        let stockInput = document.getElementById("ingredientInput");
-        let stockDisplay = document.getElementById("ingredientStock");
-        stockInput.value = "";
-        if(ingredient.ingredient.specialUnit === "bottle"){
-            let quantity = ingredient.quantity;
-
-            stockDisplay.innerText = `${ingredient.quantity.toFixed(2)} BOTTLES`;
-            stockInput.placeholder = quantity.toFixed(2);
-        }else{
-            stockDisplay.innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-            stockInput.placeholder = ingredient.quantity.toFixed(2);
-        }
+        document.getElementById("ingredientStock").innerText = ingredient.getQuantityDisplay();
 
 
+        //Calculate and display average daily use
         let quantities = [];
         let now = new Date();
         for(let i = 1; i < 31; i++){
@@ -2040,7 +2025,6 @@ let ingredientDetails = {
             sum += quantities[i];
         }
 
-        //Calculate daily use
         let dailyUse = sum / quantities.length;
         const dailyUseDiv = document.getElementById("dailyUse");
         if(ingredient.ingredient.specialUnit === "bottle"){
@@ -2064,42 +2048,6 @@ let ingredientDetails = {
             }
             ul.appendChild(li);
         }
-
-        let ingredientButtons = document.getElementById("ingredientButtons");
-        let units = [];
-        if(this.ingredient.ingredient.unitType !== "other"){
-            units = merchant.units[this.ingredient.ingredient.unitType];
-        }
-        while(ingredientButtons.children.length > 0){
-            ingredientButtons.removeChild(ingredientButtons.firstChild);
-        }
-        for(let i = 0; i < units.length; i++){
-            let button = document.createElement("button");
-            button.classList.add("unitButton");
-            button.innerText = units[i].toUpperCase();
-            button.onclick = ()=>{this.changeUnit(button, units[i])};
-            ingredientButtons.appendChild(button);
-
-            if(units[i] === this.ingredient.ingredient.unit){
-                button.classList.add("unitActive");
-            }
-        }
-
-        let add = document.querySelectorAll(".editAdd");
-        let remove = document.querySelectorAll(".editRemove");
-
-        for(let i = 0; i < add.length; i++){
-            add[i].style.display = "none";
-        }
-
-        for(let i = 0; i < remove.length; i++){
-            remove[i].style.display = "block";
-        }
-
-        document.getElementById("editSubmitButton").onclick = ()=>{this.editSubmit()};
-        document.getElementById("editCancelButton").onclick = ()=>{this.display(this.ingredient)};
-        document.getElementById("editIngBtn").onclick = ()=>{this.edit()};
-        document.getElementById("removeIngBtn").onclick = ()=>{this.remove(ingredientsStrand)};
     },
 
     remove: function(ingredientsStrand){
@@ -2132,166 +2080,11 @@ let ingredientDetails = {
             .finally(()=>{
                 loader.style.display = "none";
             });
-    },
-
-    edit: function(){
-        let add = document.querySelectorAll(".editAdd");
-        let remove = document.querySelectorAll(".editRemove");
-
-        for(let i = 0; i < add.length; i++){
-            add[i].style.display = "flex";
-        }
-
-        for(let i = 0; i < remove.length; i++){
-            remove[i].style.display = "none";
-        }
-
-        if(this.ingredient.ingredient.specialUnit === "bottle"){
-            const mainDiv = document.getElementById("ingredientDetails");
-            const displayUnits = document.getElementById("displayUnitLabel");
-
-            let label = document.createElement("label");
-            label.innerText = `BOTTLE SIZE (${this.ingredient.ingredient.unit.toUpperCase()})`;
-            label.id = "ingredientUnitSizeLabel";
-            mainDiv.insertBefore(label, displayUnits);
-
-            const convQuant = this.ingredient.ingredient.convert(this.ingredient.ingredient.unitSize);
-
-            let input = document.createElement("input");
-            input.type = "number";
-            input.value = convQuant.toFixed(2);
-            input.id = "ingredientUnitSizeIn";
-            input.min = "0";
-            input.step = "0.01";
-            label.appendChild(input);
-
-            let border = document.createElement("div");
-            border.classList.add("lineBorder");
-            border.id="bottleBorder";
-            mainDiv.insertBefore(border, displayUnits);
-        }
-    },
-
-    editSubmit: function(){
-        //Update the ingredient unit depending on the type of unit
-        let ingredientButtons = document.querySelectorAll(".unitButton");
-        for(let i = 0; i < ingredientButtons.length; i++){
-            if(ingredientButtons[i].classList.contains("unitActive")){
-                const unit = ingredientButtons[i].innerText.toLowerCase();
-                this.ingredient.ingredient.unit = unit;
-
-                break;
-            }
-        }
-
-        //Update the ingredient quantity depending on the type of unit
-        const quantityElem = document.getElementById("ingredientInput");
-        if(quantityElem.value !== ""){
-            if(this.ingredient.ingredient.specialUnit === "bottle"){
-                let quantInMain = controller.convertToMain(
-                    this.ingredient.ingredient.unit,
-                    quantityElem.value * this.ingredient.ingredient.unitSize
-                );
-
-                this.ingredient.quantity = quantInMain / this.ingredient.ingredient.unitSize;
-            }else{
-                this.ingredient.quantity = controller.convertToMain(
-                    this.ingredient.ingredient.unit,
-                    Number(quantityElem.value)
-                );
-            }
-        }
-
-        const category = document.getElementById("detailsCategoryInput");
-        this.ingredient.ingredient.category = (category.value === "") ? this.ingredient.ingredient.category : category.value;
-
-        const name = document.getElementById("ingredientDetailsNameIn");
-        this.ingredient.ingredient.name = (name.value === "") ? this.ingredient.ingredient.name : name.value;
-
-        let data = {
-            id: this.ingredient.ingredient.id,
-            name: this.ingredient.ingredient.name,
-            quantity: this.ingredient.quantity,
-            category: this.ingredient.ingredient.category,
-            defaultUnit: this.ingredient.ingredient.unit
-        };
-
-        if(this.ingredient.ingredient.specialUnit === "bottle"){
-            const unitSize = document.getElementById("ingredientUnitSizeIn").value;
-            this.ingredient.ingredient.unitSize = controller.convertToMain(this.ingredient.ingredient.unit, unitSize);
-            data.unitSize = this.ingredient.ingredient.unitSize;
-        }
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        fetch("/ingredients/update", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-            body: JSON.stringify(data)
-        })
-            .then((response) => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    banner.createError(response);
-                }else{
-                    merchant.updateIngredient(this.ingredient, this.ingredient.quantity);
-                    //ingredient updates
-
-                    this.display(this.ingredient);
-
-                    banner.createNotification("INGREDIENT UPDATED");
-                }
-            })
-            .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
-    },
-
-    changeUnit: function(newActive, unit){
-        let ingredientButtons = document.querySelectorAll(".unitButton");
-        for(let i = 0; i < ingredientButtons.length; i++){
-            ingredientButtons[i].classList.remove("unitActive");
-        }
-
-        newActive.classList.add("unitActive");
-    },
-
-    changeUnitDefault: function(){
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        let id = this.ingredient.ingredient.id;
-        let unit = this.ingredient.ingredient.unit;
-        fetch(`/merchant/ingredients/update/${id}/${unit}`, {
-            method: "put",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-        })
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    banner.createError(response);
-                }else{
-                    banner.createNotification("INGREDIENT DEFAULT UNIT UPDATED");
-                }
-            })
-            .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
     }
 }
 
 module.exports = ingredientDetails;
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 const { populate } = require("./orders");
 
 let ingredients = {
@@ -2436,7 +2229,7 @@ let ingredients = {
 }
 
 module.exports = ingredients;
-},{"./orders":16}],11:[function(require,module,exports){
+},{"./orders":17}],12:[function(require,module,exports){
 const ingredients = require("./ingredients");
 
 let newIngredient = {
@@ -2532,7 +2325,7 @@ let newIngredient = {
 }
 
 module.exports = newIngredient;
-},{"./ingredients":10}],12:[function(require,module,exports){
+},{"./ingredients":11}],13:[function(require,module,exports){
 let newOrder = {
     display: function(Order){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
@@ -2670,7 +2463,7 @@ let newOrder = {
 }
 
 module.exports = newOrder;
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 let newRecipe = {
     display: function(Recipe){
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
@@ -2783,7 +2576,7 @@ let newRecipe = {
 }
 
 module.exports = newRecipe;
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 let newTransaction = {
     display: function(Transaction){
         let recipeList = document.getElementById("newTransactionRecipes");
@@ -2871,7 +2664,7 @@ let newTransaction = {
 }
 
 module.exports = newTransaction;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 let orderDetails = {
     display: function(order){
         document.getElementById("removeOrderBtn").onclick = ()=>{this.remove(order)};
@@ -2948,7 +2741,7 @@ let orderDetails = {
 }
 
 module.exports = orderDetails;
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 let orders = {
     isPopulated: false,
     isFetched: false,
@@ -3149,7 +2942,7 @@ let orders = {
 }
 
 module.exports = orders;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
@@ -3270,7 +3063,7 @@ let recipeBook = {
 }
 
 module.exports = recipeBook;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 let recipeDetails = {
     recipe: {},
 
@@ -3448,7 +3241,7 @@ let recipeDetails = {
 }
 
 module.exports = recipeDetails;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 let transactionDetails = {
     transaction: {},
 
@@ -3520,7 +3313,7 @@ let transactionDetails = {
 }
 
 module.exports = transactionDetails;
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 let transactions = {
     isPopulated: false,
 
