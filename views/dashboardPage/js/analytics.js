@@ -279,7 +279,7 @@ let analytics = {
             },
             body: JSON.stringify(dates)
         })
-            .then((response)=>response.json())
+            .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response.data);

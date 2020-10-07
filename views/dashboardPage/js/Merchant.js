@@ -50,6 +50,10 @@ class MerchantIngredient{
     }
 
     convertToBase(quantity){
+        if(this._ingredient.specialUnit === "bottle"){
+            return quantity;
+        }
+
         switch(this._ingredient.unit){
             case "g": return quantity;
             case "kg": return quantity * 1000; 
@@ -198,7 +202,7 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
     }
 
-    updateIngredient(ingredient, quantity, unit){
+    updateIngredient(ingredient, quantity){
         const index = this._ingredients.indexOf(ingredient);
         if(index === undefined){
             return false;
@@ -208,6 +212,14 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
+    }
+
+    getIngredient(id){
+        for(let i = 0; i < this._ingredients.length; i++){
+            if(this._ingredients[i].ingredient.id === id){
+                return this._ingredients[i].ingredient;
+            }
+        }
     }
 
     get recipes(){
@@ -228,6 +240,44 @@ class Merchant{
         }
 
         this._recipes.splice(index, 1);
+
+        this._modules.transactions.isPopulated = false;
+        this._modules.recipeBook.isPopulated = false;
+    }
+
+    /*
+    recipe = {
+        name: required,
+        price: required,
+        ingredients: [{
+            ingredient: id of ingredient,
+            quantity: quantity of ingredient
+        }]
+    }
+    */
+    updateRecipe(recipe){
+        for(let i = 0; i < this._recipes.length; i++){
+            if(this._recipes[i].id === recipe._id){
+                this._recipes[i].name = recipe.name;
+                this._recipes[i].price = recipe.price;
+                
+                this._recipes[i].removeIngredients();
+                for(let j = 0; j < recipe.ingredients.length; j++){
+                    for(let k = 0; k < this._ingredients.length; k++){
+                        if(this._ingredients[k].ingredient.id === recipe.ingredients[j].ingredient){
+                            this._recipes[i].addIngredient(
+                                this._ingredients[k].ingredient,
+                                recipe.ingredients[j].quantity
+                            );
+
+                            break;
+                        }
+                    }
+                }
+
+                break;
+            }
+        }
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
@@ -328,7 +378,7 @@ class Merchant{
                 for(let j = 0; j < this._ingredients.length; j++){
                     if(order.ingredients[i] === this._ingredients[j].ingredient){
                         this._ingredients[j].quantity += order.ingredients[i].quantity;
-                        
+                        break;
                     }
                 }
             }
@@ -498,7 +548,7 @@ class Merchant{
     Groups all of the merchant's ingredients by their category
     Return: [{
         name: category name,
-        ingredients: [Ingredient Object]
+        ingredients: [MerchantIngredient Object]
     }]
     */
     categorizeIngredients(){

@@ -102,6 +102,14 @@ class Ingredient{
         this._unitSize = unitSize;
     }
 
+    getNameAndUnit(){
+        if(this._specialUnit === "bottle"){
+            return `${this._name} (BOTTLES)`;
+        }
+
+        return `${this._name} (${this._unit.toUpperCase()})`;
+    }
+
     isSanitaryString(str){
         let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
 
@@ -169,6 +177,10 @@ class MerchantIngredient{
     }
 
     convertToBase(quantity){
+        if(this._ingredient.specialUnit === "bottle"){
+            return quantity;
+        }
+
         switch(this._ingredient.unit){
             case "g": return quantity;
             case "kg": return quantity * 1000; 
@@ -317,7 +329,7 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
     }
 
-    updateIngredient(ingredient, quantity, unit){
+    updateIngredient(ingredient, quantity){
         const index = this._ingredients.indexOf(ingredient);
         if(index === undefined){
             return false;
@@ -327,6 +339,14 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
+    }
+
+    getIngredient(id){
+        for(let i = 0; i < this._ingredients.length; i++){
+            if(this._ingredients[i].ingredient.id === id){
+                return this._ingredients[i].ingredient;
+            }
+        }
     }
 
     get recipes(){
@@ -347,6 +367,44 @@ class Merchant{
         }
 
         this._recipes.splice(index, 1);
+
+        this._modules.transactions.isPopulated = false;
+        this._modules.recipeBook.isPopulated = false;
+    }
+
+    /*
+    recipe = {
+        name: required,
+        price: required,
+        ingredients: [{
+            ingredient: id of ingredient,
+            quantity: quantity of ingredient
+        }]
+    }
+    */
+    updateRecipe(recipe){
+        for(let i = 0; i < this._recipes.length; i++){
+            if(this._recipes[i].id === recipe._id){
+                this._recipes[i].name = recipe.name;
+                this._recipes[i].price = recipe.price;
+                
+                this._recipes[i].removeIngredients();
+                for(let j = 0; j < recipe.ingredients.length; j++){
+                    for(let k = 0; k < this._ingredients.length; k++){
+                        if(this._ingredients[k].ingredient.id === recipe.ingredients[j].ingredient){
+                            this._recipes[i].addIngredient(
+                                this._ingredients[k].ingredient,
+                                recipe.ingredients[j].quantity
+                            );
+
+                            break;
+                        }
+                    }
+                }
+
+                break;
+            }
+        }
 
         this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
@@ -447,7 +505,7 @@ class Merchant{
                 for(let j = 0; j < this._ingredients.length; j++){
                     if(order.ingredients[i] === this._ingredients[j].ingredient){
                         this._ingredients[j].quantity += order.ingredients[i].quantity;
-                        
+                        break;
                     }
                 }
             }
@@ -617,7 +675,7 @@ class Merchant{
     Groups all of the merchant's ingredients by their category
     Return: [{
         name: category name,
-        ingredients: [Ingredient Object]
+        ingredients: [MerchantIngredient Object]
     }]
     */
     categorizeIngredients(){
@@ -939,25 +997,29 @@ class RecipeIngredient{
     }
 
     convertToBase(quantity){
+        if(this._ingredient.specialUnit === "bottle"){
+            return quantity;
+        }
+
         switch(this._ingredient.unit){
             case "g": return quantity;
-            case "kg": return quantity / 1000; 
-            case "oz":  return quantity / 28.3495; 
-            case "lb":  return quantity / 453.5924;
-            case "ml": return quantity *= 1000; 
+            case "kg": return quantity * 1000; 
+            case "oz":  return quantity * 28.3495; 
+            case "lb":  return quantity * 453.5924;
+            case "ml": return quantity / 1000; 
             case "l": return quantity;
-            case "tsp": return quantity * 202.8842; 
-            case "tbsp": return quantity * 67.6278; 
-            case "ozfl": return quantity * 33.8141; 
-            case "cup": return quantity * 4.1667; 
-            case "pt": return quantity * 2.1134; 
-            case "qt": return quantity * 1.0567; 
-            case "gal": return quantity / 3.7854;
-            case "mm": return quantity * 1000; 
-            case "cm": return quantity * 100; 
+            case "tsp": return quantity / 202.8842; 
+            case "tbsp": return quantity / 67.6278; 
+            case "ozfl": return quantity / 33.8141; 
+            case "cup": return quantity / 4.1667; 
+            case "pt": return quantity / 2.1134; 
+            case "qt": return quantity / 1.0567; 
+            case "gal": return quantity * 3.7854;
+            case "mm": return quantity / 1000; 
+            case "cm": return quantity / 100; 
             case "m": return quantity;
-            case "in": return quantity * 39.3701; 
-            case "ft": return quantity * 3.2808;
+            case "in": return quantity / 39.3701; 
+            case "ft": return quantity / 3.2808;
             default: return quantity;
         }
     }
@@ -1009,7 +1071,7 @@ class Recipe{
     }
 
     get price(){
-        return this._price;
+        return this._price / 100;
     }
 
     set price(price){
@@ -1041,20 +1103,8 @@ class Recipe{
         this._parent.modules.analytics.isPopulated = false;
     }
 
-    removeIngredient(ingredient){
-        const index = this._ingredients.indexOf(ingredient);
-
-        this._ingredients.splice(index, 1);
-    }
-
-    updateIngredient(ingredient, quantity){
-        if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
-            return false;
-        }
-        const index = this._ingredients.indoxOf(ingredient);
-
-        this._ingredients[index].quantity = quantity;
+    removeIngredients(){
+        this._ingredients = [];
     }
 
     isSanitaryString(str){
@@ -1423,7 +1473,7 @@ let analytics = {
             },
             body: JSON.stringify(dates)
         })
-            .then((response)=>response.json())
+            .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response.data);
@@ -1472,6 +1522,7 @@ const newIngredient = require("./newIngredient.js");
 const editIngredient = require("./editIngredient.js");
 const newOrder = require("./newOrder.js");
 const newRecipe = require("./newRecipe.js");
+const editRecipe = require("./editRecipe.js");
 const newTransaction = require("./newTransaction.js");
 const orderDetails = require("./orderDetails.js");
 const recipeDetails = require("./recipeDetails.js");
@@ -1575,6 +1626,9 @@ controller = {
                 break;
             case "recipeDetails":
                 recipeDetails.display(data);
+                break;
+            case "editRecipe":
+                editRecipe.display(data);
                 break;
             case "addRecipe":
                 newRecipe.display(Recipe);
@@ -1739,7 +1793,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./home.js":9,"./ingredientDetails.js":10,"./ingredients.js":11,"./newIngredient.js":12,"./newOrder.js":13,"./newRecipe.js":14,"./newTransaction.js":15,"./orderDetails.js":16,"./orders.js":17,"./recipeBook.js":18,"./recipeDetails.js":19,"./transactionDetails.js":20,"./transactions.js":21}],8:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orders.js":18,"./recipeBook.js":19,"./recipeDetails.js":20,"./transactionDetails.js":21,"./transactions.js":22}],8:[function(require,module,exports){
 const Ingredient = require("./Ingredient");
 
 let editIngredient = {
@@ -1875,6 +1929,131 @@ let editIngredient = {
 
 module.exports = editIngredient;
 },{"./Ingredient":1}],9:[function(require,module,exports){
+let editRecipe = {
+    display: function(recipe){
+        let nameInput = document.getElementById("editRecipeName");
+        if(merchant.pos === "none"){
+            nameInput.value = recipe.name;
+        }else{
+            document.getElementById("editRecipeNoName").innertext = recipe.name;
+            nameInput.parentNode.style.display = "none";
+        }
+
+        //Populate ingredients
+        let ingredientList = document.getElementById("editRecipeIngList");
+
+        while(ingredientList.children.length > 0){
+            ingredientList.removeChild(ingredientList.firstChild);
+        }
+
+        let template = document.getElementById("editRecipeIng").content.children[0];
+        for(let i = 0; i < recipe.ingredients.length; i++){
+            let ingredientDiv = template.cloneNode(true);
+            ingredientDiv.children[0].onclick = ()=>{ingredientDiv.parentNode.removeChild(ingredientDiv)};
+            ingredientDiv.children[1].innerText = recipe.ingredients[i].ingredient.getNameAndUnit();
+            ingredientDiv.children[2].style.display = "none";
+            ingredientDiv.children[3].value = recipe.ingredients[i].quantity;
+            ingredientDiv.ingredient = recipe.ingredients[i];
+            
+            ingredientList.appendChild(ingredientDiv);
+        }
+
+        document.getElementById("addRecIng").onclick = ()=>{this.newIngredient()};
+        document.getElementById("editRecipePrice").value = recipe.price;
+        document.getElementById("editRecipeSubmit").onclick = ()=>{this.submit(recipe)};
+        document.getElementById("editRecipeCancel").onclick = ()=>{controller.openSidebar("recipeDetails", recipe)};
+    },
+
+    newIngredient: function(){
+        let ingredientList = document.getElementById("editRecipeIngList");
+
+        let ingredientDiv = document.getElementById("editRecipeIng").content.children[0].cloneNode(true);
+        ingredientDiv.children[0].onclick = ()=>{ingredientDiv.parentNode.removeChild(ingredientDiv)};
+        ingredientDiv.children[1].style.display = "none";
+        ingredientDiv.children[3].value = "0.00";
+
+        //Populate selector
+        let categories = merchant.categorizeIngredients();
+        for(let i = 0; i < categories.length; i++){
+            let group = document.createElement("optgroup");
+            group.label = categories[i].name;
+
+            for(let j = 0; j < categories[i].ingredients.length; j++){
+                let option = document.createElement("option");
+                option.innerText = categories[i].ingredients[j].ingredient.getNameAndUnit();
+                option.ingredient = categories[i].ingredients[j];
+                group.appendChild(option);
+            }
+            
+            ingredientDiv.children[2].appendChild(group);
+        }
+
+        ingredientList.appendChild(ingredientDiv);
+    },
+
+    submit: function(recipe){
+        let data = {
+            id: recipe.id,
+            name: recipe.name,
+            price: document.getElementById("editRecipePrice").value * 100,
+            ingredients: []
+        }
+
+        if(merchant.pos === "none"){
+            data.name = document.getElementById("editRecipeName").value;
+        }
+
+        let ingredients = document.getElementById("editRecipeIngList").children;
+        for(let i = 0; i < ingredients.length; i++){
+            const quantity = parseFloat(ingredients[i].children[3].value);
+
+            if(ingredients[i].children[1].style.display === "none"){
+                let selector = ingredients[i].children[2];
+                let ingredient = selector.options[selector.selectedIndex].ingredient;
+
+                data.ingredients.push({
+                    ingredient: ingredient.ingredient.id,
+                    quantity: ingredient.convertToBase(quantity)
+                });
+            }else{
+                data.ingredients.push({
+                    ingredient: ingredients[i].ingredient.ingredient.id,
+                    quantity: ingredients[i].ingredient.convertToBase(quantity)
+                });
+            }
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipe/update", {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    merchant.updateRecipe(response);
+                    controller.openStrand("recipeBook");
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    }
+}
+
+module.exports = editRecipe;
+},{}],10:[function(require,module,exports){
 let home = {
     isPopulated: false,
 
@@ -2153,7 +2332,7 @@ let home = {
 }
 
 module.exports = home;
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 let ingredientDetails = {
     ingredient: {},
     dailyUse: 0,
@@ -2239,7 +2418,7 @@ let ingredientDetails = {
 }
 
 module.exports = ingredientDetails;
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 const { populate } = require("./orders");
 
 let ingredients = {
@@ -2384,7 +2563,7 @@ let ingredients = {
 }
 
 module.exports = ingredients;
-},{"./orders":17}],12:[function(require,module,exports){
+},{"./orders":18}],13:[function(require,module,exports){
 const ingredients = require("./ingredients");
 
 let newIngredient = {
@@ -2480,7 +2659,7 @@ let newIngredient = {
 }
 
 module.exports = newIngredient;
-},{"./ingredients":11}],13:[function(require,module,exports){
+},{"./ingredients":12}],14:[function(require,module,exports){
 let newOrder = {
     display: function(Order){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
@@ -2618,7 +2797,7 @@ let newOrder = {
 }
 
 module.exports = newOrder;
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 let newRecipe = {
     display: function(Recipe){
         let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
@@ -2731,7 +2910,7 @@ let newRecipe = {
 }
 
 module.exports = newRecipe;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 let newTransaction = {
     display: function(Transaction){
         let recipeList = document.getElementById("newTransactionRecipes");
@@ -2819,7 +2998,7 @@ let newTransaction = {
 }
 
 module.exports = newTransaction;
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 let orderDetails = {
     display: function(order){
         document.getElementById("removeOrderBtn").onclick = ()=>{this.remove(order)};
@@ -2896,7 +3075,7 @@ let orderDetails = {
 }
 
 module.exports = orderDetails;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 let orders = {
     isPopulated: false,
     isFetched: false,
@@ -3097,7 +3276,7 @@ let orders = {
 }
 
 module.exports = orders;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
@@ -3134,7 +3313,7 @@ let recipeBook = {
             recipeList.appendChild(recipeDiv);
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
-            recipeDiv.children[1].innerText = `$${(merchant.recipes[i].price / 100).toFixed(2)}`;
+            recipeDiv.children[1].innerText = `$${merchant.recipes[i].price.toFixed(2)}`;
 
             this.recipeDivList.push(recipeDiv);
         }
@@ -3218,49 +3397,30 @@ let recipeBook = {
 }
 
 module.exports = recipeBook;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 let recipeDetails = {
     recipe: {},
 
     display: function(recipe){
-        this.recipe = recipe;
+        document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
+        document.getElementById("recipeName").innerText = recipe.name;
 
-        document.getElementById("recipeName").style.display = "block";
-        document.getElementById("recipeNameIn").style.display = "none";
-        document.querySelector("#recipeDetails h1").innerText = recipe.name;
+        //ingredient list
+        let ingredientsDiv = document.getElementById("recipeIngredientList");
 
-        let ingredientList = document.getElementById("recipeIngredientList");
-        while(ingredientList.children.length > 0){
-            ingredientList.removeChild(ingredientList.firstChild);
+        while(ingredientsDiv.children.length > 0){
+            ingredientsDiv.removeChild(ingredientsDiv.firstChild);
         }
 
         let template = document.getElementById("recipeIngredient").content.children[0];
         for(let i = 0; i < recipe.ingredients.length; i++){
-            ingredientDiv = template.cloneNode(true);
-
-            ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = recipe.ingredients[i].getQuantityDisplay();
-            ingredientDiv.ingredient = recipe.ingredients[i].ingredient;
-            ingredientDiv.name = recipe.ingredients[i].ingredient.name;
-
-            ingredientList.appendChild(ingredientDiv);
+            let recipeDiv = template.cloneNode(true);
+            recipeDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
+            recipeDiv.children[1].innerText = `${recipe.ingredients[i].getQuantityDisplay()}`;
+            ingredientsDiv.appendChild(recipeDiv);
         }
 
-        document.getElementById("addRecIng").style.display = "none";
-
-        let price = document.getElementById("recipePrice");
-        price.children[1].style.display = "block";
-        price.children[2].style.display = "none";
-        price.children[1].innerText = `$${(recipe.price / 100).toFixed(2)}`;
-
-        document.getElementById("recipeUpdate").style.display = "none";
-
-        document.getElementById("editRecipeBtn").onclick = ()=>{this.edit()};
-        if(merchant.pos === "none"){
-            document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
-        }
-        document.getElementById("addRecIng").onclick = ()=>{this.displayAddIngredient()};
-        document.getElementById("recipeUpdate").onclick = ()=>{this.update()};
+        document.getElementById("recipePrice").children[1].innerText = `$${recipe.price.toFixed(2)}`;
     },
 
     edit: function(){
@@ -3396,7 +3556,7 @@ let recipeDetails = {
 }
 
 module.exports = recipeDetails;
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 let transactionDetails = {
     transaction: {},
 
@@ -3468,7 +3628,7 @@ let transactionDetails = {
 }
 
 module.exports = transactionDetails;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 let transactions = {
     isPopulated: false,
 

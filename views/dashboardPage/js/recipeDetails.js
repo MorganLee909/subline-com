@@ -2,44 +2,25 @@ let recipeDetails = {
     recipe: {},
 
     display: function(recipe){
-        this.recipe = recipe;
+        document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
+        document.getElementById("recipeName").innerText = recipe.name;
 
-        document.getElementById("recipeName").style.display = "block";
-        document.getElementById("recipeNameIn").style.display = "none";
-        document.querySelector("#recipeDetails h1").innerText = recipe.name;
+        //ingredient list
+        let ingredientsDiv = document.getElementById("recipeIngredientList");
 
-        let ingredientList = document.getElementById("recipeIngredientList");
-        while(ingredientList.children.length > 0){
-            ingredientList.removeChild(ingredientList.firstChild);
+        while(ingredientsDiv.children.length > 0){
+            ingredientsDiv.removeChild(ingredientsDiv.firstChild);
         }
 
         let template = document.getElementById("recipeIngredient").content.children[0];
         for(let i = 0; i < recipe.ingredients.length; i++){
-            ingredientDiv = template.cloneNode(true);
-
-            ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = recipe.ingredients[i].getQuantityDisplay();
-            ingredientDiv.ingredient = recipe.ingredients[i].ingredient;
-            ingredientDiv.name = recipe.ingredients[i].ingredient.name;
-
-            ingredientList.appendChild(ingredientDiv);
+            let recipeDiv = template.cloneNode(true);
+            recipeDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
+            recipeDiv.children[1].innerText = `${recipe.ingredients[i].getQuantityDisplay()}`;
+            ingredientsDiv.appendChild(recipeDiv);
         }
 
-        document.getElementById("addRecIng").style.display = "none";
-
-        let price = document.getElementById("recipePrice");
-        price.children[1].style.display = "block";
-        price.children[2].style.display = "none";
-        price.children[1].innerText = `$${(recipe.price / 100).toFixed(2)}`;
-
-        document.getElementById("recipeUpdate").style.display = "none";
-
-        document.getElementById("editRecipeBtn").onclick = ()=>{this.edit()};
-        if(merchant.pos === "none"){
-            document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove()};
-        }
-        document.getElementById("addRecIng").onclick = ()=>{this.displayAddIngredient()};
-        document.getElementById("recipeUpdate").onclick = ()=>{this.update()};
+        document.getElementById("recipePrice").children[1].innerText = `$${recipe.price.toFixed(2)}`;
     },
 
     edit: function(){

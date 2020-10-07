@@ -34,7 +34,7 @@ let recipeBook = {
             recipeList.appendChild(recipeDiv);
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
-            recipeDiv.children[1].innerText = `$${(merchant.recipes[i].price / 100).toFixed(2)}`;
+            recipeDiv.children[1].innerText = `$${merchant.recipes[i].price.toFixed(2)}`;
 
             this.recipeDivList.push(recipeDiv);
         }

@@ -110,7 +110,7 @@ module.exports = {
         for(let i = 0; i < recipe.ingredients.length; i++){
             for(let j = i + 1; j < recipe.ingredients.length; j++){
                 if(recipe.ingredients[i].ingredient === recipe.ingredients[j].ingredient){
-                    return "Recipe cannot contain duplicate ingredients";
+                    return "RECIPE CANNOT CONTAIN DUPLICATE INGREDIENTS";
                 }
             }
         }

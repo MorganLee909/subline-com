@@ -58,25 +58,29 @@ class RecipeIngredient{
     }
 
     convertToBase(quantity){
+        if(this._ingredient.specialUnit === "bottle"){
+            return quantity;
+        }
+
         switch(this._ingredient.unit){
             case "g": return quantity;
-            case "kg": return quantity / 1000; 
-            case "oz":  return quantity / 28.3495; 
-            case "lb":  return quantity / 453.5924;
-            case "ml": return quantity *= 1000; 
+            case "kg": return quantity * 1000; 
+            case "oz":  return quantity * 28.3495; 
+            case "lb":  return quantity * 453.5924;
+            case "ml": return quantity / 1000; 
             case "l": return quantity;
-            case "tsp": return quantity * 202.8842; 
-            case "tbsp": return quantity * 67.6278; 
-            case "ozfl": return quantity * 33.8141; 
-            case "cup": return quantity * 4.1667; 
-            case "pt": return quantity * 2.1134; 
-            case "qt": return quantity * 1.0567; 
-            case "gal": return quantity / 3.7854;
-            case "mm": return quantity * 1000; 
-            case "cm": return quantity * 100; 
+            case "tsp": return quantity / 202.8842; 
+            case "tbsp": return quantity / 67.6278; 
+            case "ozfl": return quantity / 33.8141; 
+            case "cup": return quantity / 4.1667; 
+            case "pt": return quantity / 2.1134; 
+            case "qt": return quantity / 1.0567; 
+            case "gal": return quantity * 3.7854;
+            case "mm": return quantity / 1000; 
+            case "cm": return quantity / 100; 
             case "m": return quantity;
-            case "in": return quantity * 39.3701; 
-            case "ft": return quantity * 3.2808;
+            case "in": return quantity / 39.3701; 
+            case "ft": return quantity / 3.2808;
             default: return quantity;
         }
     }
@@ -128,7 +132,7 @@ class Recipe{
     }
 
     get price(){
-        return this._price;
+        return this._price / 100;
     }
 
     set price(price){
@@ -160,20 +164,8 @@ class Recipe{
         this._parent.modules.analytics.isPopulated = false;
     }
 
-    removeIngredient(ingredient){
-        const index = this._ingredients.indexOf(ingredient);
-
-        this._ingredients.splice(index, 1);
-    }
-
-    updateIngredient(ingredient, quantity){
-        if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
-            return false;
-        }
-        const index = this._ingredients.indoxOf(ingredient);
-
-        this._ingredients[index].quantity = quantity;
+    removeIngredients(){
+        this._ingredients = [];
     }
 
     isSanitaryString(str){

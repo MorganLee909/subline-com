@@ -101,6 +101,14 @@ class Ingredient{
         this._unitSize = unitSize;
     }
 
+    getNameAndUnit(){
+        if(this._specialUnit === "bottle"){
+            return `${this._name} (BOTTLES)`;
+        }
+
+        return `${this._name} (${this._unit.toUpperCase()})`;
+    }
+
     isSanitaryString(str){
         let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
 
