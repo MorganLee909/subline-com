@@ -18,7 +18,7 @@ let recipeDetails = {
             ingredientDiv = template.cloneNode(true);
 
             ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = `${recipe.ingredients[i].ingredient.convert(recipe.ingredients[i].quantity).toFixed(2)} ${recipe.ingredients[i].ingredient.unit}`;
+            ingredientDiv.children[2].innerText = recipe.ingredients[i].getQuantityDisplay();
             ingredientDiv.ingredient = recipe.ingredients[i].ingredient;
             ingredientDiv.name = recipe.ingredients[i].ingredient.name;
 

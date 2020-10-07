@@ -930,6 +930,14 @@ class RecipeIngredient{
         this_quantity = this.convertToBase(quantity);
     }
 
+    getQuantityDisplay(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return `${this.quantity.toFixed(2)} BOTTLES`;
+        }
+
+        return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
+    }
+
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
@@ -3231,7 +3239,7 @@ let recipeDetails = {
             ingredientDiv = template.cloneNode(true);
 
             ingredientDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = `${recipe.ingredients[i].ingredient.convert(recipe.ingredients[i].quantity).toFixed(2)} ${recipe.ingredients[i].ingredient.unit}`;
+            ingredientDiv.children[2].innerText = recipe.ingredients[i].getQuantityDisplay();
             ingredientDiv.ingredient = recipe.ingredients[i].ingredient;
             ingredientDiv.name = recipe.ingredients[i].ingredient.name;
 

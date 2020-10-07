@@ -49,6 +49,14 @@ class RecipeIngredient{
         this_quantity = this.convertToBase(quantity);
     }
 
+    getQuantityDisplay(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return `${this.quantity.toFixed(2)} BOTTLES`;
+        }
+
+        return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
+    }
+
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
