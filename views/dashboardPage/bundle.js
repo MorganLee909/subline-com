@@ -177,10 +177,6 @@ class MerchantIngredient{
     }
 
     convertToBase(quantity){
-        if(this._ingredient.specialUnit === "bottle"){
-            return quantity;
-        }
-
         switch(this._ingredient.unit){
             case "g": return quantity;
             case "kg": return quantity * 1000; 
@@ -952,9 +948,9 @@ class RecipeIngredient{
     }
 
     get quantity(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient.unitSize;
-        }
+        // if(this._ingredient.specialUnit === "bottle"){
+        //     return this._quantity / this._ingredient.unitSize;
+        // }
 
         switch(this._ingredient.unit){
             case "g":return this._quantity;
@@ -990,6 +986,7 @@ class RecipeIngredient{
 
     getQuantityDisplay(){
         if(this._ingredient.specialUnit === "bottle"){
+            
             return `${this.quantity.toFixed(2)} BOTTLES`;
         }
 
@@ -997,10 +994,6 @@ class RecipeIngredient{
     }
 
     convertToBase(quantity){
-        if(this._ingredient.specialUnit === "bottle"){
-            return quantity;
-        }
-
         switch(this._ingredient.unit){
             case "g": return quantity;
             case "kg": return quantity * 1000; 

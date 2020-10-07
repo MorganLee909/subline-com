@@ -50,10 +50,6 @@ class MerchantIngredient{
     }
 
     convertToBase(quantity){
-        if(this._ingredient.specialUnit === "bottle"){
-            return quantity;
-        }
-
         switch(this._ingredient.unit){
             case "g": return quantity;
             case "kg": return quantity * 1000; 
