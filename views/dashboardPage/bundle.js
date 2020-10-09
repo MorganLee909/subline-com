@@ -408,7 +408,7 @@ class Merchant{
 
     getTransactions(from = 0, to = new Date()){
         if(from === 0){
-            from = this._transactions[0].date;
+            from = this._transactions[this._transactions.length-1].date;
         }
 
         const {start, end} = this.getTransactionIndices(from, to);
@@ -3568,8 +3568,8 @@ let transactionDetails = {
             let price = transaction.recipes[i].quantity * transaction.recipes[i].recipe.price;
 
             recipe.children[0].innerText = transaction.recipes[i].recipe.name;
-            recipe.children[1].innerText = `${transaction.recipes[i].quantity} x $${parseFloat(transaction.recipes[i].recipe.price / 100).toFixed(2)}`;
-            recipe.children[2].innerText = `$${(price / 100).toFixed(2)}`;
+            recipe.children[1].innerText = `${transaction.recipes[i].quantity} x $${transaction.recipes[i].recipe.price.toFixed(2)}`;
+            recipe.children[2].innerText = `$${price.toFixed(2)}`;
             recipeList.appendChild(recipe);
 
             totalRecipes += transaction.recipes[i].quantity;
@@ -3583,7 +3583,7 @@ let transactionDetails = {
         document.getElementById("transactionDate").innerText = dateString;
         document.getElementById("transactionTime").innerText = transaction.date.toLocaleTimeString();
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
-        document.getElementById("totalPrice").innerText = `$${(totalPrice / 100).toFixed(2)}`;
+        document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
 
         if(merchant.pos === "none"){
             document.getElementById("removeTransBtn").onclick = ()=>{this.remove()};
@@ -3683,7 +3683,7 @@ let transactions = {
 
                 transactionDiv.children[0].innerText = `${transactions[i].date.toLocaleDateString()} ${transactions[i].date.toLocaleTimeString()}`;
                 transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
-                transactionDiv.children[2].innerText = `$${(totalPrice / 100).toFixed(2)}`;
+                transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
 
                 i++;
             }

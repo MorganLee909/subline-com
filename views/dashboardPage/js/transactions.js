@@ -61,7 +61,7 @@ let transactions = {
 
                 transactionDiv.children[0].innerText = `${transactions[i].date.toLocaleDateString()} ${transactions[i].date.toLocaleTimeString()}`;
                 transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
-                transactionDiv.children[2].innerText = `$${(totalPrice / 100).toFixed(2)}`;
+                transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
 
                 i++;
             }

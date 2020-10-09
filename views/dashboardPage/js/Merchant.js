@@ -281,7 +281,7 @@ class Merchant{
 
     getTransactions(from = 0, to = new Date()){
         if(from === 0){
-            from = this._transactions[0].date;
+            from = this._transactions[this._transactions.length-1].date;
         }
 
         const {start, end} = this.getTransactionIndices(from, to);
