@@ -280,13 +280,17 @@ class Merchant{
     }
 
     getTransactions(from = 0, to = new Date()){
+        if(merchant._transactions.length <= 0){
+            return [];
+        }
+
         if(from === 0){
             from = this._transactions[this._transactions.length-1].date;
         }
 
         const {start, end} = this.getTransactionIndices(from, to);
 
-        return this._transactions.slice(start, end);
+        return this._transactions.slice(start, end + 1);
     }
 
     addTransaction(transaction){

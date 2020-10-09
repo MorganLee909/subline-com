@@ -56,10 +56,13 @@ let transactionDetails = {
                     banner.createError(response);
                 }else{
                     merchant.removeTransaction(this.transaction);
+
+                    controller.openStrand("transactions");
                     banner.createNotification("TRANSACTION REMOVED");
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
