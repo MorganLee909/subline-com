@@ -1,10 +1,11 @@
 class OrderIngredient{
-    constructor(ingredient, quantity){
+    constructor(ingredient, quantity, pricePerUnit){
         if(quantity < 0){
             return false;
         }
         this._ingredient = ingredient;
         this._quantity = quantity;
+        this._pricePerUnit = pricePerUnit;
     }
 
     get ingredient(){
@@ -62,16 +63,61 @@ class OrderIngredient{
             default: return quantity;
         }
     }
+
+    get pricePerUnit(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return price * this._ingredient.unitSize;
+        }
+
+        switch(this._ingredient.unit){
+            case "g": return this._pricePerUnit;
+            case "kg": return this._pricePerUnit * 1000; 
+            case "oz": return this._pricePerUnit * 28.3495; 
+            case "lb": return this._pricePerUnit * 453.5924; 
+            case "ml": return this._pricePerUnit / 1000; 
+            case "l": return this._pricePerUnit;
+            case "tsp": return this._pricePerUnit / 202.8842; 
+            case "tbsp": return this._pricePerUnit / 67.6278; 
+            case "ozfl": return this._pricePerUnit / 33.8141; 
+            case "cup": return this._pricePerUnit / 4.1667; 
+            case "pt": return this._pricePerUnit / 2.1134; 
+            case "qt": return this._pricePerUnit / 1.0567; 
+            case "gal": return this._pricePerUnit * 3.7854; 
+            case "mm": return this._pricePerUnit / 1000; 
+            case "cm": return this._pricePerUnit / 100; 
+            case "m": return this._pricePerUnit;
+            case "in": return this._pricePerUnit / 39.3701; 
+            case "ft": return this._pricePerUnit / 3.2808; 
+        }
+    }
+
+    cost(){
+        return this._quantity * this._pricePerUnit;
+    }
+        
 }
 
+/*
+Order Object
+id = id of order in the database
+name = name/id of order, if any
+date = Date Object for when the order was created
+taxes = User entered taxes associated with the order
+fees = User entered fees associated with the order
+ingredients = [{
+    ingredient: Ingredient Object,
+    quantity: quantity of ingredient sold,
+    pricePerUnit: price of purchase (per base unit)
+}]
+parent = the merchant that it belongs to
+*/
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
         if(!this.isSanitaryString(name)){
-            banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
         if(taxes < 0){
-            banner.createError("TAXES CANNOT BE A NEGATIVE NUMBER");
+            return false;
         }
 
         this._id = id;
@@ -83,17 +129,15 @@ class Order{
         this._parent = parent;
 
         if(date > new Date()){
-            banner.createError("CANNOT SET A DATE IN THE FUTURE");
             return false;
         }
 
         for(let i = 0; i < ingredients.length; i++){
-            const orderIngredient = new OrderIngredient(
+            this._ingredients.push(new OrderIngredient(
                 ingredients[i].ingredient,
-                ingredients[i].quantity
-            )
-
-            this._ingredients.push(orderIngredient);
+                ingredients[i].quantity,
+                ingredients[i].pricePerUnit
+            ));
         }
 
         this._parent.modules.ingredients.isPopulated = false;
@@ -125,6 +169,19 @@ class Order{
 
     get ingredients(){
         return this._ingredients;
+    }
+
+    getIngredientCost(){
+        let sum = 0;
+        for(let i = 0; i < this._ingredients.length; i++){
+            sum += this._ingredients[i].cost();
+        }
+
+        return sum;
+    }
+
+    getTotalCost(){
+        return this.getIngredientCost() + this._taxes + this._fees;
     }
 
     isSanitaryString(str){

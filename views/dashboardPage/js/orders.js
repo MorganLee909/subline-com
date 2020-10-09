@@ -19,17 +19,29 @@ let orders = {
                         banner.createError(response);
                     }else{
                         for(let i = 0; i < response.length; i++){
-                            const order = new Order(
+                            let ingredients = [];
+                            for(let j = 0; j < response[i].ingredients.length; j++){
+                                const orderIngredient = response[i].ingredients[j];
+                                for(let k = 0; k < merchant.ingredients.length; k++){
+                                    if(merchant.ingredients[k].ingredient.id === orderIngredient.ingredient){
+                                        ingredients.push({
+                                            ingredient: merchant.ingredients[k].ingredient,
+                                            quantity: orderIngredient.quantity,
+                                            pricePerUnit: orderIngredient.pricePerUnit
+                                        });
+                                    }
+                                }
+                            }
+
+                            merchant.addOrder(new Order(
                                 response[i]._id,
                                 response[i].name,
                                 response[i].date,
                                 response[i].taxes,
                                 response[i].fees,
-                                response[i].ingredients,
+                                ingredients,
                                 merchant
-                            );
-
-                            merchant.addOrder(order);
+                            ));
                         }
 
                         document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
@@ -40,7 +52,6 @@ let orders = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
@@ -84,21 +95,14 @@ let orders = {
 
         for(let i = 0; i < merchant.orders.length; i++){
             let row = template.cloneNode(true);
-            let totalCost = 0;
-            
-            for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                const ingredient = merchant.orders[i].ingredients[j];
-                totalCost += ingredient.pricePerUnit * ingredient.quantity;
-            }
 
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            console.log(totalCost / 100);
-            console.log(merchant.orders[i].taxes / 100);
-            console.log(merchant.orders[i].fees / 100);
+            console.log(merchant.orders[i].name);
+            console.log(merchant.orders[i].getTotalCost());
             console.log();
-            row.children[3].innerText = `$${((totalCost / 100) + (merchant.orders[i].taxes / 100) + (merchant.orders[i].fees / 100)).toFixed(2)}`;
+            row.children[3].innerText = `$${(merchant.orders[i].getTotalCost() / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);

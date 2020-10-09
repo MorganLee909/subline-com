@@ -789,12 +789,13 @@ class Merchant{
 module.exports = Merchant;
 },{}],3:[function(require,module,exports){
 class OrderIngredient{
-    constructor(ingredient, quantity){
+    constructor(ingredient, quantity, pricePerUnit){
         if(quantity < 0){
             return false;
         }
         this._ingredient = ingredient;
         this._quantity = quantity;
+        this._pricePerUnit = pricePerUnit;
     }
 
     get ingredient(){
@@ -852,16 +853,61 @@ class OrderIngredient{
             default: return quantity;
         }
     }
+
+    get pricePerUnit(){
+        if(this._ingredient.specialUnit === "bottle"){
+            return price * this._ingredient.unitSize;
+        }
+
+        switch(this._ingredient.unit){
+            case "g": return this._pricePerUnit;
+            case "kg": return this._pricePerUnit * 1000; 
+            case "oz": return this._pricePerUnit * 28.3495; 
+            case "lb": return this._pricePerUnit * 453.5924; 
+            case "ml": return this._pricePerUnit / 1000; 
+            case "l": return this._pricePerUnit;
+            case "tsp": return this._pricePerUnit / 202.8842; 
+            case "tbsp": return this._pricePerUnit / 67.6278; 
+            case "ozfl": return this._pricePerUnit / 33.8141; 
+            case "cup": return this._pricePerUnit / 4.1667; 
+            case "pt": return this._pricePerUnit / 2.1134; 
+            case "qt": return this._pricePerUnit / 1.0567; 
+            case "gal": return this._pricePerUnit * 3.7854; 
+            case "mm": return this._pricePerUnit / 1000; 
+            case "cm": return this._pricePerUnit / 100; 
+            case "m": return this._pricePerUnit;
+            case "in": return this._pricePerUnit / 39.3701; 
+            case "ft": return this._pricePerUnit / 3.2808; 
+        }
+    }
+
+    cost(){
+        return this._quantity * this._pricePerUnit;
+    }
+        
 }
 
+/*
+Order Object
+id = id of order in the database
+name = name/id of order, if any
+date = Date Object for when the order was created
+taxes = User entered taxes associated with the order
+fees = User entered fees associated with the order
+ingredients = [{
+    ingredient: Ingredient Object,
+    quantity: quantity of ingredient sold,
+    pricePerUnit: price of purchase (per base unit)
+}]
+parent = the merchant that it belongs to
+*/
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
         if(!this.isSanitaryString(name)){
-            banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
             return false;
         }
         if(taxes < 0){
-            banner.createError("TAXES CANNOT BE A NEGATIVE NUMBER");
+            return false;
         }
 
         this._id = id;
@@ -873,17 +919,15 @@ class Order{
         this._parent = parent;
 
         if(date > new Date()){
-            banner.createError("CANNOT SET A DATE IN THE FUTURE");
             return false;
         }
 
         for(let i = 0; i < ingredients.length; i++){
-            const orderIngredient = new OrderIngredient(
+            this._ingredients.push(new OrderIngredient(
                 ingredients[i].ingredient,
-                ingredients[i].quantity
-            )
-
-            this._ingredients.push(orderIngredient);
+                ingredients[i].quantity,
+                ingredients[i].pricePerUnit
+            ));
         }
 
         this._parent.modules.ingredients.isPopulated = false;
@@ -915,6 +959,19 @@ class Order{
 
     get ingredients(){
         return this._ingredients;
+    }
+
+    getIngredientCost(){
+        let sum = 0;
+        for(let i = 0; i < this._ingredients.length; i++){
+            sum += this._ingredients[i].cost();
+        }
+
+        return sum;
+    }
+
+    getTotalCost(){
+        return this.getIngredientCost() + this._taxes + this._fees;
     }
 
     isSanitaryString(str){
@@ -1710,45 +1767,6 @@ controller = {
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
-    },
-
-    /*
-    Converts the price of a unit to $/main unit
-    unitType = type of the unit (i.e. mass, volume)
-    unit = exact unit to convert from
-    price = price of the ingredient per unit in cents
-    */
-    convertPrice(unitType, unit, price){
-        if(unitType === "mass"){
-            switch(unit){
-                case "g": break;
-                case "kg": price /= 1000; break;
-                case "oz":  price /= 28.3495; break;
-                case "lb":  price /= 453.5924; break;
-            }
-        }else if(unitType === "volume"){
-            switch(unit){
-                case "ml": price *= 1000; break;
-                case "l": break;
-                case "tsp": price *= 202.8842; break;
-                case "tbsp": price *= 67.6278; break;
-                case "ozfl": price *= 33.8141; break;
-                case "cup": price *= 4.1667; break;
-                case "pt": price *= 2.1134; break;
-                case "qt": price *= 1.0567; break;
-                case "gal": price /= 3.7854; break;
-            }
-        }else if(unitType === "length"){
-            switch(unit){
-                case "mm": price *= 1000; break;
-                case "cm": price *= 100; break;
-                case "m": break;
-                case "in": price *= 39.3701; break;
-                case "ft": price *= 3.2808; break;
-            }
-        }
-
-        return price;
     },
 
     /*
@@ -2744,18 +2762,16 @@ let newOrder = {
             }
 
             if(ingredients[i].ingredient.ingredient.specialUnit === "bottle"){
-                const ppu = controller.convertPrice("volume", ingredients[i].ingredient.ingredient.unit, (price * 100) / (ingredients[i].ingredient.convert(ingredients[i].ingredient.unitSize)));
-
                 data.ingredients.push({
                     ingredient: ingredients[i].ingredient.ingredient.id,
                     quantity: quantity * ingredients[i].ingredient.ingredient.unitSize,
-                    pricePerUnit: ppu,
+                    pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
                 });
             }else{
                 data.ingredients.push({
                     ingredient: ingredients[i].ingredient.ingredient.id,
                     quantity: ingredients[i].ingredient.convertToBase(quantity),
-                    pricePerUnit: controller.convertPrice(ingredients[i].ingredient.ingredient.unitType, ingredients[i].ingredient.ingredient.unit, price * 100)
+                    pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
                 });
             }
         }
@@ -2796,6 +2812,33 @@ let newOrder = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    convertPrice: function(ingredient, price){
+        if(ingredient.specialUnit === "bottle"){
+            return price / ingredient.unitSize;
+        }
+
+        switch(ingredient.unit){
+            case "g": return price;
+            case "kg": return price / 1000; 
+            case "oz": return price / 28.3495; 
+            case "lb": return price / 453.5924; 
+            case "ml": return price * 1000; 
+            case "l": return price;
+            case "tsp": return price * 202.8842; 
+            case "tbsp": return price * 67.6278; 
+            case "ozfl": return price * 33.8141; 
+            case "cup": return price * 4.1667; 
+            case "pt": return price * 2.1134; 
+            case "qt": return price * 1.0567; 
+            case "gal": return price / 3.7854; 
+            case "mm": return price * 1000; 
+            case "cm": return price * 100; 
+            case "m": return price;
+            case "in": return price * 39.3701; 
+            case "ft": return price * 3.2808; 
+        }
     }
 }
 
@@ -3114,17 +3157,29 @@ let orders = {
                         banner.createError(response);
                     }else{
                         for(let i = 0; i < response.length; i++){
-                            const order = new Order(
+                            let ingredients = [];
+                            for(let j = 0; j < response[i].ingredients.length; j++){
+                                const orderIngredient = response[i].ingredients[j];
+                                for(let k = 0; k < merchant.ingredients.length; k++){
+                                    if(merchant.ingredients[k].ingredient.id === orderIngredient.ingredient){
+                                        ingredients.push({
+                                            ingredient: merchant.ingredients[k].ingredient,
+                                            quantity: orderIngredient.quantity,
+                                            pricePerUnit: orderIngredient.pricePerUnit
+                                        });
+                                    }
+                                }
+                            }
+
+                            merchant.addOrder(new Order(
                                 response[i]._id,
                                 response[i].name,
                                 response[i].date,
                                 response[i].taxes,
                                 response[i].fees,
-                                response[i].ingredients,
+                                ingredients,
                                 merchant
-                            );
-
-                            merchant.addOrder(order);
+                            ));
                         }
 
                         document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
@@ -3135,7 +3190,6 @@ let orders = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
@@ -3179,21 +3233,14 @@ let orders = {
 
         for(let i = 0; i < merchant.orders.length; i++){
             let row = template.cloneNode(true);
-            let totalCost = 0;
-            
-            for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                const ingredient = merchant.orders[i].ingredients[j];
-                totalCost += ingredient.pricePerUnit * ingredient.quantity;
-            }
 
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            console.log(totalCost / 100);
-            console.log(merchant.orders[i].taxes / 100);
-            console.log(merchant.orders[i].fees / 100);
+            console.log(merchant.orders[i].name);
+            console.log(merchant.orders[i].getTotalCost());
             console.log();
-            row.children[3].innerText = `$${((totalCost / 100) + (merchant.orders[i].taxes / 100) + (merchant.orders[i].fees / 100)).toFixed(2)}`;
+            row.children[3].innerText = `$${(merchant.orders[i].getTotalCost() / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);
