@@ -66,33 +66,33 @@ class OrderIngredient{
 
     get pricePerUnit(){
         if(this._ingredient.specialUnit === "bottle"){
-            return price * this._ingredient.unitSize;
+            return (this._pricePerUnit * this._ingredient.unitSize) / 100;
         }
 
         switch(this._ingredient.unit){
-            case "g": return this._pricePerUnit;
-            case "kg": return this._pricePerUnit * 1000; 
-            case "oz": return this._pricePerUnit * 28.3495; 
-            case "lb": return this._pricePerUnit * 453.5924; 
-            case "ml": return this._pricePerUnit / 1000; 
-            case "l": return this._pricePerUnit;
-            case "tsp": return this._pricePerUnit / 202.8842; 
-            case "tbsp": return this._pricePerUnit / 67.6278; 
-            case "ozfl": return this._pricePerUnit / 33.8141; 
-            case "cup": return this._pricePerUnit / 4.1667; 
-            case "pt": return this._pricePerUnit / 2.1134; 
-            case "qt": return this._pricePerUnit / 1.0567; 
-            case "gal": return this._pricePerUnit * 3.7854; 
-            case "mm": return this._pricePerUnit / 1000; 
-            case "cm": return this._pricePerUnit / 100; 
-            case "m": return this._pricePerUnit;
-            case "in": return this._pricePerUnit / 39.3701; 
-            case "ft": return this._pricePerUnit / 3.2808; 
+            case "g": return this._pricePerUnit / 100;
+            case "kg": return (this._pricePerUnit * 1000) / 100; 
+            case "oz": return (this._pricePerUnit * 28.3495) / 100; 
+            case "lb": return (this._pricePerUnit * 453.5924) / 100; 
+            case "ml": return (this._pricePerUnit / 1000) / 100; 
+            case "l": return this._pricePerUnit / 100;
+            case "tsp": return (this._pricePerUnit / 202.8842) / 100; 
+            case "tbsp": return (this._pricePerUnit / 67.6278) / 100; 
+            case "ozfl": return (this._pricePerUnit / 33.8141) / 100; 
+            case "cup": return (this._pricePerUnit / 4.1667) / 100; 
+            case "pt": return (this._pricePerUnit / 2.1134) / 100; 
+            case "qt": return (this._pricePerUnit / 1.0567) / 100; 
+            case "gal": return (this._pricePerUnit * 3.7854) / 100; 
+            case "mm": return (this._pricePerUnit / 1000) / 100; 
+            case "cm": return (this._pricePerUnit / 100) / 100; 
+            case "m": return this._pricePerUnit / 100;
+            case "in": return (this._pricePerUnit / 39.3701) / 100; 
+            case "ft": return (this._pricePerUnit / 3.2808) / 100; 
         }
     }
 
     cost(){
-        return this._quantity * this._pricePerUnit;
+        return (this._quantity * this._pricePerUnit) / 100;
     }
         
 }
@@ -156,11 +156,11 @@ class Order{
     }
 
     get taxes(){
-        return this._taxes;
+        return this._taxes / 100;
     }
 
     get fees(){
-        return this._fees;
+        return this._fees / 100;
     }
 
     get parent(){
@@ -176,12 +176,11 @@ class Order{
         for(let i = 0; i < this._ingredients.length; i++){
             sum += this._ingredients[i].cost();
         }
-
         return sum;
     }
 
     getTotalCost(){
-        return this.getIngredientCost() + this._taxes + this._fees;
+        return (this.getIngredientCost() + this.taxes + this.fees);
     }
 
     isSanitaryString(str){

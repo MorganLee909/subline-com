@@ -102,8 +102,7 @@ let orders = {
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            row.children[3].innerText = `$${(merchant.orders[i].getTotalCost() / 100).toFixed(2)}`;
-            row.order = merchant.orders[i];
+            row.children[3].innerText = `$${merchant.orders[i].getTotalCost().toFixed(2)}`;
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);
         }
@@ -172,7 +171,7 @@ let orders = {
 
                         let cost = 0;
                         for(let j = 0; j < order.ingredients.length; j++){
-                            cost += (order.ingredients[j].price / 100) * order.ingredients[j].quantity;
+                            cost += order.ingredients[j].price * order.ingredients[j].quantity;
                         }
 
                         orderDiv.children[0].innerText = order.name;

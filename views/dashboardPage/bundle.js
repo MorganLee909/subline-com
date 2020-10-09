@@ -860,33 +860,33 @@ class OrderIngredient{
 
     get pricePerUnit(){
         if(this._ingredient.specialUnit === "bottle"){
-            return price * this._ingredient.unitSize;
+            return (this._pricePerUnit * this._ingredient.unitSize) / 100;
         }
 
         switch(this._ingredient.unit){
-            case "g": return this._pricePerUnit;
-            case "kg": return this._pricePerUnit * 1000; 
-            case "oz": return this._pricePerUnit * 28.3495; 
-            case "lb": return this._pricePerUnit * 453.5924; 
-            case "ml": return this._pricePerUnit / 1000; 
-            case "l": return this._pricePerUnit;
-            case "tsp": return this._pricePerUnit / 202.8842; 
-            case "tbsp": return this._pricePerUnit / 67.6278; 
-            case "ozfl": return this._pricePerUnit / 33.8141; 
-            case "cup": return this._pricePerUnit / 4.1667; 
-            case "pt": return this._pricePerUnit / 2.1134; 
-            case "qt": return this._pricePerUnit / 1.0567; 
-            case "gal": return this._pricePerUnit * 3.7854; 
-            case "mm": return this._pricePerUnit / 1000; 
-            case "cm": return this._pricePerUnit / 100; 
-            case "m": return this._pricePerUnit;
-            case "in": return this._pricePerUnit / 39.3701; 
-            case "ft": return this._pricePerUnit / 3.2808; 
+            case "g": return this._pricePerUnit / 100;
+            case "kg": return (this._pricePerUnit * 1000) / 100; 
+            case "oz": return (this._pricePerUnit * 28.3495) / 100; 
+            case "lb": return (this._pricePerUnit * 453.5924) / 100; 
+            case "ml": return (this._pricePerUnit / 1000) / 100; 
+            case "l": return this._pricePerUnit / 100;
+            case "tsp": return (this._pricePerUnit / 202.8842) / 100; 
+            case "tbsp": return (this._pricePerUnit / 67.6278) / 100; 
+            case "ozfl": return (this._pricePerUnit / 33.8141) / 100; 
+            case "cup": return (this._pricePerUnit / 4.1667) / 100; 
+            case "pt": return (this._pricePerUnit / 2.1134) / 100; 
+            case "qt": return (this._pricePerUnit / 1.0567) / 100; 
+            case "gal": return (this._pricePerUnit * 3.7854) / 100; 
+            case "mm": return (this._pricePerUnit / 1000) / 100; 
+            case "cm": return (this._pricePerUnit / 100) / 100; 
+            case "m": return this._pricePerUnit / 100;
+            case "in": return (this._pricePerUnit / 39.3701) / 100; 
+            case "ft": return (this._pricePerUnit / 3.2808) / 100; 
         }
     }
 
     cost(){
-        return this._quantity * this._pricePerUnit;
+        return (this._quantity * this._pricePerUnit) / 100;
     }
         
 }
@@ -950,11 +950,11 @@ class Order{
     }
 
     get taxes(){
-        return this._taxes;
+        return this._taxes / 100;
     }
 
     get fees(){
-        return this._fees;
+        return this._fees / 100;
     }
 
     get parent(){
@@ -970,12 +970,11 @@ class Order{
         for(let i = 0; i < this._ingredients.length; i++){
             sum += this._ingredients[i].cost();
         }
-
         return sum;
     }
 
     getTotalCost(){
-        return this.getIngredientCost() + this._taxes + this._fees;
+        return (this.getIngredientCost() + this.taxes + this.fees);
     }
 
     isSanitaryString(str){
@@ -3093,8 +3092,8 @@ let orderDetails = {
 
         document.getElementById("orderDetailName").innerText = order.name;
         document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
-        document.getElementById("orderDetailTax").innerText = `$${(order.taxes / 100).toFixed(2)}`;
-        document.getElementById("orderDetailFee").innerText = `$${(order.fees / 100).toFixed(2)}`;
+        document.getElementById("orderDetailTax").innerText = `$${order.taxes.toFixed(2)}`;
+        document.getElementById("orderDetailFee").innerText = `$${order.fees.toFixed(2)}`;
 
         let ingredientList = document.getElementById("orderIngredients");
         while(ingredientList.children.length > 0){
@@ -3107,20 +3106,20 @@ let orderDetails = {
             const ingredient = order.ingredients[i].ingredient;
             
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = `$${(order.ingredients[i].cost() / 100).toFixed(2)}`;
+            ingredientDiv.children[2].innerText = `$${order.ingredients[i].cost().toFixed(2)}`;
             
             const ingredientDisplay = ingredientDiv.children[1];
             if(ingredient.specialUnit === "bottle"){
-                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${(order.ingredients.pricePerUnit / 100).toFixed(2)}`;
+                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${order.ingredients.pricePerUnit.toFixed(2)}`;
             }else{
-                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${(order.ingredients[i].pricePerUnit / 100).toFixed(2)}`;
+                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${order.ingredients[i].pricePerUnit.toFixed(2)}`;
             }
 
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.getElementById("orderDetailTotal").innerText = `$${(order.getIngredientCost() / 100).toFixed(2)}`;
-        document.querySelector("#orderTotalPrice p").innerText = `$${(order.getTotalCost() / 100).toFixed(2)}`;
+        document.getElementById("orderDetailTotal").innerText = `$${order.getIngredientCost().toFixed(2)}`;
+        document.querySelector("#orderTotalPrice p").innerText = `$${order.getTotalCost().toFixed(2)}`;
     },
 
     remove: function(order){
@@ -3259,8 +3258,7 @@ let orders = {
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            row.children[3].innerText = `$${(merchant.orders[i].getTotalCost() / 100).toFixed(2)}`;
-            row.order = merchant.orders[i];
+            row.children[3].innerText = `$${merchant.orders[i].getTotalCost().toFixed(2)}`;
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);
         }
@@ -3329,7 +3327,7 @@ let orders = {
 
                         let cost = 0;
                         for(let j = 0; j < order.ingredients.length; j++){
-                            cost += (order.ingredients[j].price / 100) * order.ingredients[j].quantity;
+                            cost += order.ingredients[j].price * order.ingredients[j].quantity;
                         }
 
                         orderDiv.children[0].innerText = order.name;

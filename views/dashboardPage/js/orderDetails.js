@@ -4,8 +4,8 @@ let orderDetails = {
 
         document.getElementById("orderDetailName").innerText = order.name;
         document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
-        document.getElementById("orderDetailTax").innerText = `$${(order.taxes / 100).toFixed(2)}`;
-        document.getElementById("orderDetailFee").innerText = `$${(order.fees / 100).toFixed(2)}`;
+        document.getElementById("orderDetailTax").innerText = `$${order.taxes.toFixed(2)}`;
+        document.getElementById("orderDetailFee").innerText = `$${order.fees.toFixed(2)}`;
 
         let ingredientList = document.getElementById("orderIngredients");
         while(ingredientList.children.length > 0){
@@ -18,20 +18,20 @@ let orderDetails = {
             const ingredient = order.ingredients[i].ingredient;
             
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = `$${(order.ingredients[i].cost() / 100).toFixed(2)}`;
+            ingredientDiv.children[2].innerText = `$${order.ingredients[i].cost().toFixed(2)}`;
             
             const ingredientDisplay = ingredientDiv.children[1];
             if(ingredient.specialUnit === "bottle"){
-                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${(order.ingredients.pricePerUnit / 100).toFixed(2)}`;
+                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${order.ingredients.pricePerUnit.toFixed(2)}`;
             }else{
-                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${(order.ingredients[i].pricePerUnit / 100).toFixed(2)}`;
+                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${order.ingredients[i].pricePerUnit.toFixed(2)}`;
             }
 
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.getElementById("orderDetailTotal").innerText = `$${(order.getIngredientCost() / 100).toFixed(2)}`;
-        document.querySelector("#orderTotalPrice p").innerText = `$${(order.getTotalCost() / 100).toFixed(2)}`;
+        document.getElementById("orderDetailTotal").innerText = `$${order.getIngredientCost().toFixed(2)}`;
+        document.querySelector("#orderTotalPrice p").innerText = `$${order.getTotalCost().toFixed(2)}`;
     },
 
     remove: function(order){
