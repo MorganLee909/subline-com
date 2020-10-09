@@ -71,10 +71,13 @@ let newTransaction = {
                         );
 
                         merchant.addTransaction(transaction);
-                        banner.createNotification("NEW TRANSACTION CREATED, INGREDIENTS UPDATED ACCORDINGLY");
+
+                        controller.openStrand("transactions");
+                        banner.createNotification("TRANSACTION CREATED");
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
                 })
                 .finally(()=>{

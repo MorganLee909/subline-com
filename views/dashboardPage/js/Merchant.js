@@ -302,7 +302,7 @@ class Merchant{
         for(let i = 0; i < transaction.recipes.length; i++){
             const recipe = transaction.recipes[i];
             for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                const ingredient = recipe.ingredients[i];
+                const ingredient = recipe.recipe.ingredients[i];
                 if(ingredients[ingredient.ingredient.id]){
                     ingredients[ingredient.ingredient.id] += recipe.quantity * ingredient.quantity;
                 }else{
