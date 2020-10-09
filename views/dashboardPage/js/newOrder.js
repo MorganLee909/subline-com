@@ -108,18 +108,34 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    let ingredients = [];
+                    for(let i = 0; i < response.ingredients.length; i++){
+                        for(let j = 0; j < merchant.ingredients.length; j++){
+                            if(merchant.ingredients[j].ingredient.id === response.ingredients[i].ingredient){
+                                ingredients.push({
+                                    ingredient: merchant.ingredients[j].ingredient,
+                                    quantity: response.ingredients[i].quantity,
+                                    pricePerUnit: response.ingredients[j].pricePerUnit
+                                });
+
+                                break;
+                            }
+                        }
+                    }
+
                     let order = new Order(
                         response._id,
                         response.name,
                         response.date,
                         response.taxes,
                         response.fees,
-                        response.ingredients,
+                        ingredients,
                         merchant
                     );
 
                     merchant.addOrder(order, true);
                     
+                    controller.openStrand("orders");
                     banner.createNotification("NEW ORDER CREATED");
                 }
             })

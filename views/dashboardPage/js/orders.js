@@ -59,7 +59,10 @@ let orders = {
                 });
         }
 
-        
+        if(!this.isPopulated){
+            this.populate();
+            this.isPopulated = true;
+        }
     },
 
     populate: function(){

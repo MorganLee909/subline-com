@@ -49,8 +49,9 @@ let orderDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-
                     merchant.removeOrder(order);
+
+                    controller.openStrand("orders");
                     banner.createNotification("ORDER REMOVED");
                 }
             })
