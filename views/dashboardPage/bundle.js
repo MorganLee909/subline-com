@@ -791,11 +791,10 @@ module.exports = Merchant;
 class OrderIngredient{
     constructor(ingredient, quantity){
         if(quantity < 0){
-            banner.createError = "QUANTITY CANNOT BE A NEGATIVE NUBMER";
             return false;
         }
         this._ingredient = ingredient;
-        this.quantity = this.convertToBase(quantity);
+        this._quantity = quantity;
     }
 
     get ingredient(){
@@ -807,7 +806,7 @@ class OrderIngredient{
             return this._quantity / this._ingredient.unitSize;
         }
 
-        switch(unit){
+        switch(this._ingredient.unit){
             case "g":return this._quantity;
             case "kg": return this._quantity * 1000;
             case "oz": return this._quantity * 28.3495;
@@ -2048,7 +2047,6 @@ let editRecipe = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -2684,7 +2682,7 @@ let newOrder = {
             let ingredient = document.createElement("button");
             ingredient.classList = "newOrderIngredient";
             ingredient.innerText = merchant.ingredients[i].ingredient.name;
-            ingredient.onclick = ()=>{this.addIngredient(merchant.ingredients[i].ingredient, ingredient)};
+            ingredient.onclick = ()=>{this.addIngredient(merchant.ingredients[i], ingredient)};
             ingredientList.appendChild(ingredient);
         }
 
@@ -2699,10 +2697,10 @@ let newOrder = {
         div.children[0].children[1].onclick = ()=>{this.removeIngredient(div, element)};
 
         //Display units depending on the whether it is a special unit
-        if(ingredient.specialUnit === "bottle"){
-            div.children[0].children[0].innerText = `${ingredient.name} (BOTTLES)`;
+        if(ingredient.ingredient.specialUnit === "bottle"){
+            div.children[0].children[0].innerText = `${ingredient.ingredient.name} (BOTTLES)`;
         }else{
-            div.children[0].children[0].innerText = `${ingredient.name} (${ingredient.unit.toUpperCase()})`;
+            div.children[0].children[0].innerText = `${ingredient.ingredient.name} (${ingredient.ingredient.unit.toUpperCase()})`;
         }
 
         document.getElementById("selectedIngredientList").appendChild(div);
@@ -2745,19 +2743,19 @@ let newOrder = {
                 banner.createError("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS");
             }
 
-            if(ingredients[i].ingredient.specialUnit === "bottle"){
-                const ppu = controller.convertPrice("volume", ingredients[i].ingredient.unit, (price * 100) / (ingredients[i].ingredient.convert(ingredients[i].ingredient.unitSize)));
+            if(ingredients[i].ingredient.ingredient.specialUnit === "bottle"){
+                const ppu = controller.convertPrice("volume", ingredients[i].ingredient.ingredient.unit, (price * 100) / (ingredients[i].ingredient.convert(ingredients[i].ingredient.unitSize)));
 
                 data.ingredients.push({
-                    ingredient: ingredients[i].ingredient.id,
-                    quantity: quantity * ingredients[i].ingredient.unitSize,
+                    ingredient: ingredients[i].ingredient.ingredient.id,
+                    quantity: quantity * ingredients[i].ingredient.ingredient.unitSize,
                     pricePerUnit: ppu,
                 });
             }else{
                 data.ingredients.push({
-                    ingredient: ingredients[i].ingredient.id,
-                    quantity: controller.convertToMain(ingredients[i].ingredient.unit, quantity),
-                    pricePerUnit: controller.convertPrice(ingredients[i].ingredient.unitType, ingredients[i].ingredient.unit, price * 100)
+                    ingredient: ingredients[i].ingredient.ingredient.id,
+                    quantity: ingredients[i].ingredient.convertToBase(quantity),
+                    pricePerUnit: controller.convertPrice(ingredients[i].ingredient.ingredient.unitType, ingredients[i].ingredient.ingredient.unit, price * 100)
                 });
             }
         }
@@ -3131,9 +3129,13 @@ let orders = {
 
                         document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
                         this.isFetched = true;
+                        
+                        this.populate();
+                        this.isPopulated = true;
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
@@ -3141,10 +3143,7 @@ let orders = {
                 });
         }
 
-        if(!this.isPopulated){
-            this.populate();
-            this.isPopulated = true;
-        }
+        
     },
 
     populate: function(){
@@ -3190,6 +3189,10 @@ let orders = {
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
+            console.log(totalCost / 100);
+            console.log(merchant.orders[i].taxes / 100);
+            console.log(merchant.orders[i].fees / 100);
+            console.log();
             row.children[3].innerText = `$${((totalCost / 100) + (merchant.orders[i].taxes / 100) + (merchant.orders[i].fees / 100)).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};

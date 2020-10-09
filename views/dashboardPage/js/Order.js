@@ -1,11 +1,10 @@
 class OrderIngredient{
     constructor(ingredient, quantity){
         if(quantity < 0){
-            banner.createError = "QUANTITY CANNOT BE A NEGATIVE NUBMER";
             return false;
         }
         this._ingredient = ingredient;
-        this.quantity = this.convertToBase(quantity);
+        this._quantity = quantity;
     }
 
     get ingredient(){
@@ -17,7 +16,7 @@ class OrderIngredient{
             return this._quantity / this._ingredient.unitSize;
         }
 
-        switch(unit){
+        switch(this._ingredient.unit){
             case "g":return this._quantity;
             case "kg": return this._quantity * 1000;
             case "oz": return this._quantity * 28.3495;

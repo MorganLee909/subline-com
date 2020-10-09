@@ -34,9 +34,13 @@ let orders = {
 
                         document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
                         this.isFetched = true;
+                        
+                        this.populate();
+                        this.isPopulated = true;
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
                 })
                 .finally(()=>{
@@ -44,10 +48,7 @@ let orders = {
                 });
         }
 
-        if(!this.isPopulated){
-            this.populate();
-            this.isPopulated = true;
-        }
+        
     },
 
     populate: function(){
@@ -93,6 +94,10 @@ let orders = {
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
+            console.log(totalCost / 100);
+            console.log(merchant.orders[i].taxes / 100);
+            console.log(merchant.orders[i].fees / 100);
+            console.log();
             row.children[3].innerText = `$${((totalCost / 100) + (merchant.orders[i].taxes / 100) + (merchant.orders[i].fees / 100)).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
