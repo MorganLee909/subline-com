@@ -83,6 +83,17 @@ class RecipeIngredient{
     }
 }
 
+/*
+Recipe Object
+id = database id of recipe
+name = name of recipe
+price = price of recipe in cents
+ingredients = [{
+    ingredient: Ingredient Object,
+    quantity: quantity of the ingredient within the recipe (stored as base unit, i.e grams)
+}]
+parent = merchant that it belongs to
+*/
 class Recipe{
     constructor(id, name, price, ingredients, parent){
         if(price < 0){
