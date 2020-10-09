@@ -809,23 +809,23 @@ class OrderIngredient{
 
         switch(this._ingredient.unit){
             case "g":return this._quantity;
-            case "kg": return this._quantity * 1000;
-            case "oz": return this._quantity * 28.3495;
-            case "lb": return this._quantity * 453.5924;
-            case "ml": return this._quantity / 1000;
+            case "kg": return this._quantity / 1000;
+            case "oz": return this._quantity / 28.3495;
+            case "lb": return this._quantity / 453.5924;
+            case "ml": return this._quantity * 1000;
             case "l": return this._quantity;
-            case "tsp": return this._quantity / 202.8842;
-            case "tbsp": return this._quantity / 67.6278;
-            case "ozfl": return this._quantity / 33.8141;
-            case "cup": return this._quantity / 4.1667;
-            case "pt": return this._quantity / 2.1134;
-            case "qt": return this._quantity / 1.0567;
-            case "gal": return this._quantity * 3.7854;
-            case "mm": return this._quantity / 1000;
-            case "cm": return this._quantity / 100;
+            case "tsp": return this._quantity * 202.8842;
+            case "tbsp": return this._quantity * 67.6278;
+            case "ozfl": return this._quantity * 33.8141;
+            case "cup": return this._quantity * 4.1667;
+            case "pt": return this._quantity * 2.1134;
+            case "qt": return this._quantity * 1.0567;
+            case "gal": return this._quantity / 3.7854;
+            case "mm": return this._quantity * 1000;
+            case "cm": return this._quantity * 100;
             case "m": return this._quantity;
-            case "in": return this._quantity / 39.3701;
-            case "ft": return this._quantity / 3.2808;
+            case "in": return this._quantity * 39.3701;
+            case "ft": return this._quantity * 3.2808;
             default: return this._quantity;
         }
     }
@@ -3074,35 +3074,25 @@ let orderDetails = {
         }
 
         let template = document.getElementById("orderIngredient").content.children[0];
-        let grandTotal = 0;
         for(let i = 0; i < order.ingredients.length; i++){
             let ingredientDiv = template.cloneNode(true);
-            let price = order.ingredients[i].pricePerUnit * order.ingredients[i].quantity;
-            grandTotal += price;
-
             const ingredient = order.ingredients[i].ingredient;
             
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
-            ingredientDiv.children[2].innerText = `$${(price / 100).toFixed(2)}`;
+            ingredientDiv.children[2].innerText = `$${(order.ingredients[i].cost() / 100).toFixed(2)}`;
             
             const ingredientDisplay = ingredientDiv.children[1];
             if(ingredient.specialUnit === "bottle"){
-                const quantSold = order.ingredients[i].quantity / ingredient.unitSize;
-                const ppu = (order.ingredients[i].pricePerUnit * order.ingredients[i].quantity) / quantSold;
-
-                ingredientDisplay.innerText = `${quantSold.toFixed(0)} bottles x $${(ppu / 100).toFixed(2)}`;
+                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${(order.ingredients.pricePerUnit / 100).toFixed(2)}`;
             }else{
-                const convertedQuantity = ingredient.convert(order.ingredients[i].quantity);
-                const convertedPrice = controller.reconvertPrice(order.ingredients[i].ingredient.unitType, order.ingredients[i].ingredient.unit, order.ingredients[i].pricePerUnit);
-
-                ingredientDisplay.innerText = `${convertedQuantity.toFixed(2)} ${ingredient.unit.toUpperCase()} x $${(convertedPrice / 100).toFixed(2)}`;
+                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${(order.ingredients[i].pricePerUnit / 100).toFixed(2)}`;
             }
 
             ingredientList.appendChild(ingredientDiv);
         }
 
-        document.getElementById("orderDetailTotal").innerText = `$${(grandTotal / 100).toFixed(2)}`;
-        document.querySelector("#orderTotalPrice p").innerText = `$${((grandTotal + order.taxes + order.fees) / 100).toFixed(2)}`;
+        document.getElementById("orderDetailTotal").innerText = `$${(order.getIngredientCost() / 100).toFixed(2)}`;
+        document.querySelector("#orderTotalPrice p").innerText = `$${(order.getTotalCost() / 100).toFixed(2)}`;
     },
 
     remove: function(order){
@@ -3237,9 +3227,6 @@ let orders = {
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            console.log(merchant.orders[i].name);
-            console.log(merchant.orders[i].getTotalCost());
-            console.log();
             row.children[3].innerText = `$${(merchant.orders[i].getTotalCost() / 100).toFixed(2)}`;
             row.order = merchant.orders[i];
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
