@@ -43,6 +43,7 @@ module.exports = {
         if(validation !== true){
             return res.json(validation);
         }
+
         validation = Validator.quantity(req.body.quantity);
         if(validation !== true){
             return res.json(validation);
@@ -166,7 +167,7 @@ module.exports = {
             });
     },
 
-    //POST - Removes an ingredient from the merchant's inventory
+    //DELETE - Removes an ingredient from the merchant's inventory
     removeIngredient: function(req, res){
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";

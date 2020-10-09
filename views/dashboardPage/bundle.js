@@ -2362,11 +2362,11 @@ let home = {
 module.exports = home;
 },{}],11:[function(require,module,exports){
 let ingredientDetails = {
-    ingredient: {},
     dailyUse: 0,
 
     display: function(ingredient){
         document.getElementById("editIngBtn").onclick = ()=>{controller.openSidebar("editIngredient", ingredient)};
+        document.getElementById("removeIngBtn").onclick = ()=>{this.remove(ingredient)};
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
         document.getElementById("ingredientDetailsName").innerText = ingredient.ingredient.name;
         document.getElementById("ingredientStock").innerText = ingredient.getQuantityDisplay();
@@ -2412,10 +2412,10 @@ let ingredientDetails = {
         }
     },
 
-    remove: function(ingredientsStrand){
+    remove: function(ingredient){
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
-                if(this.ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){
+                if(ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){
                     banner.createError("MUST REMOVE INGREDIENT FROM ALL RECIPES BEFORE REMOVING FROM INVENTORY");
                     return;
                 }
@@ -2425,16 +2425,17 @@ let ingredientDetails = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch(`/ingredients/remove/${this.ingredient.ingredient.id}`, {
-            method: "DELETE",
+        fetch(`/ingredients/remove/${ingredient.ingredient.id}`, {
+            method: "delete",
         })
             .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.removeIngredient(this.ingredient);
-                    ingredientsStrand.display();
+                    merchant.removeIngredient(ingredient);
+                    
+                    controller.openStrand("ingredients");
                     banner.createNotification("INGREDIENT REMOVED");
                 }
             })
