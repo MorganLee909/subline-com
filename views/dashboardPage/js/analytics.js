@@ -119,7 +119,7 @@ let analytics = {
 
         for(let i = 0; i < this.transactions.length; i++){
             if(currentDate.getDate() !== this.transactions[i].date.getDate()){
-                quantities.push(this.ingredient.ingredient.convert(currentQuantity));
+                quantities.push(currentQuantity);
                 dates.push(currentDate);
                 currentQuantity = 0;
                 currentDate = this.transactions[i].date;
@@ -132,6 +132,7 @@ let analytics = {
                             const transIngredient = this.transactions[i].recipes[j].recipe.ingredients[l];
 
                             if(transIngredient.ingredient === this.ingredient.ingredient){
+
                                 currentQuantity += transIngredient.quantity * this.transactions[i].recipes[j].quantity;
 
                                 break;
@@ -142,7 +143,7 @@ let analytics = {
             }
 
             if(i === this.transactions.length - 1){
-                quantities.push(this.ingredient.ingredient.convert(currentQuantity));
+                quantities.push(currentQuantity);
                 dates.push(currentDate);
             }
         }
