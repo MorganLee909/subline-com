@@ -44,7 +44,7 @@ let newIngredient = {
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
             newIngredient.ingredient.unitType = "volume";
-            newIngredient.ingredient.unitSize = document.getElementById("bottleSize").value
+            newIngredient.ingredient.unitSize = document.getElementById("bottleSize").value;
             newIngredient.defaultUnit = document.getElementById("bottleUnits").value;
             newIngredient.ingredient.specialUnit = unit;
             newIngredient.quantity = quantityValue;
@@ -89,7 +89,9 @@ let newIngredient = {
             .finally(()=>{
                 loader.style.display = "none";
             });
-    }
+    },
+
+
 }
 
 module.exports = newIngredient;

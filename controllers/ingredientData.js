@@ -80,7 +80,7 @@ module.exports = {
                 }
 
                 if(response[0].specialUnit === "bottle"){
-                    newIngredient.quantity = req.body.quantity;
+                    newIngredient.quantity = req.body.quantity * response[0].unitSize;
                 }else{
                     newIngredient.quantity = Helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
                 }
