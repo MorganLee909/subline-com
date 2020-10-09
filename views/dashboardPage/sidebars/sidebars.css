@@ -302,6 +302,27 @@ Ingredient Details
         margin-top: 50px;
     }
 
+/*
+EDIT INGREDIENT
+*/
+#editIngredient{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #editIngredient label{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .unitbuttons{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+
 /* 
 Recipe Details 
 */
@@ -362,6 +383,7 @@ Recipe Details
             max-width: 25%;
             margin-left: 3px;
         }
+
 /*
 Add Recipe
 */
@@ -436,6 +458,38 @@ Add Recipe
     #addRecipe button:last-of-type{
         margin-top: auto;
     }
+/*
+EDIT RECIPE
+*/
+#editRecipe{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #editRecipeIngList{
+        width: 100%;
+        max-height: 75%;
+        overflow-y: auto;
+    }
+
+        .editRecipeIng{
+            background: rgb(0, 27, 45);
+            color: white;
+            width: 90%;
+            border-radius: 5px;
+            text-align: center;
+            padding: 5px;
+            margin: 5px auto;
+            position: relative;
+        }
+
+            .editRecipeIng button{
+                color: white;
+                position: absolute;
+                right: 5px;
+            }
 
 /* New Order */
 #newOrderIngredientList{

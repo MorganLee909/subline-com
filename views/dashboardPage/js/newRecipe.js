@@ -65,7 +65,7 @@ let newRecipe = {
                 if(merchant.ingredients[j].ingredient.id === inputs[i].children[1].children[0].value){
                     newRecipe.ingredients.push({
                         ingredient: inputs[i].children[1].children[0].value,
-                        quantity: controller.convertToMain(merchant.ingredients[j].ingredient.unit, inputs[i].children[2].children[0].value)
+                        quantity: merchant.ingredients[j].convertToBase(inputs[i].children[2].children[0].value)
                     });
 
                     break;
@@ -88,16 +88,30 @@ let newRecipe = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    let recipe = new Recipe(
+                    let ingredients = [];
+                    for(let i = 0; i < response.ingredients.length; i++){
+                        for(let j = 0; j < merchant.ingredients.length; j++){
+                            if(merchant.ingredients[j].ingredient.id === response.ingredients[i].ingredient){
+                                ingredients.push({
+                                    ingredient: merchant.ingredients[j].ingredient,
+                                    quantity: response.ingredients[i].quantity
+                                });
+
+                                break;
+                            }
+                        }
+                    }
+
+                    merchant.addRecipe(new Recipe(
                         response._id,
                         response.name,
                         response.price,
-                        response.ingredients,
-                        merchant,
-                    );
-                    
-                    merchant.editRecipes([recipe]);
+                        ingredients,
+                        merchant
+                    ));
+
                     banner.createNotification("RECIPE CREATED");
+                    controller.openStrand("recipeBook");
                 }
             })
             .catch((err)=>{

@@ -7,8 +7,10 @@ const transactions = require("./transactions.js");
 
 const ingredientDetails = require("./ingredientDetails.js");
 const newIngredient = require("./newIngredient.js");
+const editIngredient = require("./editIngredient.js");
 const newOrder = require("./newOrder.js");
 const newRecipe = require("./newRecipe.js");
+const editRecipe = require("./editRecipe.js");
 const newTransaction = require("./newTransaction.js");
 const orderDetails = require("./orderDetails.js");
 const recipeDetails = require("./recipeDetails.js");
@@ -20,7 +22,17 @@ const Recipe = require("./Recipe.js");
 const Order = require("./Order.js");
 const Transaction = require("./Transaction.js");
 
-merchant = new Merchant(data.merchant, data.transactions);
+merchant = new Merchant(data.merchant, data.transactions, {
+    home: home,
+    ingredients: ingredients,
+    transactions: transactions,
+    recipeBook: recipeBook,
+    analytics: analytics,
+    orders: orders,
+    Ingredient: Ingredient,
+    Recipe: Recipe,
+    Transaction: Transaction
+});
 
 controller = {
     openStrand: function(strand){
@@ -92,16 +104,19 @@ controller = {
 
         switch(sidebar){
             case "ingredientDetails":
-                ingredientDetails.display(data);
-                break;
-            case "addIngredients":
-                addIngredients.display(Merchant);
+                ingredientDetails.display(data, ingredients);
                 break;
             case "newIngredient":
                 newIngredient.display(Ingredient);
                 break;
+            case "editIngredient":
+                editIngredient.display(data);
+                break;
             case "recipeDetails":
                 recipeDetails.display(data);
+                break;
+            case "editRecipe":
+                editRecipe.display(data);
                 break;
             case "addRecipe":
                 newRecipe.display(Recipe);
@@ -179,143 +194,6 @@ controller = {
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
-    },
-
-    convertToMain: function(unit, quantity){
-        let converted = 0;
-    
-        if(merchant.units.mass.includes(unit)){
-            switch(unit){
-                case "g": converted = quantity; break;
-                case "kg": converted = quantity * 1000; break;
-                case "oz": converted = quantity * 28.3495; break;
-                case "lb": converted = quantity * 453.5924; break;
-            }
-        }else if(merchant.units.volume.includes(unit)){
-            switch(unit){
-                case "ml": converted = quantity / 1000; break;
-                case "l": converted = quantity; break;
-                case "tsp": converted = quantity / 202.8842; break;
-                case "tbsp": converted = quantity / 67.6278; break;
-                case "ozfl": converted = quantity / 33.8141; break;
-                case "cup": converted = quantity / 4.1667; break;
-                case "pt": converted = quantity / 2.1134; break;
-                case "qt": converted = quantity / 1.0567; break;
-                case "gal": converted = quantity * 3.7854; break;
-            }
-        }else if(merchant.units.length.includes(unit)){
-            switch(unit){
-                case "mm": converted = quantity / 1000; break;
-                case "cm": converted = quantity / 100; break;
-                case "m": converted = quantity; break;
-                case "in": converted = quantity / 39.3701; break;
-                case "ft": converted = quantity / 3.2808; break;
-            }
-        }else{
-            converted = quantity;
-        }
-    
-        return converted;
-    },
-
-    /*
-    Sets certain strands to repopulate everything the next time it is opened
-    Use for when any data is changed
-    item = whatever is being updated
-    */
-    updateData: function(item){
-        switch(item){
-            case "ingredient":
-                home.isPopulated = false;
-                ingredients.populateByProperty("category");
-                home.isPopulated = false;
-                break;
-            case "recipe":
-                transactions.isPopulated = false;
-                recipeBook.populateRecipes();
-                break;
-            case "order":
-                orders.populate();
-                break;
-            case "transaction":
-                transactions.isPopulated = false;
-                transactions.display(Transaction);
-                analytics.newData = true;
-                break;
-        }
-    },
-
-    /*
-    Gets the indices of two dates from transactions
-    Inputs
-    transactions: transaction list to find indices on
-    from: starting date
-    to: ending date (default to now)
-    Output
-    Array containing starting index and ending index
-    Note: Will return false if it cannot find both necessary dates
-    */
-    transactionIndices(transactions, from, to = new Date()){
-        let indices = [];
-
-        for(let i = 0; i < transactions.length; i++){
-            if(transactions[i].date < to){
-                indices.push(i);
-                break;
-            }
-        }
-
-        for(let i = transactions.length - 1; i >= 0; i--){
-            if(transactions[i].date > from){
-                indices.push(i);
-                break;
-            }
-        }
-
-        if(indices.length < 2){
-            return false;
-        }
-
-        return indices;
-    },
-
-    /*
-    Converts the price of a unit to $/main unit
-    unitType = type of the unit (i.e. mass, volume)
-    unit = exact unit to convert from
-    price = price of the ingredient per unit in cents
-    */
-    convertPrice(unitType, unit, price){
-        if(unitType === "mass"){
-            switch(unit){
-                case "g": break;
-                case "kg": price /= 1000; break;
-                case "oz":  price /= 28.3495; break;
-                case "lb":  price /= 453.5924; break;
-            }
-        }else if(unitType === "volume"){
-            switch(unit){
-                case "ml": price *= 1000; break;
-                case "l": break;
-                case "tsp": price *= 202.8842; break;
-                case "tbsp": price *= 67.6278; break;
-                case "ozfl": price *= 33.8141; break;
-                case "cup": price *= 4.1667; break;
-                case "pt": price *= 2.1134; break;
-                case "qt": price *= 1.0567; break;
-                case "gal": price /= 3.7854; break;
-            }
-        }else if(unitType === "length"){
-            switch(unit){
-                case "mm": price *= 1000; break;
-                case "cm": price *= 100; break;
-                case "m": break;
-                case "in": price *= 39.3701; break;
-                case "ft": price *= 3.2808; break;
-            }
-        }
-
-        return price;
     },
 
     /*

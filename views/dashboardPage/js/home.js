@@ -18,10 +18,10 @@ let home = {
         let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         let lastMonthToDay = new Date(new Date().setMonth(today.getMonth() - 1));
 
-        let revenueThisMonth = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfMonth));
-        let revenueLastMonthToDay = merchant.revenue(controller.transactionIndices(merchant.transactions, firstOfLastMonth, lastMonthToDay));
+        const revenueThisMonth = merchant.getRevenue(firstOfMonth);
+        const revenueLastMonthToDay = merchant.getRevenue(firstOfLastMonth, lastMonthToDay);
 
-        document.getElementById("revenue").innerText = `$${revenueThisMonth.toLocaleString("en")}`;
+        document.getElementById("revenue").innerText = `$${revenueThisMonth.toFixed(2)}`;
 
         let revenueChange = ((revenueThisMonth - revenueLastMonthToDay) / revenueLastMonthToDay) * 100;
         
@@ -39,22 +39,21 @@ let home = {
         let monthAgo = new Date();
         monthAgo.setMonth(monthAgo.getMonth() - 1);
         
-        let dateIndices = controller.transactionIndices(merchant.transactions, monthAgo);
-
         let revenue = [];
         let dates = [];
         let dayRevenue = 0;
-        let currentDate = merchant.transactions[dateIndices[0]].date;
-        for(let i = dateIndices[0]; i < dateIndices[1]; i++){
-            if(merchant.transactions[i].date.getDate() !== currentDate.getDate()){
+        const transactions = merchant.getTransactions(monthAgo);
+        let currentDate = (transactions.length > 0) ? transactions[0].date : undefined;
+        for(let i = 0; i < transactions.length; i++){
+            if(transactions[i].date.getDate() !== currentDate.getDate()){
                 revenue.push(dayRevenue / 100);
                 dayRevenue = 0;
                 dates.push(currentDate);
-                currentDate = merchant.transactions[i].date;
+                currentDate = transactions[i].date;
             }
 
-            for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
-                const recipe = merchant.transactions[i].recipes[j];
+            for(let j = 0; j < transactions[i].recipes.length; j++){
+                const recipe = transactions[i].recipes[j];
 
                 dayRevenue += recipe.recipe.price * recipe.quantity;
             }
@@ -117,10 +116,10 @@ let home = {
                 input.changed = true;
             };
             if(ingredient.ingredient.specialUnit === "bottle"){
-                input.value = (ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2);
+                input.value = ingredient.quantity.toFixed(2);
                 ingredientCheck.children[2].innerText = "BOTTLES";
             }else{
-                input.value = ingredient.ingredient.convert(ingredient.quantity).toFixed(2);
+                input.value = ingredient.quantity.toFixed(2);
                 ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
             }
 
@@ -142,7 +141,7 @@ let home = {
         let thisMonth = new Date();
         thisMonth.setDate(1);
 
-        let ingredientList = merchant.ingredientsSold(controller.transactionIndices(merchant.transactions, thisMonth));
+        const ingredientList = merchant.getIngredientsSold(thisMonth);
         if(ingredientList !== false){
             ingredientList.sort((a, b)=>{
                 if(a.quantity < b.quantity){
@@ -161,7 +160,7 @@ let home = {
             let count = (ingredientList.length < 5) ? ingredientList.length - 1 : 4;
             for(let i = count; i >= 0; i--){
                 const ingredientName = ingredientList[i].ingredient.name;
-                const ingredientQuantity = ingredientList[i].ingredient.convert(ingredientList[i].quantity);
+                const ingredientQuantity = ingredientList[i].quantity;
                 const unitName = ingredientList[i].ingredient.unit;
 
                 quantities.push(ingredientList[i].quantity);
@@ -207,6 +206,8 @@ let home = {
         }
     },
 
+    //Need to change the updating of ingredients
+    //should update the ingredient directly, then send that.  Maybe...
     submitInventoryCheck: function(){
         let lis = document.querySelectorAll("#inventoryCheckCard li");
 
@@ -255,12 +256,14 @@ let home = {
                 },
                 body: JSON.stringify(fetchData)
             })
-                .then((response) => response.json())
+                .then(response => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        merchant.editIngredients(changes);
+                        for(let i = 0; i < changes.length; i++){
+                            merchant.updateIngredient(changes[i].ingredient, changes[i].quantity);
+                        }
                         banner.createNotification("INGREDIENTS UPDATED");
                     }
                 })

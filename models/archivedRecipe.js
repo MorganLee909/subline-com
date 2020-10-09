@@ -1,30 +1,34 @@
 const mongoose = require("mongoose");
 
-const RecipeChangeSchema = new mongoose.Schema({
-    recipe: {
+const ArchivedRecipeSchema = new mongoose.Schema({
+    merchant: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Recipe",
+        ref: "Merchant",
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
         required: true
     },
     date: {
         type: Date,
         default: Date.now
     },
-    changes: [{
+    ingredients: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Ingredient",
             required: true
         },
-        change: {
+        quantity: {
             type: Number,
             required: true
         }
-    }],
-    date: {
-        type: Date,
-        default: Date.now
-    }
+    }]
 });
 
-module.exports = mongoose.model("RecipeChange", RecipeChangeSchema);
+module.exports = mongoose.model("RecipeChange", ArchivedRecipeSchema);

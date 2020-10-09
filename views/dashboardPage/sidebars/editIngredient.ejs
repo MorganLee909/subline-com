@@ -1,0 +1,34 @@
+<div id="editIngredient">
+    <div class="sidebarIconButtons mobileHide">
+        <button class="iconButton" onclick="controller.closeSidebar()">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <h1 id="editIngTitle"></h1>
+
+    <label>NAME:
+        <input id="editIngName" type="text">
+    </label>
+
+    <label>CATEGORY:
+        <input id="editIngCategory" type="text">
+    </label>
+
+    <label id="editIngQuantityLabel"></label>
+
+    <label id="editSpecialLabel"></label>
+
+    <div class="lineBorder"></div>
+
+    <h3>MEASUREMENT UNIT</h3>
+
+    <div id="unitButtons"></div>
+
+    <div class="lineBorder"></div>
+
+    <button id="editIngSubmit" class="button">SUBMIT</button>
+</div>

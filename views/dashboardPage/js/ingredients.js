@@ -1,14 +1,16 @@
+const { populate } = require("./orders");
+
 let ingredients = {
     isPopulated: false,
     ingredients: [],
 
     display: function(){
         if(!this.isPopulated){
-            this.populateByProperty("category");
-
             document.getElementById("ingredientSearch").oninput = ()=>{this.search()};
             document.getElementById("ingredientClearButton").onclick = ()=>{this.clearSorting()};
             document.getElementById("ingredientSelect").onchange = ()=>{this.sort()};
+
+            this.populateByProperty("category");
 
             this.isPopulated = true;
         }
@@ -52,9 +54,9 @@ let ingredients = {
 
                 
                 if(ingredient.ingredient.specialUnit === "bottle"){
-                    ingredientDiv.children[2].innerText = `${(ingredient.quantity / ingredient.ingredient.unitSize).toFixed(2)} BOTTLES`
+                    ingredientDiv.children[2].innerText = `${ingredient.quantity.toFixed(2)} BOTTLES`
                 }else{
-                    ingredientDiv.children[2].innerText = `${ingredient.ingredient.convert(ingredient.quantity).toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+                    ingredientDiv.children[2].innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
                 }
 
                 categoryDiv.children[1].appendChild(ingredientDiv);

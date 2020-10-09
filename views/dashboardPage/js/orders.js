@@ -1,4 +1,5 @@
 let orders = {
+    isPopulated: false,
     isFetched: false,
 
     display: async function(Order){
@@ -17,23 +18,37 @@ let orders = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        let newOrders = [];
                         for(let i = 0; i < response.length; i++){
-                            newOrders.push(new Order(
+                            let ingredients = [];
+                            for(let j = 0; j < response[i].ingredients.length; j++){
+                                const orderIngredient = response[i].ingredients[j];
+                                for(let k = 0; k < merchant.ingredients.length; k++){
+                                    if(merchant.ingredients[k].ingredient.id === orderIngredient.ingredient){
+                                        ingredients.push({
+                                            ingredient: merchant.ingredients[k].ingredient,
+                                            quantity: orderIngredient.quantity,
+                                            pricePerUnit: orderIngredient.pricePerUnit
+                                        });
+                                    }
+                                }
+                            }
+
+                            merchant.addOrder(new Order(
                                 response[i]._id,
                                 response[i].name,
                                 response[i].date,
                                 response[i].taxes,
                                 response[i].fees,
-                                response[i].ingredients,
+                                ingredients,
                                 merchant
                             ));
                         }
-                        merchant.editOrders(newOrders);
 
                         document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
-
                         this.isFetched = true;
+                        
+                        this.populate();
+                        this.isPopulated = true;
                     }
                 })
                 .catch((err)=>{
@@ -42,6 +57,11 @@ let orders = {
                 .finally(()=>{
                     loader.style.display = "none";
                 });
+        }
+
+        if(!this.isPopulated){
+            this.populate();
+            this.isPopulated = true;
         }
     },
 
@@ -78,18 +98,11 @@ let orders = {
 
         for(let i = 0; i < merchant.orders.length; i++){
             let row = template.cloneNode(true);
-            let totalCost = 0;
-            
-            for(let j = 0; j < merchant.orders[i].ingredients.length; j++){
-                const ingredient = merchant.orders[i].ingredients[j];
-                totalCost += ingredient.pricePerUnit * ingredient.quantity;
-            }
 
             row.children[0].innerText = merchant.orders[i].name;
             row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
             row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            row.children[3].innerText = `$${((totalCost / 100) + (merchant.orders[i].taxes / 100) + (merchant.orders[i].fees / 100)).toFixed(2)}`;
-            row.order = merchant.orders[i];
+            row.children[3].innerText = `$${merchant.orders[i].getTotalCost().toFixed(2)}`;
             row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
             listDiv.appendChild(row);
         }
@@ -158,7 +171,7 @@ let orders = {
 
                         let cost = 0;
                         for(let j = 0; j < order.ingredients.length; j++){
-                            cost += (order.ingredients[j].price / 100) * order.ingredients[j].quantity;
+                            cost += order.ingredients[j].price * order.ingredients[j].quantity;
                         }
 
                         orderDiv.children[0].innerText = order.name;

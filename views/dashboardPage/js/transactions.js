@@ -43,9 +43,10 @@ let transactions = {
             }
 
             let i = 0
-            while(i < merchant.transactions.length && i < 100){
+            const transactions = merchant.getTransactions();
+            while(i < transactions.length && i < 100){
                 let transactionDiv = template.cloneNode(true);
-                let transaction = merchant.transactions[i];
+                let transaction = transactions[i];
 
                 transactionDiv.onclick = ()=>{controller.openSidebar("transactionDetails", transaction)};
                 transactionsList.appendChild(transactionDiv);
@@ -53,14 +54,14 @@ let transactions = {
                 let totalRecipes = 0;
                 let totalPrice = 0;
 
-                for(let j = 0; j < merchant.transactions[i].recipes.length; j++){
-                    totalRecipes += merchant.transactions[i].recipes[j].quantity;
-                    totalPrice += merchant.transactions[i].recipes[j].recipe.price * merchant.transactions[i].recipes[j].quantity;
+                for(let j = 0; j < transactions[i].recipes.length; j++){
+                    totalRecipes += transactions[i].recipes[j].quantity;
+                    totalPrice += transactions[i].recipes[j].recipe.price * transactions[i].recipes[j].quantity;
                 }
 
-                transactionDiv.children[0].innerText = `${merchant.transactions[i].date.toLocaleDateString()} ${merchant.transactions[i].date.toLocaleTimeString()}`;
+                transactionDiv.children[0].innerText = `${transactions[i].date.toLocaleDateString()} ${transactions[i].date.toLocaleTimeString()}`;
                 transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
-                transactionDiv.children[2].innerText = `$${(totalPrice / 100).toFixed(2)}`;
+                transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
 
                 i++;
             }

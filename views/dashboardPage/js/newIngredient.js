@@ -1,3 +1,5 @@
+const ingredients = require("./ingredients");
+
 let newIngredient = {
     display: function(Ingredient){
         const selector = document.getElementById("unitSelector");
@@ -25,7 +27,7 @@ let newIngredient = {
     submit: function(Ingredient){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
-        const quantityValue = document.getElementById("newIngQuantity").value;
+        const quantityValue = parseFloat(document.getElementById("newIngQuantity").value);
 
         let unit = unitSelector.value;
 
@@ -33,22 +35,19 @@ let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
                 category: document.getElementById("newIngCategory").value,
-                unitType: options[unitSelector.selectedIndex].getAttribute("type"),
+                unitType: options[unitSelector.selectedIndex].getAttribute("type")
             },
-            quantity: controller.convertToMain(unit, quantityValue),
+            quantity: quantityValue,
             defaultUnit: unit
         }
 
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
-            const bottleUnit = document.getElementById("bottleUnits").value;
-            const bottleSize = controller.convertToMain(bottleUnit, document.getElementById("bottleSize").value);
-
             newIngredient.ingredient.unitType = "volume";
-            newIngredient.ingredient.unitSize = bottleSize;
-            newIngredient.defaultUnit = bottleUnit;
+            newIngredient.ingredient.unitSize = document.getElementById("bottleSize").value;
+            newIngredient.defaultUnit = document.getElementById("bottleUnits").value;
             newIngredient.ingredient.specialUnit = unit;
-            newIngredient.quantity = quantityValue * bottleSize;
+            newIngredient.quantity = quantityValue;
         }
     
         let loader = document.getElementById("loaderContainer");
@@ -66,19 +65,20 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    merchant.editIngredients([{
-                        ingredient: new Ingredient(
-                            response.ingredient._id,
-                            response.ingredient.name,
-                            response.ingredient.category,
-                            response.ingredient.unitType,
-                            response.defaultUnit,
-                            merchant,
-                            response.ingredient.specialUnit,
-                            response.ingredient.unitSize
-                        ),
-                        quantity: response.quantity
-                    }]);
+                    const ingredient = new Ingredient(
+                        response.ingredient._id,
+                        response.ingredient.name,
+                        response.ingredient.category,
+                        response.ingredient.unitType,
+                        response.defaultUnit,
+                        merchant,
+                        response.ingredient.specialUnit,
+                        response.ingredient.unitSize
+                    )
+
+                    merchant.addIngredient(ingredient, response.quantity);
+                    ingredients.display();
+                    controller.closeSidebar();
 
                     banner.createNotification("INGREDIENT CREATED");
                 }
@@ -89,7 +89,9 @@ let newIngredient = {
             .finally(()=>{
                 loader.style.display = "none";
             });
-    }
+    },
+
+
 }
 
 module.exports = newIngredient;

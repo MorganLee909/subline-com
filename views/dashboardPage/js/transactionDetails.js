@@ -18,8 +18,8 @@ let transactionDetails = {
             let price = transaction.recipes[i].quantity * transaction.recipes[i].recipe.price;
 
             recipe.children[0].innerText = transaction.recipes[i].recipe.name;
-            recipe.children[1].innerText = `${transaction.recipes[i].quantity} x $${parseFloat(transaction.recipes[i].recipe.price / 100).toFixed(2)}`;
-            recipe.children[2].innerText = `$${(price / 100).toFixed(2)}`;
+            recipe.children[1].innerText = `${transaction.recipes[i].quantity} x $${transaction.recipes[i].recipe.price.toFixed(2)}`;
+            recipe.children[2].innerText = `$${price.toFixed(2)}`;
             recipeList.appendChild(recipe);
 
             totalRecipes += transaction.recipes[i].quantity;
@@ -33,7 +33,7 @@ let transactionDetails = {
         document.getElementById("transactionDate").innerText = dateString;
         document.getElementById("transactionTime").innerText = transaction.date.toLocaleTimeString();
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
-        document.getElementById("totalPrice").innerText = `$${(totalPrice / 100).toFixed(2)}`;
+        document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
 
         if(merchant.pos === "none"){
             document.getElementById("removeTransBtn").onclick = ()=>{this.remove()};
@@ -55,17 +55,9 @@ let transactionDetails = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    let ingredients = {};
-                    for(let i = 0; i < this.transaction.recipes.length; i++){
-                        let recipe = this.transaction.recipes[i];
-                        for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                            ingredient = recipe.recipe.ingredients[j];
+                    merchant.removeTransaction(this.transaction);
 
-                            ingredients[ingredient.ingredient.id] = ingredient.quantity * recipe.quantity;
-                        }
-                    }
-
-                    merchant.editTransactions(this.transaction, ingredients, true);
+                    controller.openStrand("transactions");
                     banner.createNotification("TRANSACTION REMOVED");
                 }
             })

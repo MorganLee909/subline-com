@@ -11,9 +11,7 @@ let analytics = {
         if(this.transactions.length === 0 || this.newData === true){
             let startDate = new Date();
             startDate.setMonth(startDate.getMonth() - 1);
-            const dateIndices = controller.transactionIndices(merchant.transactions, startDate);
-
-            this.transactions = merchant.transactions.slice(dateIndices[0], dateIndices[1] + 1);
+            this.transactions = merchant.getTransactions(startDate);
         }
 
         let slider = document.getElementById("analSlider");
@@ -116,12 +114,12 @@ let analytics = {
         //Create Graph
         let quantities = [];
         let dates = [];
-        let currentDate = this.transactions[0].date;
+        let currentDate = (this.transactions.length > 0) ? this.transactions[0].date : undefined;
         let currentQuantity = 0;
 
         for(let i = 0; i < this.transactions.length; i++){
             if(currentDate.getDate() !== this.transactions[i].date.getDate()){
-                quantities.push(this.ingredient.ingredient.convert(currentQuantity));
+                quantities.push(currentQuantity);
                 dates.push(currentDate);
                 currentQuantity = 0;
                 currentDate = this.transactions[i].date;
@@ -134,6 +132,7 @@ let analytics = {
                             const transIngredient = this.transactions[i].recipes[j].recipe.ingredients[l];
 
                             if(transIngredient.ingredient === this.ingredient.ingredient){
+
                                 currentQuantity += transIngredient.quantity * this.transactions[i].recipes[j].quantity;
 
                                 break;
@@ -144,7 +143,7 @@ let analytics = {
             }
 
             if(i === this.transactions.length - 1){
-                quantities.push(this.ingredient.ingredient.convert(currentQuantity));
+                quantities.push(currentQuantity);
                 dates.push(currentDate);
             }
         }
@@ -173,7 +172,7 @@ let analytics = {
         //Create use cards
         let sum = 0;
         let max = 0;
-        let min = quantities[0];
+        let min = (quantities.length > 0) ? quantities[0] : 0;
         for(let i = 0; i < quantities.length; i++){
             sum += quantities[i];
             if(quantities[i] > max){
@@ -205,8 +204,11 @@ let analytics = {
     recipeDisplay: function(){
         let quantities = [];
         let dates = [];
-        let currentDate = this.transactions[0].date;
+        let currentDate;
         let quantity = 0;
+        if(this.transactions.length > 0){
+            currentDate = this.transactions[0].date;
+        }
 
         for(let i = 0; i < this.transactions.length; i++){
             if(currentDate.getDate() !== this.transactions[i].date.getDate()){
@@ -281,7 +283,7 @@ let analytics = {
             },
             body: JSON.stringify(dates)
         })
-            .then((response)=>response.json())
+            .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response.data);

@@ -41,16 +41,6 @@ let newTransaction = {
                     recipe: recipe.id,
                     quantity: quantity
                 });
-
-                for(let j = 0; j < recipe.ingredients.length; j++){
-                    const ingredient = recipe.ingredients[j];
-
-                    if(data.ingredientUpdates[ingredient.ingredient.id]){
-                        data.ingredientUpdates[ingredient.ingredient.id] += ingredient.quantity * quantity;
-                    }else{
-                        data.ingredientUpdates[ingredient.ingredient.id] = ingredient.quantity * quantity;
-                    }
-                }
             }else if(quantity < 0){
                 banner.createError("CANNOT HAVE NEGATIVE VALUES");
                 return;
@@ -73,14 +63,17 @@ let newTransaction = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        let transaction = new Transaction(
+                        const transaction = new Transaction(
                             response._id,
                             response.date,
                             response.recipes,
                             merchant
                         );
-                        merchant.editTransactions(transaction, data.ingredientUpdates);
-                        banner.createNotification("NEW TRANSACTION CREATED, INGREDIENTS UPDATED ACCORDINGLY");
+
+                        merchant.addTransaction(transaction);
+
+                        controller.openStrand("transactions");
+                        banner.createNotification("TRANSACTION CREATED");
                     }
                 })
                 .catch((err)=>{

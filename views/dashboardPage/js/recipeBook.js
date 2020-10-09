@@ -12,6 +12,8 @@ let recipeBook = {
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
             document.getElementById("recipeClearButton").onclick = ()=>{this.clearSorting()};
 
+            this.populateRecipes();
+
             this.isPopulated = true;
         }
     },
@@ -32,7 +34,7 @@ let recipeBook = {
             recipeList.appendChild(recipeDiv);
 
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
-            recipeDiv.children[1].innerText = `$${(merchant.recipes[i].price / 100).toFixed(2)}`;
+            recipeDiv.children[1].innerText = `$${merchant.recipes[i].price.toFixed(2)}`;
 
             this.recipeDivList.push(recipeDiv);
         }
@@ -82,31 +84,28 @@ let recipeBook = {
         })
             .then(response => response.json())
             .then((response)=>{
-                let newRecipes = [];
                 for(let i = 0; i < response.new.length; i++){
-                    newRecipes.push(new Recipe(
+                    const recipe = new Recipe(
                         response.new[i]._id,
                         response.new[i].name,
                         response.new[i].price,
                         merchant,
                         []
-                    ));
-                }
-                if(newRecipes.length > 0){
-                    merchant.editRecipes(newRecipes);
+                    );
+
+                    merchant.addRecipe(recipe);
                 }
 
-                let removeRecipes = [];
                 for(let i = 0; i < response.removed.length; i++){
-                    for(let j = 0; j < merchant.recipes.length; j++){
-                        if(response.removed[i]._id === merchant.recipes[j].id){
-                            removeRecipes.push(merchant.recipes[j], true);
-                            break;
-                        }
-                    }
-                }
-                if(removeRecipes.length > 0){
-                    merchant.editRecipes(removeRecipes, true);
+                    const recipe = new Recipe(
+                        response.removed[i]._id,
+                        response.removed[i].name,
+                        response.removed[i].price,
+                        merchant,
+                        []
+                    );
+
+                    merchant.removeRecipe(recipe);
                 }
             })
             .catch((err)=>{
