@@ -204,8 +204,11 @@ let analytics = {
     recipeDisplay: function(){
         let quantities = [];
         let dates = [];
-        let currentDate = this.transactions[0].date;
+        let currentDate;
         let quantity = 0;
+        if(this.transactions.length > 0){
+            currentDate = this.transactions[0].date;
+        }
 
         for(let i = 0; i < this.transactions.length; i++){
             if(currentDate.getDate() !== this.transactions[i].date.getDate()){
