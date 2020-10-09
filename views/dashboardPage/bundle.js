@@ -3514,8 +3514,8 @@ let recipeDetails = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch(`/merchant/recipes/remove/${recipe.id}`, {
-            method: "DELETE"
+        fetch(`/recipe/remove/${recipe.id}`, {
+            method: "delete"
         })
             .then((response) => response.json())
             .then((response)=>{

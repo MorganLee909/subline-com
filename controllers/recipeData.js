@@ -105,6 +105,44 @@ module.exports = {
             });
     },
 
+    //DELETE - removes a single recipe from the merchant and the database
+    removeRecipe: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                if(merchant.pos === "clover"){
+                    return res.json("YOU MUST EDIT YOUR RECIPES INSIDE CLOVER");
+                }
+                
+                for(let i = 0; i < merchant.recipes.length; i++){
+                    if(merchant.recipes[i].toString() === req.params.id){
+                        merchant.recipes.splice(i, 1);
+                        break;
+                    }
+                }
+
+                merchant.save()
+                    .then((updatedMerchant)=>{
+                        return res.json({});
+                    })
+                    .catch((err)=>{
+                        return res.json("ERROR: UNABLE TO SAVE DATA");
+                    })
+
+                return Recipe.deleteOne({_id: req.params.id});
+            })
+            .then((response)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
+            });
+    },
+
     //GET - Checks clover for new or deleted recipes
     //Returns: 
     //  merchant: Full merchant (recipe ingredients populated)
