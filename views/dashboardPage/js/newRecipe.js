@@ -110,6 +110,7 @@ let newRecipe = {
                         merchant
                     ));
 
+                    banner.createNotification("RECIPE CREATED");
                     controller.openStrand("recipeBook");
                 }
             })
