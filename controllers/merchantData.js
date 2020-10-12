@@ -1,10 +1,12 @@
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
+const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.com"});
 
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 const Validator = require("./validator.js");
+const WelcomeEmail = require("../emails/welcomeEmail.js");
 
 module.exports = {
     /*
@@ -43,6 +45,28 @@ module.exports = {
             merchant.save()
                 .then((merchant)=>{
                     req.session.user = merchant._id;
+                    console.log("mailgunning");
+
+                    const mailgunData = {
+                        from: "The Subline <clientsupport@thesubline.com>",
+                        to: merchant.email,
+                        subject: "Welcome to The Subline!",
+                        html: WelcomeEmail({name: merchant.name, email: merchant.email})
+                    }
+                    mailgun.messages().send(mailgunData, (err, body)=>{
+                        console.log(err);
+                        console.log(data);
+                    });
+
+                    const mailgunList = mailgun.lists("clientsupport@mail.thesubline.com");
+                    mailgunList.members.create({
+                        subscribed: true,
+                        address: merchant.email,
+                        name: merchant.name
+                    }, (err, data)=>{
+                        console.log(err);
+                    });
+                    console.log("mailgunned");
 
                     return res.redirect("/dashboard");
                 })

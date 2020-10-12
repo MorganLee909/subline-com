@@ -55,6 +55,7 @@ module.exports = function(app){
     app.get("/squarelogin", otherData.squareRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
     app.get("/squareauth", otherData.squareAuth);
+    app.get("/logo", otherData.logo);
 
     //Information Pages
     app.get("/privacy", informationPages.privacy);

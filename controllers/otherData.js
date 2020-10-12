@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
+const path = require("path");
 
 const Merchant = require("../models/merchant");
 
@@ -143,5 +144,9 @@ module.exports = {
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM SQUARE";
                 return res.redirect("/");
             });
+    },
+
+    logo: function(req, res){
+        return res.sendFile(path.resolve("./views/shared/images/logo.png"));
     }
 }
