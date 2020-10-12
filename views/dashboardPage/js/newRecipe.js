@@ -1,41 +1,51 @@
 let newRecipe = {
+
     display: function(Recipe){
-        let ingredientsSelect = document.querySelector("#recipeInputIngredients select");
+        document.getElementById("newRecipeName").value = "";
+        document.getElementById("newRecipePrice").value = "";
+        document.getElementById("ingredientCount").value = 1;
+
         let categories = merchant.categorizeIngredients();
 
+        let ingredientsSelect = document.getElementById("recipeInputIngredients");
         while(ingredientsSelect.children.length > 0){
             ingredientsSelect.removeChild(ingredientsSelect.firstChild);
         }
 
-        for(let i = 0; i < categories.length; i++){
-            let optgroup = document.createElement("optgroup");
-            optgroup.label = categories[i].name;
-            ingredientsSelect.appendChild(optgroup);
+        this.changeIngredientCount(categories);
 
-            for(let j = 0; j < categories[i].ingredients.length; j++){
-                let option = document.createElement("option");
-                option.value = categories[i].ingredients[j].ingredient.id;
-                option.innerText = `${categories[i].ingredients[j].ingredient.name} (${categories[i].ingredients[j].ingredient.unit})`;
-                optgroup.appendChild(option);
-            }
-        }
-
-        document.getElementById("ingredientCount").onchange = ()=>{this.changeRecipeCount()};
+        document.getElementById("ingredientCount").onchange = ()=>{this.changeIngredientCount(categories)};
         document.getElementById("submitNewRecipe").onclick = ()=>{this.submit(Recipe)};
     },
 
     //Updates the number of ingredient inputs displayed for new recipes
-    changeRecipeCount: function(){
+    changeIngredientCount: function(categories){
         let newCount = document.getElementById("ingredientCount").value;
         let ingredientsDiv = document.getElementById("recipeInputIngredients");
+        let template = document.getElementById("recipeInputIngredient").content.children[0];
         let oldCount = ingredientsDiv.children.length;
 
         if(newCount > oldCount){
             let newDivs = newCount - oldCount;
 
             for(let i = 0; i < newDivs; i++){
-                let newNode = ingredientsDiv.children[0].cloneNode(true);
-                newNode.children[2].children[0].value = "";
+                let newNode = template.cloneNode(true);
+                newNode.children[0].innnerText = `INGREDIENT ${i + oldCount}`;
+                newNode.children[2].children[0].value = 0;
+
+                for(let j = 0; j < categories.length; j++){
+                    let optgroup = document.createElement("optgroup");
+                    optgroup.label = categories[j].name;
+
+                    for(let k = 0; k < categories[j].ingredients.length; k++){
+                        let option = document.createElement("option");
+                        option.innerText = categories[j].ingredients[k].ingredient.getNameAndUnit();
+                        option.ingredient = categories[j].ingredients[k];
+                        optgroup.appendChild(option);
+                    }
+
+                    newNode.children[1].children[0].appendChild(optgroup);
+                }
 
                 ingredientsDiv.appendChild(newNode);
             }
@@ -59,18 +69,15 @@ let newRecipe = {
             ingredients: []
         }
 
-        let inputs = document.querySelectorAll("#recipeInputIngredients > div");
+        let inputs = document.getElementById("recipeInputIngredients").children;
         for(let i = 0; i < inputs.length; i++){
-            for(let j = 0; j < merchant.ingredients.length; j++){
-                if(merchant.ingredients[j].ingredient.id === inputs[i].children[1].children[0].value){
-                    newRecipe.ingredients.push({
-                        ingredient: inputs[i].children[1].children[0].value,
-                        quantity: merchant.ingredients[j].convertToBase(inputs[i].children[2].children[0].value)
-                    });
+            let sel = inputs[i].children[1].children[0];
+            let ingredient = sel.options[sel.selectedIndex].ingredient;
 
-                    break;
-                }
-            }
+            newRecipe.ingredients.push({
+                ingredient: ingredient.ingredient.id,
+                quantity: ingredient.convertToBase(inputs[i].children[2].children[0].value)
+            });
         }
 
         let loader = document.getElementById("loaderContainer");
