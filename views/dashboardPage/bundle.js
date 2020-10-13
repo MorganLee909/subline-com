@@ -1612,7 +1612,7 @@ merchant = new Merchant(data.merchant, data.transactions, {
 });
 
 controller = {
-    openStrand: function(strand){
+    openStrand: function(strand, data = undefined){
         this.closeSidebar();
 
         let strands = document.querySelectorAll(".strand");
@@ -1651,7 +1651,7 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.display(Order);
+                orders.display(Order, data);
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -1702,7 +1702,7 @@ controller = {
                 orderDetails.display(data);
                 break;
             case "orderFilter":
-                orderFilter.display();
+                orderFilter.display(Order);
                 break;
             case "newOrder":
                 newOrder.display(Order);
@@ -3163,7 +3163,7 @@ let orderDetails = {
 module.exports = orderDetails;
 },{}],18:[function(require,module,exports){
 let orderFilter = {
-    display: function(){
+    display: function(Order){
         let now = new Date();
         let past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
         let ingredientList = document.getElementById("orderFilterIngredients");
@@ -3187,7 +3187,7 @@ let orderFilter = {
             element.appendChild(text);
         }
 
-        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit()};
+        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit(Order)};
     },
 
     toggleActive: function(element){
@@ -3198,7 +3198,7 @@ let orderFilter = {
         }
     },
 
-    submit: function(){
+    submit: function(Order){
         let data = {
             startDate: document.getElementById("orderFilterDateFrom").valueAsDate,
             endDate: document.getElementById("orderFilterDateTo").valueAsDate,
@@ -3235,97 +3235,11 @@ let orderFilter = {
         })
         .then(response => response.json())
         .then((response)=>{
+            let orders = [];
             if(typeof(response) === "string"){
                 banner.createError(response);
-            }else{
-                let orderList = document.getElementById("orderList");
-                let template = document.getElementById("order").content.children[0];
-
-                while(orderList.children.length > 0){
-                    orderList.removeChild(orderList.firstChild);
-                }
-
-                for(let i = 0; i < response.length; i++){
-                    let orderDiv = template.cloneNode(true);
-                    let order = new Order(
-                        response[i]._id,
-                        response[i].name,
-                        response[i].date,
-                        response[i].taxes,
-                        response[i].fees,
-                        response[i].ingredients,
-                        merchant
-                    );
-
-                    let cost = 0;
-                    for(let j = 0; j < order.ingredients.length; j++){
-                        cost += order.ingredients[j].price * order.ingredients[j].quantity;
-                    }
-
-                    orderDiv.children[0].innerText = order.name;
-                    orderDiv.children[1].innerText = `${order.ingredients.length} items`;
-                    orderDiv.children[2].innerText = order.date.toLocaleDateString();
-                    orderDiv.children[3].innerText = `$${cost.toFixed(2)}`;
-                    orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", order)};
-                    orderList.appendChild(orderDiv);
-                }
-            }
-        })
-        .catch((err)=>{
-            banner.createError("UNABLE TO DISPLAY THE ORDERS");
-        })
-        .finally(()=>{
-            loader.style.display = "none";
-        });
-    }
-}
-
-module.exports = orderFilter;
-},{}],19:[function(require,module,exports){
-let orders = {
-    orders: [],
-
-    display: function(Order){
-        if(this.orders.length === 0){
-            this.getOrders(Order);
-        }else{
-            document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
-            document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
-
-            let orderList = document.getElementById("orderList");
-            let template = document.getElementById("order").content.children[0];
-
-            while(orderList.children.length > 0){
-                orderList.removeChild(orderList.firstChild);
-            }
-
-            for(let i = 0; i < this.orders.length; i++){
-                let orderDiv = template.cloneNode(true);
-                orderDiv.order = this.orders[i];
-                orderDiv.children[0].innerText = this.orders[i].name;
-                orderDiv.children[1].innerText = `${this.orders[i].ingredients.length} ingredients`;
-                orderDiv.children[2].innerText = this.orders[i].date.toLocaleDateString("en-US");
-                orderDiv.children[3].innerText = `$${this.orders[i].getTotalCost().toFixed(2)}`;
-                orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", this.orders[i])};
-                orderList.appendChild(orderDiv);
-            }
-        }
-    },
-
-    getOrders: function(Order){
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        fetch("/order", {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            }
-        })
-        .then(response => response.json())
-        .then((response)=>{
-            if(typeof(response) === "string"){
-                banner.createError(response);
+            }else if(response.length === 0){
+                banner.createError("NO ORDERS MATCH YOUR SEARCH");
             }else{
                 let ingredients = [];
                 for(let i = 0; i < response.length; i++){
@@ -3342,7 +3256,96 @@ let orders = {
                         }
                     }
 
-                    this.orders.push(new Order(
+                    orders.push(new Order(
+                        response[i]._id,
+                        response[i].name,
+                        response[i].date,
+                        response[i].taxes,
+                        response[i].fees,
+                        ingredients,
+                        merchant
+                    ));
+                }    
+            }
+
+            controller.openStrand("orders", orders);
+        })
+        .catch((err)=>{
+            banner.createError("UNABLE TO DISPLAY THE ORDERS");
+        })
+        .finally(()=>{
+            loader.style.display = "none";
+        });
+    }
+}
+
+module.exports = orderFilter;
+},{}],19:[function(require,module,exports){
+let orders = {
+    orders: [],
+
+    display: async function(Order, newOrders){
+        if(newOrders){
+            this.orders = newOrders;
+        }
+        if(this.orders.length === 0){
+            this.orders = await this.getOrders(Order);
+        }
+
+        document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
+        document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
+
+        let orderList = document.getElementById("orderList");
+        let template = document.getElementById("order").content.children[0];
+
+        while(orderList.children.length > 0){
+            orderList.removeChild(orderList.firstChild);
+        }
+
+        for(let i = 0; i < this.orders.length; i++){
+            let orderDiv = template.cloneNode(true);
+            orderDiv.order = this.orders[i];
+            orderDiv.children[0].innerText = this.orders[i].name;
+            orderDiv.children[1].innerText = `${this.orders[i].ingredients.length} ingredients`;
+            orderDiv.children[2].innerText = this.orders[i].date.toLocaleDateString("en-US");
+            orderDiv.children[3].innerText = `$${this.orders[i].getTotalCost().toFixed(2)}`;
+            orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", this.orders[i])};
+            orderList.appendChild(orderDiv);
+        }
+    },
+
+    getOrders: function(Order){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        return fetch("/order", {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            }
+        })
+        .then(response => response.json())
+        .then((response)=>{
+            if(typeof(response) === "string"){
+                banner.createError(response);
+            }else{
+                let orders = [];
+                let ingredients = [];
+                for(let i = 0; i < response.length; i++){
+                    for(let j = 0; j < response[i].ingredients.length; j++){
+                        for(let k = 0; k < merchant.ingredients.length; k++){
+                            if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
+                                ingredients.push({
+                                    ingredient: merchant.ingredients[k].ingredient,
+                                    quantity: response[i].ingredients[j].quantity,
+                                    pricePerUnit: response[i].ingredients[j].pricePerUnit
+                                });
+                                break;
+                            }
+                        }
+                    }
+
+                    orders.push(new Order(
                         response[i]._id,
                         response[i].name,
                         response[i].date,
@@ -3353,7 +3356,7 @@ let orders = {
                     ));
                 }
 
-                this.display();
+                return orders;
             }
         })
         .catch((err)=>{

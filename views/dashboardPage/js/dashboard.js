@@ -36,7 +36,7 @@ merchant = new Merchant(data.merchant, data.transactions, {
 });
 
 controller = {
-    openStrand: function(strand){
+    openStrand: function(strand, data = undefined){
         this.closeSidebar();
 
         let strands = document.querySelectorAll(".strand");
@@ -75,7 +75,7 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.display(Order);
+                orders.display(Order, data);
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -126,7 +126,7 @@ controller = {
                 orderDetails.display(data);
                 break;
             case "orderFilter":
-                orderFilter.display();
+                orderFilter.display(Order);
                 break;
             case "newOrder":
                 newOrder.display(Order);

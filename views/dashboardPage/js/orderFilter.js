@@ -1,5 +1,5 @@
 let orderFilter = {
-    display: function(){
+    display: function(Order){
         let now = new Date();
         let past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
         let ingredientList = document.getElementById("orderFilterIngredients");
@@ -23,7 +23,7 @@ let orderFilter = {
             element.appendChild(text);
         }
 
-        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit()};
+        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit(Order)};
     },
 
     toggleActive: function(element){
@@ -34,7 +34,7 @@ let orderFilter = {
         }
     },
 
-    submit: function(){
+    submit: function(Order){
         let data = {
             startDate: document.getElementById("orderFilterDateFrom").valueAsDate,
             endDate: document.getElementById("orderFilterDateTo").valueAsDate,
@@ -71,41 +71,40 @@ let orderFilter = {
         })
         .then(response => response.json())
         .then((response)=>{
+            let orders = [];
             if(typeof(response) === "string"){
                 banner.createError(response);
+            }else if(response.length === 0){
+                banner.createError("NO ORDERS MATCH YOUR SEARCH");
             }else{
-                let orderList = document.getElementById("orderList");
-                let template = document.getElementById("order").content.children[0];
-
-                while(orderList.children.length > 0){
-                    orderList.removeChild(orderList.firstChild);
-                }
-
+                let ingredients = [];
                 for(let i = 0; i < response.length; i++){
-                    let orderDiv = template.cloneNode(true);
-                    let order = new Order(
+                    for(let j = 0; j < response[i].ingredients.length; j++){
+                        for(let k = 0; k < merchant.ingredients.length; k++){
+                            if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
+                                ingredients.push({
+                                    ingredient: merchant.ingredients[k].ingredient,
+                                    quantity: response[i].ingredients[j].quantity,
+                                    pricePerUnit: response[i].ingredients[j].pricePerUnit
+                                });
+                                break;
+                            }
+                        }
+                    }
+
+                    orders.push(new Order(
                         response[i]._id,
                         response[i].name,
                         response[i].date,
                         response[i].taxes,
                         response[i].fees,
-                        response[i].ingredients,
+                        ingredients,
                         merchant
-                    );
-
-                    let cost = 0;
-                    for(let j = 0; j < order.ingredients.length; j++){
-                        cost += order.ingredients[j].price * order.ingredients[j].quantity;
-                    }
-
-                    orderDiv.children[0].innerText = order.name;
-                    orderDiv.children[1].innerText = `${order.ingredients.length} items`;
-                    orderDiv.children[2].innerText = order.date.toLocaleDateString();
-                    orderDiv.children[3].innerText = `$${cost.toFixed(2)}`;
-                    orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", order)};
-                    orderList.appendChild(orderDiv);
-                }
+                    ));
+                }    
             }
+
+            controller.openStrand("orders", orders);
         })
         .catch((err)=>{
             banner.createError("UNABLE TO DISPLAY THE ORDERS");
