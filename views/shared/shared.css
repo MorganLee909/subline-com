@@ -224,6 +224,9 @@ form{
 }
 
 .choosable{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     background: rgb(0, 27, 45);
     color: white;
     border-radius: 5px;
@@ -232,6 +235,10 @@ form{
     text-align: center;
     cursor: pointer;
 }
+
+    .choosable.tall{
+        padding: 15px;
+    }
 
     .choosable:hover{
         background: rgb(201, 201, 201);
