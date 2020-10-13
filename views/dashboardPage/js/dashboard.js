@@ -13,6 +13,7 @@ const newRecipe = require("./newRecipe.js");
 const editRecipe = require("./editRecipe.js");
 const newTransaction = require("./newTransaction.js");
 const orderDetails = require("./orderDetails.js");
+const orderFilter = require("./orderFilter.js");
 const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
@@ -123,6 +124,9 @@ controller = {
                 break;
             case "orderDetails":
                 orderDetails.display(data);
+                break;
+            case "orderFilter":
+                orderFilter.display();
                 break;
             case "newOrder":
                 newOrder.display(Order);

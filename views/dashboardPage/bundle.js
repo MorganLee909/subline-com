@@ -1589,6 +1589,7 @@ const newRecipe = require("./newRecipe.js");
 const editRecipe = require("./editRecipe.js");
 const newTransaction = require("./newTransaction.js");
 const orderDetails = require("./orderDetails.js");
+const orderFilter = require("./orderFilter.js");
 const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
@@ -1699,6 +1700,9 @@ controller = {
                 break;
             case "orderDetails":
                 orderDetails.display(data);
+                break;
+            case "orderFilter":
+                orderFilter.display();
                 break;
             case "newOrder":
                 newOrder.display(Order);
@@ -1818,7 +1822,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orders.js":18,"./recipeBook.js":19,"./recipeDetails.js":20,"./transactionDetails.js":21,"./transactions.js":22}],8:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orderFilter.js":18,"./orders.js":19,"./recipeBook.js":20,"./recipeDetails.js":21,"./transactionDetails.js":22,"./transactions.js":23}],8:[function(require,module,exports){
 const Ingredient = require("./Ingredient");
 
 let editIngredient = {
@@ -2588,7 +2592,7 @@ let ingredients = {
 }
 
 module.exports = ingredients;
-},{"./orders":18}],13:[function(require,module,exports){
+},{"./orders":19}],13:[function(require,module,exports){
 const ingredients = require("./ingredients");
 
 let newIngredient = {
@@ -3158,6 +3162,126 @@ let orderDetails = {
 
 module.exports = orderDetails;
 },{}],18:[function(require,module,exports){
+let orderFilter = {
+    display: function(){
+        let now = new Date();
+        let past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+        let ingredientList = document.getElementById("orderFilterIngredients");
+
+        document.getElementById("orderFilterDateFrom").valueAsDate = past;
+        document.getElementById("orderFilterDateTo").valueAsDate = now;
+
+        while(ingredientList.children.length > 0){
+            ingredientList.removeChild(ingredientList.firstChild);
+        }
+
+        for(let i = 0; i < merchant.ingredients.length; i++){
+            let element = document.createElement("div");
+            element.classList.add("choosable");
+            element.ingredient = merchant.ingredients[i].ingredient.id;
+            element.onclick = ()=>{this.toggleActive(element)};
+            ingredientList.appendChild(element);
+
+            let text = document.createElement("p");
+            text.innerText = merchant.ingredients[i].ingredient.name;
+            element.appendChild(text);
+        }
+
+        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit()};
+    },
+
+    toggleActive: function(element){
+        if(element.classList.contains("active")){
+            element.classList.remove("active");
+        }else{
+            element.classList.add("active");
+        }
+    },
+
+    submit: function(){
+        let data = {
+            startDate: document.getElementById("orderFilterDateFrom").valueAsDate,
+            endDate: document.getElementById("orderFilterDateTo").valueAsDate,
+            ingredients: []
+        }
+
+        if(data.startDate >= data.endDate){
+            banner.createError("START DATE CACNNOT BE AFTER END DATE");
+            return;
+        }
+
+        let ingredients = document.getElementById("orderFilterIngredients").children;
+        for(let i = 0; i < ingredients.length; i++){
+            if(ingredients[i].classList.contains("active")){
+                data.ingredients.push(ingredients[i].ingredient);
+            }
+        }
+
+        if(data.ingredients.length === 0){
+            for(let i = 0; i < merchant.ingredients.length; i++){
+                data.ingredients.push(merchant.ingredients[i].ingredient.id);
+            }
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/order", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then((response)=>{
+            if(typeof(response) === "string"){
+                banner.createError(response);
+            }else{
+                let orderList = document.getElementById("orderList");
+                let template = document.getElementById("order").content.children[0];
+
+                while(orderList.children.length > 0){
+                    orderList.removeChild(orderList.firstChild);
+                }
+
+                for(let i = 0; i < response.length; i++){
+                    let orderDiv = template.cloneNode(true);
+                    let order = new Order(
+                        response[i]._id,
+                        response[i].name,
+                        response[i].date,
+                        response[i].taxes,
+                        response[i].fees,
+                        response[i].ingredients,
+                        merchant
+                    );
+
+                    let cost = 0;
+                    for(let j = 0; j < order.ingredients.length; j++){
+                        cost += order.ingredients[j].price * order.ingredients[j].quantity;
+                    }
+
+                    orderDiv.children[0].innerText = order.name;
+                    orderDiv.children[1].innerText = `${order.ingredients.length} items`;
+                    orderDiv.children[2].innerText = order.date.toLocaleDateString();
+                    orderDiv.children[3].innerText = `$${cost.toFixed(2)}`;
+                    orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", order)};
+                    orderList.appendChild(orderDiv);
+                }
+            }
+        })
+        .catch((err)=>{
+            banner.createError("UNABLE TO DISPLAY THE ORDERS");
+        })
+        .finally(()=>{
+            loader.style.display = "none";
+        });
+    }
+}
+
+module.exports = orderFilter;
+},{}],19:[function(require,module,exports){
 let orders = {
     isPopulated: false,
     isFetched: false,
@@ -3236,6 +3360,8 @@ let orders = {
 
         document.getElementById("dateFilterBtnOrder").onclick = ()=>{this.toggleDropdown(dateDropdown)};
         document.getElementById("ingredientFilterBtn").onclick = ()=>{this.toggleDropdown(ingredientDropdown)};
+        document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
+        document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
 
         for(let i = 0; i < merchant.ingredients.length; i++){
             let checkbox = document.createElement("input");
@@ -3366,7 +3492,7 @@ let orders = {
 }
 
 module.exports = orders;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
@@ -3490,7 +3616,7 @@ let recipeBook = {
 }
 
 module.exports = recipeBook;
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
@@ -3566,7 +3692,7 @@ let recipeDetails = {
 }
 
 module.exports = recipeDetails;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 let transactionDetails = {
     transaction: {},
 
@@ -3640,7 +3766,7 @@ let transactionDetails = {
 }
 
 module.exports = transactionDetails;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 let transactions = {
     isPopulated: false,
 

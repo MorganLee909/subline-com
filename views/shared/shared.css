@@ -223,6 +223,26 @@ form{
     transition: width 1s linear;
 }
 
+.choosable{
+    background: rgb(0, 27, 45);
+    color: white;
+    border-radius: 5px;
+    margin: 2px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .choosable:hover{
+        background: rgb(201, 201, 201);
+        color: black;
+    }
+
+    .choosable.active{
+        background: rgb(179, 191, 209);
+        color: white;
+    }
+
 /* Header partial */
 .header{
     display: flex;

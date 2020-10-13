@@ -76,6 +76,8 @@ let orders = {
 
         document.getElementById("dateFilterBtnOrder").onclick = ()=>{this.toggleDropdown(dateDropdown)};
         document.getElementById("ingredientFilterBtn").onclick = ()=>{this.toggleDropdown(ingredientDropdown)};
+        document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
+        document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
 
         for(let i = 0; i < merchant.ingredients.length; i++){
             let checkbox = document.createElement("input");

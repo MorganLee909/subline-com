@@ -370,7 +370,12 @@
                 <div class="strandHead">
                     <h1 class="strandTitle">ORDERS</h1>
 
-                    <button class="button mobileHide" onclick="controller.openSidebar('newOrder')">NEW</button>
+                    <div class="buttonBox">
+                        <button id="orderFilterBtn" class="button mobileHide">FILTER</button>
+
+                        <button id="newOrderBtn" class="button mobileHide">NEW</button>
+                    </div>
+                    
                 </div>
 
                 <form id="orderSubmitForm" class="filterForm">
@@ -495,6 +500,7 @@
             <% include ./sidebars/transactionDetails %>
             <% include ./sidebars/newTransaction %>
             <% include ./sidebars/editRecipe %>
+            <% include ./sidebars/orderFilter %>
         </div>
 
         <% include ../shared/loader %>

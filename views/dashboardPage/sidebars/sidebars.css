@@ -671,7 +671,23 @@ EDIT RECIPE
     }
 
 /*
-Transaction Details
+ORDER FILTER
+*/
+#orderFilter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    .orderFilterDates{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+/*
+TRANSACTION DETAILS
 */
 .transactionDetails{
     display: flex;
