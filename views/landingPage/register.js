@@ -20,6 +20,7 @@ let registerObj = {
 
     submit: function(){
         event.preventDefault();
+        console.log("something");
 
         let form = document.querySelector("#registerStrand form");
         let checkbox = document.getElementById("checkAgree");
@@ -37,12 +38,10 @@ let registerObj = {
         }
 
         if(checkbox.checked){
-            if(validator.isSanitary(document.getElementById("regName").value)){
-                document.getElementById("loaderContainer").style.display = "flex";
-                form.action = "merchant/create/none";
-                form.method = "post";
-                form.submit();
-            }
+            document.getElementById("loaderContainer").style.display = "flex";
+            form.action = "merchant/create/none";
+            form.method = "post";
+            form.submit();
         }else{
             banner.createError("Please agree to the Privacy Policy and Terms and Conditions to continue");
         }

@@ -1,6 +1,4 @@
-<div class="banner">
-    <ul></ul>
-</div>
+<div id="banner" class="banner"></div>
 
 <script>
     let banner = {
@@ -8,49 +6,29 @@
         notificationList: [],
 
         createNotification: function(value){
-            this.notificationList.push(value);
+            let banner = document.getElementById("banner");
+            banner.style.display = "flex";
+            banner.innerText = value;
+            banner.classList.add("notification");
 
-            this.updateNotifications();
 
             setTimeout(()=>{
-                this.notificationList.splice(0, 1);
-                this.updateNotifications();
+                banner.style.display = "none";
+                banner.classList.remove("notification");
             }, 10000);
         },
 
         createError: function(value){
-            this.errorList.push(value);
+            let banner = document.getElementById("banner");
+            banner.style.display = "flex";
+            banner.innerText = value;
+            banner.classList.add("error");
 
-            this.updateNotifications();
 
             setTimeout(()=>{
-                this.errorList.splice(0, 1);
-                this.updateNotifications();
+                banner.style.display = "none";
+                banner.classList.remove("notification");
             }, 10000);
-        },
-
-        updateNotifications: function(){
-            let banner = document.querySelector(".banner");
-            let ul = document.querySelector(".banner ul");
-
-            while(ul.hasChildNodes()){
-                ul.removeChild(ul.firstChild);
-            }
-
-            for(let i = 0; i < this.notificationList.length; i++){
-                let li = document.createElement("li");                                                                       
-                                                                                                            
-                li.classList = "notification";
-                li.innerText = this.notificationList[i];
-                ul.appendChild(li);
-            }
-
-            for(let i = 0; i < this.errorList.length; i++){
-                let li = document.createElement("li");
-                li.classList = "error";
-                li.innerText = this.errorList[i];
-                ul.appendChild(li);
-            }
         }
     }
 </script>

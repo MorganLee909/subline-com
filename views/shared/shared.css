@@ -272,26 +272,20 @@ form{
 
 /* Banner partial */
 .banner{
+    justify-content: center;
     width: 100%;
-    text-align: center;
-    list-style-type: none;
     font-size: 20px;
     color: white;
-    z-index: -10;
     position: absolute;
-    border-radius: 5px;
+    padding: 5px;
 }
 
-    .banner .notification{
+    .notification{
         background: rgba(1, 140, 15, 0.75);
-        list-style-type: none;
-        padding: 5px;
     }
 
-    .banner .error{
+    .error{
         background: rgba(255, 0, 0, 0.75);
-        list-style-type: none;
-        padding: 5px;
     }
 
 /* Footer Partial */
