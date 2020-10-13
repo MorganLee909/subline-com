@@ -20,7 +20,6 @@ let registerObj = {
 
     submit: function(){
         event.preventDefault();
-        console.log("something");
 
         let form = document.querySelector("#registerStrand form");
         let checkbox = document.getElementById("checkAgree");
