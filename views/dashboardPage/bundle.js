@@ -3494,8 +3494,10 @@ module.exports = recipeBook;
 let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
-        document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove(recipe)};
         document.getElementById("recipeName").innerText = recipe.name;
+        if(merchant.pos === "none"){
+            document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove(recipe)};
+        }
 
         //ingredient list
         let ingredientsDiv = document.getElementById("recipeIngredientList");
