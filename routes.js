@@ -11,7 +11,6 @@ module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
     app.get("/dashboard", renderer.displayDashboard);
-    app.get("/information", renderer.displayLegal);
     app.get("/resetpassword/*", renderer.displayPassReset);
 
     //Merchant

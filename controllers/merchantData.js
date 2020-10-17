@@ -1,6 +1,6 @@
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
-const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.com"});
+const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
@@ -45,28 +45,23 @@ module.exports = {
             merchant.save()
                 .then((merchant)=>{
                     req.session.user = merchant._id;
-                    console.log("mailgunning");
 
                     const mailgunData = {
-                        from: "The Subline <clientsupport@thesubline.com>",
+                        from: "The Subline <clientsupport@thesubline.net>",
                         to: merchant.email,
                         subject: "Welcome to The Subline!",
-                        html: WelcomeEmail({name: merchant.name, email: merchant.email})
+                        template: "welcome-message"
                     }
-                    mailgun.messages().send(mailgunData, (err, body)=>{
-                        console.log(err);
-                        console.log(data);
-                    });
+                    mailgun.messages().send(mailgunData, (err, body)=>{});
 
                     const mailgunList = mailgun.lists("clientsupport@mail.thesubline.com");
-                    mailgunList.members.create({
+                    const memberData = {
                         subscribed: true,
                         address: merchant.email,
-                        name: merchant.name
-                    }, (err, data)=>{
-                        console.log(err);
-                    });
-                    console.log("mailgunned");
+                        name: merchant.name,
+                        vars: {}
+                    }
+                    mailgunList.members().create(memberData, (err, data)=>{});
 
                     return res.redirect("/dashboard");
                 })
