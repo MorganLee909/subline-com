@@ -18,7 +18,7 @@ function requireHTTPS(req, res, next) {
 }
 
 app.use(requireHTTPS);
-app.use(compression())
+app.use(compression());
 app.use(session({
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen",
     cookie: {secure: false},
