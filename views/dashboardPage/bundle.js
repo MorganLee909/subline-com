@@ -1007,9 +1007,9 @@ class RecipeIngredient{
     }
 
     get quantity(){
-        // if(this._ingredient.specialUnit === "bottle"){
-        //     return this._quantity / this._ingredient.unitSize;
-        // }
+        if(this._ingredient.specialUnit === "bottle"){
+            return this._quantity / this._ingredient.unitSize;
+        }
 
         switch(this._ingredient.unit){
             case "g":return this._quantity;
@@ -1112,9 +1112,6 @@ class Recipe{
 
             this._ingredients.push(recipeIngredient);
         }
-
-        this._parent.modules.recipeBook.isPopulated = false;
-        this._parent.modules.analytics.isPopulated = false;
     }
 
     get id(){
@@ -1592,6 +1589,7 @@ const newRecipe = require("./newRecipe.js");
 const editRecipe = require("./editRecipe.js");
 const newTransaction = require("./newTransaction.js");
 const orderDetails = require("./orderDetails.js");
+const orderFilter = require("./orderFilter.js");
 const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
 
@@ -1614,7 +1612,7 @@ merchant = new Merchant(data.merchant, data.transactions, {
 });
 
 controller = {
-    openStrand: function(strand){
+    openStrand: function(strand, data = undefined){
         this.closeSidebar();
 
         let strands = document.querySelectorAll(".strand");
@@ -1653,7 +1651,7 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.display(Order);
+                orders.display(Order, data);
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -1702,6 +1700,9 @@ controller = {
                 break;
             case "orderDetails":
                 orderDetails.display(data);
+                break;
+            case "orderFilter":
+                orderFilter.display(Order);
                 break;
             case "newOrder":
                 newOrder.display(Order);
@@ -1821,7 +1822,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orders.js":18,"./recipeBook.js":19,"./recipeDetails.js":20,"./transactionDetails.js":21,"./transactions.js":22}],8:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orderFilter.js":18,"./orders.js":19,"./recipeBook.js":20,"./recipeDetails.js":21,"./transactionDetails.js":22,"./transactions.js":23}],8:[function(require,module,exports){
 const Ingredient = require("./Ingredient");
 
 let editIngredient = {
@@ -2591,7 +2592,7 @@ let ingredients = {
 }
 
 module.exports = ingredients;
-},{"./orders":18}],13:[function(require,module,exports){
+},{"./orders":19}],13:[function(require,module,exports){
 const ingredients = require("./ingredients");
 
 let newIngredient = {
@@ -3161,134 +3162,58 @@ let orderDetails = {
 
 module.exports = orderDetails;
 },{}],18:[function(require,module,exports){
-let orders = {
-    isPopulated: false,
-    isFetched: false,
+let orderFilter = {
+    display: function(Order){
+        let now = new Date();
+        let past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+        let ingredientList = document.getElementById("orderFilterIngredients");
 
-    display: async function(Order){
-        if(!this.isFetched){
-            let loader = document.getElementById("loaderContainer");
-            loader.style.display = "flex";
+        document.getElementById("orderFilterDateFrom").valueAsDate = past;
+        document.getElementById("orderFilterDateTo").valueAsDate = now;
 
-            fetch("/order", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-            })
-                .then((response) => response.json())
-                .then((response)=>{
-                    if(typeof(response) === "string"){
-                        banner.createError(response);
-                    }else{
-                        for(let i = 0; i < response.length; i++){
-                            let ingredients = [];
-                            for(let j = 0; j < response[i].ingredients.length; j++){
-                                const orderIngredient = response[i].ingredients[j];
-                                for(let k = 0; k < merchant.ingredients.length; k++){
-                                    if(merchant.ingredients[k].ingredient.id === orderIngredient.ingredient){
-                                        ingredients.push({
-                                            ingredient: merchant.ingredients[k].ingredient,
-                                            quantity: orderIngredient.quantity,
-                                            pricePerUnit: orderIngredient.pricePerUnit
-                                        });
-                                    }
-                                }
-                            }
-
-                            merchant.addOrder(new Order(
-                                response[i]._id,
-                                response[i].name,
-                                response[i].date,
-                                response[i].taxes,
-                                response[i].fees,
-                                ingredients,
-                                merchant
-                            ));
-                        }
-
-                        document.getElementById("orderSubmitForm").onsubmit = ()=>{this.submitFilter(Order)};
-                        this.isFetched = true;
-                        
-                        this.populate();
-                        this.isPopulated = true;
-                    }
-                })
-                .catch((err)=>{
-                    banner.createError("SOMETHING WENT WRONG. TRY REFRESHING THE PAGE");
-                })
-                .finally(()=>{
-                    loader.style.display = "none";
-                });
+        while(ingredientList.children.length > 0){
+            ingredientList.removeChild(ingredientList.firstChild);
         }
-
-        if(!this.isPopulated){
-            this.populate();
-            this.isPopulated = true;
-        }
-    },
-
-    populate: function(){
-        let listDiv = document.getElementById("orderList");
-        let template = document.getElementById("order").content.children[0];
-        let dateDropdown = document.getElementById("dateDropdownOrder");
-        let ingredientDropdown = document.getElementById("ingredientDropdown");
-
-        dateDropdown.style.display = "none";
-        ingredientDropdown.style.display = "none";
-
-        document.getElementById("dateFilterBtnOrder").onclick = ()=>{this.toggleDropdown(dateDropdown)};
-        document.getElementById("ingredientFilterBtn").onclick = ()=>{this.toggleDropdown(ingredientDropdown)};
 
         for(let i = 0; i < merchant.ingredients.length; i++){
-            let checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.ingredient = merchant.ingredients[i].ingredient;
-            ingredientDropdown.appendChild(checkbox);
+            let element = document.createElement("div");
+            element.classList.add("choosable");
+            element.ingredient = merchant.ingredients[i].ingredient.id;
+            element.onclick = ()=>{this.toggleActive(element)};
+            ingredientList.appendChild(element);
 
-            let label = document.createElement("label");
-            label.innerText = merchant.ingredients[i].ingredient.name;
-            label.for = checkbox;
-            ingredientDropdown.appendChild(label);
-
-            let brk = document.createElement("br");
-            ingredientDropdown.appendChild(brk);
+            let text = document.createElement("p");
+            text.innerText = merchant.ingredients[i].ingredient.name;
+            element.appendChild(text);
         }
 
-        while(listDiv.children.length > 0){
-            listDiv.removeChild(listDiv.firstChild);
-        }
+        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit(Order)};
+    },
 
-        for(let i = 0; i < merchant.orders.length; i++){
-            let row = template.cloneNode(true);
-
-            row.children[0].innerText = merchant.orders[i].name;
-            row.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
-            row.children[2].innerText = new Date(merchant.orders[i].date).toLocaleDateString("en-US");
-            row.children[3].innerText = `$${merchant.orders[i].getTotalCost().toFixed(2)}`;
-            row.onclick = ()=>{controller.openSidebar("orderDetails", merchant.orders[i])};
-            listDiv.appendChild(row);
+    toggleActive: function(element){
+        if(element.classList.contains("active")){
+            element.classList.remove("active");
+        }else{
+            element.classList.add("active");
         }
     },
 
-    submitFilter: function(){
-        event.preventDefault();
-
+    submit: function(Order){
         let data = {
-            startDate: document.getElementById("orderFilDate1").valueAsDate,
-            endDate: document.getElementById("orderFilDate2").valueAsDate,
+            startDate: document.getElementById("orderFilterDateFrom").valueAsDate,
+            endDate: document.getElementById("orderFilterDateTo").valueAsDate,
             ingredients: []
         }
 
         if(data.startDate >= data.endDate){
-            banner.createError("START DATE CANNOT BE AFTER END DATE");
+            banner.createError("START DATE CACNNOT BE AFTER END DATE");
             return;
         }
 
-        let ingredientChoices = document.getElementById("ingredientDropdown");
-        for(let i = 0; i < ingredientChoices.children.length; i += 3){
-            if(ingredientChoices.children[i].checked){
-                data.ingredients.push(ingredientChoices.children[i].ingredient.id);
+        let ingredients = document.getElementById("orderFilterIngredients").children;
+        for(let i = 0; i < ingredients.length; i++){
+            if(ingredients[i].classList.contains("active")){
+                data.ingredients.push(ingredients[i].ingredient);
             }
         }
 
@@ -3302,74 +3227,149 @@ let orders = {
         loader.style.display = "flex";
 
         fetch("/order", {
-            method: "POST",
+            method: "post",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
             },
             body: JSON.stringify(data)
         })
-            .then((response) => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    banner.createError(response);
-                }else{
-                    let orderList = document.getElementById("orderList");
-                    let template = document.getElementById("order").content.children[0];
-
-                    while(orderList.children.length > 0){
-                        orderList.removeChild(orderList.firstChild);
-                    }
-
-                    for(let i = 0; i < response.length; i++){
-                        let orderDiv = template.cloneNode(true);
-                        let order = new Order(
-                            response[i]._id,
-                            response[i].name,
-                            response[i].date,
-                            response[i].taxes,
-                            response[i].fees,
-                            response[i].ingredients,
-                            merchant
-                        );
-
-                        let cost = 0;
-                        for(let j = 0; j < order.ingredients.length; j++){
-                            cost += order.ingredients[j].price * order.ingredients[j].quantity;
+        .then(response => response.json())
+        .then((response)=>{
+            let orders = [];
+            if(typeof(response) === "string"){
+                banner.createError(response);
+            }else if(response.length === 0){
+                banner.createError("NO ORDERS MATCH YOUR SEARCH");
+            }else{
+                let ingredients = [];
+                for(let i = 0; i < response.length; i++){
+                    for(let j = 0; j < response[i].ingredients.length; j++){
+                        for(let k = 0; k < merchant.ingredients.length; k++){
+                            if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
+                                ingredients.push({
+                                    ingredient: merchant.ingredients[k].ingredient,
+                                    quantity: response[i].ingredients[j].quantity,
+                                    pricePerUnit: response[i].ingredients[j].pricePerUnit
+                                });
+                                break;
+                            }
                         }
-
-                        orderDiv.children[0].innerText = order.name;
-                        orderDiv.children[1].innerText = `${order.ingredients.length} items`;
-                        orderDiv.children[2].innerText = order.date.toLocaleDateString();
-                        orderDiv.children[3].innerText = `$${cost.toFixed(2)}`;
-                        orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", order)};
-                        orderList.appendChild(orderDiv);
                     }
-                }
-            })
-            .catch((err)=>{
-                banner.createError("UNABLE TO DISPLAY THE ORDERS");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
+
+                    orders.push(new Order(
+                        response[i]._id,
+                        response[i].name,
+                        response[i].date,
+                        response[i].taxes,
+                        response[i].fees,
+                        ingredients,
+                        merchant
+                    ));
+                }    
+            }
+
+            controller.openStrand("orders", orders);
+        })
+        .catch((err)=>{
+            banner.createError("UNABLE TO DISPLAY THE ORDERS");
+        })
+        .finally(()=>{
+            loader.style.display = "none";
+        });
+    }
+}
+
+module.exports = orderFilter;
+},{}],19:[function(require,module,exports){
+let orders = {
+    orders: [],
+
+    display: async function(Order, newOrders){
+        if(newOrders){
+            this.orders = newOrders;
+        }
+        if(this.orders.length === 0){
+            this.orders = await this.getOrders(Order);
+        }
+
+        document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
+        document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
+
+        let orderList = document.getElementById("orderList");
+        let template = document.getElementById("order").content.children[0];
+
+        while(orderList.children.length > 0){
+            orderList.removeChild(orderList.firstChild);
+        }
+
+        for(let i = 0; i < this.orders.length; i++){
+            let orderDiv = template.cloneNode(true);
+            orderDiv.order = this.orders[i];
+            orderDiv.children[0].innerText = this.orders[i].name;
+            orderDiv.children[1].innerText = `${this.orders[i].ingredients.length} ingredients`;
+            orderDiv.children[2].innerText = this.orders[i].date.toLocaleDateString("en-US");
+            orderDiv.children[3].innerText = `$${this.orders[i].getTotalCost().toFixed(2)}`;
+            orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", this.orders[i])};
+            orderList.appendChild(orderDiv);
+        }
     },
 
-    toggleDropdown: function(dropdown){
-        event.preventDefault();
-        let polyline = dropdown.parentElement.children[0].children[1].children[0].children[0];
+    getOrders: function(Order){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
 
-        if(dropdown.style.display === "none"){
-            dropdown.style.display = "block";
-            polyline.setAttribute("points", "18 15 12 9 6 15");
-        }else{
-            dropdown.style.display = "none";
-            polyline.setAttribute("points", "6 9 12 15 18 9");
-        }
+        return fetch("/order", {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            }
+        })
+        .then(response => response.json())
+        .then((response)=>{
+            if(typeof(response) === "string"){
+                banner.createError(response);
+            }else{
+                let orders = [];
+                for(let i = 0; i < response.length; i++){
+                    let ingredients = [];
+                    for(let j = 0; j < response[i].ingredients.length; j++){
+                        for(let k = 0; k < merchant.ingredients.length; k++){
+                            if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
+                                ingredients.push({
+                                    ingredient: merchant.ingredients[k].ingredient,
+                                    quantity: response[i].ingredients[j].quantity,
+                                    pricePerUnit: response[i].ingredients[j].pricePerUnit
+                                });
+                                break;
+                            }
+                        }
+                    }
+
+                    orders.push(new Order(
+                        response[i]._id,
+                        response[i].name,
+                        response[i].date,
+                        response[i].taxes,
+                        response[i].fees,
+                        ingredients,
+                        merchant
+                    ));
+                }
+
+                return orders;
+            }
+        })
+        .catch((err)=>{
+            banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+        })
+        .finally(()=>{
+            loader.style.display = "none";
+        });
     }
 }
 
 module.exports = orders;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
@@ -3456,28 +3456,31 @@ let recipeBook = {
         })
             .then(response => response.json())
             .then((response)=>{
-                for(let i = 0; i < response.new.length; i++){
-                    const recipe = new Recipe(
-                        response.new[i]._id,
-                        response.new[i].name,
-                        response.new[i].price,
-                        merchant,
-                        []
-                    );
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    for(let i = 0; i < response.new.length; i++){
+                        const recipe = new Recipe(
+                            response.new[i]._id,
+                            response.new[i].name,
+                            response.new[i].price,
+                            merchant,
+                            []
+                        );
 
-                    merchant.addRecipe(recipe);
-                }
+                        merchant.addRecipe(recipe);
+                    }
 
-                for(let i = 0; i < response.removed.length; i++){
-                    const recipe = new Recipe(
-                        response.removed[i]._id,
-                        response.removed[i].name,
-                        response.removed[i].price,
-                        merchant,
-                        []
-                    );
+                    for(let i = 0; i < response.removed.length; i++){
+                        for(let j = 0; j < merchant.recipes.length; j++){
+                            if(merchant.recipes[j].id === response.removed[i]._id){
+                                merchant.removeRecipe(merchant.recipes[j]);
+                                break;
+                            }
+                        }
+                    }
 
-                    merchant.removeRecipe(recipe);
+                    this.display();
                 }
             })
             .catch((err)=>{
@@ -3490,12 +3493,14 @@ let recipeBook = {
 }
 
 module.exports = recipeBook;
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
-        document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove(recipe)};
         document.getElementById("recipeName").innerText = recipe.name;
+        if(merchant.pos === "none"){
+            document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove(recipe)};
+        }
 
         //ingredient list
         let ingredientsDiv = document.getElementById("recipeIngredientList");
@@ -3564,7 +3569,7 @@ let recipeDetails = {
 }
 
 module.exports = recipeDetails;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 let transactionDetails = {
     transaction: {},
 
@@ -3638,7 +3643,7 @@ let transactionDetails = {
 }
 
 module.exports = transactionDetails;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 let transactions = {
     isPopulated: false,
 

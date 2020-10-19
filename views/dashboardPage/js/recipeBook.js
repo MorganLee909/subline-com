@@ -84,28 +84,31 @@ let recipeBook = {
         })
             .then(response => response.json())
             .then((response)=>{
-                for(let i = 0; i < response.new.length; i++){
-                    const recipe = new Recipe(
-                        response.new[i]._id,
-                        response.new[i].name,
-                        response.new[i].price,
-                        merchant,
-                        []
-                    );
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    for(let i = 0; i < response.new.length; i++){
+                        const recipe = new Recipe(
+                            response.new[i]._id,
+                            response.new[i].name,
+                            response.new[i].price,
+                            merchant,
+                            []
+                        );
 
-                    merchant.addRecipe(recipe);
-                }
+                        merchant.addRecipe(recipe);
+                    }
 
-                for(let i = 0; i < response.removed.length; i++){
-                    const recipe = new Recipe(
-                        response.removed[i]._id,
-                        response.removed[i].name,
-                        response.removed[i].price,
-                        merchant,
-                        []
-                    );
+                    for(let i = 0; i < response.removed.length; i++){
+                        for(let j = 0; j < merchant.recipes.length; j++){
+                            if(merchant.recipes[j].id === response.removed[i]._id){
+                                merchant.removeRecipe(merchant.recipes[j]);
+                                break;
+                            }
+                        }
+                    }
 
-                    merchant.removeRecipe(recipe);
+                    this.display();
                 }
             })
             .catch((err)=>{

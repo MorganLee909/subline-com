@@ -13,9 +13,9 @@ class RecipeIngredient{
     }
 
     get quantity(){
-        // if(this._ingredient.specialUnit === "bottle"){
-        //     return this._quantity / this._ingredient.unitSize;
-        // }
+        if(this._ingredient.specialUnit === "bottle"){
+            return this._quantity / this._ingredient.unitSize;
+        }
 
         switch(this._ingredient.unit){
             case "g":return this._quantity;
@@ -118,9 +118,6 @@ class Recipe{
 
             this._ingredients.push(recipeIngredient);
         }
-
-        this._parent.modules.recipeBook.isPopulated = false;
-        this._parent.modules.analytics.isPopulated = false;
     }
 
     get id(){
