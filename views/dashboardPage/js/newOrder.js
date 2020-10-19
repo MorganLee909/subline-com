@@ -108,7 +108,6 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    console.log(response);
                     let ingredients = [];
                     for(let i = 0; i < response.ingredients.length; i++){
                         for(let j = 0; j < merchant.ingredients.length; j++){
@@ -116,7 +115,7 @@ let newOrder = {
                                 ingredients.push({
                                     ingredient: merchant.ingredients[j].ingredient,
                                     quantity: response.ingredients[i].quantity,
-                                    pricePerUnit: response.ingredients[j].pricePerUnit
+                                    pricePerUnit: response.ingredients[i].pricePerUnit
                                 });
 
                                 break;
@@ -141,7 +140,6 @@ let newOrder = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
