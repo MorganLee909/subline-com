@@ -2807,7 +2807,7 @@ let newOrder = {
                                 ingredients.push({
                                     ingredient: merchant.ingredients[j].ingredient,
                                     quantity: response.ingredients[i].quantity,
-                                    pricePerUnit: response.ingredients[j].pricePerUnit
+                                    pricePerUnit: response.ingredients[i].pricePerUnit
                                 });
 
                                 break;
