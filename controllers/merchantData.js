@@ -63,9 +63,10 @@ module.exports = {
     Redirects to /dashboard
     */
     createMerchantClover: async function(req, res){
+        let merchant = {}
         axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}?access_token=${req.session.accessToken}`)
             .then((response)=>{
-                let merchant = new Merchant({
+                merchant = new Merchant({
                     name: response.data.name,
                     pos: "clover",
                     posId: req.session.merchantId,
@@ -76,50 +77,35 @@ module.exports = {
                     recipes: []
                 });
 
-                axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`)
-                    .then((response)=>{
-                        let recipes = [];
-                        for(let i = 0; i < response.data.elements.length; i++){
-                            let recipe = new Recipe({
-                                posId: response.data.elements[i].id,
-                                merchant: merchant,
-                                name: response.data.elements[i].name,
-                                price: response.data.elements[i].price,
-                                ingredients: []
-                            });
+                return axios.get(`${process.env.CLOVER_ADDRESS}/v3/merchants/${req.session.merchantId}/items?access_token=${req.session.accessToken}`);
+            })
+            .then((response)=>{
+                let recipes = [];
+                for(let i = 0; i < response.data.elements.length; i++){
+                    let recipe = new Recipe({
+                        posId: response.data.elements[i].id,
+                        merchant: merchant,
+                        name: response.data.elements[i].name,
+                        price: response.data.elements[i].price,
+                        ingredients: []
+                    });
 
-                            recipes.push(recipe);
-                            merchant.recipes.push(recipe);                                
-                        }
+                    recipes.push(recipe);
+                    merchant.recipes.push(recipe);                                
+                }
 
-                        Recipe.create(recipes)
-                            .catch((err)=>{
-                                req.session.error = "ERROR: UNABLE TO CREATE YOUR RECIPES FROM CLOVER."
-                            })
+                Recipe.create(recipes).catch((err)=>{});
 
-                        merchant.save()
-                            .then((newMerchant)=>{
-                                req.session.accessToken = undefined;
-                                req.session.user = newMerchant._id;
+                return merchant.save();
+            })
+            .then((newMerchant)=>{
+                req.session.accessToken = undefined;
+                req.session.user = newMerchant._id;
 
-                                return res.redirect("/dashboard");
-                            })
-                            .catch((err)=>{
-                                req.session.error = "ERROR: UNABLE TO SAVE DATA FROM CLOVER";
-
-                                return res.redirect("/");
-                            });
-                    })
-                    .catch((err)=>{
-                        req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
-                        return res.redirect("/");
-                    })
-
-                
+                return res.redirect("/dashboard");
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
-
                 return res.redirect("/");
             });
     },

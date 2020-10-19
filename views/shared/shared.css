@@ -223,6 +223,33 @@ form{
     transition: width 1s linear;
 }
 
+.choosable{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgb(0, 27, 45);
+    color: white;
+    border-radius: 5px;
+    margin: 2px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .choosable.tall{
+        padding: 15px;
+    }
+
+    .choosable:hover{
+        background: rgb(201, 201, 201);
+        color: black;
+    }
+
+    .choosable.active{
+        background: rgb(179, 191, 209);
+        color: white;
+    }
+
 /* Header partial */
 .header{
     display: flex;
@@ -272,26 +299,20 @@ form{
 
 /* Banner partial */
 .banner{
+    justify-content: center;
     width: 100%;
-    text-align: center;
-    list-style-type: none;
     font-size: 20px;
     color: white;
-    z-index: -10;
     position: absolute;
-    border-radius: 5px;
+    padding: 5px 0;
 }
 
-    .banner .notification{
+    .notification{
         background: rgba(1, 140, 15, 0.75);
-        list-style-type: none;
-        padding: 5px;
     }
 
-    .banner .error{
+    .error{
         background: rgba(255, 0, 0, 0.75);
-        list-style-type: none;
-        padding: 5px;
     }
 
 /* Footer Partial */

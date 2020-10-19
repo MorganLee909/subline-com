@@ -71,32 +71,31 @@ module.exports = {
             }
         }
 
+        let response = {}
         axios.get(`${process.env.CLOVER_ADDRESS}/oauth/token?client_id=${process.env.SUBLINE_CLOVER_APPID}&client_secret=${process.env.SUBLINE_CLOVER_APPSECRET}&code=${authorizationCode}`)
-            .then((response)=>{
-                Merchant.findOne({posId: merchantId})
-                    .then((merchant)=>{
-                        if(merchant){
-                            merchant.posAccessToken = response.data.access_token;
-
-                            merchant.save()
-                                .then((updatedMerchant)=>{
-                                    req.session.user = updatedMerchant._id;
-                                    return res.redirect("/dashboard");
-                                })
-                                .catch((err)=>{
-                                    req.session.error("Error: unable to save critical data.  Try again.");
-                                    return res.redirect("/")
-                                });
-                        }else{
-                            req.session.merchantId = merchantId;
-                            req.session.accessToken = response.data.access_token;
-                            return res.redirect("/merchant/create/clover");
-                        }
-                    })
-                    .catch((err)=>{
-                        req.session.error = "ERROR: WE MADE AN OOPSIES";
-                    });
+            .then((data)=>{
+                response = data;
                 
+                return Merchant.findOne({posId: merchantId});
+            })
+            .then((merchant)=>{
+                if(merchant){
+                    merchant.posAccessToken = response.data.access_token;
+
+                    merchant.save()
+                        .then((updatedMerchant)=>{
+                            req.session.user = updatedMerchant._id;
+                            return res.redirect("/dashboard");
+                        })
+                        .catch((err)=>{
+                            req.session.error("ERROR: UNABLE TO CREATE MERCHANT");
+                            return res.redirect("/")
+                        });
+                }else{
+                    req.session.merchantId = merchantId;
+                    req.session.accessToken = response.data.access_token;
+                    return res.redirect("/merchant/create/clover");
+                }
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";

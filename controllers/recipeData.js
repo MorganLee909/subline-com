@@ -153,69 +153,56 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let merchant = {};
+        let newRecipes = [];
+        let deletedRecipes = []
         Merchant.findOne({_id: req.session.user})
             .populate("recipes")
-            .then((merchant)=>{
-                axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/items?access_token=${merchant.posAccessToken}`)
-                    .then((result)=>{
-                        let deletedRecipes = merchant.recipes.slice();
-                        for(let i = 0; i < result.data.elements.length; i++){
-                            for(let j = 0; j < deletedRecipes.length; j++){
-                                if(result.data.elements[i].id === deletedRecipes[j].posId){
-                                    result.data.elements.splice(i, 1);
-                                    deletedRecipes.splice(j, 1);
-                                    i--;
-                                    break;
-                                }
-                            }
+            .then((response)=>{
+                merchant = response;
+                return axios.get(`https://apisandbox.dev.clover.com/v3/merchants/${merchant.posId}/items?access_token=${merchant.posAccessToken}`);
+            })
+            .then((result)=>{
+                deletedRecipes = merchant.recipes.slice();
+                for(let i = 0; i < result.data.elements.length; i++){
+                    for(let j = 0; j < deletedRecipes.length; j++){
+                        if(result.data.elements[i].id === deletedRecipes[j].posId){
+                            result.data.elements.splice(i, 1);
+                            deletedRecipes.splice(j, 1);
+                            i--;
+                            break;
                         }
+                    }
+                }
 
-                        for(let i = 0; i < deletedRecipes.length; i++){
-                            for(let j = 0; j < merchant.recipes.length; j++){
-                                if(deletedRecipes[i]._id === merchant.recipes[j]._id){
-                                    merchant.recipes.splice(j, 1);
-                                    break;
-                                }
-                            }
+                for(let i = 0; i < deletedRecipes.length; i++){
+                    for(let j = 0; j < merchant.recipes.length; j++){
+                        if(deletedRecipes[i]._id === merchant.recipes[j]._id){
+                            merchant.recipes.splice(j, 1);
+                            break;
                         }
+                    }
+                }
 
-                        let newRecipes = []
-                        for(let i = 0; i < result.data.elements.length; i++){
-                            let newRecipe = new Recipe({
-                                posId: result.data.elements[i].id,
-                                merchant: merchant._id,
-                                name: result.data.elements[i].name,
-                                ingredients: [],
-                                price: result.data.elements[i].price
-                            });
-
-                            merchant.recipes.push(newRecipe);
-                            newRecipes.push(newRecipe);
-                        }
-
-                        Recipe.create(newRecipes)
-                            .catch((err)=>{
-                                return res.json("ERROR: UNABLE TO SAVE RECIPES");
-                            });
-
-                        merchant.save()
-                            .then((newMerchant)=>{
-                                newMerchant.populate("recipes.ingredients.ingredient").execPopulate()
-                                    .then((newestMerchant)=>{
-                                        merchant.password = undefined;
-                                        return res.json({new: newRecipes, removed: deletedRecipes});
-                                    })
-                                    .catch((err)=>{
-                                        return res.json("ERROR: UNABLE TO RETRIEVE DATA");
-                                    });
-                            })
-                            .catch((err)=>{
-                                return res.json("ERROR: UNABLE TO SAVE CHANGES FROM CLOVER");
-                            });
-                    })
-                    .catch((err)=>{
-                        return res.json("ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER");
+                for(let i = 0; i < result.data.elements.length; i++){
+                    let newRecipe = new Recipe({
+                        posId: result.data.elements[i].id,
+                        merchant: merchant._id,
+                        name: result.data.elements[i].name,
+                        ingredients: [],
+                        price: result.data.elements[i].price
                     });
+
+                    merchant.recipes.push(newRecipe);
+                    newRecipes.push(newRecipe);
+                }
+
+                Recipe.create(newRecipes).catch((err)=>{});
+
+                return merchant.save();
+            })
+            .then((newMerchant)=>{
+                return res.json({new: newRecipes, removed: deletedRecipes});
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO RETRIEVE MERCHANT DATA");
