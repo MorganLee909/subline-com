@@ -108,6 +108,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    console.log(response);
                     let ingredients = [];
                     for(let i = 0; i < response.ingredients.length; i++){
                         for(let j = 0; j < merchant.ingredients.length; j++){
