@@ -172,6 +172,16 @@ Multi-strand use classes
     left: 15px;
 }
 
+.buttonBox{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 50px;
+}
+
+    .buttonBox > *{
+        margin-right: 10px;
+    }
+
 /* 
 Home Strand 
 */

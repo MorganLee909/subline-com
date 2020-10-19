@@ -47,8 +47,8 @@ let orders = {
                 banner.createError(response);
             }else{
                 let orders = [];
-                let ingredients = [];
                 for(let i = 0; i < response.length; i++){
+                    let ingredients = [];
                     for(let j = 0; j < response[i].ingredients.length; j++){
                         for(let k = 0; k < merchant.ingredients.length; k++){
                             if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
