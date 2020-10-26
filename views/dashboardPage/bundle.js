@@ -443,7 +443,7 @@ class Merchant{
                 }else{
                     ingredients[ingredient.ingredient.id] = recipe.quantity * ingredient.quantity;
                 }
-            } 
+            }
         }
 
         const keys = Object.keys(ingredients);
@@ -3051,6 +3051,15 @@ let newTransaction = {
                     recipe: recipe.id,
                     quantity: quantity
                 });
+
+                for(let j = 0; j < recipe.ingredients.length; j++){
+                    let ingredient = recipe.ingredients[j];
+                    if(data.ingredientUpdates[ingredient.ingredient.id]){
+                        data.ingredientUpdates[ingredient.ingredient.id] += ingredient.convertToBase(ingredient.quantity) * quantity;
+                    }else{
+                        data.ingredientUpdates[ingredient.ingredient.id] = ingredient.convertToBase(ingredient.quantity) * quantity;
+                    }
+                }
             }else if(quantity < 0){
                 banner.createError("CANNOT HAVE NEGATIVE VALUES");
                 return;

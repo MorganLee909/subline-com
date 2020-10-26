@@ -316,7 +316,7 @@ class Merchant{
                 }else{
                     ingredients[ingredient.ingredient.id] = recipe.quantity * ingredient.quantity;
                 }
-            } 
+            }
         }
 
         const keys = Object.keys(ingredients);
