@@ -176,6 +176,10 @@ class MerchantIngredient{
         this._quantity = quantity;
     }
 
+    updateQuantity(quantity){
+        this._quantity += this.convertToBase(quantity);
+    }
+
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
@@ -439,14 +443,14 @@ class Merchant{
                 }else{
                     ingredients[ingredient.ingredient.id] = recipe.quantity * ingredient.quantity;
                 }
-            } 
+            }
         }
 
         const keys = Object.keys(ingredients);
         for(let i = 0; i < keys.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients.quantity -= ingredients[keys[i]];
+                    this._ingredients[j].updateQuantity(-ingredients[keys[i]]);
                 }
             }
         }
@@ -503,8 +507,8 @@ class Merchant{
         if(isNew){
             for(let i = 0; i < order.ingredients.length; i++){
                 for(let j = 0; j < this._ingredients.length; j++){
-                    if(order.ingredients[i] === this._ingredients[j].ingredient){
-                        this._ingredients[j].quantity += order.ingredients[i].quantity;
+                    if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
+                        this._ingredients[j].updateQuantity(order.ingredients[i].quantity);
                         break;
                     }
                 }
@@ -3047,6 +3051,15 @@ let newTransaction = {
                     recipe: recipe.id,
                     quantity: quantity
                 });
+
+                for(let j = 0; j < recipe.ingredients.length; j++){
+                    let ingredient = recipe.ingredients[j];
+                    if(data.ingredientUpdates[ingredient.ingredient.id]){
+                        data.ingredientUpdates[ingredient.ingredient.id] += ingredient.convertToBase(ingredient.quantity) * quantity;
+                    }else{
+                        data.ingredientUpdates[ingredient.ingredient.id] = ingredient.convertToBase(ingredient.quantity) * quantity;
+                    }
+                }
             }else if(quantity < 0){
                 banner.createError("CANNOT HAVE NEGATIVE VALUES");
                 return;
