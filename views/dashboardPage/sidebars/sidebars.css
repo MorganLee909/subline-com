@@ -641,18 +641,6 @@ EDIT RECIPE
         font-weight: bold;
     }
 
-    .orderIngredient{
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        box-sizing: border-box;
-        background: rgb(240, 252, 255);
-        border: 1px solid black;
-        border-radius: 5px;
-        padding: 10px;
-        margin: 5px 0;
-    }
-
 /*
 ORDER FILTER
 */

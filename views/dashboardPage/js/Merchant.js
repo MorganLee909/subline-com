@@ -217,7 +217,7 @@ class Merchant{
     getIngredient(id){
         for(let i = 0; i < this._ingredients.length; i++){
             if(this._ingredients[i].ingredient.id === id){
-                return this._ingredients[i].ingredient;
+                return this._ingredients[i];
             }
         }
     }
