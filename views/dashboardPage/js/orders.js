@@ -26,7 +26,10 @@ let orders = {
             orderDiv.children[1].innerText = `${this.orders[i].ingredients.length} ingredients`;
             orderDiv.children[2].innerText = this.orders[i].date.toLocaleDateString("en-US");
             orderDiv.children[3].innerText = `$${this.orders[i].getTotalCost().toFixed(2)}`;
-            orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", this.orders[i])};
+            orderDiv.onclick = ()=>{
+                controller.openSidebar("orderDetails", this.orders[i]);
+                orderDiv.classList.add("active");
+            }
             orderList.appendChild(orderDiv);
         }
     },

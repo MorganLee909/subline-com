@@ -29,7 +29,10 @@ let recipeBook = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let recipeDiv = template.cloneNode(true);
-            recipeDiv.onclick = ()=>{controller.openSidebar("recipeDetails", merchant.recipes[i])};
+            recipeDiv.onclick = ()=>{
+                controller.openSidebar("recipeDetails", merchant.recipes[i]);
+                recipeDiv.classList.add("active");
+            }
             recipeDiv._name = merchant.recipes[i].name;
             recipeList.appendChild(recipeDiv);
 

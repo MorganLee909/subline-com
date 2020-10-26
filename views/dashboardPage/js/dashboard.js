@@ -160,6 +160,12 @@ controller = {
                     case "transactionDetails":
                         choosables = document.getElementById("transactionsList").children;
                         break;
+                    case "recipeDetails":
+                        choosables = document.getElementById("recipeList").children;
+                        break;
+                    case "orderDetails":
+                        choosables = document.getElementById("orderList").children;
+                        break;
                 }
 
                 for(let i = 0; i < choosables.length; i++){

@@ -1740,6 +1740,12 @@ controller = {
                     case "transactionDetails":
                         choosables = document.getElementById("transactionsList").children;
                         break;
+                    case "recipeDetails":
+                        choosables = document.getElementById("recipeList").children;
+                        break;
+                    case "orderDetails":
+                        choosables = document.getElementById("orderList").children;
+                        break;
                 }
 
                 for(let i = 0; i < choosables.length; i++){
@@ -3346,7 +3352,10 @@ let orders = {
             orderDiv.children[1].innerText = `${this.orders[i].ingredients.length} ingredients`;
             orderDiv.children[2].innerText = this.orders[i].date.toLocaleDateString("en-US");
             orderDiv.children[3].innerText = `$${this.orders[i].getTotalCost().toFixed(2)}`;
-            orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", this.orders[i])};
+            orderDiv.onclick = ()=>{
+                controller.openSidebar("orderDetails", this.orders[i]);
+                orderDiv.classList.add("active");
+            }
             orderList.appendChild(orderDiv);
         }
     },
@@ -3438,7 +3447,10 @@ let recipeBook = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let recipeDiv = template.cloneNode(true);
-            recipeDiv.onclick = ()=>{controller.openSidebar("recipeDetails", merchant.recipes[i])};
+            recipeDiv.onclick = ()=>{
+                controller.openSidebar("recipeDetails", merchant.recipes[i]);
+                recipeDiv.classList.add("active");
+            }
             recipeDiv._name = merchant.recipes[i].name;
             recipeList.appendChild(recipeDiv);
 
