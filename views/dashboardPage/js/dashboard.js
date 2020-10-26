@@ -149,6 +149,14 @@ controller = {
     closeSidebar: function(){
         let sidebar = document.getElementById("sidebarDiv");
         for(let i = 0; i < sidebar.children.length; i++){
+            if(sidebar.children[i].id === "ingredientDetails" && sidebar.children[i].style.display !== "none"){
+                let ingredients = document.querySelectorAll(".ingredient");
+                
+                for(let i = 0; i < ingredients.length; i++){
+                    ingredients[i].classList.remove("active");
+                }
+            }
+
             sidebar.children[i].style.display = "none";
         }
         sidebar.classList = "sidebarHide";

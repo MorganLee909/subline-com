@@ -1729,6 +1729,14 @@ controller = {
     closeSidebar: function(){
         let sidebar = document.getElementById("sidebarDiv");
         for(let i = 0; i < sidebar.children.length; i++){
+            if(sidebar.children[i].id === "ingredientDetails" && sidebar.children[i].style.display !== "none"){
+                let ingredients = document.querySelectorAll(".ingredient");
+                
+                for(let i = 0; i < ingredients.length; i++){
+                    ingredients[i].classList.remove("active");
+                }
+            }
+
             sidebar.children[i].style.display = "none";
         }
         sidebar.classList = "sidebarHide";
@@ -2491,7 +2499,7 @@ let ingredients = {
             let categoryDiv = categoryTemplate.cloneNode(true);
             categoryDiv.children[0].children[0].innerText = categories[i].name.toUpperCase();
             
-            categoryDiv.children[0].children[1].onclick = ()=>{
+            categoryDiv.children[0].onclick = ()=>{
                 this.toggleCategory(categoryDiv.children[1], categoryDiv.children[0].children[1]);
             };
             categoryDiv.children[1].style.display = "none";
@@ -2502,9 +2510,13 @@ let ingredients = {
                 let ingredientDiv = ingredientTemplate.cloneNode(true);
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
-                ingredientDiv.onclick = ()=>{controller.openSidebar("ingredientDetails", ingredient)};
+                ingredientDiv.onclick = ()=>{
+                    ingredientDiv.classList.add("active");
+                    controller.openSidebar("ingredientDetails", ingredient);
+                };
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
+                ingredientDiv.classList.add("choosable");
 
                 
                 if(ingredient.ingredient.specialUnit === "bottle"){

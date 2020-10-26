@@ -182,6 +182,33 @@ Multi-strand use classes
         margin-right: 10px;
     }
 
+.choosable{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgb(0, 27, 45);
+    color: white;
+    border-radius: 5px;
+    margin: 2px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .choosable.tall{
+        padding: 15px;
+    }
+
+    .choosable:hover{
+        background: rgb(201, 201, 201);
+        color: black;
+    }
+
+    .choosable.active{
+        background: rgb(179, 191, 209);
+        color: white;
+    }
+
 /* 
 Home Strand 
 */
@@ -362,8 +389,16 @@ Ingredients Strand
         width: 80%;
     }
 
+    .categoryDiv{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .categoryDiv > div:first-of-type{
         display: flex;
+        cursor: pointer;
+        width: 100%;
     }
 
     .categoryDiv > div:first-of-type p{
@@ -389,29 +424,7 @@ Ingredients Strand
 
         .ingredientsDiv{
             flex-direction: column;
-        }
-
-    .ingredient{
-        display: flex;
-        width: 50%;
-        padding: 15px;
-        margin: auto;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-
-        .ingredient:hover{
-            background: rgb(0, 27, 45);
-            color: white;
-        }
-
-        .ingredient > *{
-            width: 33%;
-            margin-right: 15px;
-        }
-
-        .ingredient > p:last-of-type{
-            text-align: right;
+            width: 50%;
         }
 
         .ingredientSpacer{
