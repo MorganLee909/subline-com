@@ -40,16 +40,16 @@ let analytics = {
 
         for(let i = 0; i < merchant.ingredients.length; i++){
             let li = document.createElement("li");
-            li.classList.add("itemButton");
+            li.classList.add("choosable");
             li.item = merchant.ingredients[i];
             li.innerText = merchant.ingredients[i].ingredient.name;
             li.onclick = ()=>{
                 const itemsList = document.getElementById("itemsList");
                 for(let i = 0; i < itemsList.children.length; i++){
-                    itemsList.children[i].classList.remove("analItemActive");
+                    itemsList.children[i].classList.remove("active");
                 }
 
-                li.classList.add("analItemActive");
+                li.classList.add("active");
 
                 this.ingredient = merchant.ingredients[i];
                 this.ingredientDisplay();
@@ -71,15 +71,15 @@ let analytics = {
 
         for(let i = 0; i < merchant.recipes.length; i++){
             let li = document.createElement("li");
-            li.classList.add("itemButton");
+            li.classList.add("choosable");
             li.recipe = merchant.recipes[i];
             li.innerText = merchant.recipes[i].name;
             li.onclick = ()=>{
                 let recipeList = document.getElementById("analRecipeList");
                 for(let i = 0; i < recipeList.children.length; i++){
-                    recipeList.children[i].classList.remove("analItemActive");
+                    recipeList.children[i].classList.remove("active");
                 }
-                li.classList.add("analItemActive");
+                li.classList.add("active");
 
                 this.recipe = merchant.recipes[i];
                 this.recipeDisplay();
