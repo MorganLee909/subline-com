@@ -48,7 +48,10 @@ let transactions = {
                 let transactionDiv = template.cloneNode(true);
                 let transaction = transactions[i];
 
-                transactionDiv.onclick = ()=>{controller.openSidebar("transactionDetails", transaction)};
+                transactionDiv.onclick = ()=>{
+                    controller.openSidebar("transactionDetails", transaction);
+                    transactionDiv.classList.add("active");
+                }
                 transactionsList.appendChild(transactionDiv);
 
                 let totalRecipes = 0;

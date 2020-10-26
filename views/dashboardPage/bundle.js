@@ -1729,14 +1729,25 @@ controller = {
     closeSidebar: function(){
         let sidebar = document.getElementById("sidebarDiv");
         for(let i = 0; i < sidebar.children.length; i++){
-            if(sidebar.children[i].id === "ingredientDetails" && sidebar.children[i].style.display !== "none"){
-                let ingredients = document.querySelectorAll(".ingredient");
-                for(let i = 0; i < ingredients.length; i++){
-                    ingredients[i].classList.remove("active");
+            if(sidebar.children[i].style.display !== "none"){
+                sidebar.children[i].style.display = "none";
+                let choosables = [];
+
+                switch(sidebar.children[i].id){
+                    case "ingredientDetails": 
+                        choosables = document.querySelectorAll(".ingredient");
+                        break;
+                    case "transactionDetails":
+                        choosables = document.getElementById("transactionsList").children;
+                        break;
+                }
+
+                for(let i = 0; i < choosables.length; i++){
+                    choosables[i].classList.remove("active");
                 }
             }
 
-            sidebar.children[i].style.display = "none";
+            
         }
         sidebar.classList = "sidebarHide";
 
@@ -3720,7 +3731,10 @@ let transactions = {
                 let transactionDiv = template.cloneNode(true);
                 let transaction = transactions[i];
 
-                transactionDiv.onclick = ()=>{controller.openSidebar("transactionDetails", transaction)};
+                transactionDiv.onclick = ()=>{
+                    controller.openSidebar("transactionDetails", transaction);
+                    transactionDiv.classList.add("active");
+                }
                 transactionsList.appendChild(transactionDiv);
 
                 let totalRecipes = 0;
