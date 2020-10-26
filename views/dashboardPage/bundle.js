@@ -176,6 +176,10 @@ class MerchantIngredient{
         this._quantity = quantity;
     }
 
+    updateQuantity(quantity){
+        this._quantity -= this.convertToBase(quantity);
+    }
+
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
@@ -446,7 +450,7 @@ class Merchant{
         for(let i = 0; i < keys.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients.quantity -= ingredients[keys[i]];
+                    this._ingredients[j].updateQuantity(ingredients[keys[i]]);
                 }
             }
         }
