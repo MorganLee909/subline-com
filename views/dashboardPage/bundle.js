@@ -177,7 +177,7 @@ class MerchantIngredient{
     }
 
     updateQuantity(quantity){
-        this._quantity -= this.convertToBase(quantity);
+        this._quantity += this.convertToBase(quantity);
     }
 
     convertToBase(quantity){
@@ -450,7 +450,7 @@ class Merchant{
         for(let i = 0; i < keys.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients[j].updateQuantity(ingredients[keys[i]]);
+                    this._ingredients[j].updateQuantity(-ingredients[keys[i]]);
                 }
             }
         }
@@ -507,8 +507,8 @@ class Merchant{
         if(isNew){
             for(let i = 0; i < order.ingredients.length; i++){
                 for(let j = 0; j < this._ingredients.length; j++){
-                    if(order.ingredients[i] === this._ingredients[j].ingredient){
-                        this._ingredients[j].quantity += order.ingredients[i].quantity;
+                    if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
+                        this._ingredients[j].updateQuantity(order.ingredients[i].quantity);
                         break;
                     }
                 }
