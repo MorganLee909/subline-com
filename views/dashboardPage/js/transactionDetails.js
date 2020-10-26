@@ -20,13 +20,17 @@ let transactionDetails = {
             recipe.children[0].innerText = transaction.recipes[i].recipe.name;
             recipe.children[1].innerText = `${transaction.recipes[i].quantity} x $${transaction.recipes[i].recipe.price.toFixed(2)}`;
             recipe.children[2].innerText = `$${price.toFixed(2)}`;
+            recipe.onclick = ()=>{
+                controller.openStrand("recipeBook");
+                controller.openSidebar("recipeDetails", transaction.recipes[i].recipe);
+            }
             recipeList.appendChild(recipe);
 
             totalRecipes += transaction.recipes[i].quantity;
             totalPrice += price;
         }
 
-        let months = ["January", "Fecbruary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         let dateString = `${days[transaction.date.getDay()]}, ${months[transaction.date.getMonth()]} ${transaction.date.getDate()}, ${transaction.date.getFullYear()}`;
 
