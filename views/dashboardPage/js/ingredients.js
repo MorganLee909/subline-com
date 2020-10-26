@@ -54,8 +54,6 @@ let ingredients = {
                 };
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
-                ingredientDiv.classList.add("choosable");
-
                 
                 if(ingredient.ingredient.specialUnit === "bottle"){
                     ingredientDiv.children[2].innerText = `${ingredient.quantity.toFixed(2)} BOTTLES`

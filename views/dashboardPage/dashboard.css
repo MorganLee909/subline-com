@@ -193,6 +193,8 @@ Multi-strand use classes
     padding: 5px;
     text-align: center;
     cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
 }
 
     .choosable.tall{
@@ -730,18 +732,6 @@ Transactions Strand
         .mobileHide{
             display: none;
         }
-
-        .itemDisplay{
-            color: black;
-            padding: 5px;
-            margin-top: 2px;
-            margin-bottom: 2px;
-        }
-
-            .itemDisplay:hover{
-                background: rgb(240, 252, 255);
-                color: black;
-            }
 
         .smallItemDisplay{
             color: black;
