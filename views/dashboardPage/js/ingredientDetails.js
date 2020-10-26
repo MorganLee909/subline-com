@@ -33,19 +33,23 @@ let ingredientDetails = {
         }
 
         //Show recipes that this ingredient is a part of
-        let ul = document.getElementById("ingredientRecipeList");
+        let recipeList = document.getElementById("ingredientRecipeList");
+        let template = document.getElementById("ingredientRecipe").content.children[0];
         let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
-        while(ul.children.length > 0){
-            ul.removeChild(ul.firstChild);
+
+        while(recipeList.children.length > 0){
+            recipeList.removeChild(recipeList.firstChild);
         }
+
         for(let i = 0; i < recipes.length; i++){
-            let li = document.createElement("li");
-            li.innerText = recipes[i].name;
-            li.onclick = ()=>{
+            let recipeDiv = template.cloneNode(true);
+            recipeDiv.children[0].innerText = recipes[i].name;
+            recipeDiv.onclick = ()=>{
                 controller.openStrand("recipeBook");
                 controller.openSidebar("recipeDetails", recipes[i]);
             }
-            ul.appendChild(li);
+            recipeDiv.classList.add("choosable");
+            recipeList.appendChild(recipeDiv);
         }
     },
 

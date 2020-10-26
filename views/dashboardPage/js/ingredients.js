@@ -49,8 +49,8 @@ let ingredients = {
 
                 ingredientDiv.children[0].innerText = ingredient.ingredient.name;
                 ingredientDiv.onclick = ()=>{
-                    ingredientDiv.classList.add("active");
                     controller.openSidebar("ingredientDetails", ingredient);
+                    ingredientDiv.classList.add("active");
                 };
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
