@@ -1,5 +1,3 @@
-const { populate } = require("./orders");
-
 let ingredients = {
     isPopulated: false,
     ingredients: [],
@@ -7,22 +5,16 @@ let ingredients = {
     display: function(){
         if(!this.isPopulated){
             document.getElementById("ingredientSearch").oninput = ()=>{this.search()};
-            document.getElementById("ingredientClearButton").onclick = ()=>{this.clearSorting()};
-            document.getElementById("ingredientSelect").onchange = ()=>{this.sort()};
 
-            this.populateByProperty("category");
+            this.populateByProperty();
 
             this.isPopulated = true;
         }
     },
 
-    populateByProperty: function(property){
+    populateByProperty: function(){
         let categories;
-        if(property === "category"){
-            categories = merchant.categorizeIngredients();
-        }else if(property === "unit"){
-            categories = merchant.unitizeIngredients();
-        }
+        categories = merchant.categorizeIngredients();
         
         let ingredientStrand = document.getElementById("categoryList");
         let categoryTemplate = document.getElementById("categoryDiv").content.children[0];
@@ -91,11 +83,9 @@ let ingredients = {
 
     search: function(){
         let input = document.getElementById("ingredientSearch").value.toLowerCase();
-        document.getElementById("ingredientSelect").selectedIndex = 0;
 
         if(input === ""){
-            this.populateByProperty("category");
-            document.getElementById("ingredientClearButton").style.display = "none";
+            this.populateByProperty();
             return;
         }
 
@@ -106,40 +96,7 @@ let ingredients = {
             }
         }
 
-        document.getElementById("ingredientClearButton").style.display = "inline";
         this.displayIngredientsOnly(matchingIngredients);
-    },
-
-    sort: function(){
-        let sortType = document.getElementById("ingredientSelect").value;
-        
-        if(sortType === ""){
-            return;
-        }
-
-        document.getElementById("ingredientSearch").value = "";
-
-        if(sortType === "category"){
-            this.populateByProperty("category");
-            return;
-        }
-
-        if(sortType === "unit"){
-            this.populateByProperty("unit");
-            return;
-        }
-
-        document.getElementById("ingredientClearButton").style.display = "inline";
-        let sortedIngredients = this.ingredients.slice().sort((a, b)=> (a[sortType] > b[sortType]) ? 1 : -1);
-        this.displayIngredientsOnly(sortedIngredients);
-    },
-
-    clearSorting: function(button){
-        document.getElementById("ingredientSearch").value = "";
-        document.getElementById("ingredientSelect").selectedIndex = 0;
-        document.getElementById("ingredientClearButton").style.display = "none";
-
-        this.populateByProperty("category");
     }
 }
 

@@ -49,82 +49,6 @@ Multi-strand use classes
             padding: 0;
         }
 
-.searchBar{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3px;
-    width: 80%;
-    padding: 10px 25px;
-    box-sizing: border-box;
-    background: rgb(0, 27,45);
-    border-radius: 5px;
-}
-
-    .searchAndIcon{
-        display: flex;
-        width: 25%;
-    }
-
-        .searchAndIcon svg{
-            background: rgb(201, 201, 201);
-            border-bottom-left-radius: 5px;
-            border-top-left-radius: 5px;
-            color: gray;
-            padding: 5px 0 5px 5px;
-            width: 30px;
-            z-index: 10;
-        }
-
-        .searchAndIcon input{
-            background: rgb(201, 201, 201);
-            border: none;
-            height: 30px;
-            border-bottom-right-radius: 5px;
-            border-top-right-radius: 5px;
-            font-size: 20px;
-            padding: 5px 0 5px 10px;
-            max-width: 200px;
-        }
-
-    .clearButton{
-        background: none;
-        border: none;
-        color: rgb(255, 99, 107);
-        cursor: pointer;
-    }
-
-        .clearButton:hover{
-            background: rgb(0, 27, 45);
-        }
-
-    .searchBar select{
-        background: rgb(201, 201, 201);
-        font-size: 20px;
-        border-radius: 5px;
-        border: none;
-        height: 30px;
-        padding: 5px 0;
-        box-sizing: content-box;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
-        background-repeat: no-repeat;
-        background-position-x: 100%;
-        background-position-y: 50%;
-        cursor: pointer;
-    }
-
-    .button2Link{
-        background: none;
-        border: none;
-        color: blue;
-        text-decoration: underline;
-        font-size: 15px;
-        margin-top: auto;
-        cursor: pointer;
-    }
-
 #sidebarCloser{
     width: 30px;
     background: rgb(0, 27, 45);
@@ -175,6 +99,39 @@ Multi-strand use classes
     .choosable.active{
         background: rgb(179, 191, 209);
         color: white;
+    }
+
+.searchBar{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .searchButton{
+        padding: 6px;
+        background: rgb(0, 27, 45);
+        cursor: pointer;
+        color: white;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+        .searchButton:hover{
+            background: rgb(201, 201, 201);
+            color: black;
+        }
+
+        .searchButton:active{
+            background: rgb(179, 191, 209);
+            color: white;
+        }
+
+    .searchInput{
+        border: 4px solid rgb(0, 27, 45);
+        font-size: 20px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        padding: 1px 0 1px 4px;
     }
 
 /* 
@@ -697,10 +654,6 @@ Transactions Strand
         color: black;
     }
 
-        #ingredientSearch{
-            border-radius: 5px;
-        }
-
         .categoryDiv > div:first-of-type p{
             padding: 5px 0 5px 5px;
         }
@@ -729,10 +682,6 @@ Transactions Strand
     */
     .searchBar{
         padding: 0;
-    }
-
-    .searchAndIcon{
-        width: 100%;
     }
 
     #recipeSearch{
