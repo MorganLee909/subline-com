@@ -3567,6 +3567,10 @@ let recipeDetails = {
             let recipeDiv = template.cloneNode(true);
             recipeDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
             recipeDiv.children[1].innerText = `${recipe.ingredients[i].getQuantityDisplay()}`;
+            recipeDiv.onclick = ()=>{
+                controller.openStrand("ingredients");
+                controller.openSidebar("ingredientDetails", recipe.ingredients[i]);
+            }
             ingredientsDiv.appendChild(recipeDiv);
         }
 

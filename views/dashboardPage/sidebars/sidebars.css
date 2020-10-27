@@ -340,22 +340,6 @@ Recipe Details
         margin: 25px 0 0 0;
     }
 
-    .recipeIngredient{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 25px;
-        text-align: center;
-    }
-
-        .recipeIngredient > *:first-of-type{
-            text-align: left;
-        }
-
-        .recipeIngredientElement{
-            width: 30%;
-        }
-
     .addRecIngredient{
         display: flex;
         justify-content: center;
