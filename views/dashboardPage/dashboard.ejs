@@ -367,48 +367,12 @@
                 <div class="strandHead">
                     <h1 class="strandTitle">TRANSACTIONS</h1>
 
-                    <button class="button mobileHide" onclick="controller.openSidebar('newTransaction')">NEW</button>
-                </div>
+                    <div class="buttonBox">
+                        <button id="filterTransactionsButton" class="button">FILTER</button>
 
-                <form id="transFormSubmit" class="filterForm">
-                    <h2>Search</h2>
-                    <div>
-                        <div class="dropdown">
-                            <div class="dropdownHead">
-                                <p>DATES</p>
-                                <button id="dateFilterBtn">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="6 9 12 15 18 9"></polyline>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="dropdownContents" id="dateDropdown">
-                                <label>From:
-                                    <input id="transFilDate1"type="date">
-                                </label>
-                                
-                                <label>To:
-                                    <input id="transFilDate2" type="date">
-                                </label>
-                            </div>
-                            
-                        </div>
-                        <div class="dropdown">
-                            <div class="dropdownHead">
-                                <p>RECIPES</p>
-                                <button id="recipeFilterBtn">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="6 9 12 15 18 9"></polyline>
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <div class="dropdownContents" id="recipeDropDown"></div>
-                        </div>
+                        <button id="newTransactionButton" class="button mobileHide">NEW</button>
                     </div>
-
-                    <input class="button" type="submit" value="SUBMIT">
-                </form>
+                </div>
 
                 <div id="transactionsList" class="transactionsList"></div>
 

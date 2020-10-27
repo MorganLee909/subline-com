@@ -502,25 +502,6 @@ Orders Strand
         overflow-y: auto;
     }
 
-    .filterForm{
-        padding: 5px;
-        margin: 0;
-        align-items: center;
-        max-height: 150px;
-    }
-
-        .filterForm > div{
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-        }
-
-        .filterForm input[type=submit]{
-            max-height: 30px;
-            padding: 0;
-            font-size: 15px;
-        }
-
 /*
 Transactions Strand
 */
@@ -534,52 +515,6 @@ Transactions Strand
         overflow-y: auto;
         margin-top: 50px;
     }
-
-    .dropdown{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        margin: 0;
-    }
-
-        .dropdown button{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 25px;
-            width: 25px;
-            border-radius: 5px;
-            border: 1px solid black;
-            background: none;
-            cursor: pointer;
-        }
-
-            .dropdownHead{
-                display: flex;
-            }
-
-            .dropdown button:hover{
-                background: rgb(0, 27, 45);
-                color: white;
-            }
-
-        .dropdownContents{
-            text-align: left;
-            position: absolute;
-            top: 25px;
-            background: rgb(240, 252, 255);
-            z-index: 1;
-            padding: 2px;
-            border: 1px solid black;
-            border-radius: 5px;
-            padding: 5px;
-            white-space: nowrap;
-        }
-
-            .dropDownContents label{
-                margin: 0;
-            }
 
 @media screen and (max-width: 1000px){
     body{
@@ -607,10 +542,6 @@ Transactions Strand
         .mobileHide{
             display: none;
         }
-
-    .filterForm{
-        display: none;
-    }
 
     /*
     Home
