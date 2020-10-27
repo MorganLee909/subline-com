@@ -366,18 +366,6 @@ Recipe Book Strand
     align-items: center;
 }
 
-    #recipeBookStrand .searchBar{
-        width: 50%;
-    }
-
-        #recipeSearch{
-            width: 50%;
-        }
-
-        #recipeSelect{
-            width: 25%;
-        }
-
     #recipeList{
         display: flex;
         flex-direction: column;
