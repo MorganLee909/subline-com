@@ -15,7 +15,7 @@ let newOrder = {
 
         for(let i = 0; i < merchant.ingredients.length; i++){
             let ingredient = document.createElement("button");
-            ingredient.classList = "newOrderIngredient";
+            ingredient.classList = "choosable";
             ingredient.innerText = merchant.ingredients[i].ingredient.name;
             ingredient.onclick = ()=>{this.addIngredient(merchant.ingredients[i], ingredient)};
             ingredientList.appendChild(ingredient);

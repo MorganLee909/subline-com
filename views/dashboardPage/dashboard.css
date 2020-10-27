@@ -159,6 +159,8 @@ Multi-strand use classes
     cursor: pointer;
     width: 99%;
     box-sizing: border-box;
+    border: none;
+    font-size: 16px;
 }
 
     .choosable.tall{
