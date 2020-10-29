@@ -3338,28 +3338,15 @@ let orders = {
                 banner.createError(response);
             }else{
                 let orders = [];
-                for(let i = 0; i < response.length; i++){
-                    let ingredients = [];
-                    for(let j = 0; j < response[i].ingredients.length; j++){
-                        for(let k = 0; k < merchant.ingredients.length; k++){
-                            if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
-                                ingredients.push({
-                                    ingredient: merchant.ingredients[k].ingredient,
-                                    quantity: response[i].ingredients[j].quantity,
-                                    pricePerUnit: response[i].ingredients[j].pricePerUnit
-                                });
-                                break;
-                            }
-                        }
-                    }
 
+                for(let i = 0; i < response.length; i++){
                     orders.push(new Order(
                         response[i]._id,
                         response[i].name,
                         response[i].date,
                         response[i].taxes,
                         response[i].fees,
-                        ingredients,
+                        response[i].ingredients,
                         merchant
                     ));
                 }
