@@ -132,15 +132,7 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
-            })
-
-        // Transaction.deleteOne({_id: req.params.id})
-        //     .then((response)=>{
-        //         return res.json({});
-        //     })
-        //     .catch((err)=>{
-        //         return res.json("ERROR: UNABLE TO DELETE TRANSACTION");
-        //     });
+            });
     },
 
     getTransactionsByDate: function(req, res){

@@ -81,6 +81,7 @@ controller = {
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
+                transactions.transactions = data;
                 transactions.display(Transaction);
                 break;
         }

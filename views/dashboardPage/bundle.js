@@ -356,7 +356,6 @@ class Merchant{
     addRecipe(recipe){
         this._recipes.push(recipe);
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -368,7 +367,6 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -406,7 +404,6 @@ class Merchant{
             }
         }
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -457,7 +454,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
     }
 
@@ -493,7 +489,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
     }
 
@@ -1661,6 +1656,7 @@ controller = {
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
+                transactions.transactions = data;
                 transactions.display(Transaction);
                 break;
         }
@@ -3083,7 +3079,7 @@ let newTransaction = {
 
                         merchant.addTransaction(transaction);
 
-                        controller.openStrand("transactions");
+                        controller.openStrand("transactions", merchant.getTransactions());
                         banner.createNotification("TRANSACTION CREATED");
                     }
                 })
@@ -3215,7 +3211,7 @@ let orderFilter = {
         }
 
         if(data.startDate >= data.endDate){
-            banner.createError("START DATE CACNNOT BE AFTER END DATE");
+            banner.createError("START DATE CANNOT BE AFTER END DATE");
             return;
         }
 
@@ -3618,7 +3614,7 @@ let transactionDetails = {
                 }else{
                     merchant.removeTransaction(this.transaction);
 
-                    controller.openStrand("transactions");
+                    controller.openStrand("transactions", merchant.getTransactions());
                     banner.createNotification("TRANSACTION REMOVED");
                 }
             })
@@ -3633,6 +3629,8 @@ let transactionDetails = {
 
 module.exports = transactionDetails;
 },{}],23:[function(require,module,exports){
+const Transaction = require("./Transaction");
+
 let transactionFilter = {
     display: function(){
         //Set default dates
@@ -3672,55 +3670,113 @@ let transactionFilter = {
     },
 
     submit: function(){
-        
+        let data = {
+            startDate: document.getElementById("transFilterDateStart").valueAsDate,
+            endDate: document.getElementById("transFilterDateEnd").valueAsDate,
+            recipes: []
+        }
+
+        if(data.startDate >= data.endDate){
+            banner.createError("START DATE CANNOT BE AFTER END DATE");
+            return;
+        }
+
+        let recipes = document.getElementById("transFilterRecipeList").children;
+        for(let i = 0; i < recipes.length; i++){
+            if(recipes[i].classList.contains("active")){
+                data.recipes.push(recipes[i].recipe.id);
+            }
+        }
+
+        if(data.recipes.length === 0){
+            for(let i = 0; i < merchant.recipes.length; i++){
+                data.recipes.push(merchant.recipes[i].id);
+            }
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/transaction", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    let transactions = [];
+                    for(let i = 0; i < response.length; i++){
+                        transactions.push(new Transaction(
+                            response[i]._id,
+                            response[i].date,
+                            response[i].recipes,
+                            merchant
+                        ));
+                    }
+
+                    controller.openStrand("transactions", transactions);
+                }
+            })
+            .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 
 module.exports = transactionFilter;
-},{}],24:[function(require,module,exports){
+},{"./Transaction":5}],24:[function(require,module,exports){
 let transactions = {
-    isPopulated: false,
+    transactions: [],
 
     display: function(Transaction){
-        if(!this.isPopulated){
-            let transactionsList = document.getElementById("transactionsList");
-            let template = document.getElementById("transaction").content.children[0];
+        document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("transactionFilter")};
+        document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
 
-            document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("transactionFilter")};
-            document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
+        this.populateTransactions(this.transactions);
 
-            while(transactionsList.children.length > 0){
-                transactionsList.removeChild(transactionsList.firstChild);
+        this.isPopulated = true;
+    },
+
+    populateTransactions: function(transactions){
+        let transactionsList = document.getElementById("transactionsList");
+        let template = document.getElementById("transaction").content.children[0];
+
+        while(transactionsList.children.length > 0){
+            transactionsList.removeChild(transactionsList.firstChild);
+        }
+
+        let i = 0;
+        while(i < transactions.length && i < 100){
+            let transactionDiv = template.cloneNode(true);
+            let transaction = transactions[i];
+
+            transactionDiv.onclick = ()=>{
+                controller.openSidebar("transactionDetails", transaction);
+                transactionDiv.classList.add("active");
+            }
+            transactionsList.appendChild(transactionDiv);
+
+            let totalRecipes = 0;
+            let totalPrice = 0;
+
+            for(let j = 0; j < transactions[i].recipes.length; j++){
+                totalRecipes += transactions[i].recipes[j].quantity;
+                totalPrice += transactions[i].recipes[j].recipe.price * transactions[i].recipes[j].quantity;
             }
 
-            let i = 0;
-            const transactions = merchant.getTransactions();
-            while(i < transactions.length && i < 100){
-                let transactionDiv = template.cloneNode(true);
-                let transaction = transactions[i];
+            transactionDiv.children[0].innerText = `${transactions[i].date.toLocaleDateString()} ${transactions[i].date.toLocaleTimeString()}`;
+            transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
+            transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
 
-                transactionDiv.onclick = ()=>{
-                    controller.openSidebar("transactionDetails", transaction);
-                    transactionDiv.classList.add("active");
-                }
-                transactionsList.appendChild(transactionDiv);
-
-                let totalRecipes = 0;
-                let totalPrice = 0;
-
-                for(let j = 0; j < transactions[i].recipes.length; j++){
-                    totalRecipes += transactions[i].recipes[j].quantity;
-                    totalPrice += transactions[i].recipes[j].recipe.price * transactions[i].recipes[j].quantity;
-                }
-
-                transactionDiv.children[0].innerText = `${transactions[i].date.toLocaleDateString()} ${transactions[i].date.toLocaleTimeString()}`;
-                transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
-                transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
-
-                i++;
-            }
-
-            this.isPopulated = true;
+            i++;
         }
     }
 }

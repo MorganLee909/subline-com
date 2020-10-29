@@ -42,7 +42,7 @@ let orderFilter = {
         }
 
         if(data.startDate >= data.endDate){
-            banner.createError("START DATE CACNNOT BE AFTER END DATE");
+            banner.createError("START DATE CANNOT BE AFTER END DATE");
             return;
         }
 

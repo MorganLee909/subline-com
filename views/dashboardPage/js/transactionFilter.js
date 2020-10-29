@@ -1,3 +1,5 @@
+const Transaction = require("./Transaction");
+
 let transactionFilter = {
     display: function(){
         //Set default dates
@@ -37,7 +39,64 @@ let transactionFilter = {
     },
 
     submit: function(){
-        
+        let data = {
+            startDate: document.getElementById("transFilterDateStart").valueAsDate,
+            endDate: document.getElementById("transFilterDateEnd").valueAsDate,
+            recipes: []
+        }
+
+        if(data.startDate >= data.endDate){
+            banner.createError("START DATE CANNOT BE AFTER END DATE");
+            return;
+        }
+
+        let recipes = document.getElementById("transFilterRecipeList").children;
+        for(let i = 0; i < recipes.length; i++){
+            if(recipes[i].classList.contains("active")){
+                data.recipes.push(recipes[i].recipe.id);
+            }
+        }
+
+        if(data.recipes.length === 0){
+            for(let i = 0; i < merchant.recipes.length; i++){
+                data.recipes.push(merchant.recipes[i].id);
+            }
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/transaction", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    let transactions = [];
+                    for(let i = 0; i < response.length; i++){
+                        transactions.push(new Transaction(
+                            response[i]._id,
+                            response[i].date,
+                            response[i].recipes,
+                            merchant
+                        ));
+                    }
+
+                    controller.openStrand("transactions", transactions);
+                }
+            })
+            .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 

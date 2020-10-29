@@ -229,7 +229,6 @@ class Merchant{
     addRecipe(recipe){
         this._recipes.push(recipe);
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -241,7 +240,6 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -279,7 +277,6 @@ class Merchant{
             }
         }
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -330,7 +327,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
     }
 
@@ -366,7 +362,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
     }
 

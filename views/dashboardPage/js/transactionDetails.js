@@ -61,7 +61,7 @@ let transactionDetails = {
                 }else{
                     merchant.removeTransaction(this.transaction);
 
-                    controller.openStrand("transactions");
+                    controller.openStrand("transactions", merchant.getTransactions());
                     banner.createNotification("TRANSACTION REMOVED");
                 }
             })
