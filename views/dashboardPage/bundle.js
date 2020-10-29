@@ -1859,14 +1859,18 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     this.changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
 }
-
+//Add click listeners for menu buttons
+document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")};
+document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
+document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
+document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
 document.getElementById("ordersBtn").onclick = async ()=>{
     if(merchant.orders.length === 0){
         merchant.setOrders(await orders.getOrders(Order));
     }
     controller.openStrand("orders", merchant.orders);
-    
 }
+document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 
 controller.openStrand("home");
 },{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orderFilter.js":18,"./orders.js":19,"./recipeBook.js":20,"./recipeDetails.js":21,"./transactionDetails.js":22,"./transactionFilter.js":23,"./transactions.js":24}],8:[function(require,module,exports){

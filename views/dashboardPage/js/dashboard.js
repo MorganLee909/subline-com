@@ -274,13 +274,17 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     this.changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
 }
-
+//Add click listeners for menu buttons
+document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")};
+document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
+document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
+document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
 document.getElementById("ordersBtn").onclick = async ()=>{
     if(merchant.orders.length === 0){
         merchant.setOrders(await orders.getOrders(Order));
     }
     controller.openStrand("orders", merchant.orders);
-    
 }
+document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 
 controller.openStrand("home");
