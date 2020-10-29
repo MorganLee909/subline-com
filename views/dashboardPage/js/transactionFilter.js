@@ -75,10 +75,12 @@ let transactionFilter = {
         })
             .then(response => response.json())
             .then((response)=>{
+                let transactions = [];
                 if(typeof(response) === "string"){
                     banner.createError(response);
+                }else if(response.length === 0){
+                    banner.createError("NO TRANSACTIONS MATCH YOUR SEARCH");
                 }else{
-                    let transactions = [];
                     for(let i = 0; i < response.length; i++){
                         transactions.push(new Transaction(
                             response[i]._id,
@@ -87,9 +89,9 @@ let transactionFilter = {
                             merchant
                         ));
                     }
-
-                    controller.openStrand("transactions", transactions);
                 }
+
+                controller.openStrand("transactions", transactions);
             })
             .catch((err)=>{
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
