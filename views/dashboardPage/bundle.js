@@ -514,6 +514,10 @@ class Merchant{
         this._modules.orders.isPopulated = false;
     }
 
+    setOrders(orders){
+        this._orders = orders
+    }
+
     removeOrder(order){
         const index = this._orders.indexOf(order);
         if(index === undefined){
@@ -1657,7 +1661,8 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.display(Order, data);
+                orders.orders = data;
+                orders.display(Order);
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -1846,13 +1851,21 @@ controller = {
             }
         }
 
-    return price;
-}
+        return price;
+    }
 }
 
 if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     this.changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
+}
+
+document.getElementById("ordersBtn").onclick = async ()=>{
+    if(merchant.orders.length === 0){
+        merchant.setOrders(await orders.getOrders(Order));
+    }
+    controller.openStrand("orders", merchant.orders);
+    
 }
 
 controller.openStrand("home");
@@ -2799,34 +2812,19 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    let ingredients = [];
-                    for(let i = 0; i < response.ingredients.length; i++){
-                        for(let j = 0; j < merchant.ingredients.length; j++){
-                            if(merchant.ingredients[j].ingredient.id === response.ingredients[i].ingredient){
-                                ingredients.push({
-                                    ingredient: merchant.ingredients[j].ingredient,
-                                    quantity: response.ingredients[i].quantity,
-                                    pricePerUnit: response.ingredients[i].pricePerUnit
-                                });
-
-                                break;
-                            }
-                        }
-                    }
-
                     let order = new Order(
                         response._id,
                         response.name,
                         response.date,
                         response.taxes,
                         response.fees,
-                        ingredients,
+                        response.ingredients,
                         merchant
                     );
 
                     merchant.addOrder(order, true);
                     
-                    controller.openStrand("orders");
+                    controller.openStrand("orders", merchant.orders);
                     banner.createNotification("NEW ORDER CREATED");
                 }
             })
@@ -3158,7 +3156,7 @@ let orderDetails = {
                 }else{
                     merchant.removeOrder(order);
 
-                    controller.openStrand("orders");
+                    controller.openStrand("orders", merchant.orders);
                     banner.createNotification("ORDER REMOVED");
                 }
             })
@@ -3281,14 +3279,7 @@ module.exports = orderFilter;
 let orders = {
     orders: [],
 
-    display: async function(Order, newOrders){
-        if(newOrders){
-            this.orders = newOrders;
-        }
-        if(this.orders.length === 0){
-            this.orders = await this.getOrders(Order);
-        }
-
+    display: function(){
         document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
         document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
 
@@ -3341,6 +3332,10 @@ let orders = {
                         response[i].ingredients,
                         merchant
                     ));
+                }
+
+                if(merchant.orders.length === 0){
+                    merchant.setOrders(orders);
                 }
 
                 return orders;

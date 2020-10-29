@@ -1,14 +1,7 @@
 let orders = {
     orders: [],
 
-    display: async function(Order, newOrders){
-        if(newOrders){
-            this.orders = newOrders;
-        }
-        if(this.orders.length === 0){
-            this.orders = await this.getOrders(Order);
-        }
-
+    display: function(){
         document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
         document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
 
@@ -61,6 +54,10 @@ let orders = {
                         response[i].ingredients,
                         merchant
                     ));
+                }
+
+                if(merchant.orders.length === 0){
+                    merchant.setOrders(orders);
                 }
 
                 return orders;

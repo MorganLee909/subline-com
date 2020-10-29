@@ -387,6 +387,10 @@ class Merchant{
         this._modules.orders.isPopulated = false;
     }
 
+    setOrders(orders){
+        this._orders = orders
+    }
+
     removeOrder(order){
         const index = this._orders.indexOf(order);
         if(index === undefined){

@@ -55,7 +55,7 @@ let orderDetails = {
                 }else{
                     merchant.removeOrder(order);
 
-                    controller.openStrand("orders");
+                    controller.openStrand("orders", merchant.orders);
                     banner.createNotification("ORDER REMOVED");
                 }
             })

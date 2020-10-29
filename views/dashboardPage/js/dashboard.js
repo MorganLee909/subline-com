@@ -76,7 +76,8 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.display(Order, data);
+                orders.orders = data;
+                orders.display(Order);
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -265,13 +266,21 @@ controller = {
             }
         }
 
-    return price;
-}
+        return price;
+    }
 }
 
 if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     this.changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
+}
+
+document.getElementById("ordersBtn").onclick = async ()=>{
+    if(merchant.orders.length === 0){
+        merchant.setOrders(await orders.getOrders(Order));
+    }
+    controller.openStrand("orders", merchant.orders);
+    
 }
 
 controller.openStrand("home");
