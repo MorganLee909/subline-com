@@ -77,31 +77,17 @@ let orderFilter = {
             }else if(response.length === 0){
                 banner.createError("NO ORDERS MATCH YOUR SEARCH");
             }else{
-                let ingredients = [];
                 for(let i = 0; i < response.length; i++){
-                    for(let j = 0; j < response[i].ingredients.length; j++){
-                        for(let k = 0; k < merchant.ingredients.length; k++){
-                            if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
-                                ingredients.push({
-                                    ingredient: merchant.ingredients[k].ingredient,
-                                    quantity: response[i].ingredients[j].quantity,
-                                    pricePerUnit: response[i].ingredients[j].pricePerUnit
-                                });
-                                break;
-                            }
-                        }
-                    }
-
                     orders.push(new Order(
                         response[i]._id,
                         response[i].name,
                         response[i].date,
                         response[i].taxes,
                         response[i].fees,
-                        ingredients,
+                        response[i].ingredients,
                         merchant
                     ));
-                }    
+                }
             }
 
             controller.openStrand("orders", orders);
