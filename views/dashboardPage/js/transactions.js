@@ -6,7 +6,7 @@ let transactions = {
             let transactionsList = document.getElementById("transactionsList");
             let template = document.getElementById("transaction").content.children[0];
 
-            document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("filterTransactions")};
+            document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("transactionFilter")};
             document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
 
             while(transactionsList.children.length > 0){

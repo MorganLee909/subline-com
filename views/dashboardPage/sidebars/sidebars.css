@@ -600,7 +600,17 @@ TRANSACTION DETAILS
     }
 
 /*
-New Transaction
+TRANSACTION FILTER
+*/
+.transactionFilter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/*
+NEW TRANSACTION
 */
 .newTransaction{
     display: flex;

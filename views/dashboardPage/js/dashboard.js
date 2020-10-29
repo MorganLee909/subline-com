@@ -16,6 +16,7 @@ const orderDetails = require("./orderDetails.js");
 const orderFilter = require("./orderFilter.js");
 const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
+const transactionFilter = require("./transactionFilter.js");
 
 const Merchant = require("./Merchant.js");
 const Ingredient = require("./Ingredient.js");
@@ -133,6 +134,9 @@ controller = {
                 break;
             case "transactionDetails":
                 transactionDetails.display(data);
+                break;
+            case "transactionFilter":
+                transactionFilter.display();
                 break;
             case "newTransaction":
                 newTransaction.display(Transaction);

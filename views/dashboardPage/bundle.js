@@ -1596,6 +1596,7 @@ const orderDetails = require("./orderDetails.js");
 const orderFilter = require("./orderFilter.js");
 const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
+const transactionFilter = require("./transactionFilter.js");
 
 const Merchant = require("./Merchant.js");
 const Ingredient = require("./Ingredient.js");
@@ -1713,6 +1714,9 @@ controller = {
                 break;
             case "transactionDetails":
                 transactionDetails.display(data);
+                break;
+            case "transactionFilter":
+                transactionFilter.display();
                 break;
             case "newTransaction":
                 newTransaction.display(Transaction);
@@ -1850,7 +1854,7 @@ if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
 }
 
 controller.openStrand("home");
-},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orderFilter.js":18,"./orders.js":19,"./recipeBook.js":20,"./recipeDetails.js":21,"./transactionDetails.js":22,"./transactions.js":23}],8:[function(require,module,exports){
+},{"./Ingredient.js":1,"./Merchant.js":2,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5,"./analytics.js":6,"./editIngredient.js":8,"./editRecipe.js":9,"./home.js":10,"./ingredientDetails.js":11,"./ingredients.js":12,"./newIngredient.js":13,"./newOrder.js":14,"./newRecipe.js":15,"./newTransaction.js":16,"./orderDetails.js":17,"./orderFilter.js":18,"./orders.js":19,"./recipeBook.js":20,"./recipeDetails.js":21,"./transactionDetails.js":22,"./transactionFilter.js":23,"./transactions.js":24}],8:[function(require,module,exports){
 const Ingredient = require("./Ingredient");
 
 let editIngredient = {
@@ -3629,6 +3633,14 @@ let transactionDetails = {
 
 module.exports = transactionDetails;
 },{}],23:[function(require,module,exports){
+let transactionFilter = {
+    display: function(){
+        
+    }
+}
+
+module.exports = transactionFilter;
+},{}],24:[function(require,module,exports){
 let transactions = {
     isPopulated: false,
 
@@ -3637,7 +3649,7 @@ let transactions = {
             let transactionsList = document.getElementById("transactionsList");
             let template = document.getElementById("transaction").content.children[0];
 
-            document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("filterTransactions")};
+            document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("transactionFilter")};
             document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
 
             while(transactionsList.children.length > 0){

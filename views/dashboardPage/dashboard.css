@@ -134,6 +134,23 @@ Multi-strand use classes
         padding: 1px 0 1px 4px;
     }
 
+.dateRange{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .dateRangeInput{
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .dateRangeInput p{
+            margin: 0 5px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
 /* 
 Home Strand 
 */
