@@ -113,15 +113,15 @@ module.exports = {
                 return Transaction.deleteOne({_id: req.params.id});
             })
             .then((response)=>{
-                res.json({});
+                res.json();
 
                 for(let i = 0; i < transaction.recipes.length; i++){
                     const recipe = transaction.recipes[i].recipe;
                     for(let j = 0; j < recipe.ingredients.length; j++){
-                        const ingredient = recipe.ingredients[i].ingredient;
+                        const ingredient = recipe.ingredients[j].ingredient;
                         for(let k = 0; k < merchant.inventory.length; k++){
-                            if(ingredient.toString() == merchant.inventory[i].ingredient.toString()){
-                                merchant.inventory[i].quantity += recipe.ingredients[i].quantity * transaction.recipes[i].quantity;
+                            if(ingredient.toString() === merchant.inventory[k].ingredient.toString()){
+                                merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
                                 break;
                             }
                         }
@@ -131,6 +131,7 @@ module.exports = {
                 return merchant.save();
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
             });
     },
