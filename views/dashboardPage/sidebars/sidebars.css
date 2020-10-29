@@ -580,6 +580,12 @@ ORDER FILTER
         width: 100%;
     }
 
+    #orderFilterIngredients{
+        width: 100%;
+        max-height: 50%;
+        overflow-y: auto;
+    }
+
 /*
 TRANSACTION DETAILS
 */
@@ -608,6 +614,12 @@ TRANSACTION FILTER
     align-items: center;
     width: 100%;
 }
+
+    #transFilterRecipeList{
+        width: 100%;
+        max-height: 50%;
+        overflow-y: auto;
+    }
 
 /*
 NEW TRANSACTION
