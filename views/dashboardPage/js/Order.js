@@ -133,11 +133,17 @@ class Order{
         }
 
         for(let i = 0; i < ingredients.length; i++){
-            this._ingredients.push(new OrderIngredient(
-                ingredients[i].ingredient,
-                ingredients[i].quantity,
-                ingredients[i].pricePerUnit
-            ));
+            for(let j = 0; j < merchant.ingredients.length; j++){
+                if(merchant.ingredients[j].ingredient.id === ingredients[i].ingredient){
+                    this._ingredients.push(new OrderIngredient(
+                        merchant.ingredients[j].ingredient,
+                        ingredients[i].quantity,
+                        ingredients[i].pricePerUnit
+                    ));
+                    break;
+                }
+            }
+            
         }
 
         this._parent.modules.ingredients.isPopulated = false;
