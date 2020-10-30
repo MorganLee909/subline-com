@@ -131,7 +131,6 @@ module.exports = {
                 return merchant.save();
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
             });
     },

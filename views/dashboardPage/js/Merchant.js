@@ -56,7 +56,7 @@ class MerchantIngredient{
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
-            case "kg": return quantity * 1000; 
+            case "kg": return quantity * 1000;
             case "oz":  return quantity * 28.3495; 
             case "lb":  return quantity * 453.5924;
             case "ml": return quantity / 1000; 
@@ -402,7 +402,8 @@ class Merchant{
         for(let i = 0; i < order.ingredients.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
-                    this._ingredients[j].quantity -= order.ingredients[i].quantity;
+                    this._ingredients[j].updateQuantity(-order.ingredients[i].quantity);
+                    break;
                 }
             }
         }
