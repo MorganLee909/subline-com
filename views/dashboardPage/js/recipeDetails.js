@@ -20,7 +20,7 @@ let recipeDetails = {
             recipeDiv.children[1].innerText = `${recipe.ingredients[i].getQuantityDisplay()}`;
             recipeDiv.onclick = ()=>{
                 controller.openStrand("ingredients");
-                controller.openSidebar("ingredientDetails", recipe.ingredients[i]);
+                controller.openSidebar("ingredientDetails", merchant.getIngredient(recipe.ingredients[i].ingredient.id));
             }
             ingredientsDiv.appendChild(recipeDiv);
         }
