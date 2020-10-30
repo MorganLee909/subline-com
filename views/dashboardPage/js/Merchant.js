@@ -355,7 +355,8 @@ class Merchant{
         for(let i = 0; i < keys.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients.quantity += ingredients[keys[i]];
+                    this._ingredients[j].updateQuantity(ingredients[keys[i]]);
+                    break;
                 }
             }
         }

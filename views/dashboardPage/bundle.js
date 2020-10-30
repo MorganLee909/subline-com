@@ -482,7 +482,8 @@ class Merchant{
         for(let i = 0; i < keys.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients.quantity += ingredients[keys[i]];
+                    this._ingredients[j].updateQuantity(ingredients[keys[i]]);
+                    break;
                 }
             }
         }
@@ -3594,7 +3595,6 @@ let transactionDetails = {
                 "Content-Type": "application/json;charset=utf-8"
             },
         })
-            .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);

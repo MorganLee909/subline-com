@@ -54,7 +54,6 @@ let transactionDetails = {
                 "Content-Type": "application/json;charset=utf-8"
             },
         })
-            .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);
