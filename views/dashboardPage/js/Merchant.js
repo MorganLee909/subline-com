@@ -41,14 +41,6 @@ class MerchantIngredient{
         }
     }
 
-    set quantity(quantity){
-        if(quantity < 0){
-            return false;
-        }
-
-        this._quantity = quantity;
-    }
-
     updateQuantity(quantity){
         this._quantity += this.convertToBase(quantity);
     }
