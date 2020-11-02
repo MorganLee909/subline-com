@@ -1,14 +1,7 @@
 let orders = {
     orders: [],
 
-    display: async function(Order, newOrders){
-        if(newOrders){
-            this.orders = newOrders;
-        }
-        if(this.orders.length === 0){
-            this.orders = await this.getOrders(Order);
-        }
-
+    display: function(){
         document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
         document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
 
@@ -26,7 +19,10 @@ let orders = {
             orderDiv.children[1].innerText = `${this.orders[i].ingredients.length} ingredients`;
             orderDiv.children[2].innerText = this.orders[i].date.toLocaleDateString("en-US");
             orderDiv.children[3].innerText = `$${this.orders[i].getTotalCost().toFixed(2)}`;
-            orderDiv.onclick = ()=>{controller.openSidebar("orderDetails", this.orders[i])};
+            orderDiv.onclick = ()=>{
+                controller.openSidebar("orderDetails", this.orders[i]);
+                orderDiv.classList.add("active");
+            }
             orderList.appendChild(orderDiv);
         }
     },
@@ -47,30 +43,21 @@ let orders = {
                 banner.createError(response);
             }else{
                 let orders = [];
-                for(let i = 0; i < response.length; i++){
-                    let ingredients = [];
-                    for(let j = 0; j < response[i].ingredients.length; j++){
-                        for(let k = 0; k < merchant.ingredients.length; k++){
-                            if(merchant.ingredients[k].ingredient.id === response[i].ingredients[j].ingredient){
-                                ingredients.push({
-                                    ingredient: merchant.ingredients[k].ingredient,
-                                    quantity: response[i].ingredients[j].quantity,
-                                    pricePerUnit: response[i].ingredients[j].pricePerUnit
-                                });
-                                break;
-                            }
-                        }
-                    }
 
+                for(let i = 0; i < response.length; i++){
                     orders.push(new Order(
                         response[i]._id,
                         response[i].name,
                         response[i].date,
                         response[i].taxes,
                         response[i].fees,
-                        ingredients,
+                        response[i].ingredients,
                         merchant
                     ));
+                }
+
+                if(merchant.orders.length === 0){
+                    merchant.setOrders(orders);
                 }
 
                 return orders;

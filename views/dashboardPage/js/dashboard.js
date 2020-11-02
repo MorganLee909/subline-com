@@ -16,6 +16,7 @@ const orderDetails = require("./orderDetails.js");
 const orderFilter = require("./orderFilter.js");
 const recipeDetails = require("./recipeDetails.js");
 const transactionDetails = require("./transactionDetails.js");
+const transactionFilter = require("./transactionFilter.js");
 
 const Merchant = require("./Merchant.js");
 const Ingredient = require("./Ingredient.js");
@@ -75,11 +76,13 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.display(Order, data);
+                orders.orders = data;
+                orders.display(Order);
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
+                transactions.transactions = data;
                 transactions.display(Transaction);
                 break;
         }
@@ -134,6 +137,9 @@ controller = {
             case "transactionDetails":
                 transactionDetails.display(data);
                 break;
+            case "transactionFilter":
+                transactionFilter.display();
+                break;
             case "newTransaction":
                 newTransaction.display(Transaction);
                 break;
@@ -149,7 +155,31 @@ controller = {
     closeSidebar: function(){
         let sidebar = document.getElementById("sidebarDiv");
         for(let i = 0; i < sidebar.children.length; i++){
-            sidebar.children[i].style.display = "none";
+            if(sidebar.children[i].style.display !== "none"){
+                sidebar.children[i].style.display = "none";
+                let choosables = [];
+
+                switch(sidebar.children[i].id){
+                    case "ingredientDetails": 
+                        choosables = document.querySelectorAll(".ingredient");
+                        break;
+                    case "transactionDetails":
+                        choosables = document.getElementById("transactionsList").children;
+                        break;
+                    case "recipeDetails":
+                        choosables = document.getElementById("recipeList").children;
+                        break;
+                    case "orderDetails":
+                        choosables = document.getElementById("orderList").children;
+                        break;
+                }
+
+                for(let i = 0; i < choosables.length; i++){
+                    choosables[i].classList.remove("active");
+                }
+            }
+
+            
         }
         sidebar.classList = "sidebarHide";
 
@@ -236,13 +266,25 @@ controller = {
             }
         }
 
-    return price;
-}
+        return price;
+    }
 }
 
 if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
     this.changeMenu();
     document.getElementById("menuShifter2").style.display = "none";
 }
+//Add click listeners for menu buttons
+document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")};
+document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
+document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
+document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
+document.getElementById("ordersBtn").onclick = async ()=>{
+    if(merchant.orders.length === 0){
+        merchant.setOrders(await orders.getOrders(Order));
+    }
+    controller.openStrand("orders", merchant.orders);
+}
+document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 
 controller.openStrand("home");

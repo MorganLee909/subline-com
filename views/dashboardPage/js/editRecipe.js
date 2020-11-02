@@ -109,6 +109,7 @@ let editRecipe = {
                 }else{
                     merchant.updateRecipe(response);
                     controller.openStrand("recipeBook");
+                    banner.createNotification("RECIPE UPDATED");
                 }
             })
             .catch((err)=>{

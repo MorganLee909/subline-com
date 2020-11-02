@@ -41,14 +41,6 @@ class MerchantIngredient{
         }
     }
 
-    set quantity(quantity){
-        if(quantity < 0){
-            return false;
-        }
-
-        this._quantity = quantity;
-    }
-
     updateQuantity(quantity){
         this._quantity += this.convertToBase(quantity);
     }
@@ -56,7 +48,7 @@ class MerchantIngredient{
     convertToBase(quantity){
         switch(this._ingredient.unit){
             case "g": return quantity;
-            case "kg": return quantity * 1000; 
+            case "kg": return quantity * 1000;
             case "oz":  return quantity * 28.3495; 
             case "lb":  return quantity * 453.5924;
             case "ml": return quantity / 1000; 
@@ -217,7 +209,7 @@ class Merchant{
     getIngredient(id){
         for(let i = 0; i < this._ingredients.length; i++){
             if(this._ingredients[i].ingredient.id === id){
-                return this._ingredients[i].ingredient;
+                return this._ingredients[i];
             }
         }
     }
@@ -229,7 +221,6 @@ class Merchant{
     addRecipe(recipe){
         this._recipes.push(recipe);
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -241,7 +232,6 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -279,7 +269,6 @@ class Merchant{
             }
         }
 
-        this._modules.transactions.isPopulated = false;
         this._modules.recipeBook.isPopulated = false;
     }
 
@@ -310,7 +299,7 @@ class Merchant{
         for(let i = 0; i < transaction.recipes.length; i++){
             const recipe = transaction.recipes[i];
             for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                const ingredient = recipe.recipe.ingredients[i];
+                const ingredient = recipe.recipe.ingredients[j];
                 if(ingredients[ingredient.ingredient.id]){
                     ingredients[ingredient.ingredient.id] += recipe.quantity * ingredient.quantity;
                 }else{
@@ -330,7 +319,6 @@ class Merchant{
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
     }
 
@@ -346,7 +334,7 @@ class Merchant{
         for(let i = 0; i < transaction.recipes.length; i++){
             const recipe = transaction.recipes[i];
             for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                const ingredient = recipe.recipe.ingredients[i];
+                const ingredient = recipe.recipe.ingredients[j];
                 if(ingredients[ingredient.ingredient.id]){
                     ingredients[ingredient.ingredient.id] += ingredient.quantity * recipe.quantity;
                 }else{
@@ -359,14 +347,14 @@ class Merchant{
         for(let i = 0; i < keys.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients.quantity += ingredients[keys[i]];
+                    this._ingredients[j].updateQuantity(ingredients[keys[i]]);
+                    break;
                 }
             }
         }
 
         this._modules.home.isPopulated = false;
         this._modules.ingredients.isPopulated = false;
-        this._modules.transactions.isPopulated = false;
         this._modules.analytics.newData = true;
     }
 
@@ -392,6 +380,10 @@ class Merchant{
         this._modules.orders.isPopulated = false;
     }
 
+    setOrders(orders){
+        this._orders = orders
+    }
+
     removeOrder(order){
         const index = this._orders.indexOf(order);
         if(index === undefined){
@@ -403,7 +395,8 @@ class Merchant{
         for(let i = 0; i < order.ingredients.length; i++){
             for(let j = 0; j < this._ingredients.length; j++){
                 if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
-                    this._ingredients[j].quantity -= order.ingredients[i].quantity;
+                    this._ingredients[j].updateQuantity(-order.ingredients[i].quantity);
+                    break;
                 }
             }
         }

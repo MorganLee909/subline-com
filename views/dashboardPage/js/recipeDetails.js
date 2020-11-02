@@ -18,6 +18,10 @@ let recipeDetails = {
             let recipeDiv = template.cloneNode(true);
             recipeDiv.children[0].innerText = recipe.ingredients[i].ingredient.name;
             recipeDiv.children[1].innerText = `${recipe.ingredients[i].getQuantityDisplay()}`;
+            recipeDiv.onclick = ()=>{
+                controller.openStrand("ingredients");
+                controller.openSidebar("ingredientDetails", merchant.getIngredient(recipe.ingredients[i].ingredient.id));
+            }
             ingredientsDiv.appendChild(recipeDiv);
         }
 
@@ -48,27 +52,6 @@ let recipeDetails = {
             .finally(()=>{
                 loader.style.display = "none";
             });
-    },
-
-    displayAddIngredient: function(){
-        let template = document.getElementById("addRecIngredient").content.children[0].cloneNode(true);
-        template.name = "new";
-        document.getElementById("recipeIngredientList").appendChild(template);
-
-        let categories = merchant.categorizeIngredients();
-
-        for(let i = 0; i < categories.length; i++){
-            let optGroup = document.createElement("optgroup");
-            optGroup.label = categories[i].name;
-            template.children[0].appendChild(optGroup);
-
-            for(let j = 0; j < categories[i].ingredients.length; j++){
-                let option = document.createElement("option");
-                option.innerText = `${categories[i].ingredients[j].ingredient.name} (${categories[i].ingredients[j].ingredient.unit})`;
-                option.ingredient = categories[i].ingredients[j].ingredient;
-                optGroup.appendChild(option);
-            }
-        }
     }
 }
 

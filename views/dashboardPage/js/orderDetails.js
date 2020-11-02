@@ -19,8 +19,12 @@ let orderDetails = {
             
             ingredientDiv.children[0].innerText = order.ingredients[i].ingredient.name;
             ingredientDiv.children[2].innerText = `$${order.ingredients[i].cost().toFixed(2)}`;
+            ingredientDiv.onclick = ()=>{
+                controller.openStrand("ingredients");
+                controller.openSidebar("ingredientDetails", merchant.getIngredient(order.ingredients[i].ingredient.id));
+            }
             
-            const ingredientDisplay = ingredientDiv.children[1];
+            let ingredientDisplay = ingredientDiv.children[1];
             if(ingredient.specialUnit === "bottle"){
                 ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${order.ingredients.pricePerUnit.toFixed(2)}`;
             }else{
@@ -51,7 +55,7 @@ let orderDetails = {
                 }else{
                     merchant.removeOrder(order);
 
-                    controller.openStrand("orders");
+                    controller.openStrand("orders", merchant.orders);
                     banner.createNotification("ORDER REMOVED");
                 }
             })

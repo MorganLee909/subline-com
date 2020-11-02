@@ -126,10 +126,8 @@ module.exports = {
                 }
 
                 merchant.save()
-                    .then((updatedMerchant)=>{
-                        return res.json({});
-                    })
                     .catch((err)=>{
+                        console.log(err);
                         return res.json("ERROR: UNABLE TO SAVE DATA");
                     })
 

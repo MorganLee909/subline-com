@@ -81,7 +81,7 @@ let newTransaction = {
 
                         merchant.addTransaction(transaction);
 
-                        controller.openStrand("transactions");
+                        controller.openStrand("transactions", merchant.getTransactions());
                         banner.createNotification("TRANSACTION CREATED");
                     }
                 })
