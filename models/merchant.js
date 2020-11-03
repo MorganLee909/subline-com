@@ -24,10 +24,7 @@ const MerchantSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    accountStatus: {
-        status: String,
-        expiration: Date,
-    },
+    status: [],
     squareLocation: String,
     inventory: [{
         ingredient: {
@@ -48,7 +45,8 @@ const MerchantSchema = new mongoose.Schema({
     recipes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Recipe"
-    }]
+    }],
+    verifyId: String
 });
 
 module.exports = mongoose.model("Merchant", MerchantSchema);
