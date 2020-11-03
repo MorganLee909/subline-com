@@ -1,47 +1,19 @@
 module.exports = (data)=>{
     return `
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <meta content="width=device-width, initial-scale=1" name="viewport"/>
-                <title>Welcome to The Subline</title>
-                <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
-                <style>
-                    *{margin:0;padding:0;font-family:"Saira",sans-serif;}
-        
-                    .header{
-                        display: flex;
-                        justify-content: flex-start;
-                        align-items: center;
-                        height: 75px;
-                        width: 100%;
-                        background: rgb(0, 27, 45);
-                        color: rgb(255, 99, 107);
-                    }
-        
-                    .header img{
-                        max-height: 80%;
-                    }
-        
-                    .message{
-                        width: 90%;
-                        margin: auto;
-                        text-align: center;
-                        padding: 100px 0;
-                        font-size: 30px;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="header">
-                    <img src="localhost:8080/logo" alt="The Subline">
-                    
-                    <h1>THE SUBLINE</h1>
-                </div>
-        
-                <p class="message">Thank you for signing up for The Subline ${data.name}.  We look forward to helping your business to reduce waste.  To get started, visit our <a href="thesubline.com/help">help page</a> for more information.</p>
-            </body>
-        </html>
+        <div id="welcomeEmail">
+            <header style="width:100%;height:75px;background:rgb(0,27,45);">
+                <img src="https://i.postimg.cc/dQky3vPX/logo.png" alt="Subline Logo" style="height:50px;padding:12px 12px;float:left;">
+
+                <h3 style="color:rgb(255,99,107);font-size:30px;margin:15px 0 0 0;float:left;">THE SUBLINE</h3>
+            </header>
+
+            <h1 style="text-align:center;">Welcome to The Subline ${data.name}!</h1>
+
+            <p>We are glad to have you aboard and look forward to helping your business improve efficiency and cut costs.</p>
+
+            <p>Please follow the link below to verify your email address:</p>
+
+            <p>${data.link}</p>
+        </div>
     `;
 }

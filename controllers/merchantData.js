@@ -6,6 +6,7 @@ const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 const Validator = require("./validator.js");
+const Helper = require("./helper.js");
 const WelcomeEmail = require("../emails/welcomeEmail.js");
 
 module.exports = {
@@ -37,20 +38,25 @@ module.exports = {
                 pos: "none",
                 lastUpdatedTime: Date.now(),
                 createdAt: Date.now(),
-                accountStatus: "valid",
+                status: ["unverified"],
                 inventory: [],
-                recipes: []
+                recipes: [],
+                verifyId: Helper.generateId(15)
             });
 
             merchant.save()
                 .then((merchant)=>{
                     req.session.user = merchant._id;
+                    const mail = merchant.email.split("@");
 
                     const mailgunData = {
                         from: "The Subline <clientsupport@thesubline.net>",
                         to: merchant.email,
                         subject: "Welcome to The Subline!",
-                        template: "welcome-message"
+                        html: WelcomeEmail({
+                            name: merchant.name,
+                            link: `${process.env.SITE}/verify/${merchant.verifyId}/${mail[0]}`
+                        })
                     }
                     mailgun.messages().send(mailgunData, (err, body)=>{});
 
