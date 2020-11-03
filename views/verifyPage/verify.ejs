@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <title>The Subline</title>
+        <link rel="icon" type="img/png" href="/shared/images/logo.png">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
+    </head>
+    <body>
+        <h1>Verify your email address</h1>
+
+        <p>Please enter the code sent to your email address</p>
+
+        <form action="/verify" method="post">
+            <input name="code" type="text">
+
+            <input name="id" type="hidden" value="<%=id%>">
+
+            <input type="submit" value="VERIFY">
+        </form>
+
+        <p>Didn't recieve an email? <a href="/verify/email/<%=id%>">Resend email</a></p>
+    </body>
+</html>

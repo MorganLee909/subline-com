@@ -1,13 +1,11 @@
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
-const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 const Validator = require("./validator.js");
 const Helper = require("./helper.js");
-const WelcomeEmail = require("../emails/welcomeEmail.js");
 
 module.exports = {
     /*
@@ -46,30 +44,7 @@ module.exports = {
 
             merchant.save()
                 .then((merchant)=>{
-                    req.session.user = merchant._id;
-                    const mail = merchant.email.split("@");
-
-                    const mailgunData = {
-                        from: "The Subline <clientsupport@thesubline.net>",
-                        to: merchant.email,
-                        subject: "Welcome to The Subline!",
-                        html: WelcomeEmail({
-                            name: merchant.name,
-                            link: `${process.env.SITE}/verify/${merchant.verifyId}/${mail[0]}`
-                        })
-                    }
-                    mailgun.messages().send(mailgunData, (err, body)=>{});
-
-                    const mailgunList = mailgun.lists("clientsupport@mail.thesubline.com");
-                    const memberData = {
-                        subscribed: true,
-                        address: merchant.email,
-                        name: merchant.name,
-                        vars: {}
-                    }
-                    mailgunList.members().create(memberData, (err, data)=>{});
-
-                    return res.redirect("/dashboard");
+                    return res.redirect(`/verify/email/${merchant._id}`);
                 })
                 .catch((err)=>{
                     req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";

@@ -243,6 +243,6 @@ module.exports = {
             result += characters.charAt(Math.floor(Math.random() * characters.length));
         }
         
-        return results.length;
+        return result;
     }
 }

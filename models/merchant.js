@@ -45,7 +45,8 @@ const MerchantSchema = new mongoose.Schema({
     recipes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Recipe"
-    }]
+    }],
+    verifyId: String
 });
 
 module.exports = mongoose.model("Merchant", MerchantSchema);

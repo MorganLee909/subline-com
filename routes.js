@@ -6,6 +6,7 @@ const transactionData = require("./controllers/transactionData");
 const recipeData = require("./controllers/recipeData");
 const orderData = require("./controllers/orderData.js");
 const informationPages = require("./controllers/informationPages.js");
+const emailVerification = require("./controllers/emailVerification.js");
 
 module.exports = function(app){
     //Render page
@@ -60,4 +61,9 @@ module.exports = function(app){
     app.get("/privacy", informationPages.privacy);
     app.get("/terms", informationPages.terms);
     app.get("/help", informationPages.help);
+
+    //Email verification
+    app.get("/verify/email/:id", emailVerification.sendVerifyEmail);
+    app.get("/verify/:id", emailVerification.verifyPage);
+    app.post("/verify", emailVerification.verify);
 }
