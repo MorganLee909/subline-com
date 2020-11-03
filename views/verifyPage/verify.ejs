@@ -6,20 +6,32 @@
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
         <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="/shared/shared.css">
+        <link rel="stylesheet" href="/verifyPage/verify.css">
     </head>
     <body>
-        <h1>Verify your email address</h1>
+        <% include ../shared/header %>
 
-        <p>Please enter the code sent to your email address</p>
+        <h1 class="title">Verify your email address</h1>
 
-        <form action="/verify" method="post">
-            <input name="code" type="text">
+        <p class="text">Please enter the 15 character code sent to your email address</p>
+
+        <form class="form" action="/verify" method="post">
+            <input class="code" name="code" type="text">
 
             <input name="id" type="hidden" value="<%=id%>">
 
-            <input type="submit" value="VERIFY">
+            <input class="button" type="submit" value="VERIFY">
         </form>
 
-        <p>Didn't recieve an email? <a href="/verify/email/<%=id%>">Resend email</a></p>
+        <p class="resend">Didn't recieve an email?</p>
+
+        <a href="/verify/email/<%=id%>">Resend email</a>
     </body>
+
+    <script>
+        document.getElementById("helpLink").style.display = "block";
+        document.getElementById("privacyPolicyLink").style.display = "block";
+        document.getElementById("termsLink").style.display = "block";
+    </script>
 </html>
