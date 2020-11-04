@@ -71,5 +71,6 @@ module.exports = function(app){
     //Password reset
     app.get("/reset/email", passwordReset.enterEmail);
     app.post("/reset/email", passwordReset.generateCode);
-    app.get("/reset/:code", passwordReset.enterPassword);
+    app.get("/reset/:id/:code", passwordReset.enterPassword);
+    app.post("/reset", passwordReset.resetPassword);
 }
