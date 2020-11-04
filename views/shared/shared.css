@@ -117,7 +117,8 @@ button::-moz-focus-inner{
 .link {
     cursor: pointer;
     color: gray;
-    text-decoration: none;
+    text-decoration: underline;
+    margin-top: 20px;
 }
 
 .link:hover {
