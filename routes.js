@@ -7,6 +7,7 @@ const recipeData = require("./controllers/recipeData");
 const orderData = require("./controllers/orderData.js");
 const informationPages = require("./controllers/informationPages.js");
 const emailVerification = require("./controllers/emailVerification.js");
+const passwordReset = require("./controllers/passwordReset.js");
 
 module.exports = function(app){
     //Render page
@@ -66,4 +67,7 @@ module.exports = function(app){
     app.get("/verify/email/:id", emailVerification.sendVerifyEmail);
     app.get("/verify/:id", emailVerification.verifyPage);
     app.post("/verify", emailVerification.verify);
+
+    //Password reset
+    app.get("/reset/email", passwordReset.enterEmail);
 }

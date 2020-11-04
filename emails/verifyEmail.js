@@ -1,6 +1,6 @@
 module.exports = (data)=>{
     return `
-        <div id="verifyemail">
+        <div id="verifyEmail">
             <header style="width:100%;height:75px;background:rgb(0,27,45);">
                 <img src="https://i.postimg.cc/dQky3vPX/logo.png" alt="Subline Logo" style="height:50px;padding:12px 12px;float:left;">
 
