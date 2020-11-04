@@ -46,6 +46,6 @@ module.exports = {
     },
 
     enterPassword: function(req, res){
-        return res.render("passwordResetPages/password");
+        return res.render("passwordResetPages/password", {code: req.params.code});
     }
 }

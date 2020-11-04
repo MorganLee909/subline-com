@@ -16,7 +16,7 @@ module.exports = {
                         link: `${process.env.SITE}/verify/${merchant._id}`,
                         code: merchant.verifyId
                     })
-                }
+                };
                 mailgun.messages().send(mailgunData, (err, body)=>{});
 
                 return res.redirect(`/verify/${merchant._id}`);
