@@ -30,9 +30,7 @@ module.exports = {
                         link: `${process.env.SITE}/reset/${merchant._id}/${merchant.verifyId}`
                     })
                 };
-                mailgun.messages().send(mailgunData, (err, body)=>{
-                    console.log(err);
-                });
+                mailgun.messages().send(mailgunData, (err, body)=>{});
 
                 return merchant.save();
             })
@@ -41,14 +39,21 @@ module.exports = {
                 return res.redirect("/");
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RESET PASSWORD AT THIS TIME";
                 return res.redirect("/");
             });
     },
 
     enterPassword: function(req, res){
-        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code});
+        let error = {};
+        if(req.session.error){
+            error = req.session.error;
+            req.session.error = undefined;
+        }else{
+            error = null;
+        }
+
+        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code, error: error});
     },
 
     resetPassword: function(req, res){
@@ -57,6 +62,16 @@ module.exports = {
                 if(merchant.verifyId !== req.body.code){
                     req.session.error = "YOUR ACCOUNT COULD NOT BE VERIFIED.  PLEASE CONTACT US IF THE PROBLEM PERSISTS.";
                     return res.redirect("/");
+                }
+
+                if(req.body.password !== req.body.confirmPassword){
+                    req.session.error = "PASSWORDS DO NOT MATCH";
+                    return res.redirect(`/reset/${merchant._id}/${merchant.verifyId}`);
+                }
+
+                if(req.body.password.length < 10){
+                    req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
+                    return res.redirect(`/reset/${merchant._id}/${merchant.verifyId}`);
                 }
 
                 const salt = bcrypt.genSaltSync(10);
@@ -68,12 +83,14 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
-                req.session.error = "PASSWORD SUCCESSFULLY UPDATED.  PLEASE LOG IN";
-                return res.redirect("/");
+                if(merchant !== undefined){
+                    req.session.error = "PASSWORD SUCCESSFULLY UPDATED.  PLEASE LOG IN";
+                    return res.redirect("/");
+                }
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO UPDATE YOUR PASSWORD AT THIS TIME";
                 return res.redirect("/");
-            })
+            });
     }
 }
