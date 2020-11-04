@@ -1,7 +1,7 @@
 const Merchant = require("../models/merchant.js");
 
 const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
-const VerifyEmail = require("../emails/verifyEmail.js");
+const verifyEmail = require("../emails/verifyEmail.js");
 
 module.exports = {
     sendVerifyEmail: function(req, res){
@@ -11,7 +11,7 @@ module.exports = {
                     from: "The Subline <clientsupport@thesubline.net>",
                     to: merchant.email,
                     subject: "Email verification",
-                    html: VerifyEmail({
+                    html: verifyEmail({
                         name: merchant.name,
                         link: `${process.env.SITE}/verify/${merchant._id}`,
                         code: merchant.verifyId
