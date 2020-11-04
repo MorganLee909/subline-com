@@ -119,6 +119,8 @@ button::-moz-focus-inner{
     color: gray;
     text-decoration: underline;
     margin-top: 20px;
+    text-align: center;
+    font-size: 20px;
 }
 
 .link:hover {
