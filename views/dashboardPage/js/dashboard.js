@@ -1,28 +1,28 @@
-const home = require("./home.js");
-const ingredients = require("./ingredients.js");
-const recipeBook = require("./recipeBook.js");
-const analytics = require("./analytics.js");
-const orders = require("./orders.js");
-const transactions = require("./transactions.js");
+const home = require("./strands/home.js");
+const ingredients = require("./strands/ingredients.js");
+const recipeBook = require("./strands/recipeBook.js");
+const analytics = require("./strands/analytics.js");
+const orders = require("./strands/orders.js");
+const transactions = require("./strands/transactions.js");
 
-const ingredientDetails = require("./ingredientDetails.js");
-const newIngredient = require("./newIngredient.js");
-const editIngredient = require("./editIngredient.js");
-const newOrder = require("./newOrder.js");
-const newRecipe = require("./newRecipe.js");
-const editRecipe = require("./editRecipe.js");
-const newTransaction = require("./newTransaction.js");
-const orderDetails = require("./orderDetails.js");
-const orderFilter = require("./orderFilter.js");
-const recipeDetails = require("./recipeDetails.js");
-const transactionDetails = require("./transactionDetails.js");
-const transactionFilter = require("./transactionFilter.js");
+const ingredientDetails = require("./sidebars/ingredientDetails.js");
+const newIngredient = require("./sidebars/newIngredient.js");
+const editIngredient = require("./sidebars/editIngredient.js");
+const newOrder = require("./sidebars/newOrder.js");
+const newRecipe = require("./sidebars/newRecipe.js");
+const editRecipe = require("./sidebars/editRecipe.js");
+const newTransaction = require("./sidebars/newTransaction.js");
+const orderDetails = require("./sidebars/orderDetails.js");
+const orderFilter = require("./sidebars/orderFilter.js");
+const recipeDetails = require("./sidebars/recipeDetails.js");
+const transactionDetails = require("./sidebars/transactionDetails.js");
+const transactionFilter = require("./sidebars/transactionFilter.js");
 
-const Merchant = require("./Merchant.js");
-const Ingredient = require("./Ingredient.js");
-const Recipe = require("./Recipe.js");
-const Order = require("./Order.js");
-const Transaction = require("./Transaction.js");
+const Merchant = require("./classes/Merchant.js");
+const Ingredient = require("./classes/Ingredient.js");
+const Recipe = require("./classes/Recipe.js");
+const Order = require("./classes/Order.js");
+const Transaction = require("./classes/Transaction.js");
 
 merchant = new Merchant(data.merchant, data.transactions, {
     home: home,

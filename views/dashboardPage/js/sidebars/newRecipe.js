@@ -1,5 +1,4 @@
 let newRecipe = {
-
     display: function(Recipe){
         document.getElementById("newRecipeName").value = "";
         document.getElementById("newRecipePrice").value = "";

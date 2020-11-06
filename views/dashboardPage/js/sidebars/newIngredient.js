@@ -1,5 +1,3 @@
-const ingredients = require("./ingredients");
-
 let newIngredient = {
     display: function(Ingredient){
         const selector = document.getElementById("unitSelector");

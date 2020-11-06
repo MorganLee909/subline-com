@@ -1,5 +1,3 @@
-const Ingredient = require("./Ingredient");
-
 let editIngredient = {
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");

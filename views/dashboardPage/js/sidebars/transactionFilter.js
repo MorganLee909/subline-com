@@ -1,5 +1,3 @@
-const Transaction = require("./Transaction");
-
 let transactionFilter = {
     display: function(){
         //Set default dates
