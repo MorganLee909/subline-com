@@ -1980,13 +1980,13 @@ let newIngredient = {
                     )
 
                     merchant.addIngredient(ingredient, response.quantity);
-                    ingredients.display();
-                    controller.closeSidebar();
+                    controller.openStrand("ingredients");
 
                     banner.createNotification("INGREDIENT CREATED");
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
