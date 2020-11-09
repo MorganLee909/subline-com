@@ -1,0 +1,31 @@
+body{
+    align-items: center;
+}
+
+.title{
+    margin-top: 25px;
+    font-size: 40px;
+}
+
+.text{
+    font-size: 25px;
+    text-align: center;
+}
+
+.form{
+    border: none;
+    background: none;
+    width: 325px;
+    padding: 0;
+}
+
+    .code{
+        font-size: 30px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .button{
+        font-size: 25px;
+        padding: 5px;
+    }

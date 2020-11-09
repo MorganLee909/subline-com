@@ -5,6 +5,7 @@ const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 const Validator = require("./validator.js");
+const Helper = require("./helper.js");
 
 module.exports = {
     /*
@@ -35,16 +36,15 @@ module.exports = {
                 pos: "none",
                 lastUpdatedTime: Date.now(),
                 createdAt: Date.now(),
-                accountStatus: "valid",
+                status: ["unverified"],
                 inventory: [],
-                recipes: []
+                recipes: [],
+                verifyId: Helper.generateId(15)
             });
 
             merchant.save()
                 .then((merchant)=>{
-                    req.session.user = merchant._id;
-
-                    return res.redirect("/dashboard");
+                    return res.redirect(`/verify/email/${merchant._id}`);
                 })
                 .catch((err)=>{
                     req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";

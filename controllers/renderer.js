@@ -44,6 +44,7 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
+        
         new Activity({
             ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
             merchant: req.session.user,
@@ -64,13 +65,18 @@ module.exports = {
                 lastUpdatedTime: 1,
                 inventory: 1,
                 recipes: 1,
-                squareLocation: 1
+                squareLocation: 1,
+                status: 1
             }
         )
             .populate("inventory.ingredient")
             .populate("recipes")
             .then(async (merchant)=>{
                 merchant2 = merchant;
+                if(merchant.status.includes("unverified")){
+                    throw "unverified";
+                }
+
                 if(merchant.pos === "clover"){
                     await helper.getCloverData(merchant);
                 }else if(merchant.pos === "square"){
@@ -105,18 +111,17 @@ module.exports = {
                 merchant2.posAccessToken = undefined;
                 merchant2.lastUpdatedTime = undefined;
                 merchant2.accountStatus = undefined;
+                merchant2.status = undefined;
 
                 return res.render("dashboardPage/dashboard", {merchant: merchant2, transactions: transactions});
             })
             .catch((err)=>{
+                if(err === "unverified"){
+                    return res.redirect(`/verify/email/${merchant2._id}`);
+                }
                 req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
                 return res.redirect("/");
             });
-    },
-
-    //GET - Renders the information page
-    displayLegal: function(req, res){
-        return res.render("informationPage/information");
     },
 
     //GET - Renders the page to reset your password

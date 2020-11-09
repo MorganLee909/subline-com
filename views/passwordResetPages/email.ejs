@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <title>The Subline</title>
+        <link rel="icon" type="img/png" href="/shared/images/logo.png">
+        <link rel="stylesheet" href="/shared/shared.css">
+        <link rel="stylesheet" href="/passwordResetPages/passwordReset.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
+    </head>
+    <body>
+        <% include ../shared/header %>
+
+        <h1 class="title">Enter your email to reset your password</h1>
+
+        <form class="form" action="/reset/email" method="post">
+            <input class="formInput" name="email" type="email" placeholder="email">
+
+            <input class="button" type="submit" value="SEND EMAIL">
+        </form>
+
+        <p class="text">An email will be sent to you shortly with instructions on reseting your password.  If you don't recieve an email within one minute, then try again.</p>
+
+        <script>
+            document.getElementById("helpLink").style.display = "block";
+            document.getElementById("privacyPolicyLink").style.display = "block";
+            document.getElementById("termsLink").style.display = "block";
+        </script>
+    </body>
+</html>

@@ -6,12 +6,13 @@ const transactionData = require("./controllers/transactionData");
 const recipeData = require("./controllers/recipeData");
 const orderData = require("./controllers/orderData.js");
 const informationPages = require("./controllers/informationPages.js");
+const emailVerification = require("./controllers/emailVerification.js");
+const passwordReset = require("./controllers/passwordReset.js");
 
 module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
     app.get("/dashboard", renderer.displayDashboard);
-    app.get("/information", renderer.displayLegal);
     app.get("/resetpassword/*", renderer.displayPassReset);
 
     //Merchant
@@ -55,9 +56,21 @@ module.exports = function(app){
     app.get("/squarelogin", otherData.squareRedirect);
     app.get("/cloverauth*", otherData.cloverAuth);
     app.get("/squareauth", otherData.squareAuth);
+    app.get("/logo", otherData.logo);
 
     //Information Pages
     app.get("/privacy", informationPages.privacy);
     app.get("/terms", informationPages.terms);
     app.get("/help", informationPages.help);
+
+    //Email verification
+    app.get("/verify/email/:id", emailVerification.sendVerifyEmail);
+    app.get("/verify/:id", emailVerification.verifyPage);
+    app.post("/verify", emailVerification.verify);
+
+    //Password reset
+    app.get("/reset/email", passwordReset.enterEmail);
+    app.post("/reset/email", passwordReset.generateCode);
+    app.get("/reset/:id/:code", passwordReset.enterPassword);
+    app.post("/reset", passwordReset.resetPassword);
 }
