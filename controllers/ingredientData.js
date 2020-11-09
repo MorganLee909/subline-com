@@ -6,6 +6,7 @@ const Helper = require("./helper.js");
 const Validator = require("./validator.js");
 
 const xlsx = require("xlsx");
+const fs = require("fs");
 module.exports = {
     //GET - gets a list of all database ingredients
     //Returns:
@@ -199,6 +200,7 @@ module.exports = {
 
     createFromSpreadsheet: function(req, res){
         let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
         console.log(workbook);
     }
 }
