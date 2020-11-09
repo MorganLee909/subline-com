@@ -1915,6 +1915,7 @@ let newIngredient = {
 
         selector.onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
+        document.getElementById("submitFile").addEventListener("click", this.submitFile);
     },
 
     unitChange: function(){
@@ -1994,7 +1995,22 @@ let newIngredient = {
             });
     },
 
+    submitFile: function(){
+        const file = document.getElementById("file").files[0];
+        let data = new FormData();
 
+        data.append("spreadsheet", file);
+        fetch("/ingredients/create/spreadsheet", {
+            method: "post",
+            body: data,
+        })
+            .then((response)=>{
+                console.log("did things");
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+    }
 }
 
 module.exports = newIngredient;

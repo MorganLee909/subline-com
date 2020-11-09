@@ -5,6 +5,7 @@ const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 const Helper = require("./helper.js");
 const Validator = require("./validator.js");
 
+const xlsx = require("xlsx");
 module.exports = {
     //GET - gets a list of all database ingredients
     //Returns:
@@ -195,4 +196,9 @@ module.exports = {
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },
+
+    createFromSpreadsheet: function(req, res){
+        let workbook = xlsx.readFile(req.file.path);
+        console.log(workbook);
+    }
 }
