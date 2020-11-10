@@ -1955,7 +1955,7 @@ let newIngredient = {
         }
     },
 
-    submit: function(Ingredient){
+    submit: function(){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
         const quantityValue = parseFloat(document.getElementById("newIngQuantity").value);
@@ -2024,6 +2024,9 @@ let newIngredient = {
         })
             .then(response => response.json())
             .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }
                 for(let i = 0; i < response.length; i++){
                     merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
                 }

@@ -242,6 +242,7 @@ module.exports = {
                     case "kg": unitType = "mass"; break;
                     case "oz": unitType = "mass"; break;
                     case "lb": unitType = "mass"; break;
+                    case "ml": unitType = "volume"; break;
                     case "l": unitType = "volume"; break;
                     case "tsp": unitType = "volume"; break;
                     case "tbsp": unitType = "volume"; break;
@@ -255,6 +256,7 @@ module.exports = {
                     case "m": unitType = "length"; break;
                     case "in": unitType = "length"; break;
                     case "ft": unitType = "length"; break;
+                    default: unitType = "other";
                 }
 
                 ingredient.unitType = unitType;
