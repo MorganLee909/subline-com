@@ -218,6 +218,7 @@ module.exports = {
                 case "category": locations.category = i; break;
                 case "quantity": locations.quantity = i; break;
                 case "unit": locations.unit = i; break;
+                case "bottle": locations.bottle = i; break;
                 case "bottle size": locations.bottleSize = i; break;
             }
         }
@@ -231,7 +232,13 @@ module.exports = {
                 category: array[i][locations.category]
             });
 
-            if(array[i][locations.unit].toLowerCase() === "bottle"){
+            let merchantItem = {
+                ingredient: array[i][locations.name],
+                quantity: Helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
+                defaultUnit: array[i][locations.unit]
+            }
+
+            if(array[i][locations.bottle] === true){
                 ingredient.unitType = "volume";
                 ingredient.specialUnit = "bottle";
                 ingredient.unitSize = Helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);
@@ -261,13 +268,8 @@ module.exports = {
 
                 ingredient.unitType = unitType;
             }
-            
-            merchantData.push({
-                ingredient: array[i][locations.name],
-                quantity: Helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
-                defaultUnit: array[i][locations.unit]
-            })
 
+            merchantData.push(merchantItem);
             ingredients.push(ingredient);
         }
 
