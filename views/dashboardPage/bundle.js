@@ -168,6 +168,10 @@ class MerchantIngredient{
         }
     }
 
+    set quantity(quantity){
+        this._quantity = quantity;
+    }
+
     updateQuantity(quantity){
         this._quantity += this.convertToBase(quantity);
     }
