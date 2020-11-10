@@ -2018,7 +2018,7 @@ let newIngredient = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/ingredients/create/spreadsheet", {
+        fetch("/spreadsheet", {
             method: "post",
             body: data,
         })

@@ -2,11 +2,11 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 
-const Helper = require("./helper.js");
-const Validator = require("./validator.js");
+const helper = require("./helper.js");
+const validator = require("./validator.js");
 
-const xlsx = require("xlsx");
-const fs = require("fs");
+const xlsxUtils = require("xlsx").utils;
+
 module.exports = {
     //GET - gets a list of all database ingredients
     //Returns:
@@ -41,18 +41,18 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator.ingredient(req.body.ingredient);
+        let validation = validator.ingredient(req.body.ingredient);
         if(validation !== true){
             return res.json(validation);
         }
 
-        validation = Validator.quantity(req.body.quantity);
+        validation = validator.quantity(req.body.quantity);
         if(validation !== true){
             return res.json(validation);
         }
 
         if(req.body.ingredient.unitSize){
-            validation = Validator.quantity(req.body.ingredient.unitSize);
+            validation = validator.quantity(req.body.ingredient.unitSize);
             if(validation !== true){
                 return res.json(validation);
             }
@@ -65,7 +65,7 @@ module.exports = {
                 category: req.body.ingredient.category,
                 unitType: req.body.ingredient.unitType,
                 specialUnit: req.body.ingredient.specialUnit,
-                unitSize: Helper.convertQuantityToBaseUnit(req.body.ingredient.unitSize, req.body.defaultUnit)
+                unitSize: helper.convertQuantityToBaseUnit(req.body.ingredient.unitSize, req.body.defaultUnit)
             });
         }else{
             newIngredient = new Ingredient(req.body.ingredient);
@@ -84,7 +84,7 @@ module.exports = {
                 if(response[0].specialUnit === "bottle"){
                     newIngredient.quantity = req.body.quantity * response[0].unitSize;
                 }else{
-                    newIngredient.quantity = Helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
+                    newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
                 }
 
                 response[1].inventory.push(newIngredient);
@@ -116,7 +116,7 @@ module.exports = {
             return res.redirect("/");
         }
 
-        const ingredientCheck = Validator.ingredient(req.body);
+        const ingredientCheck = validator.ingredient(req.body);
         if(ingredientCheck !== true){
             return res.json(ingredientCheck);
         }
@@ -198,15 +198,8 @@ module.exports = {
             });
     },
 
-    createFromSpreadsheet: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let workbook = xlsx.readFile(req.file.path);
-        fs.unlink(req.file.path, ()=>{});
-        let array = xlsx.utils.sheet_to_json(workbook.Sheets.Sheet1, {
+    createFromSpreadsheet: function(sheet, user){
+        const array = xlsxUtils.sheet_to_json(sheet, {
             header: 1
         });
 
@@ -234,14 +227,14 @@ module.exports = {
 
             let merchantItem = {
                 ingredient: array[i][locations.name],
-                quantity: Helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
+                quantity: helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
                 defaultUnit: array[i][locations.unit]
             }
 
             if(array[i][locations.bottle] === true){
                 ingredient.unitType = "volume";
                 ingredient.specialUnit = "bottle";
-                ingredient.unitSize = Helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);
+                ingredient.unitSize = helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);
             }else{
                 let unitType = "";
                 switch(array[i][locations.unit].toLowerCase()){
@@ -275,11 +268,11 @@ module.exports = {
 
         //Update the database
         let createdIngredients = [];
-        Ingredient.create(ingredients)
+        return Ingredient.create(ingredients)
             .then((ingredients)=>{
                 createdIngredients = ingredients;
 
-                return Merchant.findOne({_id: req.session.user});
+                return Merchant.findOne({_id: user});
             })
             .then((merchant)=>{
                 for(let i = 0; i < merchantData.length; i++){
@@ -295,10 +288,10 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
-                return res.json(merchantData);
+                return merchantData;
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO CREATE YOUR INGREDIENTS");
+                return "ERROR: UNABLE TO CREATE YOUR INGREDIENTS";
             });
     }
 }

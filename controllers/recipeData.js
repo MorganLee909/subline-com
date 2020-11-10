@@ -1,9 +1,10 @@
-const axios = require("axios");
-
 const Recipe = require("../models/recipe.js");
 const Merchant = require("../models/merchant.js");
 const ArchivedRecipe = require("../models/archivedRecipe.js");
-const Validator = require("./validator.js");
+
+const validator = require("./validator.js");
+
+const axios = require("axios");
 
 module.exports = {
     /*
@@ -24,7 +25,7 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator.recipe(req.body);
+        let validation = validator.recipe(req.body);
         if(validation !== true){
             return res.json(validation);
         }
@@ -76,7 +77,7 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator.recipe(req.body);
+        let validation = validator.recipe(req.body);
         if(validation !== true){
             return res.json(validation);
         }
@@ -296,5 +297,14 @@ module.exports = {
             .catch((err)=>{
                 return "ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE";
             });
+    },
+
+    createFromSpreadSheet: function(sheet, user){
+        const array = xlsxUtils.sheet_to_json(sheet, {
+            header: 1
+        });
+
+        //get property locations
+        
     }
 }

@@ -1,10 +1,13 @@
+const Merchant = require("../models/merchant");
+
+const ingredientData = require("./ingredientData.js");
+const recipeData = require("./recipeData.js");
+
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const path = require("path");
-const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
-const VerifyEmail = require("../emails/verifyEmail.js");
-
-const Merchant = require("../models/merchant");
+const fs = require("fs");
+const xlsx = require("xlsx");
 
 module.exports = {
     /*
@@ -149,5 +152,30 @@ module.exports = {
 
     logo: function(req, res){
         return res.sendFile(path.resolve("./views/shared/images/logo.png"));
+    },
+
+    readSpreadsheet: async function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
+        let sheets = Object.keys(workbook.Sheets);
+
+        let data = {};
+        for(let i = 0; i < sheets.length; i++){
+            switch(sheets[i].toLocaleLowerCase()){
+                case "ingredients":
+                    data.ingredients = await ingredientData.createFromSpreadsheet(workbook.Sheets[sheets[i]], req.session.user);
+                    break;
+                case "recipes":
+                    data.recipes = await recipeData.createFromSpreadsheet(workbook.Sheets[sheets[i]], req.session.user);
+                    break;
+            }
+        }
+
+        return res.json(data);
     }
 }
