@@ -199,8 +199,102 @@ module.exports = {
     },
 
     createFromSpreadsheet: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
         let workbook = xlsx.readFile(req.file.path);
         fs.unlink(req.file.path, ()=>{});
-        console.log(workbook);
+        let array = xlsx.utils.sheet_to_json(workbook.Sheets.Sheet1, {
+            header: 1
+        });
+
+        //get property locations
+        let locations = {};
+        for(let i = 0; i < array[0].length; i++){
+            switch(array[0][i].toLowerCase()){
+                case "name": locations.name = i; break;
+                case "category": locations.category = i; break;
+                case "quantity": locations.quantity = i; break;
+                case "unit": locations.unit = i; break;
+                case "bottle size": locations.bottleSize = i; break;
+            }
+        }
+
+        //Create ingredients
+        let ingredients = [];
+        let merchantData = [];
+        for(let i = 1; i < array.length; i++){
+            let ingredient = new Ingredient({
+                name: array[i][locations.name],
+                category: array[i][locations.category]
+            });
+
+            if(array[i][locations.unit].toLowerCase() === "bottle"){
+                ingredient.unitType = "volume";
+                ingredient.specialUnit = "bottle";
+                ingredient.unitSize = Helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);
+            }else{
+                let unitType = "";
+                switch(array[i][locations.unit].toLowerCase()){
+                    case "g": unitType = "mass"; break;
+                    case "kg": unitType = "mass"; break;
+                    case "oz": unitType = "mass"; break;
+                    case "lb": unitType = "mass"; break;
+                    case "l": unitType = "volume"; break;
+                    case "tsp": unitType = "volume"; break;
+                    case "tbsp": unitType = "volume"; break;
+                    case "ozfl": unitType = "volume"; break;
+                    case "cup": unitType = "volume"; break;
+                    case "pt": unitType = "volume"; break;
+                    case "qt": unitType = "volume"; break;
+                    case "gal": unitType = "volume"; break;
+                    case "mm": unitType = "length"; break;
+                    case "cm": unitType = "length"; break;
+                    case "m": unitType = "length"; break;
+                    case "in": unitType = "length"; break;
+                    case "ft": unitType = "length"; break;
+                }
+
+                ingredient.unitType = unitType;
+            }
+            
+            merchantData.push({
+                ingredient: array[i][locations.name],
+                quantity: Helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
+                defaultUnit: array[i][locations.unit]
+            })
+
+            ingredients.push(ingredient);
+        }
+
+        //Update the database
+        let createdIngredients = [];
+        Ingredient.create(ingredients)
+            .then((ingredients)=>{
+                createdIngredients = ingredients;
+
+                return Merchant.findOne({_id: req.session.user});
+            })
+            .then((merchant)=>{
+                for(let i = 0; i < merchantData.length; i++){
+                    for(let j = 0; j < createdIngredients.length; j++){
+                        if(merchantData[i].ingredient === createdIngredients[j].name){
+                            merchantData[i].ingredient = createdIngredients[j];
+                            merchant.inventory.push(merchantData[i]);
+                            break;
+                        }
+                    }
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return res.json(merchantData);
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO CREATE YOUR INGREDIENTS");
+            });
     }
 }
