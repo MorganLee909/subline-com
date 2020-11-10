@@ -174,8 +174,31 @@ class Merchant{
         return this._ingredients;
     }
 
-    addIngredient(ingredient, quantity){
-        const merchantIngredient = new MerchantIngredient(ingredient, quantity);
+    /*
+    ingredient: {
+        _id: String,
+        name: String,
+        category: String,
+        unitType: String,
+        specialUnit: String || undefined,
+        unitSize: Number || undefined
+    }
+    quantity: Number
+    defaultUnit: String
+    */
+    addIngredient(ingredient, quantity, defaultUnit){
+        const createdIngredient = new this._modules.Ingredient(
+            ingredient._id,
+            ingredient.name,
+            ingredient.category,
+            ingredient.unitType,
+            defaultUnit,
+            this,
+            ingredient.specialUnit,
+            ingredient.unitSize
+        )
+
+        const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);
 
         this._modules.home.isPopulated = false;

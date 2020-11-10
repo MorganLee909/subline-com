@@ -301,8 +301,31 @@ class Merchant{
         return this._ingredients;
     }
 
-    addIngredient(ingredient, quantity){
-        const merchantIngredient = new MerchantIngredient(ingredient, quantity);
+    /*
+    ingredient: {
+        _id: String,
+        name: String,
+        category: String,
+        unitType: String,
+        specialUnit: String || undefined,
+        unitSize: Number || undefined
+    }
+    quantity: Number
+    defaultUnit: String
+    */
+    addIngredient(ingredient, quantity, defaultUnit){
+        const createdIngredient = new this._modules.Ingredient(
+            ingredient._id,
+            ingredient.name,
+            ingredient.category,
+            ingredient.unitType,
+            defaultUnit,
+            this,
+            ingredient.specialUnit,
+            ingredient.unitSize
+        )
+
+        const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);
 
         this._modules.home.isPopulated = false;
@@ -1969,18 +1992,7 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    const ingredient = new Ingredient(
-                        response.ingredient._id,
-                        response.ingredient.name,
-                        response.ingredient.category,
-                        response.ingredient.unitType,
-                        response.defaultUnit,
-                        merchant,
-                        response.ingredient.specialUnit,
-                        response.ingredient.unitSize
-                    )
-
-                    merchant.addIngredient(ingredient, response.quantity);
+                    merchant.addIngredient(response.ingredient, response.quantity, response.defaultUnit);
                     controller.openStrand("ingredients");
 
                     banner.createNotification("INGREDIENT CREATED");
@@ -1997,15 +2009,28 @@ let newIngredient = {
     submitFile: function(){
         const file = document.getElementById("file").files[0];
         let data = new FormData();
-
         data.append("spreadsheet", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         fetch("/ingredients/create/spreadsheet", {
             method: "post",
             body: data,
         })
+            .then(response => response.json())
             .then((response)=>{
+                for(let i = 0; i < response.length; i++){
+                    merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
+                }
+
+                controller.openStrand("ingredients");
             })
             .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
             });
     }
 }

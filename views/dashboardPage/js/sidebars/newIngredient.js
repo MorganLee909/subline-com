@@ -64,18 +64,7 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    const ingredient = new Ingredient(
-                        response.ingredient._id,
-                        response.ingredient.name,
-                        response.ingredient.category,
-                        response.ingredient.unitType,
-                        response.defaultUnit,
-                        merchant,
-                        response.ingredient.specialUnit,
-                        response.ingredient.unitSize
-                    )
-
-                    merchant.addIngredient(ingredient, response.quantity);
+                    merchant.addIngredient(response.ingredient, response.quantity, response.defaultUnit);
                     controller.openStrand("ingredients");
 
                     banner.createNotification("INGREDIENT CREATED");
@@ -92,15 +81,28 @@ let newIngredient = {
     submitFile: function(){
         const file = document.getElementById("file").files[0];
         let data = new FormData();
-
         data.append("spreadsheet", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
         fetch("/ingredients/create/spreadsheet", {
             method: "post",
             body: data,
         })
+            .then(response => response.json())
             .then((response)=>{
+                for(let i = 0; i < response.length; i++){
+                    merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
+                }
+
+                controller.openStrand("ingredients");
             })
             .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
             });
     }
 }
