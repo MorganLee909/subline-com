@@ -221,18 +221,6 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
     }
 
-    updateIngredient(ingredient, quantity){
-        const index = this._ingredients.indexOf(ingredient);
-        if(index === undefined){
-            return false;
-        }
-
-        this._ingredients[index].quantity = quantity;
-
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
-    }
-
     getIngredient(id){
         for(let i = 0; i < this._ingredients.length; i++){
             if(this._ingredients[i].ingredient.id === id){

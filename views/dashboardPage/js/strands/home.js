@@ -247,7 +247,6 @@ let home = {
                         banner.createError(response);
                     }else{
                         for(let i = 0; i < response.length; i++){
-                            // merchant.updateIngredient(changes[i].ingredient, changes[i].quantity);
                             merchant.removeIngredient(merchant.getIngredient(response[i].ingredient._id));
                             merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
                         }

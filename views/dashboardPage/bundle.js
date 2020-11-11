@@ -348,18 +348,6 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
     }
 
-    updateIngredient(ingredient, quantity){
-        const index = this._ingredients.indexOf(ingredient);
-        if(index === undefined){
-            return false;
-        }
-
-        this._ingredients[index].quantity = quantity;
-
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
-    }
-
     getIngredient(id){
         for(let i = 0; i < this._ingredients.length; i++){
             if(this._ingredients[i].ingredient.id === id){
@@ -3432,7 +3420,6 @@ let home = {
                         banner.createError(response);
                     }else{
                         for(let i = 0; i < response.length; i++){
-                            // merchant.updateIngredient(changes[i].ingredient, changes[i].quantity);
                             merchant.removeIngredient(merchant.getIngredient(response[i].ingredient._id));
                             merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
                         }
