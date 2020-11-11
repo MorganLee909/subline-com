@@ -2026,12 +2026,10 @@ let newIngredient = {
             .then((response)=>{
                 if(typeof(response) === "string"){
                     banner.createError(response);
+                }else{
+                    console.log(response);
                 }
-                for(let i = 0; i < response.length; i++){
-                    merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
-                }
-
-                controller.openStrand("ingredients");
+                
             })
             .catch((err)=>{
                 banner.createError("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE");

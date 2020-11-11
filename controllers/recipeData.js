@@ -5,6 +5,7 @@ const ArchivedRecipe = require("../models/archivedRecipe.js");
 const validator = require("./validator.js");
 
 const axios = require("axios");
+const xlsxUtils = require("xlsx").utils;
 
 module.exports = {
     /*
@@ -299,12 +300,54 @@ module.exports = {
             });
     },
 
-    createFromSpreadSheet: function(sheet, user){
+    createFromSpreadsheet: function(sheet, user){
         const array = xlsxUtils.sheet_to_json(sheet, {
             header: 1
         });
 
         //get property locations
-        
+        let locations = {};
+        for(let i = 0; i < array[0].length; i++){
+            switch(array[0][i].toLowerCase()){
+                case "name": locations.name = i; break;
+                case "price": locations.price = i; break;
+            }
+        }
+
+        //Create Recipes
+        let merchant = {};
+        let newRecipes = [];
+        return Merchant.findOne({_id: user})
+            .then((response)=>{
+                merchant = response;
+
+                let recipes = [];
+                for(let i = 1; i < array.length; i++){
+                    recipes.push({
+                        name: array[i][locations.name],
+                        price: parseInt(array[i][locations.price] * 100),
+                        merchant: merchant
+                    });
+                }
+
+                return Recipe.create(recipes)
+            })
+            .then((recipes)=>{
+                for(let i = 0; i < recipes.length; i++){
+                    merchant.recipes.push(recipes[i]);
+
+                    recipes[i].merchant = undefined;
+                    newRecipes.push(recipes[i]);
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return newRecipes;
+            })
+            .catch((err)=>{
+                console.log(err);
+                return "ERROR: UNABLE TO CREATE RECIPES";
+            });
     }
 }

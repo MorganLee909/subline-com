@@ -226,7 +226,7 @@ module.exports = {
             });
 
             let merchantItem = {
-                ingredient: array[i][locations.name],
+                ingredient: ingredient,
                 quantity: helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
                 defaultUnit: array[i][locations.unit]
             }
@@ -276,13 +276,7 @@ module.exports = {
             })
             .then((merchant)=>{
                 for(let i = 0; i < merchantData.length; i++){
-                    for(let j = 0; j < createdIngredients.length; j++){
-                        if(merchantData[i].ingredient === createdIngredients[j].name){
-                            merchantData[i].ingredient = createdIngredients[j];
-                            merchant.inventory.push(merchantData[i]);
-                            break;
-                        }
-                    }
+                    merchant.inventory.push(merchantData[i]);
                 }
 
                 return merchant.save();

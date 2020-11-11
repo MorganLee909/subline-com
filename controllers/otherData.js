@@ -168,9 +168,11 @@ module.exports = {
         for(let i = 0; i < sheets.length; i++){
             switch(sheets[i].toLocaleLowerCase()){
                 case "ingredients":
+                    console.log("ingredients");
                     data.ingredients = await ingredientData.createFromSpreadsheet(workbook.Sheets[sheets[i]], req.session.user);
                     break;
                 case "recipes":
+                    console.log("recipes");
                     data.recipes = await recipeData.createFromSpreadsheet(workbook.Sheets[sheets[i]], req.session.user);
                     break;
             }
