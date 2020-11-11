@@ -153,7 +153,7 @@ module.exports = {
                             merchant.inventory[i].quantity = req.body.quantity;
                         }
 
-                        updatedIngredient.quantity = req.body.quantity;
+                        updatedIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.unit);
                         updatedIngredient.unit = req.body.unit;
                         
                         break;

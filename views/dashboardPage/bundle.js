@@ -1666,7 +1666,7 @@ let editIngredient = {
             data.quantity = quantity * unitSize;
             data.unitSize = unitSize;
         }else{
-            data.quantity = ingredient.convertToBase(quantity);
+            data.quantity = quantity;
         }
 
         //Get the measurement unit
@@ -1693,12 +1693,9 @@ let editIngredient = {
             if(typeof(response) === "string"){
                 banner.createError(response);
             }else{
-                ingredient.ingredient.name = response.ingredient.name;
-                ingredient.ingredient.category = response.ingredient.category;
-                ingredient.ingredient.unitSize = response.ingredient.unitSize;
-                ingredient.ingredient.unit = response.unit;
+                merchant.removeIngredient(merchant.getIngredient(response.ingredient._id));
+                merchant.addIngredient(response.ingredient, response.quantity, response.unit);
 
-                merchant.updateIngredient(ingredient, response.quantity);
                 controller.openStrand("ingredients");
                 banner.createNotification("INGREDIENT UPDATED");
             }
