@@ -12,7 +12,7 @@ module.exports = {
     },
 
     generateCode: function(req, res){
-        Merchant.findOne({email: req.body.email})
+        Merchant.findOne({email: req.body.email.toLowerCase()})
             .then((merchant)=>{
                 if(merchant === null){
                     req.session.error = "USER WITH THIS EMAIL DOES NOT EXIST";
