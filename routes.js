@@ -22,7 +22,6 @@ module.exports = function(app){
     app.post("/merchant/create/none", merchantData.createMerchantNone);
     app.get("/merchant/create/clover", merchantData.createMerchantClover);
     app.get("/merchant/create/square", merchantData.createMerchantSquare);
-    app.put("/merchant/ingredients/update/:id/:unit", merchantData.ingredientDefaultUnit);
     app.put("/merchant/ingredients/update", merchantData.updateMerchantIngredient); //also updates some data in ingredients
     app.post("/merchant/password", merchantData.updatePassword);
 

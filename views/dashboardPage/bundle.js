@@ -3396,30 +3396,15 @@ let home = {
     submitInventoryCheck: function(){
         let lis = document.querySelectorAll("#inventoryCheckCard li");
 
-        let changes = [];
-        let fetchData = [];
+        let data = [];
 
         for(let i = 0; i < lis.length; i++){
             if(lis[i].children[1].children[1].value >= 0){
-                let merchIngredient = lis[i].ingredient;
-
                 if(lis[i].children[1].children[1].changed === true){
-                    let value = 0;
-                    if(merchIngredient.ingredient.specialUnit === "bottle"){
-                        value = parseFloat(lis[i].children[1].children[1].value) * merchIngredient.ingredient.unitSize;
-                    }else{
-                        value = controller.convertToMain(merchIngredient.ingredient.unit, parseFloat(lis[i].children[1].children[1].value));
-                    }
-                    
-
-                    changes.push({
-                        ingredient: merchIngredient.ingredient,
-                        quantity: value
-                    });
-
-                    fetchData.push({
+                    let merchIngredient = lis[i].ingredient;
+                    data.push({
                         id: merchIngredient.ingredient.id,
-                        quantity: value
+                        quantity: lis[i].children[1].children[1].value
                     });
 
                     lis[i].children[1].children[1].changed = false;
@@ -3430,7 +3415,7 @@ let home = {
             }
         }
         
-        if(fetchData.length > 0){
+        if(data.length > 0){
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
 
@@ -3439,20 +3424,24 @@ let home = {
                 headers: {
                     "Content-Type": "application/json;charset=utf-8"
                 },
-                body: JSON.stringify(fetchData)
+                body: JSON.stringify(data)
             })
                 .then(response => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        for(let i = 0; i < changes.length; i++){
-                            merchant.updateIngredient(changes[i].ingredient, changes[i].quantity);
+                        for(let i = 0; i < response.length; i++){
+                            // merchant.updateIngredient(changes[i].ingredient, changes[i].quantity);
+                            merchant.removeIngredient(merchant.getIngredient(response[i].ingredient._id));
+                            merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
                         }
                         banner.createNotification("INGREDIENTS UPDATED");
                     }
                 })
-                .catch((err)=>{})
+                .catch((err)=>{
+                    banner.createError("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE");
+                })
                 .finally(()=>{
                     loader.style.display = "none";
                 });

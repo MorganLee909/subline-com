@@ -1,11 +1,12 @@
-const axios = require("axios");
-const bcrypt = require("bcryptjs");
-
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
-const Validator = require("./validator.js");
-const Helper = require("./helper.js");
+
+const validator = require("./validator.js");
+const helper = require("./helper.js");
+
+const axios = require("axios");
+const bcrypt = require("bcryptjs");
 
 module.exports = {
     /*
@@ -19,7 +20,7 @@ module.exports = {
     Redirects to /dashboard
     */
     createMerchantNone: async function(req, res){
-        let validation =  await Validator.merchant(req.body);
+        let validation =  await validator.merchant(req.body);
         if(validation !== true){
             req.session.error = validation;
             return res.redirect("/");
@@ -39,7 +40,7 @@ module.exports = {
                 status: ["unverified"],
                 inventory: [],
                 recipes: [],
-                verifyId: Helper.generateId(15)
+                verifyId: helper.generateId(15)
             });
 
             merchant.save()
@@ -190,31 +191,6 @@ module.exports = {
             });
     },
 
-    //PUT - Update the default unit for a single ingredient
-    ingredientDefaultUnit: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(merchant.inventory[i].ingredient.toString() === req.params.id){
-                        merchant.inventory[i].defaultUnit =req.params.unit;
-                    }
-                }
-
-                return merchant.save()
-            })
-            .then((merchant)=>{
-                return res.json({});
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO UPDATE DEFAULT UNIT");
-            });
-    },
-
     /*
     POST - Update the quantity for a merchant inventory item
     req.body = [{
@@ -229,20 +205,21 @@ module.exports = {
         }
 
         for(let i = 0; i < req.body.length; i++){
-            let validation = Validator.quantity(req.body[i].quantity);
+            let validation = validator.quantity(req.body[i].quantity);
             if(validation !== true){
                 return res.json(validation);
             }
         }
 
         let adjustments = [];
-
+        let changedIngredients = []
         Merchant.findOne({_id: req.session.user})
+            .populate("inventory.ingredient")
             .then((merchant)=>{
                 for(let i = 0; i < req.body.length; i++){
                     let updateIngredient;
                     for(let j = 0; j < merchant.inventory.length; j++){
-                        if(merchant.inventory[j].ingredient.toString() === req.body[i].id){
+                        if(merchant.inventory[j].ingredient._id.toString() === req.body[i].id){
                             updateIngredient = merchant.inventory[j];
                             break;
                         }
@@ -255,13 +232,14 @@ module.exports = {
                         quantity: req.body[i].quantity - updateIngredient.quantity,
                     }));
 
-                    updateIngredient.quantity = req.body[i].quantity;
+                    updateIngredient.quantity = helper.convertQuantityToBaseUnit(req.body[i].quantity, updateIngredient.defaultUnit);
+                    changedIngredients.push(updateIngredient);
                 }
 
                 return merchant.save();
             })
             .then((newMerchant)=>{
-                res.json({});
+                res.json(changedIngredients);
 
                 InventoryAdjustment.create(adjustments).catch(()=>{});
                 return;
@@ -280,7 +258,7 @@ module.exports = {
     }
     */
     updatePassword: function(req, res){
-        let validation = Validator.password(req.body.pass, req.body.confirmPass);
+        let validation = validator.password(req.body.pass, req.body.confirmPass);
         if(validation !== true){
             return res.json(validation);
         }
