@@ -152,32 +152,5 @@ module.exports = {
 
     logo: function(req, res){
         return res.sendFile(path.resolve("./views/shared/images/logo.png"));
-    },
-
-    readSpreadsheet: async function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let workbook = xlsx.readFile(req.file.path);
-        fs.unlink(req.file.path, ()=>{});
-        let sheets = Object.keys(workbook.Sheets);
-
-        let data = {};
-        for(let i = 0; i < sheets.length; i++){
-            switch(sheets[i].toLocaleLowerCase()){
-                case "ingredients":
-                    console.log("ingredients");
-                    data.ingredients = await ingredientData.createFromSpreadsheet(workbook.Sheets[sheets[i]], req.session.user);
-                    break;
-                case "recipes":
-                    console.log("recipes");
-                    data.recipes = await recipeData.createFromSpreadsheet(workbook.Sheets[sheets[i]], req.session.user);
-                    break;
-            }
-        }
-
-        return res.json(data);
     }
 }

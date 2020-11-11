@@ -346,7 +346,6 @@ module.exports = {
                 return newRecipes;
             })
             .catch((err)=>{
-                console.log(err);
                 return "ERROR: UNABLE TO CREATE RECIPES";
             });
     }

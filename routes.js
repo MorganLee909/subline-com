@@ -31,6 +31,7 @@ module.exports = function(app){
     app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", ingredientData.updateIngredient);
     app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
+    app.post("/ingredients/create/spreadsheet", upload.single("spreadsheet"), ingredientData.createFromSpreadsheet);
 
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);
@@ -60,7 +61,6 @@ module.exports = function(app){
     app.get("/cloverauth*", otherData.cloverAuth);
     app.get("/squareauth", otherData.squareAuth);
     app.get("/logo", otherData.logo);
-    app.post("/spreadsheet", upload.single("spreadsheet"), otherData.readSpreadsheet);
 
     //Information Pages
     app.get("/privacy", informationPages.privacy);

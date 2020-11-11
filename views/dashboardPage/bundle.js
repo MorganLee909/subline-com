@@ -2018,7 +2018,7 @@ let newIngredient = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/spreadsheet", {
+        fetch("/ingredients/create/spreadsheet", {
             method: "post",
             body: data,
         })
@@ -2027,11 +2027,16 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    console.log(response);
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
+
+                        controller.openStrand("ingredients");
+                    }
                 }
                 
             })
             .catch((err)=>{
+                console.log(err);
                 banner.createError("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE");
             })
             .finally(()=>{

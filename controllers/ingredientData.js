@@ -5,7 +5,8 @@ const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 const helper = require("./helper.js");
 const validator = require("./validator.js");
 
-const xlsxUtils = require("xlsx").utils;
+const xlsx = require("xlsx");
+const fs = require("fs");
 
 module.exports = {
     //GET - gets a list of all database ingredients
@@ -198,8 +199,25 @@ module.exports = {
             });
     },
 
-    createFromSpreadsheet: function(sheet, user){
-        const array = xlsxUtils.sheet_to_json(sheet, {
+    createFromSpreadsheet: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        //read file, get the correct sheet, create array from sheet
+        let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
+
+        let sheets = Object.keys(workbook.Sheets);
+        let sheet = {};
+        for(let i = 0; i < sheets.length; i++){
+            let str = sheets[i].toLowerCase();
+            if(str === "ingredient" || str === "ingredients"){
+                sheet = workbook.Sheets[sheets[i]];
+            }
+        }
+        const array = xlsx.utils.sheet_to_json(sheet, {
             header: 1
         });
 
@@ -268,11 +286,11 @@ module.exports = {
 
         //Update the database
         let createdIngredients = [];
-        return Ingredient.create(ingredients)
+        Ingredient.create(ingredients)
             .then((ingredients)=>{
                 createdIngredients = ingredients;
 
-                return Merchant.findOne({_id: user});
+                return Merchant.findOne({_id: req.session.user});
             })
             .then((merchant)=>{
                 for(let i = 0; i < merchantData.length; i++){
@@ -282,7 +300,7 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
-                return merchantData;
+                return res.json(merchantData);
             })
             .catch((err)=>{
                 return "ERROR: UNABLE TO CREATE YOUR INGREDIENTS";
