@@ -28,10 +28,11 @@ module.exports = {
         }
         let startDate = new Date(req.body.startDate);
         let endDate = new Date(req.body.endDate);
-        endDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1);
+        endDate.setDate(endDate.getDate() + 1);
+
         Transaction.aggregate([
             {$match: {
-                merchant: new ObjectId(req.session.user),
+                merchant: ObjectId(req.session.user),
                 date: {
                     $gte: startDate,
                     $lt: endDate
@@ -132,34 +133,6 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
-            });
-    },
-
-    getTransactionsByDate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        const from = new Date(req.body.from);
-        let to = new Date(req.body.to);
-        to.setDate(to.getDate() + 1);
-
-        Transaction.aggregate([
-            {$match: {
-                merchant: ObjectId(req.session.user),
-                date: {
-                    $gte: from,
-                    $lt: to
-                }
-            }},
-            {$sort: {date: 1}}
-        ])
-            .then((transactions)=>{
-                return res.json(transactions);
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE YOUR DATA");
             });
     },
 

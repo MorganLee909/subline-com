@@ -263,30 +263,35 @@ let analytics = {
     },
 
     changeDates: function(Transaction){
-        let dates = {
-            from: document.getElementById("analStartDate").valueAsDate,
-            to: document.getElementById("analEndDate").valueAsDate
+        let data = {
+            startDate: document.getElementById("analStartDate").valueAsDate,
+            endDate: document.getElementById("analEndDate").valueAsDate,
+            recipes: []
         }
 
-        if(dates.from > dates.to || dates.from === "" || dates.to === "" || dates.to > new Date()){
+        if(data.from > data.to || data.from === "" || data.to === "" || data.to > new Date()){
             banner.createError("INVALID DATE");
             return;
+        }
+
+        for(let i = 0; i < merchant.recipes.length; i++){
+            data.recipes.push(merchant.recipes[i].id);
         }
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/transaction/retrieve", {
+        fetch("/transaction", {
             method: "post",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
             },
-            body: JSON.stringify(dates)
+            body: JSON.stringify(data)
         })
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response.data);
+                    banner.createError(response);
                 }else{
                     this.transactions = [];
 
