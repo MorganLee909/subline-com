@@ -79,7 +79,7 @@ let newIngredient = {
     },
 
     submitFile: function(){
-        const file = document.getElementById("file").files[0];
+        const file = document.getElementById("ingredientFile").files[0];
         let data = new FormData();
         data.append("spreadsheet", file);
 
@@ -104,7 +104,6 @@ let newIngredient = {
                 
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE");
             })
             .finally(()=>{

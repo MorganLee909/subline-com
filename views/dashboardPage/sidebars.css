@@ -534,6 +534,11 @@ EDIT RECIPE
         margin: 15px auto;
     }
 
+    #newIngredient h2{
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
 /* Order Details */
 #orderDetails{
     display: flex;
