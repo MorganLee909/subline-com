@@ -1,7 +1,7 @@
 const home = require("./strands/home.js");
 const ingredients = require("./strands/ingredients.js");
 const recipeBook = require("./strands/recipeBook.js");
-const analytics = require("./strands/analytics.js");
+const analytics = require("./strands/analytics2.js");
 const orders = require("./strands/orders.js");
 const transactions = require("./strands/transactions.js");
 

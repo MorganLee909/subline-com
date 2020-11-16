@@ -47,6 +47,7 @@ module.exports = function(app){
 
     //Transactions
     app.post("/transaction", transactionData.getTransactions);
+    app.get("/transactions/:from/:to", transactionData.getTransactionsByDate);
     app.post("/transaction/create", transactionData.createTransaction);
     app.delete("/transaction/:id", transactionData.remove);
     app.get("/populatesometransactions", transactionData.populate);

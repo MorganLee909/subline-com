@@ -56,6 +56,66 @@ module.exports = {
     },
 
     /*
+    GET - get transactions between two dates, sorted and group by date
+    params:
+        from: Date string
+        to: Date string
+    return:
+        [{
+            date: Date
+            transactions:[[Recipe]]
+        }]
+    */
+    getTransactionsByDate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        const from = new Date(req.params.from);
+        const to = new Date(req.params.to);
+
+        Transaction.aggregate([
+            {$match: {
+                merchant: ObjectId(req.session.user),
+                date: {
+                    $gte: from,
+                    $lt: to
+                }
+            }},
+            {$group: {
+                _id: {$function: {
+                    body: "function(year, month, date){return `${year}-${month}-${date}`;}",
+                    args: [{$year: "$date"}, {$month: "$date"}, {$dayOfMonth: "$date"}],
+                    lang: "js"
+                }},
+                transactions: {$push: {
+                    _id: "$_id",
+                    recipes: "$recipes"
+                }}
+            }},
+            {$project: {
+                _id: 0,
+                date: {$convert: {
+                    input: "$_id",
+                    to: "date"
+                }},
+                transactions: 1
+            }},
+            {$sort: {
+                date: 1
+            }}
+        ])
+            .then((transactions)=>{
+                return res.json(transactions);
+            })
+            .catch((err)=>{
+                console.log(err);
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
+            });
+    },
+
+    /*
     POST - create a new transaction
     req.body = {
         date: date of the transaction,

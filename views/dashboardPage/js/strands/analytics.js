@@ -247,7 +247,7 @@ let analytics = {
                 title: "DATE"
             },
             yaxis: {
-                title: "Quantity"
+                title: "QUANTITY"
             }
         }
 
