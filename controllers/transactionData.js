@@ -74,6 +74,7 @@ module.exports = {
 
         const from = new Date(req.params.from);
         const to = new Date(req.params.to);
+        to.setDate(to.getDate() + 1);
 
         Transaction.aggregate([
             {$match: {

@@ -1,153 +1,119 @@
 let analytics = {
-    newData: false,
-    dateChange: false,
-    transactions: [],
+    isPopulated: false,
     ingredient: {},
     recipe: {},
+    transactionsByDate: [],
 
     display: function(Transaction){
-        document.getElementById("analDateBtn").onclick = ()=>{this.changeDates(Transaction)};
+        if(!this.isPopulated){
+            document.getElementById("analRecipeContent").style.display = "none";
 
-        if(this.transactions.length === 0 || this.newData === true){
-            let startDate = new Date();
-            startDate.setMonth(startDate.getMonth() - 1);
-            this.transactions = merchant.getTransactions(startDate);
-        }
+            let to = new Date()
+            let from = new Date(to.getFullYear(), to.getMonth() - 1, to.getDate());
 
-        let slider = document.getElementById("analSlider");
-        slider.onchange = ()=>{this.display(Transaction)};
+            document.getElementById("analStartDate").valueAsDate = from;
+            document.getElementById("analEndDate").valueAsDate = to;
+            let analSlider = document.getElementById("analSlider");
+            analSlider.onclick = ()=>{this.switchDisplay()};
+            analSlider.checked = false;
+            document.getElementById("analDateBtn").onclick = ()=>{this.newDates(Transaction)};
 
-        let ingredientContent = document.getElementById("analIngredientContent");
-        let recipeContent = document.getElementById("analRecipeContent");
+            this.populateButtons();
 
-        if(slider.checked){
-            ingredientContent.style.display = "none";
-            recipeContent.style.display = "flex";
-            this.displayRecipes();
-        }else{
-            ingredientContent.style.display = "flex";
-            recipeContent.style.display = "none"
-            this.displayIngredients();
+            this.ingredient = merchant.ingredients[0].ingredient;
+            this.recipe = merchant.recipes[0];
+
+            this.newDates(Transaction);
+            
+            this.isPopulated = true;
         }
     },
 
-    displayIngredients: function(){
-        const itemsList = document.getElementById("itemsList");
-
-        while(itemsList.children.length > 0){
-            itemsList.removeChild(itemsList.firstChild);
-        }
+    populateButtons: function(){
+        let ingredientButtons = document.getElementById("analIngredientList");
+        let recipeButtons = document.getElementById("analRecipeList");
 
         for(let i = 0; i < merchant.ingredients.length; i++){
-            let li = document.createElement("li");
-            li.classList.add("choosable");
-            li.item = merchant.ingredients[i];
-            li.innerText = merchant.ingredients[i].ingredient.name;
-            li.onclick = ()=>{
-                const itemsList = document.getElementById("itemsList");
-                for(let i = 0; i < itemsList.children.length; i++){
-                    itemsList.children[i].classList.remove("active");
-                }
-
-                li.classList.add("active");
-
-                this.ingredient = merchant.ingredients[i];
-                this.ingredientDisplay();
+            let button = document.createElement("button");
+            button.innerText = merchant.ingredients[i].ingredient.name;
+            button.classList.add("choosable");
+            button.onclick = ()=>{
+                this.ingredient = merchant.ingredients[i].ingredient;
+                this.displayIngredient()
             };
-            itemsList.appendChild(li);
-        }
-
-        if(this.dateChange && Object.keys(this.ingredient).length !== 0){
-            this.ingredientDisplay();
-        }
-        this.dateChange = false;
-    },
-
-    displayRecipes: function(){
-        let recipeList = document.getElementById("analRecipeList");
-        while(recipeList.children.length > 0){
-            recipeList.removeChild(recipeList.firstChild);
+            ingredientButtons.appendChild(button);
         }
 
         for(let i = 0; i < merchant.recipes.length; i++){
-            let li = document.createElement("li");
-            li.classList.add("choosable");
-            li.recipe = merchant.recipes[i];
-            li.innerText = merchant.recipes[i].name;
-            li.onclick = ()=>{
-                let recipeList = document.getElementById("analRecipeList");
-                for(let i = 0; i < recipeList.children.length; i++){
-                    recipeList.children[i].classList.remove("active");
-                }
-                li.classList.add("active");
-
+            let button = document.createElement("button");
+            button.innerText = merchant.recipes[i].name;
+            button.classList.add("choosable");
+            button.onclick = ()=>{
                 this.recipe = merchant.recipes[i];
-                this.recipeDisplay();
-            }
-
-            recipeList.appendChild(li);
+                this.displayRecipe()
+            };
+            recipeButtons.appendChild(button);
         }
-
-        if(this.dateChange  && Object.keys(this.recipe).length !== 0){
-            this.recipeDisplay();
-        }
-        this.dateChange = false;
     },
 
-    ingredientDisplay: function(){
-        //Get list of recipes that contain the ingredient
-        let containingRecipes = [];
+    getData: function(from, to, Transaction){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
 
-        for(let i = 0; i < merchant.recipes.length; i++){
-            for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
-                if(merchant.recipes[i].ingredients[j].ingredient === this.ingredient.ingredient){
-                    containingRecipes.push({
-                        recipe: merchant.recipes[i],
-                        quantity: merchant.recipes[i].ingredients[j].quantity
-                    });
+        return fetch(`/transactions/${from.toISOString()}/${to.toISOString()}`)
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    this.transactionsByDate = [];
 
-                    break;
-                }
-            }
-        }
+                    for(let i = 0; i < response.length; i++){
+                        const date = new Date(response[i].date);
+                        let newDate = {
+                            date: date,
+                            transactions: []
+                        };
 
-        //Create Graph
-        let quantities = [];
-        let dates = [];
-        let currentDate = (this.transactions.length > 0) ? this.transactions[0].date : undefined;
-        let currentQuantity = 0;
-
-        for(let i = 0; i < this.transactions.length; i++){
-            if(currentDate.getDate() !== this.transactions[i].date.getDate()){
-                quantities.push(currentQuantity);
-                dates.push(currentDate);
-                currentQuantity = 0;
-                currentDate = this.transactions[i].date;
-            }
-
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                for(let k = 0; k < containingRecipes.length; k++){
-                    if(this.transactions[i].recipes[j].recipe === containingRecipes[k].recipe){
-                        for(let l = 0; l < this.transactions[i].recipes[j].recipe.ingredients.length; l++){
-                            const transIngredient = this.transactions[i].recipes[j].recipe.ingredients[l];
-
-                            if(transIngredient.ingredient === this.ingredient.ingredient){
-
-                                currentQuantity += transIngredient.quantity * this.transactions[i].recipes[j].quantity;
-
-                                break;
-                            }
+                        for(let j = 0; j < response[i].transactions.length; j++){
+                            newDate.transactions.push(new Transaction(
+                                response[i].transactions[j]._id,
+                                date,
+                                response[i].transactions[j].recipes,
+                                merchant
+                            ));
                         }
+
+                        this.transactionsByDate.push(newDate);
                     }
                 }
-            }
+            })
+            .catch((err)=>{
+                banner.createError("UNABLE TO UPDATE THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    },
 
-            if(i === this.transactions.length - 1){
-                quantities.push(currentQuantity);
-                dates.push(currentDate);
+    displayIngredient: function(ingredient){
+        //break down data into dates and quantities
+        let dates = [];
+        let quantities = [];
+
+        for(let i = 0; i < this.transactionsByDate.length; i++){
+            dates.push(this.transactionsByDate[i].date);
+
+            let sum = 0;
+            for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
+                let transactions = this.transactionsByDate[i].transactions[j];
+                sum += transactions.getIngredientQuantity(this.ingredient);
             }
+            
+            quantities.push(sum);
         }
 
+        //create and display the graph
         let trace = {
             x: dates,
             y: quantities,
@@ -158,33 +124,34 @@ let analytics = {
         }
 
         const layout = {
-            title: this.ingredient.ingredient.name.toUpperCase(),
-            xaxis: {
-                title: "DATE"
-            },
-            yaxis: {
-                title: `QUANTITY (${this.ingredient.ingredient.unit.toUpperCase()})`,
-            }
+            title: this.ingredient.name.toUpperCase(),
+            xaxis: {title: "DATE"},
+            yaxis: {title: `QUANTITY (${this.ingredient.unit.toUpperCase()})`}
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
 
-        //Create use cards
+        //Create min/max/avg
+        //Current ingredient is stored on the "analMinUse" element
+        let min = quantities[0];
+        let max = quantities[0];
         let sum = 0;
-        let max = 0;
-        let min = (quantities.length > 0) ? quantities[0] : 0;
         for(let i = 0; i < quantities.length; i++){
-            sum += quantities[i];
-            if(quantities[i] > max){
-                max = quantities[i];
-            }else if(quantities[i] < min){
+            if(quantities[i] < min){
                 min = quantities[i];
             }
-        }
-        document.getElementById("analMinUse").innerText = `${min.toFixed(2)} ${this.ingredient.ingredient.unit}`;
-        document.getElementById("analAvgUse").innerText = `${(sum / quantities.length).toFixed(2)} ${this.ingredient.ingredient.unit}`;        
-        document.getElementById("analMaxUse").innerText = `${max.toFixed(2)} ${this.ingredient.ingredient.unit}`;
+            if(quantities[i] > max){
+                max = quantities[i];
+            }
 
+            sum += quantities[i];
+        }
+
+        document.getElementById("analMinUse").innerText = `${min.toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analAvgUse").innerText = `${(sum / quantities.length).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analMaxUse").innerText = `${max.toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+
+        //Create weekday averages
         let dayUse = [0, 0, 0, 0, 0, 0, 0];
         let dayCount = [0, 0, 0, 0, 0, 0, 0];
         for(let i = 0; i < quantities.length; i++){
@@ -192,134 +159,94 @@ let analytics = {
             dayCount[dates[i].getDay()]++;
         }
 
-        document.getElementById("analDayOne").innerText = `${(dayUse[0] / dayCount[0]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-        document.getElementById("analDayTwo").innerText = `${(dayUse[1] / dayCount[1]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-        document.getElementById("analDayThree").innerText = `${(dayUse[2] / dayCount[2]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-        document.getElementById("analDayFour").innerText = `${(dayUse[3] / dayCount[3]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-        document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-        document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
-        document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.ingredient.unit}`;
+        document.getElementById("analDayOne").innerText = `${(dayUse[0] / dayCount[0]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayTwo").innerText = `${(dayUse[1] / dayCount[1]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayThree").innerText = `${(dayUse[2] / dayCount[2]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayFour").innerText = `${(dayUse[3] / dayCount[3]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
     },
 
-    recipeDisplay: function(){
-        let quantities = [];
+    displayRecipe: function(){
+        //break down data into dates and quantities
         let dates = [];
-        let currentDate;
-        let quantity = 0;
-        if(this.transactions.length > 0){
-            currentDate = this.transactions[0].date;
-        }
+        let quantities = [];
 
-        for(let i = 0; i < this.transactions.length; i++){
-            if(currentDate.getDate() !== this.transactions[i].date.getDate()){
-                quantities.push(quantity);
-                quantity = 0;
-                dates.push(currentDate);
-                currentDate = this.transactions[i].date;
-            }
+        for(let i = 0; i < this.transactionsByDate.length; i++){
+            dates.push(this.transactionsByDate[i].date);
+            let sum = 0;
 
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                const recipe = this.transactions[i].recipes[j];
+            for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
+                const transaction = this.transactionsByDate[i].transactions[j];
 
-                if(recipe.recipe === this.recipe){
-                    quantity += recipe.quantity;
+                for(let k = 0; k < transaction.recipes.length; k++){
+                    if(transaction.recipes[k].recipe === this.recipe){
+                        sum += transaction.recipes[k].quantity;
+                    }
                 }
             }
 
-            if(i === this.transactions.length - 1){
-                quantities.push(quantity);
-                dates.push(currentDate);
-            }
+            quantities.push(sum);
         }
-
+        
+        //create and display the graph
         const trace = {
             x: dates,
             y: quantities,
             mode: "lines+markers",
             line: {
-                color: "rgb(255, 99, 107"
+                color: "rgb(255, 99, 107)"
             }
         }
 
         const layout = {
             title: this.recipe.name.toUpperCase(),
-            xaxis: {
-                title: "DATE"
-            },
-            yaxis: {
-                title: "QUANTITY"
-            }
+            xaxis: {title: "DATE"},
+            yaxis: {title: "QUANTITY"}
         }
 
         Plotly.newPlot("recipeSalesGraph", [trace], layout);
 
-        let sum = 0;
+        //Display the boxes at the bottom
+        //Current recipe is stored on the "recipeAvgUse" element
+        let avg = 0;
         for(let i = 0; i < quantities.length; i++){
-            sum += quantities[i];
+            avg += quantities[i];
         }
+        avg = avg / quantities.length;
 
-        document.getElementById("recipeAvgUse").innerText = (sum / quantities.length).toFixed(2);
-        document.getElementById("recipeAvgRevenue").innerText = `$${(((sum / quantities.length) * this.recipe.price) / 100).toFixed(2)}`;
+        document.getElementById("recipeAvgUse").innerText = avg.toFixed(2);
+        document.getElementById("recipeAvgRevenue").innerText = `$${(avg * this.recipe.price).toFixed(2)}`
     },
 
-    changeDates: function(Transaction){
-        let data = {
-            startDate: document.getElementById("analStartDate").valueAsDate,
-            endDate: document.getElementById("analEndDate").valueAsDate,
-            recipes: []
+    switchDisplay: function(){
+        const checkbox = document.getElementById("analSlider");
+        let ingredient = document.getElementById("analIngredientContent");
+        let recipe = document.getElementById("analRecipeContent");
+
+        if(checkbox.checked === true){
+            ingredient.style.display = "none";
+            recipe.style.display = "flex";
+            this.displayRecipe();
+        }else{
+            ingredient.style.display = "flex";
+            recipe.style.display = "none";
+            this.displayIngredient();
         }
+    },
 
-        if(data.from > data.to || data.from === "" || data.to === "" || data.to > new Date()){
-            banner.createError("INVALID DATE");
-            return;
+    newDates: async function(Transaction){
+        const from = document.getElementById("analStartDate").valueAsDate;
+        const to = document.getElementById("analEndDate").valueAsDate;
+
+        await this.getData(from, to, Transaction);
+
+        if(document.getElementById("analSlider").checked === true){
+            this.displayRecipe();
+        }else{
+            this.displayIngredient();
         }
-
-        for(let i = 0; i < merchant.recipes.length; i++){
-            data.recipes.push(merchant.recipes[i].id);
-        }
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        fetch("/transaction", {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    banner.createError(response);
-                }else{
-                    this.transactions = [];
-
-                    for(let i = 0; i < response.length; i++){
-                        this.transactions.push(new Transaction(
-                            response[i]._id,
-                            new Date(response[i].date),
-                            response[i].recipes,
-                            merchant
-                        ));
-                    }
-
-                    let isRecipe = document.getElementById("analSlider").checked;
-                    if(isRecipe && Object.keys(this.recipe).length !== 0){
-                        this.recipeDisplay();
-                    }else if(!isRecipe && Object.keys(this.ingredient).length !== 0){
-                        this.ingredientDisplay();
-                    }
-                    
-                    this.dateChange = true;
-                }
-            })
-            .catch((err)=>{
-                banner.createError("ERROR: UNABLE TO DISPLAY THE DATA");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
     }
 }
 

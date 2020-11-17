@@ -1295,7 +1295,7 @@ module.exports = Transaction;
 const home = require("./strands/home.js");
 const ingredients = require("./strands/ingredients.js");
 const recipeBook = require("./strands/recipeBook.js");
-const analytics = require("./strands/analytics2.js");
+const analytics = require("./strands/analytics.js");
 const orders = require("./strands/orders.js");
 const transactions = require("./strands/transactions.js");
 
@@ -1582,7 +1582,7 @@ document.getElementById("ordersBtn").onclick = async ()=>{
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 
 controller.openStrand("home");
-},{"./classes/Ingredient.js":1,"./classes/Merchant.js":2,"./classes/Order.js":3,"./classes/Recipe.js":4,"./classes/Transaction.js":5,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderDetails.js":14,"./sidebars/orderFilter.js":15,"./sidebars/recipeDetails.js":16,"./sidebars/transactionDetails.js":17,"./sidebars/transactionFilter.js":18,"./strands/analytics2.js":19,"./strands/home.js":20,"./strands/ingredients.js":21,"./strands/orders.js":22,"./strands/recipeBook.js":23,"./strands/transactions.js":24}],7:[function(require,module,exports){
+},{"./classes/Ingredient.js":1,"./classes/Merchant.js":2,"./classes/Order.js":3,"./classes/Recipe.js":4,"./classes/Transaction.js":5,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderDetails.js":14,"./sidebars/orderFilter.js":15,"./sidebars/recipeDetails.js":16,"./sidebars/transactionDetails.js":17,"./sidebars/transactionFilter.js":18,"./strands/analytics.js":19,"./strands/home.js":20,"./strands/ingredients.js":21,"./strands/orders.js":22,"./strands/recipeBook.js":23,"./strands/transactions.js":24}],7:[function(require,module,exports){
 let editIngredient = {
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");
