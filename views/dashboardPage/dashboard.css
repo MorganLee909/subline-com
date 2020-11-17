@@ -559,7 +559,7 @@ Transactions Strand
 Modal
 */
 .modal{
-    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -568,17 +568,28 @@ Modal
     background: rgba(0, 27, 45, 0.75);
 }
 
-    .modalSpreadsheetUpload{
+    .modalBox{
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        padding: 25px;
+        align-items: flex-end;
     }
 
-        .modalSpreadsheetUpload > *{
-            margin-top: 15px;
+        .modalBox svg{
+            color: rgb(255, 99, 107);
+            cursor: pointer;
         }
+
+        .modalSpreadsheetUpload{
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0;
+            padding: 25px;
+        }
+
+            .modalSpreadsheetUpload > *{
+                margin-top: 15px;
+            }
 
 @media screen and (max-width: 1000px){
     body{

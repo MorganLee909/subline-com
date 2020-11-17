@@ -190,6 +190,29 @@ controller = {
         }
     },
 
+    openModal: function(str){
+        let modal = document.getElementById("modal");
+        document.getElementById("modalClose").addEventListener("click", this.closeModal);
+
+        switch(str){
+            case "recipeSpreadsheet":
+                modal.style.display = "flex";
+                document.getElementById("modalSpreadsheetUpload").style.display = "flex";
+                break;
+        }
+    },
+
+    closeModal: function(){
+        let modal = document.getElementById("modal");
+        let modalContent = document.getElementById("modalContent");
+
+        for(let i = 0; i < modalContent.children.length; i++){
+            modalContent.children[i].style.display = "none";
+        }
+
+        modal.style.display = "none";
+    },
+
     changeMenu: function(){
         let menu = document.querySelector(".menu");
         let buttons = document.querySelectorAll(".menuButton");

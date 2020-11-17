@@ -111,7 +111,6 @@ module.exports = {
                 return res.json(transactions);
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });
     },

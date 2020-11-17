@@ -15,6 +15,7 @@ let newRecipe = {
 
         document.getElementById("ingredientCount").onchange = ()=>{this.changeIngredientCount(categories)};
         document.getElementById("submitNewRecipe").onclick = ()=>{this.submit(Recipe)};
+        document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
     },
 
     //Updates the number of ingredient inputs displayed for new recipes
