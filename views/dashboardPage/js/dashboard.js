@@ -192,12 +192,14 @@ controller = {
 
     openModal: function(str){
         let modal = document.getElementById("modal");
+        modal.style.display = "flex";
         document.getElementById("modalClose").addEventListener("click", this.closeModal);
 
         switch(str){
             case "recipeSpreadsheet":
-                modal.style.display = "flex";
-                document.getElementById("modalSpreadsheetUpload").style.display = "flex";
+                let form = document.getElementById("modalSpreadsheetUpload");
+                form.style.display = "flex";
+                form.onsubmit = newRecipe.submitSpreadsheet();
                 break;
         }
     },

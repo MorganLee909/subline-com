@@ -81,14 +81,14 @@ let newIngredient = {
     submitFile: function(){
         const file = document.getElementById("ingredientFile").files[0];
         let data = new FormData();
-        data.append("spreadsheet", file);
+        data.append("ingredients", file);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
         fetch("/ingredients/create/spreadsheet", {
             method: "post",
-            body: data,
+            body: data
         })
             .then(response => response.json())
             .then((response)=>{

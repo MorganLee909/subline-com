@@ -38,6 +38,7 @@ module.exports = function(app){
     app.delete("/recipe/remove/:id", recipeData.removeRecipe);
     app.get("/recipe/update/clover", recipeData.updateRecipesClover);
     app.get("/recipe/update/square", recipeData.updateRecipesSquare);
+    app.post("/recipes/create/spreadsheet", upload.single("spreadsheet"), recipeData.createFromSpreadsheet);
 
     //Orders
     app.get("/order", orderData.getOrders);

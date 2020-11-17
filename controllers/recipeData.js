@@ -5,7 +5,8 @@ const ArchivedRecipe = require("../models/archivedRecipe.js");
 const validator = require("./validator.js");
 
 const axios = require("axios");
-const xlsxUtils = require("xlsx").utils;
+const xlsx = require("xlsx");
+const fs = require("fs");
 
 module.exports = {
     /*
@@ -300,8 +301,27 @@ module.exports = {
             });
     },
 
-    createFromSpreadsheet: function(sheet, user){
-        const array = xlsxUtils.sheet_to_json(sheet, {
+    createFromSpreadsheet: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        console.log(req.file);
+        //read file, get the correct sheet, create array from sheet
+        let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
+
+        let sheets = Object.keys(workbook.Sheets);
+        let sheet = {};
+        for(let i = 0; i < sheets.length; i++){
+            let str = sheets[i].toLowerCase();
+            if(str === "recipe" || str === "recipes"){
+                sheet = workbook.Sheets[sheets[i]];
+            }
+        }
+
+        const array = xlsx.utils.sheet_to_json(sheet, {
             header: 1
         });
 

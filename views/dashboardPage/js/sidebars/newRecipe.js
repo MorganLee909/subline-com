@@ -128,6 +128,37 @@ let newRecipe = {
                 loader.style.display = "none";
             });
     },
+
+    submitSpreadsheet: function(){
+        event.preventDefault();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("recipes", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipes/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "String"){
+                    banner.createError(response);
+                }else{
+
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    }
 }
 
 module.exports = newRecipe;

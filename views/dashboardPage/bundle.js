@@ -1486,12 +1486,14 @@ controller = {
 
     openModal: function(str){
         let modal = document.getElementById("modal");
+        modal.style.display = "flex";
         document.getElementById("modalClose").addEventListener("click", this.closeModal);
 
         switch(str){
             case "recipeSpreadsheet":
-                modal.style.display = "flex";
-                document.getElementById("modalSpreadsheetUpload").style.display = "flex";
+                let form = document.getElementById("modalSpreadsheetUpload");
+                form.style.display = "flex";
+                form.onsubmit = newRecipe.submitSpreadsheet();
                 break;
         }
     },
@@ -2035,14 +2037,14 @@ let newIngredient = {
     submitFile: function(){
         const file = document.getElementById("ingredientFile").files[0];
         let data = new FormData();
-        data.append("spreadsheet", file);
+        data.append("ingredients", file);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
         fetch("/ingredients/create/spreadsheet", {
             method: "post",
-            body: data,
+            body: data
         })
             .then(response => response.json())
             .then((response)=>{
@@ -2362,6 +2364,37 @@ let newRecipe = {
                 loader.style.display = "none";
             });
     },
+
+    submitSpreadsheet: function(){
+        event.preventDefault();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("recipes", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipes/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "String"){
+                    banner.createError(response);
+                }else{
+
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    }
 }
 
 module.exports = newRecipe;
