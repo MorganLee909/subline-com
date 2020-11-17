@@ -20,43 +20,51 @@ module.exports = {
     Redirects to /dashboard
     */
     createMerchantNone: async function(req, res){
-        let validation =  await validator.merchant(req.body);
-        if(validation !== true){
-            req.session.error = validation;
+        if(req.body.password.length < 10){
+            req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
             return res.redirect("/");
         }
 
-        if(req.body.password === req.body.confirmPassword){
-            let salt = bcrypt.genSaltSync(10);
-            let hash = bcrypt.hashSync(req.body.password, salt);
-
-            let merchant = new Merchant({
-                name: req.body.name,
-                email: req.body.email.toLowerCase(),
-                password: hash,
-                pos: "none",
-                lastUpdatedTime: Date.now(),
-                createdAt: Date.now(),
-                status: ["unverified"],
-                inventory: [],
-                recipes: [],
-                verifyId: helper.generateId(15)
-            });
-
-            merchant.save()
-                .then((merchant)=>{
-                    return res.redirect(`/verify/email/${merchant._id}`);
-                })
-                .catch((err)=>{
-                    req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
-
-                    return res.redirect("/");
-                });
-        }else{
+        if(req.body.password !== req.body.confirmPassword){
             req.session.error = "PASSWORDS DO NOT MATCH";
-
             return res.redirect("/");
         }
+
+        const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
+        if(merchantFind !== null){
+            req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
+            return res.redirect("/");
+        }
+
+        let salt = bcrypt.genSaltSync(10);
+        let hash = bcrypt.hashSync(req.body.password, salt);
+
+        let merchant = new Merchant({
+            name: req.body.name,
+            email: req.body.email.toLowerCase(),
+            password: hash,
+            pos: "none",
+            lastUpdatedTime: Date.now(),
+            createdAt: Date.now(),
+            status: ["unverified"],
+            inventory: [],
+            recipes: [],
+            verifyId: helper.generateId(15)
+        });
+
+        merchant.save()
+            .then((merchant)=>{
+                return res.redirect(`/verify/email/${merchant._id}`);
+            })
+            .catch((err)=>{
+                if(err.errors.name.properties.type === "user defined"){
+                    req.session.error = err.errors.name.properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
+                }
+                
+                return res.redirect("/");
+            });
     },
 
     /*

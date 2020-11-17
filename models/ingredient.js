@@ -1,28 +1,31 @@
+const helper = require("../controllers/helper.js");
+
 const mongoose = require("mongoose");
+
+let sanitary = (value)=>{
+    return helper.isSanitary(value);
+}
 
 const IngredientSchema = new mongoose.Schema({
     name: {
         type: String,
         minlength: 2,
-        required: true
+        required: true,
+        validate: {
+
+        }
     },
     category: {
         type: String,
-        minlength: 3,
+        minlength: 2,
         required: true
     },
     unitType: {
         type: String,
         required: true
     },
-    specialUnit: {
-        type: String,
-        required: false
-    },
-    unitSize:{
-        type: Number,
-        required: false
-    }
+    specialUnit: String,
+    unitSize: String
 });
 
 module.exports = mongoose.model("Ingredient", IngredientSchema);

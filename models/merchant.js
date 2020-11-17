@@ -1,14 +1,35 @@
+const helper = require("../controllers/helper.js");
+
 const mongoose = require("mongoose");
+
+let nameSanitary = (value)=>{
+    return helper.isSanitary(value);
+}
+
+let emailValid = (value)=>{
+    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+}
 
 const MerchantSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: nameSanitary,
+            message: "NAME CONTAINS ILLEGAL CHARACTERS"
+        }
     },
-    email: String,
+    email: {
+        type: String,
+        required: true,
+        validate: {
+            validator: emailValid,
+            message: "INVALID EMAIL ADDRESS"
+        }
+    },
     password: {
         type: String,
-        minlength: 15
+        required: true,
     },
     pos: {
         type: String,
