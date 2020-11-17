@@ -199,7 +199,7 @@ controller = {
             case "recipeSpreadsheet":
                 let form = document.getElementById("modalSpreadsheetUpload");
                 form.style.display = "flex";
-                form.onsubmit = newRecipe.submitSpreadsheet();
+                form.onsubmit = newRecipe.submitSpreadsheet;
                 break;
         }
     },

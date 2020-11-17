@@ -1493,7 +1493,7 @@ controller = {
             case "recipeSpreadsheet":
                 let form = document.getElementById("modalSpreadsheetUpload");
                 form.style.display = "flex";
-                form.onsubmit = newRecipe.submitSpreadsheet();
+                form.onsubmit = newRecipe.submitSpreadsheet;
                 break;
         }
     },
@@ -2370,7 +2370,9 @@ let newRecipe = {
 
         const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
+        console.log(file);
         data.append("recipes", file);
+        console.log(data);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
