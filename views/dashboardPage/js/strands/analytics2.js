@@ -195,8 +195,15 @@ let analytics = {
 
         Plotly.newPlot("recipeSalesGraph", [trace], layout);
 
-        //display the boxes at the bottom
+        //Display the boxes at the bottom
+        let avg = 0;
+        for(let i = 0; i < quantities.length; i++){
+            avg += quantities[i];
+        }
+        avg = avg / quantities.length;
 
+        document.getElementById("recipeAvgUse").innerText = avg.toFixed(2);
+        document.getElementById("recipeAvgRevenue").innerText = `$${(avg * recipe.price).toFixed(2)}`
     },
 
     switchDisplay: function(){
