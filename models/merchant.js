@@ -13,7 +13,7 @@ let emailValid = (value)=>{
 const MerchantSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, "MERCHANT NAME IS REQUIRED"],
         validate: {
             validator: nameSanitary,
             message: "NAME CONTAINS ILLEGAL CHARACTERS"
@@ -21,7 +21,7 @@ const MerchantSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
+        required: [true, "EMAIL IS REQUIRED"],
         validate: {
             validator: emailValid,
             message: "INVALID EMAIL ADDRESS"
@@ -55,12 +55,12 @@ const MerchantSchema = new mongoose.Schema({
         },
         quantity: {
             type: Number,
-            required: true,
-            min: 0
+            required: [true, "INGREDIENT QUANTITY IS REQUIRED"],
+            min: [0, "QUANTITY CANNOT BE A NEGATIVE NUMBER"]
         },
         defaultUnit: {
             type: String,
-            required: true
+            required: [true, "INGREDIENT UNIT IS REQUIRED"]
         }
     }],
     recipes: [{

@@ -57,8 +57,9 @@ module.exports = {
                 return res.redirect(`/verify/email/${merchant._id}`);
             })
             .catch((err)=>{
-                if(err.errors.name.properties.type === "user defined"){
-                    req.session.error = err.errors.name.properties.message;
+                const error = err.errors.name.properties;
+                if(error.type === "user defined"){
+                    req.session.error = error.message;
                 }else{
                     req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
                 }
@@ -212,15 +213,8 @@ module.exports = {
             return res.redirect("/");
         }
 
-        for(let i = 0; i < req.body.length; i++){
-            let validation = validator.quantity(req.body[i].quantity);
-            if(validation !== true){
-                return res.json(validation);
-            }
-        }
-
         let adjustments = [];
-        let changedIngredients = []
+        let changedIngredients = [];
         Merchant.findOne({_id: req.session.user})
             .populate("inventory.ingredient")
             .then((merchant)=>{
@@ -253,6 +247,11 @@ module.exports = {
                 return;
             })
             .catch((err)=>{
+                const error = err.errors.name.properties;
+                if(error.type === "user defined" || error.type === "minlength"){
+                    return res.json(error.message);
+                }
+
                 return res.json("ERROR: UNABLE TO UPDATE DATA");
             });        
     },
@@ -269,6 +268,16 @@ module.exports = {
         let validation = validator.password(req.body.pass, req.body.confirmPass);
         if(validation !== true){
             return res.json(validation);
+        }
+
+        if(req.body.pass.length < 10){
+            req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
+            return res.redirect("/");
+        }
+
+        if(req.body.pass !== req.body.confirmPass){
+            req.session.error = "PASSWORDS DO NOT MATCH";
+            return res.redirect("/");
         }
 
         Merchant.findOne({password: req.body.hash})

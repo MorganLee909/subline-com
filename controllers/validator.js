@@ -143,5 +143,19 @@ module.exports = {
         }
 
         return true;
+    },
+
+    isSanitary: function(strings){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < strings.length; i++){
+            for(let j = 0; j < disallowed.length; j++){
+                if(strings[i].includes(disallowed[j])){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
