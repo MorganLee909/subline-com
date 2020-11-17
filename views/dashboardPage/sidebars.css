@@ -377,10 +377,6 @@ Add Recipe
                 color: rgb(255, 99, 107);
             }
 
-    #addRecipe button:last-of-type{
-        margin-top: auto;
-    }
-
 /*
 EDIT RECIPE
 */

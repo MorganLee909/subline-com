@@ -192,6 +192,16 @@ form{
     cursor: pointer;
 }
 
+.linkButton{
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 15px;
+}
+
 .public-buttons {
     position: inherit;
     align-self: center;

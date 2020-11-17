@@ -555,6 +555,31 @@ Transactions Strand
         margin-top: 50px;
     }
 
+/*
+Modal
+*/
+.modal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 27, 45, 0.75);
+}
+
+    .modalSpreadsheetUpload{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 25px;
+    }
+
+        .modalSpreadsheetUpload > *{
+            margin-top: 15px;
+        }
+
 @media screen and (max-width: 1000px){
     body{
         flex-direction: column;
