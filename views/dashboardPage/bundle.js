@@ -2979,8 +2979,40 @@ let analytics = {
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
 
-        //display the boxes at the bottom
-        
+        //Create min/max/avg 
+        let min = quantities[0];
+        let max = quantities[0];
+        let sum = 0;
+        for(let i = 0; i < quantities.length; i++){
+            if(quantities[i] < min){
+                min = quantities[i];
+            }
+            if(quantities[i] > max){
+                max = quantities[i];
+            }
+
+            sum += quantities[i];
+        }
+
+        document.getElementById("analMinUse").innerText = `${min.toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analAvgUse").innerText = `${(sum / quantities.length).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analMaxUse").innerText = `${max.toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+
+        //Create weekday averages
+        let dayUse = [0, 0, 0, 0, 0, 0, 0];
+        let dayCount = [0, 0, 0, 0, 0, 0, 0];
+        for(let i = 0; i < quantities.length; i++){
+            dayUse[dates[i].getDay()] += quantities[i];
+            dayCount[dates[i].getDay()]++;
+        }
+
+        document.getElementById("analDayOne").innerText = `${(dayUse[0] / dayCount[0]).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayTwo").innerText = `${(dayUse[1] / dayCount[1]).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayThree").innerText = `${(dayUse[2] / dayCount[2]).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayFour").innerText = `${(dayUse[3] / dayCount[3]).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${ingredient.unit.toUpperCase()}`;
     },
 
     displayRecipe: function(recipe){
