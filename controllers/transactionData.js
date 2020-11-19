@@ -2,8 +2,9 @@ const Transaction = require("../models/transaction");
 const Merchant = require("../models/merchant");
 
 const helper = require("./helper.js");
-
 const ObjectId = require("mongoose").Types.ObjectId;
+const xlsx = require("xlsx");
+const fs = require("fs");
 
 module.exports = {
     /*
@@ -194,6 +195,32 @@ module.exports = {
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
             });
+    },
+
+    createFromSpreadsheet: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        //read file, get the correct sheet, create array from sheet
+        let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
+
+        let sheets = Object.keys(workbook.Sheets);
+        let sheet = {};
+        for(let i = 0; i < sheets.length; i++){
+            let str = sheets[i].toLowerCase();
+            if(str === "transaction" || str === "transactions"){
+                sheet = workbook.Sheets[sheets[i]];
+            }
+        }
+
+        const array = xlsx.utils.sheet_to_json(sheet, {
+            header: 1
+        });
+
+        console.log(array);
     },
 
     /*

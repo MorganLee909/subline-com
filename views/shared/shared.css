@@ -159,6 +159,7 @@ form{
     font-size: 20px;
     font-weight: bold;
     min-width: 100px;
+    margin: 5px;
 } 
 
     .buttonWithBorder {

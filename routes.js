@@ -52,6 +52,7 @@ module.exports = function(app){
     app.get("/transactions/:from/:to", transactionData.getTransactionsByDate);
     app.post("/transaction/create", transactionData.createTransaction);
     app.delete("/transaction/:id", transactionData.remove);
+    app.post("/transactions/create/spreadsheet", upload.single("transactions"), transactionData.createFromSpreadsheet);
     app.get("/populatesometransactions", transactionData.populate);
 
     //Other

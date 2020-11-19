@@ -1504,6 +1504,11 @@ controller = {
                 document.getElementById("modalSpreadsheetTitle").innerText = "orders";
                 content.onsubmit = newOrder.submitSpreadsheet;
                 break;
+            case "transactionSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "transactions";
+                content.onsubmit = newTransaction.submitSpreadsheet;
         }
     },
 
@@ -2448,6 +2453,7 @@ let newTransaction = {
     display: function(Transaction){
         let recipeList = document.getElementById("newTransactionRecipes");
         let template = document.getElementById("createTransaction").content.children[0];
+        document.getElementById("transactionFileUpload").addEventListener("click", ()=>{controller.openModal("transactionSpreadsheet")});
 
         while(recipeList.children.length > 0){
             recipeList.removeChild(recipeList.firstChild);
@@ -2538,6 +2544,37 @@ let newTransaction = {
                     loader.style.display = "none";
                 });
         }
+    },
+
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("transactions", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/transactions/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+
+                }
+            })
+            .catch((err)=>{
+                banner.createError("UNABLE TO DISPLAY NEW TRANSACTIONS.  PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 

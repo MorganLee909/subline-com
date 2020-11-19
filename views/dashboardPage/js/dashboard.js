@@ -209,6 +209,11 @@ controller = {
                 document.getElementById("modalSpreadsheetTitle").innerText = "orders";
                 content.onsubmit = newOrder.submitSpreadsheet;
                 break;
+            case "transactionSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "transactions";
+                content.onsubmit = newTransaction.submitSpreadsheet;
         }
     },
 
