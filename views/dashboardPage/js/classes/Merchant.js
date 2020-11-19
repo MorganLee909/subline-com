@@ -1,4 +1,5 @@
-const Recipe = require("./Recipe");
+const Order = require("./Order.js");
+const Recipe = require("./Recipe.js");
 
 class MerchantIngredient{
     constructor(ingredient, quantity){
@@ -377,7 +378,17 @@ class Merchant{
         return this._orders;
     }
 
-    addOrder(order, isNew = false){
+    addOrder(data, isNew = false){
+        let order = new Order(
+            data._id,
+            data.name,
+            data.date,
+            data.taxes,
+            data.fees,
+            data.ingredients,
+            this
+        );
+
         this._orders.push(order);
 
         if(isNew){

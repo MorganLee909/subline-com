@@ -125,7 +125,8 @@ class Ingredient{
 
 module.exports = Ingredient;
 },{}],2:[function(require,module,exports){
-const Recipe = require("./Recipe");
+const Order = require("./Order.js");
+const Recipe = require("./Recipe.js");
 
 class MerchantIngredient{
     constructor(ingredient, quantity){
@@ -504,7 +505,17 @@ class Merchant{
         return this._orders;
     }
 
-    addOrder(order, isNew = false){
+    addOrder(data, isNew = false){
+        let order = new Order(
+            data._id,
+            data.name,
+            data.date,
+            data.taxes,
+            data.fees,
+            data.ingredients,
+            this
+        );
+
         this._orders.push(order);
 
         if(isNew){
@@ -803,7 +814,7 @@ class Merchant{
 }
 
 module.exports = Merchant;
-},{"./Recipe":4}],3:[function(require,module,exports){
+},{"./Order.js":3,"./Recipe.js":4}],3:[function(require,module,exports){
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
         if(quantity < 0){
@@ -927,9 +938,6 @@ parent = the merchant that it belongs to
 */
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
-        if(!this.isSanitaryString(name)){
-            return false;
-        }
         if(taxes < 0){
             return false;
         }
@@ -1001,18 +1009,6 @@ class Order{
 
     getTotalCost(){
         return (this.getIngredientCost() + this.taxes + this.fees);
-    }
-
-    isSanitaryString(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; i++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
     }
 }
 
@@ -2194,17 +2190,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    let order = new Order(
-                        response._id,
-                        response.name,
-                        response.date,
-                        response.taxes,
-                        response.fees,
-                        response.ingredients,
-                        merchant
-                    );
-
-                    merchant.addOrder(order, true);
+                    merchant.addOrder(response, true);
                     
                     controller.openStrand("orders", merchant.orders);
                     banner.createNotification("NEW ORDER CREATED");
@@ -2265,7 +2251,12 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addOrder(response[i], true);
+                    }
 
+                    banner.createNotification("ORDERS CREATED AND INGREDIENTS UPDATE SUCCESSFULLY");
+                    controller.openStrand("orders");
                 }
             })
             .catch((err)=>{
@@ -2580,7 +2571,7 @@ let orderDetails = {
             
             let ingredientDisplay = ingredientDiv.children[1];
             if(ingredient.specialUnit === "bottle"){
-                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${order.ingredients.pricePerUnit.toFixed(2)}`;
+                ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${order.ingredients[i].pricePerUnit.toFixed(2)}`;
             }else{
                 ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${order.ingredients[i].pricePerUnit.toFixed(2)}`;
             }
@@ -3595,7 +3586,6 @@ let ingredients = {
 module.exports = ingredients;
 },{}],22:[function(require,module,exports){
 let orders = {
-    orders: [],
 
     display: function(){
         document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
@@ -3608,15 +3598,15 @@ let orders = {
             orderList.removeChild(orderList.firstChild);
         }
 
-        for(let i = 0; i < this.orders.length; i++){
+        for(let i = 0; i < merchant.orders.length; i++){
             let orderDiv = template.cloneNode(true);
-            orderDiv.order = this.orders[i];
-            orderDiv.children[0].innerText = this.orders[i].name;
-            orderDiv.children[1].innerText = `${this.orders[i].ingredients.length} ingredients`;
-            orderDiv.children[2].innerText = this.orders[i].date.toLocaleDateString("en-US");
-            orderDiv.children[3].innerText = `$${this.orders[i].getTotalCost().toFixed(2)}`;
+            orderDiv.order = merchant.orders[i];
+            orderDiv.children[0].innerText = merchant.orders[i].name;
+            orderDiv.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
+            orderDiv.children[2].innerText = merchant.orders[i].date.toLocaleDateString("en-US");
+            orderDiv.children[3].innerText = `$${merchant.orders[i].getTotalCost().toFixed(2)}`;
             orderDiv.onclick = ()=>{
-                controller.openSidebar("orderDetails", this.orders[i]);
+                controller.openSidebar("orderDetails", merchant.orders[i]);
                 orderDiv.classList.add("active");
             }
             orderList.appendChild(orderDiv);

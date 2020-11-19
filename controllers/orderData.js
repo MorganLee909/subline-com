@@ -224,7 +224,6 @@ module.exports = {
         }
 
         let merchant = {};
-        let ingredients = [];
         Merchant.findOne({_id: req.session.user})
             .populate("inventory.ingredient")
             .then((response)=>{
@@ -262,7 +261,7 @@ module.exports = {
                             currentOrder.ingredients.push({
                                 ingredient: merchant.inventory[j].ingredient._id,
                                 quantity: baseQuantity,
-                                pricePerUnit: parseInt(array[i][locations.price] * 100)
+                                pricePerUnit: helper.convertPrice(array[i][locations.price] * 100, merchant.inventory[j].defaultUnit)
                             });
 
                             merchant.inventory[j].quantity += baseQuantity;
@@ -283,7 +282,6 @@ module.exports = {
                 return res.json(response[0]);
             })
             .catch((err)=>{
-                console.log(err);
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }

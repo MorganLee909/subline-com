@@ -121,9 +121,6 @@ parent = the merchant that it belongs to
 */
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
-        if(!this.isSanitaryString(name)){
-            return false;
-        }
         if(taxes < 0){
             return false;
         }
@@ -195,18 +192,6 @@ class Order{
 
     getTotalCost(){
         return (this.getIngredientCost() + this.taxes + this.fees);
-    }
-
-    isSanitaryString(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; i++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
     }
 }
 

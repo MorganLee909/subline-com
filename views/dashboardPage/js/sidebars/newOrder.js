@@ -109,17 +109,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    let order = new Order(
-                        response._id,
-                        response.name,
-                        response.date,
-                        response.taxes,
-                        response.fees,
-                        response.ingredients,
-                        merchant
-                    );
-
-                    merchant.addOrder(order, true);
+                    merchant.addOrder(response, true);
                     
                     controller.openStrand("orders", merchant.orders);
                     banner.createNotification("NEW ORDER CREATED");
@@ -180,7 +170,12 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addOrder(response[i], true);
+                    }
 
+                    banner.createNotification("ORDERS CREATED AND INGREDIENTS UPDATE SUCCESSFULLY");
+                    controller.openStrand("orders");
                 }
             })
             .catch((err)=>{
