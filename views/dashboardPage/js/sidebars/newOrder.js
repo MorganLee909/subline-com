@@ -158,6 +158,38 @@ let newOrder = {
             case "in": return price * 39.3701; 
             case "ft": return price * 3.2808; 
         }
+    },
+
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("orders", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/orders/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                banner.createError("UNABLE TO DISPLAY NEW ORDERS. PLEASE REFRESH THE PAGE.");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 

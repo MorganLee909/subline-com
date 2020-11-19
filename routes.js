@@ -45,6 +45,7 @@ module.exports = function(app){
     app.post("/order", orderData.orderFilter);
     app.post("/order/create", orderData.createOrder);
     app.delete("/order/:id", orderData.removeOrder);
+    app.post("/orders/create/spreadsheet", upload.single("orders"), orderData.createFromSpreadsheet);
 
     //Transactions
     app.post("/transaction", transactionData.getTransactions);

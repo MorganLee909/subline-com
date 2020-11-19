@@ -207,7 +207,7 @@ controller = {
                 content = document.getElementById("modalSpreadsheetUpload");
                 content.style.display = "flex";
                 document.getElementById("modalSpreadsheetTitle").innerText = "orders";
-                form.submit = newOrder.submitSpreadsheet;
+                content.onsubmit = newOrder.submitSpreadsheet;
                 break;
         }
     },

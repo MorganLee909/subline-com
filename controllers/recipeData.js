@@ -8,7 +8,6 @@ const helper = require("./helper.js");
 const axios = require("axios");
 const xlsx = require("xlsx");
 const fs = require("fs");
-const ObjectId = require("mongoose").ObjectId;
 
 module.exports = {
     /*
