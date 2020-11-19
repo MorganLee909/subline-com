@@ -3,6 +3,7 @@ const Merchant = require("../models/merchant.js");
 
 const ObjectId = require("mongoose").Types.ObjectId;
 const Validator = require("./validator.js");
+const helper = require("./helper.js");
 
 const xlsx = require("xlsx");
 const fs = require("fs");
@@ -196,7 +197,6 @@ module.exports = {
         fs.unlink(req.file.path, ()=>{});
 
         let sheets = Object.keys(workbook.Sheets);
-        console.log(sheets);
         let sheet = {};
         for(let i = 0; i < sheets.length; i++){
             let str = sheets[i].toLowerCase();
@@ -209,6 +209,86 @@ module.exports = {
             header: 1
         });
 
-        console.log(array);
+        //get property locations
+        let locations = {};
+        for(let i = 0; i < array[0].length; i++){
+            switch(array[0][i].toLowerCase()){
+                case "name": locations.name = i; break;
+                case "date": locations.date = i; break;
+                case "taxes": locations.taxes = i; break;
+                case "fees": locations.fees = i; break;
+                case "ingredients": locations.ingredients = i; break;
+                case "quantity": locations.quantity = i; break;
+                case "price": locations.price = i; break;
+            }
+        }
+
+        let merchant = {};
+        let ingredients = [];
+        Merchant.findOne({_id: req.session.user})
+            .populate("inventory.ingredient")
+            .then((response)=>{
+                merchant = response;
+
+                let orders = [];
+                let currentOrder = {};
+                for(let i = 1; i < array.length; i++){
+                    if(array[i].length === 0){
+                        continue;
+                    }
+
+                    if(array[i][locations.name] !== undefined){
+                        currentOrder = {
+                            merchant: req.session.user,
+                            name: array[i][locations.name],
+                            taxes: parseInt(array[i][locations.taxes] * 100),
+                            fees: parseInt(array[i][locations.fees] * 100),
+                            ingredients: []
+                        }
+
+                        if(array[i][locations.date] === undefined){
+                            currentOrder.date = new Date();
+                        }else{
+                            currentOrder.date = new Date(array[i][locations.date]);
+                        }
+
+                        orders.push(currentOrder);
+                    }
+
+                    let exists = false;
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(merchant.inventory[j].ingredient.name.toLowerCase() === array[i][locations.ingredients]){
+                            const baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);
+                            currentOrder.ingredients.push({
+                                ingredient: merchant.inventory[j].ingredient._id,
+                                quantity: baseQuantity,
+                                pricePerUnit: parseInt(array[i][locations.price] * 100)
+                            });
+
+                            merchant.inventory[j].quantity += baseQuantity;
+
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if(exists === false){
+                        throw `CANNOT FIND INGREDIENT ${array[i][locations.ingredients]} FROM ORDER ${array[i][locations.name]}`;
+                    }
+                }
+
+                return Promise.all([Order.create(orders), merchant.save()]);
+            })
+            .then((response)=>{
+                return res.json(response[0]);
+            })
+            .catch((err)=>{
+                console.log(err);
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+
+                return res.json("ERROR: UNABLE TO CREATE YOUR ORDERS");
+            });
     }
 }

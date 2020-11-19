@@ -184,7 +184,6 @@ let newOrder = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("UNABLE TO DISPLAY NEW ORDERS. PLEASE REFRESH THE PAGE.");
             })
             .finally(()=>{

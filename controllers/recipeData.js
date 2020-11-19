@@ -405,6 +405,8 @@ module.exports = {
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
+
+                return res.json("ERROR: UNABLE TO CREATE YOUR INGREDIENTS");
             });
     }
 }
