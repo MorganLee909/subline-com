@@ -2,6 +2,7 @@ let newOrder = {
     display: function(Order){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("newOrderIngredientList").style.display = "flex";
+        document.getElementById("orderFileUpload").addEventListener("click", ()=>{controller.openModal("orderSpreadsheet")});
 
         let selectedList = document.getElementById("selectedIngredientList");
         while(selectedList.children.length > 0){

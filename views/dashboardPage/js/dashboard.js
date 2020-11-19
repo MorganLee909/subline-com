@@ -194,12 +194,20 @@ controller = {
         let modal = document.getElementById("modal");
         modal.style.display = "flex";
         document.getElementById("modalClose").addEventListener("click", this.closeModal);
+        let content = {};
 
         switch(str){
             case "recipeSpreadsheet":
-                let form = document.getElementById("modalSpreadsheetUpload");
-                form.style.display = "flex";
-                form.onsubmit = newRecipe.submitSpreadsheet;
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "recipes";
+                content.onsubmit = newRecipe.submitSpreadsheet;
+                break;
+            case "orderSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "orders";
+                form.submit = newOrder.submitSpreadsheet;
                 break;
         }
     },

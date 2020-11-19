@@ -1493,12 +1493,20 @@ controller = {
         let modal = document.getElementById("modal");
         modal.style.display = "flex";
         document.getElementById("modalClose").addEventListener("click", this.closeModal);
+        let content = {};
 
         switch(str){
             case "recipeSpreadsheet":
-                let form = document.getElementById("modalSpreadsheetUpload");
-                form.style.display = "flex";
-                form.onsubmit = newRecipe.submitSpreadsheet;
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "recipes";
+                content.onsubmit = newRecipe.submitSpreadsheet;
+                break;
+            case "orderSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "orders";
+                form.submit = newOrder.submitSpreadsheet;
                 break;
         }
     },
@@ -2079,6 +2087,7 @@ let newOrder = {
     display: function(Order){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("newOrderIngredientList").style.display = "flex";
+        document.getElementById("orderFileUpload").addEventListener("click", ()=>{controller.openModal("orderSpreadsheet")});
 
         let selectedList = document.getElementById("selectedIngredientList");
         while(selectedList.children.length > 0){
