@@ -125,6 +125,8 @@ class Ingredient{
 
 module.exports = Ingredient;
 },{}],2:[function(require,module,exports){
+const Recipe = require("./Recipe");
+
 class MerchantIngredient{
     constructor(ingredient, quantity){
         if(quantity < 0){
@@ -250,7 +252,7 @@ class Merchant{
                 for(let k = 0; k < this._ingredients.length; k++){
                     if(ingredient.ingredient === this._ingredients[k].ingredient.id){
                         ingredients.push({
-                            ingredient: this._ingredients[k].ingredient,
+                            ingredient: this._ingredients[k].ingredient.id,
                             quantity: ingredient.quantity
                         });
                         break;
@@ -356,7 +358,9 @@ class Merchant{
         return this._recipes;
     }
 
-    addRecipe(recipe){
+    addRecipe(id, name, price, ingredients){
+        let recipe = new Recipe(id, name, price, ingredients, this);
+
         this._recipes.push(recipe);
 
         this._modules.recipeBook.isPopulated = false;
@@ -799,7 +803,7 @@ class Merchant{
 }
 
 module.exports = Merchant;
-},{}],3:[function(require,module,exports){
+},{"./Recipe":4}],3:[function(require,module,exports){
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
         if(quantity < 0){
@@ -1127,8 +1131,9 @@ class Recipe{
         this._ingredients = [];
 
         for(let i = 0; i < ingredients.length; i++){
+            const ingredient = parent.getIngredient(ingredients[i].ingredient);
             const recipeIngredient = new RecipeIngredient(
-                ingredients[i].ingredient,
+                ingredient.ingredient,
                 ingredients[i].quantity
             );
 
@@ -2345,13 +2350,12 @@ let newRecipe = {
                         }
                     }
 
-                    merchant.addRecipe(new Recipe(
+                    merchant.addRecipe(
                         response._id,
                         response.name,
                         response.price,
-                        ingredients,
-                        merchant
-                    ));
+                        ingredients
+                    );
 
                     banner.createNotification("RECIPE CREATED");
                     controller.openStrand("recipeBook");
@@ -2367,12 +2371,11 @@ let newRecipe = {
 
     submitSpreadsheet: function(){
         event.preventDefault();
+        controller.closeModal();
 
         const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
-        console.log(file);
         data.append("recipes", file);
-        console.log(data);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
@@ -2386,11 +2389,20 @@ let newRecipe = {
                 if(typeof(response) === "String"){
                     banner.createError(response);
                 }else{
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addRecipe(
+                            response[i]._id,
+                            response[i].name,
+                            response[i].price,
+                            response[i].ingredients
+                        );
+                    }
 
+                    banner.createNotification("ALL INGREDIENTS SUCCESSFULLY CREATED");
+                    controller.openStrand("recipeBook");
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

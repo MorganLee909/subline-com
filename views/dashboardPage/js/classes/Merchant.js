@@ -1,3 +1,5 @@
+const Recipe = require("./Recipe");
+
 class MerchantIngredient{
     constructor(ingredient, quantity){
         if(quantity < 0){
@@ -123,7 +125,7 @@ class Merchant{
                 for(let k = 0; k < this._ingredients.length; k++){
                     if(ingredient.ingredient === this._ingredients[k].ingredient.id){
                         ingredients.push({
-                            ingredient: this._ingredients[k].ingredient,
+                            ingredient: this._ingredients[k].ingredient.id,
                             quantity: ingredient.quantity
                         });
                         break;
@@ -229,7 +231,9 @@ class Merchant{
         return this._recipes;
     }
 
-    addRecipe(recipe){
+    addRecipe(id, name, price, ingredients){
+        let recipe = new Recipe(id, name, price, ingredients, this);
+
         this._recipes.push(recipe);
 
         this._modules.recipeBook.isPopulated = false;

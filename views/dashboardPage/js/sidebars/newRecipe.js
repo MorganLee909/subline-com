@@ -109,13 +109,12 @@ let newRecipe = {
                         }
                     }
 
-                    merchant.addRecipe(new Recipe(
+                    merchant.addRecipe(
                         response._id,
                         response.name,
                         response.price,
-                        ingredients,
-                        merchant
-                    ));
+                        ingredients
+                    );
 
                     banner.createNotification("RECIPE CREATED");
                     controller.openStrand("recipeBook");
@@ -131,12 +130,11 @@ let newRecipe = {
 
     submitSpreadsheet: function(){
         event.preventDefault();
+        controller.closeModal();
 
         const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
-        console.log(file);
         data.append("recipes", file);
-        console.log(data);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
@@ -150,11 +148,20 @@ let newRecipe = {
                 if(typeof(response) === "String"){
                     banner.createError(response);
                 }else{
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addRecipe(
+                            response[i]._id,
+                            response[i].name,
+                            response[i].price,
+                            response[i].ingredients
+                        );
+                    }
 
+                    banner.createNotification("ALL INGREDIENTS SUCCESSFULLY CREATED");
+                    controller.openStrand("recipeBook");
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{

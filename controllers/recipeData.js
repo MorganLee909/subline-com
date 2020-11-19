@@ -3,10 +3,12 @@ const Merchant = require("../models/merchant.js");
 const ArchivedRecipe = require("../models/archivedRecipe.js");
 
 const validator = require("./validator.js");
+const helper = require("./helper.js");
 
 const axios = require("axios");
 const xlsx = require("xlsx");
 const fs = require("fs");
+const ObjectId = require("mongoose").ObjectId;
 
 module.exports = {
     /*
@@ -307,7 +309,6 @@ module.exports = {
             return res.redirect("/");
         }
 
-        console.log(req.file);
         //read file, get the correct sheet, create array from sheet
         let workbook = xlsx.readFile(req.file.path);
         fs.unlink(req.file.path, ()=>{});
@@ -331,42 +332,80 @@ module.exports = {
             switch(array[0][i].toLowerCase()){
                 case "name": locations.name = i; break;
                 case "price": locations.price = i; break;
+                case "ingredients": locations.ingredient = i; break;
+                case "ingredient amount": locations.amount = i; break;
             }
         }
 
-        //Create Recipes
-        // let merchant = {};
-        // let newRecipes = [];
-        // return Merchant.findOne({_id: req.session.user})
-        //     .then((response)=>{
-        //         merchant = response;
+        let merchant = {};
+        let ingredients = [];
+        Merchant.findOne({_id: req.session.user})
+            .populate("inventory.ingredient")
+            .then((response)=>{
+                merchant = response;
 
-        //         let recipes = [];
-        //         for(let i = 1; i < array.length; i++){
-        //             recipes.push({
-        //                 name: array[i][locations.name],
-        //                 price: parseInt(array[i][locations.price] * 100),
-        //                 merchant: merchant
-        //             });
-        //         }
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    ingredients.push({
+                        id: merchant.inventory[i].ingredient._id,
+                        name: merchant.inventory[i].ingredient.name.toLowerCase(),
+                        unit: merchant.inventory[i].defaultUnit
+                    });
+                }
 
-        //         return Recipe.create(recipes)
-        //     })
-        //     .then((recipes)=>{
-        //         for(let i = 0; i < recipes.length; i++){
-        //             merchant.recipes.push(recipes[i]);
+                let recipes = [];
+                let currentRecipe = {};
+                for(let i = 1; i < array.length; i++){
+                    if(array[i].length === 0){
+                        continue;
+                    }
 
-        //             recipes[i].merchant = undefined;
-        //             newRecipes.push(recipes[i]);
-        //         }
+                    if(array[i][locations.name] !== undefined){
+                        currentRecipe = {
+                            merchant: req.session.user,
+                            name: array[i][locations.name],
+                            price: parseInt(array[i][locations.price] * 100),
+                            ingredients: []
+                        }
 
-        //         return merchant.save();
-        //     })
-        //     .then((merchant)=>{
-        //         return newRecipes;
-        //     })
-        //     .catch((err)=>{
-        //         return "ERROR: UNABLE TO CREATE RECIPES";
-        //     });
+                        recipes.push(currentRecipe);
+                    }
+
+                    let exists = false;
+                    for(let j = 0; j < ingredients.length; j++){
+                        if(ingredients[j].name === array[i][locations.ingredient]){
+                            currentRecipe.ingredients.push({
+                                ingredient: ingredients[j].id,
+                                quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)
+                            });
+
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if(exists === false){
+                        throw `CANNOT FIND INGREDIENT ${array[i][locations.ingredient]} FROM RECIPE ${array[i][locations.name]}`;
+                    }
+                }
+                
+                return Recipe.create(recipes);
+            })
+            .then((response)=>{
+                recipes = response;
+
+                for(let i = 0; i < recipes.length; i++){
+                    merchant.recipes.push(recipes[i]._id);
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return res.json(recipes);
+            })
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+            });
     }
 }
