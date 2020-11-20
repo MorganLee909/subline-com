@@ -127,14 +127,10 @@ module.exports = Ingredient;
 },{}],2:[function(require,module,exports){
 const Order = require("./Order.js");
 const Recipe = require("./Recipe.js");
+const Transaction = require("./Transaction.js");
 
 class MerchantIngredient{
     constructor(ingredient, quantity){
-        if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
-            return false;
-        }
-        
         this._quantity = quantity;
         this._ingredient = ingredient;
     }
@@ -415,6 +411,10 @@ class Merchant{
         this._modules.recipeBook.isPopulated = false;
     }
 
+    get transactions(){
+        return this._transactions;
+    }
+
     getTransactions(from = 0, to = new Date()){
         if(merchant._transactions.length <= 0){
             return [];
@@ -430,6 +430,13 @@ class Merchant{
     }
 
     addTransaction(transaction){
+        transaction = new Transaction(
+            transaction._id,
+            transaction.date,
+            transaction.recipes,
+            this
+        );
+
         this._transactions.push(transaction);
         this._transactions.sort((a, b)=>{
             if(a.date > b.date){
@@ -814,7 +821,7 @@ class Merchant{
 }
 
 module.exports = Merchant;
-},{"./Order.js":3,"./Recipe.js":4}],3:[function(require,module,exports){
+},{"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5}],3:[function(require,module,exports){
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
         if(quantity < 0){
@@ -2524,14 +2531,7 @@ let newTransaction = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        const transaction = new Transaction(
-                            response._id,
-                            response.date,
-                            response.recipes,
-                            merchant
-                        );
-
-                        merchant.addTransaction(transaction);
+                        merchant.addTransaction(response);
 
                         controller.openStrand("transactions", merchant.getTransactions());
                         banner.createNotification("TRANSACTION CREATED");
@@ -2566,7 +2566,13 @@ let newTransaction = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    console.log(response);
+                    for(let i = 0; i < response.recipes.length; i++){
+                        response.recipes[i].recipe = response.recipes[i].recipe._id;
+                    }
+                    merchant.addTransaction(response);
+
+                    controller.openStrand("transactions", merchant.transactions);
+                    banner.createNotification("TRANSACTION SUCCESSFULLY CREATED.  INGREDIENTS UPDATED");
                 }
             })
             .catch((err)=>{

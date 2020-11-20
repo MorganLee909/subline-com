@@ -73,14 +73,7 @@ let newTransaction = {
                     if(typeof(response) === "string"){
                         banner.createError(response);
                     }else{
-                        const transaction = new Transaction(
-                            response._id,
-                            response.date,
-                            response.recipes,
-                            merchant
-                        );
-
-                        merchant.addTransaction(transaction);
+                        merchant.addTransaction(response);
 
                         controller.openStrand("transactions", merchant.getTransactions());
                         banner.createNotification("TRANSACTION CREATED");
@@ -115,7 +108,13 @@ let newTransaction = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    console.log(response);
+                    for(let i = 0; i < response.recipes.length; i++){
+                        response.recipes[i].recipe = response.recipes[i].recipe._id;
+                    }
+                    merchant.addTransaction(response);
+
+                    controller.openStrand("transactions", merchant.transactions);
+                    banner.createNotification("TRANSACTION SUCCESSFULLY CREATED.  INGREDIENTS UPDATED");
                 }
             })
             .catch((err)=>{

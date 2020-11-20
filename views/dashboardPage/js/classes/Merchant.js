@@ -1,13 +1,9 @@
 const Order = require("./Order.js");
 const Recipe = require("./Recipe.js");
+const Transaction = require("./Transaction.js");
 
 class MerchantIngredient{
     constructor(ingredient, quantity){
-        if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
-            return false;
-        }
-        
         this._quantity = quantity;
         this._ingredient = ingredient;
     }
@@ -288,6 +284,10 @@ class Merchant{
         this._modules.recipeBook.isPopulated = false;
     }
 
+    get transactions(){
+        return this._transactions;
+    }
+
     getTransactions(from = 0, to = new Date()){
         if(merchant._transactions.length <= 0){
             return [];
@@ -303,6 +303,13 @@ class Merchant{
     }
 
     addTransaction(transaction){
+        transaction = new Transaction(
+            transaction._id,
+            transaction.date,
+            transaction.recipes,
+            this
+        );
+
         this._transactions.push(transaction);
         this._transactions.sort((a, b)=>{
             if(a.date > b.date){
