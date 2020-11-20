@@ -2566,7 +2566,7 @@ let newTransaction = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-
+                    console.log(response);
                 }
             })
             .catch((err)=>{

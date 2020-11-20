@@ -220,7 +220,80 @@ module.exports = {
             header: 1
         });
 
-        console.log(array);
+        let locations = {};
+        for(let i = 0; i < array[0].length; i++){
+            switch(array[0][i].toLowerCase()){
+                case "date": locations.date = i; break;
+                case "recipes": locations.recipes = i; break;
+                case "quantity": locations.quantity = i; break;
+            }
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .populate("recipes")
+            .populate("inventory.ingredient")
+            .then((merchant)=>{       
+                let transaction = new Transaction({
+                    merchant: req.session.user,
+                    recipes: []
+                });
+
+                if(array[1][0] === undefined){
+                    transaction.date = new Date(array[1][0]);
+                }else{
+                    transaction.date = new Date();
+                }
+                
+                let ingredients = [];
+                for(let i = 1; i < array.length; i++){
+                    let exists = false;
+                    for(let j = 0; j < merchant.recipes.length; j++){
+                        if(merchant.recipes[j].name.toLowerCase() === array[i][locations.recipes]){
+                            transaction.recipes.push({
+                                recipe: merchant.recipes[j],
+                                quantity: array[i][locations.quantity]
+                            });
+
+                            for(let k = 0; k < merchant.recipes[j].ingredients.length; k++){
+                                ingredients.push({
+                                    id: merchant.recipes[j].ingredients[k].ingredient,
+                                    quantity: array[i][locations.quantity] * merchant.recipes[j].ingredients[k].quantity
+                                });
+                            }
+
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if(exists !== true){
+                        throw `COULD NOT FIND RECIPE ${array[i][locations.recipes]}`;
+                    }
+                }
+
+                for(let i = 0; i < ingredients.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        
+                        if(merchant.inventory[j].ingredient._id.toString() === ingredients[i].id.toString()){
+                            merchant.inventory[j].quantity -= ingredients[i].quantity;
+
+                            break;
+                        }
+                    }
+                }
+
+                return Promise.all([transaction.save(), merchant.save()]);
+            })
+            .then((response)=>{
+                return res.json(response[0]);
+            })
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+
+                return res.json("ERROR: UNABLE TO CREATE YOUR TRANSACTION");
+            });
     },
 
     /*
