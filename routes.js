@@ -31,6 +31,7 @@ module.exports = function(app){
     app.put("/ingredients/update", ingredientData.updateIngredient);
     app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
     app.post("/ingredients/create/spreadsheet", upload.single("ingredients"), ingredientData.createFromSpreadsheet);
+    
 
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);

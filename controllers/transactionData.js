@@ -57,66 +57,6 @@ module.exports = {
     },
 
     /*
-    GET - get transactions between two dates, sorted and group by date
-    params:
-        from: Date string
-        to: Date string
-    return:
-        [{
-            date: Date
-            transactions:[[Recipe]]
-        }]
-    */
-    getTransactionsByDate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        const from = new Date(req.params.from);
-        const to = new Date(req.params.to);
-        to.setDate(to.getDate() + 1);
-
-        Transaction.aggregate([
-            {$match: {
-                merchant: ObjectId(req.session.user),
-                date: {
-                    $gte: from,
-                    $lt: to
-                }
-            }},
-            {$group: {
-                _id: {$function: {
-                    body: "function(year, month, date){return `${year}-${month}-${date}`;}",
-                    args: [{$year: "$date"}, {$month: "$date"}, {$dayOfMonth: "$date"}],
-                    lang: "js"
-                }},
-                transactions: {$push: {
-                    _id: "$_id",
-                    recipes: "$recipes"
-                }}
-            }},
-            {$project: {
-                _id: 0,
-                date: {$convert: {
-                    input: "$_id",
-                    to: "date"
-                }},
-                transactions: 1
-            }},
-            {$sort: {
-                date: 1
-            }}
-        ])
-            .then((transactions)=>{
-                return res.json(transactions);
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
-            });
-    },
-
-    /*
     POST - create a new transaction
     req.body = {
         date: date of the transaction,
@@ -151,49 +91,6 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO CREATE NEW TRANSACTION");
-            });
-    },
-
-    /*
-    DELETE - Remove a transaction from the database
-    */
-    remove: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let merchant = {};
-        let transaction = {};
-        Merchant.findOne({_id: req.session.user})
-            .then((response)=>{
-                merchant = response;
-                return Transaction.findOne({_id: req.params.id}).populate("recipes.recipe");
-            })
-            .then((response)=>{
-                transaction = response;
-                return Transaction.deleteOne({_id: req.params.id});
-            })
-            .then((response)=>{
-                res.json();
-
-                for(let i = 0; i < transaction.recipes.length; i++){
-                    const recipe = transaction.recipes[i].recipe;
-                    for(let j = 0; j < recipe.ingredients.length; j++){
-                        const ingredient = recipe.ingredients[j].ingredient;
-                        for(let k = 0; k < merchant.inventory.length; k++){
-                            if(ingredient.toString() === merchant.inventory[k].ingredient.toString()){
-                                merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                return merchant.save();
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
             });
     },
 
@@ -328,6 +225,109 @@ module.exports = {
                 });
             })
             .catch((err)=>{});
+    },
+
+    /*
+    DELETE - Remove a transaction from the database
+    */
+    remove: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        let merchant = {};
+        let transaction = {};
+        Merchant.findOne({_id: req.session.user})
+            .then((response)=>{
+                merchant = response;
+                return Transaction.findOne({_id: req.params.id}).populate("recipes.recipe");
+            })
+            .then((response)=>{
+                transaction = response;
+                return Transaction.deleteOne({_id: req.params.id});
+            })
+            .then((response)=>{
+                res.json();
+
+                for(let i = 0; i < transaction.recipes.length; i++){
+                    const recipe = transaction.recipes[i].recipe;
+                    for(let j = 0; j < recipe.ingredients.length; j++){
+                        const ingredient = recipe.ingredients[j].ingredient;
+                        for(let k = 0; k < merchant.inventory.length; k++){
+                            if(ingredient.toString() === merchant.inventory[k].ingredient.toString()){
+                                merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return merchant.save();
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
+            });
+    },
+
+    /*
+    GET - get transactions between two dates, sorted and group by date
+    params:
+        from: Date string
+        to: Date string
+    return:
+        [{
+            date: Date
+            transactions:[[Recipe]]
+        }]
+    */
+    getTransactionsByDate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        const from = new Date(req.params.from);
+        const to = new Date(req.params.to);
+        to.setDate(to.getDate() + 1);
+
+        Transaction.aggregate([
+            {$match: {
+                merchant: ObjectId(req.session.user),
+                date: {
+                    $gte: from,
+                    $lt: to
+                }
+            }},
+            {$group: {
+                _id: {$function: {
+                    body: "function(year, month, date){return `${year}-${month}-${date}`;}",
+                    args: [{$year: "$date"}, {$month: "$date"}, {$dayOfMonth: "$date"}],
+                    lang: "js"
+                }},
+                transactions: {$push: {
+                    _id: "$_id",
+                    recipes: "$recipes"
+                }}
+            }},
+            {$project: {
+                _id: 0,
+                date: {$convert: {
+                    input: "$_id",
+                    to: "date"
+                }},
+                transactions: 1
+            }},
+            {$sort: {
+                date: 1
+            }}
+        ])
+            .then((transactions)=>{
+                return res.json(transactions);
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
+            });
     },
 
     /*
