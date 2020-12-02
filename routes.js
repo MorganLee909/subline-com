@@ -39,6 +39,7 @@ module.exports = function(app){
     app.get("/recipe/update/clover", recipeData.updateRecipesClover);
     app.get("/recipe/update/square", recipeData.updateRecipesSquare);
     app.post("/recipes/create/spreadsheet", upload.single("recipes"), recipeData.createFromSpreadsheet);
+    app.get("/recipes/download/spreadsheet", recipeData.spreadsheetTemplate);
 
     //Orders
     app.get("/order", orderData.getOrders);

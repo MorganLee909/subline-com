@@ -408,5 +408,65 @@ module.exports = {
 
                 return res.json("ERROR: UNABLE TO CREATE YOUR INGREDIENTS");
             });
+    },
+
+    spreadsheetTemplate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .populate({
+                path: "recipes",
+                populate: {
+                    path: "ingredients.ingredient",
+                    model: "Ingredient"
+                }
+            })
+            .then((merchant)=>{
+                let workbook = xlsx.utils.book_new();
+                workbook.SheetNames.push("Recipes");
+                let workbookData = [];
+
+                workbookData.push(["Name", "Price", "Ingredients", "Ingredient Amount", "unit"]);
+
+                for(let i = 0; i < merchant.recipes.length; i++){
+                    for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
+                        let row = [];
+                        if(j === 0){
+                            row[0] = merchant.recipes[i].name;
+                            row[1] = parseFloat((merchant.recipes[i].price / 100).toFixed(2));
+                        }else{
+                            row[0] = "";
+                            row[1] = "";
+                        }
+                        const ingredient = merchant.recipes[i].ingredients[j];
+                        row[2] = ingredient.ingredient.name;
+                        //using convertPrice because it is the same as converting from the base unit
+                        let quantity = 0;
+                        for(let k = 0; k < merchant.inventory.length; k++){
+                            if(merchant.inventory[k].ingredient.toString() === ingredient.ingredient._id.toString()){
+                                quantity = helper.convertPrice(ingredient.quantity, merchant.inventory[k].defaultUnit);
+                                row[3] = parseFloat(quantity.toFixed(2));
+                                row[4] = merchant.inventory[k].defaultUnit;
+                            }
+                        }
+                        
+                        workbookData.push(row);
+                    }
+                }
+
+                workbook.Sheets.Recipes = xlsx.utils.aoa_to_sheet(workbookData);
+
+                xlsx.writeFile(workbook, "SublineRecipes.xlsx");
+
+                res.download("SublineRecipes.xlsx", (err)=>{
+                    fs.unlink("SublineRecipes.xlsx", ()=>{});
+                });
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
     }
 }

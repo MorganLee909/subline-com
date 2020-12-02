@@ -201,6 +201,7 @@ controller = {
                 content = document.getElementById("modalSpreadsheetUpload");
                 content.style.display = "flex";
                 document.getElementById("modalSpreadsheetTitle").innerText = "recipes";
+                document.getElementById("spreadsheetDownload").href = "/recipes/download/spreadsheet";
                 content.onsubmit = newRecipe.submitSpreadsheet;
                 break;
             case "orderSpreadsheet":
