@@ -288,5 +288,48 @@ module.exports = {
 
                 return res.json("ERROR: UNABLE TO CREATE YOUR ORDERS");
             });
+    },
+
+    /*
+    GET - Creates and sends a template xlsx for uploading orders
+    */
+    spreadsheetTemplate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .populate("inventory.ingredient")
+            .then((merchant)=>{
+                let workbook = xlsx.utils.book_new();
+                workbook.SheetNames.push("Order");
+                let workbookData = [];
+
+                workbookData.push(["Name", "Date", "Taxes", "Fees", "Ingredients", "Quantity", "Price", "<- Price Per Unit", "Ingredient Reference"]);
+
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    let data = ["", "", "", "", "", "", "", "", merchant.inventory[i].ingredient.name];
+                    workbookData.push(data);
+                }
+
+                workbookData[1][0] = "My Order Name";
+                workbookData[1][1] = "2020-02-29";
+                workbookData[1][2] = 10.99;
+                workbookData[1][3] = 5.98;
+                workbookData[1][4] = "Example ingredient 1";
+                workbookData[1][5] = 100;
+                workbookData[1][6] = 1.99;
+                workbookData[2][4] = "Example ingredient 2";
+                workbookData[2][5] = 55;
+                workbookData[2][6] = 0.95;
+
+                workbook.Sheets.Order = xlsx.utils.aoa_to_sheet(workbookData);
+                xlsx.writeFile(workbook, "SublineOrder.xlsx");
+                return res.download("SublineOrder.xlsx", (err)=>{
+                    fs.unlink("SublineOrder.xlsx", ()=>{});
+                });
+            })
+            .catch((err)=>{});
     }
 }

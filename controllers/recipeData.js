@@ -465,8 +465,6 @@ module.exports = {
                     fs.unlink("SublineRecipes.xlsx", ()=>{});
                 });
             })
-            .catch((err)=>{
-                console.log(err);
-            });
+            .catch((err)=>{});
     }
 }

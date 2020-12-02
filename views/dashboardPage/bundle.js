@@ -1510,6 +1510,7 @@ controller = {
                 content = document.getElementById("modalSpreadsheetUpload");
                 content.style.display = "flex";
                 document.getElementById("modalSpreadsheetTitle").innerText = "orders";
+                document.getElementById("spreadsheetDownload").href = "/orders/download/spreadsheet";
                 content.onsubmit = newOrder.submitSpreadsheet;
                 break;
             case "transactionSpreadsheet":
