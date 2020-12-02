@@ -1517,6 +1517,7 @@ controller = {
                 content = document.getElementById("modalSpreadsheetUpload");
                 content.style.display = "flex";
                 document.getElementById("modalSpreadsheetTitle").innerText = "transactions";
+                document.getElementById("spreadsheetDownload").href = "/transactions/download/spreadsheet";
                 content.onsubmit = newTransaction.submitSpreadsheet;
         }
     },

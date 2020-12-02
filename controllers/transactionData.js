@@ -296,6 +296,40 @@ module.exports = {
             });
     },
 
+    spreadsheetTemplate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        Merchant.findOne({_id: req.session.user})
+            .populate("recipes")
+            .then((merchant)=>{
+                let workbook = xlsx.utils.book_new();
+                workbook.SheetNames.push("Transaction");
+                let workbookData = [];
+
+                workbookData.push(["Date", "Recipes", "Quantity", "", "Recipes Reference"]);
+
+                for(let i = 0; i < merchant.recipes.length; i++){
+                    workbookData.push(["", "", "", "", merchant.recipes[i].name]);
+                }
+
+                workbookData[1][0] = "2020-02-29";
+                workbookData[1][1] = "Example Recipe 1";
+                workbookData[1][2] = 12;
+                workbookData[2][1] = "Example Recipe 2";
+                workbookData[2][2] = 7;
+
+                workbook.Sheets.Transaction = xlsx.utils.aoa_to_sheet(workbookData);
+                xlsx.writeFile(workbook, "SublineTransaction.xlsx");
+                return res.download("SublineTransaction.xlsx", (err)=>{
+                    fs.unlink("SublineTransaction.xlsx", ()=>{});
+                });
+            })
+            .catch((err)=>{});
+    },
+
     /*
     GET - Creates 5000 transactions for logged in merchant for testing
     */

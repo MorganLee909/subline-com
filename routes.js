@@ -51,10 +51,11 @@ module.exports = function(app){
 
     //Transactions
     app.post("/transaction", transactionData.getTransactions);
-    app.get("/transactions/:from/:to", transactionData.getTransactionsByDate);
     app.post("/transaction/create", transactionData.createTransaction);
-    app.delete("/transaction/:id", transactionData.remove);
     app.post("/transactions/create/spreadsheet", upload.single("transactions"), transactionData.createFromSpreadsheet);
+    app.get("/transactions/download/spreadsheet", transactionData.spreadsheetTemplate);
+    app.delete("/transaction/:id", transactionData.remove);
+    app.get("/transactions/:from/:to", transactionData.getTransactionsByDate);
     app.get("/populatesometransactions", transactionData.populate);
 
     //Other
