@@ -278,6 +278,27 @@ module.exports = {
             });
     },
 
+    spreadsheetTemplate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        let workbook = xlsx.utils.book_new();
+        workbook.SheetNames.push("Ingredients");
+        let workbookData = [];
+
+        workbookData.push(["Name", "Category", "Quantity", "Unit", "Bottle", "Bottle Size"]);
+        workbookData.push(["Example Ingredient 1", "Produce", 100, "lbs"]);
+        workbookData.push(["Example Ingredient Two", "Beverage", 5, "ml", "TRUE", 750]);
+
+        workbook.Sheets.Ingredients = xlsx.utils.aoa_to_sheet(workbookData);
+        xlsx.writeFile(workbook, "SublineIngredients.xlsx");
+        return res.download("SublineIngredients.xlsx", (err)=>{
+            fs.unlink("SublineIngredients.xlsx", ()=>{});
+        });
+    },
+
     //DELETE - Removes an ingredient from the merchant's inventory
     removeIngredient: function(req, res){
         if(!req.session.user){

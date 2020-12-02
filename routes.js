@@ -30,6 +30,7 @@ module.exports = function(app){
     app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", ingredientData.updateIngredient);
     app.post("/ingredients/create/spreadsheet", upload.single("ingredients"), ingredientData.createFromSpreadsheet);
+    app.get("/ingredients/download/spreadsheet", ingredientData.spreadsheetTemplate);
     app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
     
 

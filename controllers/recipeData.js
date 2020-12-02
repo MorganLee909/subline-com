@@ -461,7 +461,7 @@ module.exports = {
 
                 xlsx.writeFile(workbook, "SublineRecipes.xlsx");
 
-                res.download("SublineRecipes.xlsx", (err)=>{
+                return res.download("SublineRecipes.xlsx", (err)=>{
                     fs.unlink("SublineRecipes.xlsx", ()=>{});
                 });
             })
