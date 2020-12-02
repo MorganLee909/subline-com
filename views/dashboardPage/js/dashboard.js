@@ -178,8 +178,6 @@ controller = {
                     choosables[i].classList.remove("active");
                 }
             }
-
-            
         }
         sidebar.classList = "sidebarHide";
 
@@ -197,6 +195,13 @@ controller = {
         let content = {};
 
         switch(str){
+            case "ingredientSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "ingredients";
+                document.getElementById("spreadsheetDownload").href = "/ingredients/download/spreadsheet";
+                content.onsubmit = newIngredient.submitSpreadsheet;
+                break;
             case "recipeSpreadsheet":
                 content = document.getElementById("modalSpreadsheetUpload");
                 content.style.display = "flex";

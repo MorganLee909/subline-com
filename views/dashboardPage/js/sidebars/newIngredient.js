@@ -10,7 +10,7 @@ let newIngredient = {
 
         selector.onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
-        document.getElementById("submitFile").addEventListener("click", this.submitFile);
+        document.getElementById("ingredientFileUpload").addEventListener("click", ()=>{controller.openModal("ingredientSpreadsheet")});
     },
 
     unitChange: function(){
@@ -78,8 +78,11 @@ let newIngredient = {
             });
     },
 
-    submitFile: function(){
-        const file = document.getElementById("ingredientFile").files[0];
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
         data.append("ingredients", file);
 

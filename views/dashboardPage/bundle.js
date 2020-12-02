@@ -1480,8 +1480,6 @@ controller = {
                     choosables[i].classList.remove("active");
                 }
             }
-
-            
         }
         sidebar.classList = "sidebarHide";
 
@@ -1499,6 +1497,13 @@ controller = {
         let content = {};
 
         switch(str){
+            case "ingredientSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "ingredients";
+                document.getElementById("spreadsheetDownload").href = "/ingredients/download/spreadsheet";
+                content.onsubmit = newIngredient.submitSpreadsheet;
+                break;
             case "recipeSpreadsheet":
                 content = document.getElementById("modalSpreadsheetUpload");
                 content.style.display = "flex";
@@ -1990,7 +1995,7 @@ let newIngredient = {
 
         selector.onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
-        document.getElementById("submitFile").addEventListener("click", this.submitFile);
+        document.getElementById("ingredientFileUpload").addEventListener("click", ()=>{controller.openModal("ingredientSpreadsheet")});
     },
 
     unitChange: function(){
@@ -2058,8 +2063,11 @@ let newIngredient = {
             });
     },
 
-    submitFile: function(){
-        const file = document.getElementById("ingredientFile").files[0];
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
         data.append("ingredients", file);
 
