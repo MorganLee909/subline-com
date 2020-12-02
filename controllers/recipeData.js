@@ -417,50 +417,33 @@ module.exports = {
         }
 
         Merchant.findOne({_id: req.session.user})
-            .populate({
-                path: "recipes",
-                populate: {
-                    path: "ingredients.ingredient",
-                    model: "Ingredient"
-                }
-            })
+            .populate("inventory.ingredient")
             .then((merchant)=>{
                 let workbook = xlsx.utils.book_new();
                 workbook.SheetNames.push("Recipes");
                 let workbookData = [];
 
-                workbookData.push(["Name", "Price", "Ingredients", "Ingredient Amount", "unit"]);
-
-                for(let i = 0; i < merchant.recipes.length; i++){
-                    for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
-                        let row = [];
-                        if(j === 0){
-                            row[0] = merchant.recipes[i].name;
-                            row[1] = parseFloat((merchant.recipes[i].price / 100).toFixed(2));
-                        }else{
-                            row[0] = "";
-                            row[1] = "";
-                        }
-                        const ingredient = merchant.recipes[i].ingredients[j];
-                        row[2] = ingredient.ingredient.name;
-                        //using convertPrice because it is the same as converting from the base unit
-                        let quantity = 0;
-                        for(let k = 0; k < merchant.inventory.length; k++){
-                            if(merchant.inventory[k].ingredient.toString() === ingredient.ingredient._id.toString()){
-                                quantity = helper.convertPrice(ingredient.quantity, merchant.inventory[k].defaultUnit);
-                                row[3] = parseFloat(quantity.toFixed(2));
-                                row[4] = merchant.inventory[k].defaultUnit;
-                            }
-                        }
-                        
-                        workbookData.push(row);
-                    }
+                workbookData.push(["Name", "Price", "Ingredients", "Ingredient Amount", "", "Ingredients Reference", "Ingredient Unit"]);
+                
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    workbookData.push(["", "", "", "", "", merchant.inventory[i].ingredient.name, merchant.inventory[i].defaultUnit]);
                 }
 
+                workbookData[1][0] = "Example Recipe 1";
+                workbookData[1][1] = 10.98;
+                workbookData[1][2] = "Example Ingredient 1";
+                workbookData[1][3] = 1.2;
+                workbookData[2][2] = "Example Ingredient 2";
+                workbookData[2][3] =  0.55;
+                workbookData[3][0] = "Example Recipe 2";
+                workbookData[3][1] = 5.54;
+                workbookData[3][2] = "Example Ingredient 3";
+                workbookData[3][3] = 1;
+                workbookData[4][2] = "Example Ingredient 4";
+                workbookData[4][3] = 1.53; 
+
                 workbook.Sheets.Recipes = xlsx.utils.aoa_to_sheet(workbookData);
-
                 xlsx.writeFile(workbook, "SublineRecipes.xlsx");
-
                 return res.download("SublineRecipes.xlsx", (err)=>{
                     fs.unlink("SublineRecipes.xlsx", ()=>{});
                 });
