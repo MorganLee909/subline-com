@@ -29,8 +29,8 @@ module.exports = function(app){
     app.get("/ingredients", ingredientData.getIngredients);
     app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", ingredientData.updateIngredient);
-    app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
     app.post("/ingredients/create/spreadsheet", upload.single("ingredients"), ingredientData.createFromSpreadsheet);
+    app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
     
 
     //Recipes
