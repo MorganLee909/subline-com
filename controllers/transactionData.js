@@ -140,9 +140,9 @@ module.exports = {
                 });
 
                 if(array[1][0] === undefined){
-                    transaction.date = new Date(array[1][0]);
-                }else{
                     transaction.date = new Date();
+                }else{
+                    transaction.date = new Date(array[1][0]);
                 }
                 
                 let ingredients = [];
