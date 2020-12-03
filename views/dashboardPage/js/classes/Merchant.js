@@ -1,10 +1,5 @@
 class MerchantIngredient{
     constructor(ingredient, quantity){
-        if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
-            return false;
-        }
-        
         this._quantity = quantity;
         this._ingredient = ingredient;
     }

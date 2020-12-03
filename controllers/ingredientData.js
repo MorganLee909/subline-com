@@ -116,17 +116,12 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-
-        const ingredientCheck = validator.ingredient(req.body);
-        if(ingredientCheck !== true){
-            return res.json(ingredientCheck);
-        }
-
         let updatedIngredient = {};
         Ingredient.findOne({_id: req.body.id})
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
                 ingredient.category = req.body.category
+                //TODO: Handle this in the class
                 if(ingredient.specialUnit === "bottle"){
                     ingredient.unitSize = req.body.unitSize;
                 }
@@ -166,7 +161,10 @@ module.exports = {
                 return res.json(updatedIngredient);
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO UPDATE INGREDIENT");
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                return res.json(err.errors.name.properties.message);
             });
     },
 
@@ -285,11 +283,8 @@ module.exports = {
         }
 
         //Update the database
-        let createdIngredients = [];
         Ingredient.create(ingredients)
             .then((ingredients)=>{
-                createdIngredients = ingredients;
-
                 return Merchant.findOne({_id: req.session.user});
             })
             .then((merchant)=>{

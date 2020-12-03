@@ -251,7 +251,6 @@ module.exports = {
                 if(error.type === "user defined" || error.type === "minlength"){
                     return res.json(error.message);
                 }
-
                 return res.json("ERROR: UNABLE TO UPDATE DATA");
             });        
     },

@@ -1,10 +1,6 @@
-const helper = require("../controllers/helper.js");
+const isSanitary = require("../controllers/helper.js").isSanitary;
 
 const mongoose = require("mongoose");
-
-let nameSanitary = (value)=>{
-    return helper.isSanitary(value);
-}
 
 let emailValid = (value)=>{
     /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
@@ -15,7 +11,7 @@ const MerchantSchema = new mongoose.Schema({
         type: String,
         required: [true, "MERCHANT NAME IS REQUIRED"],
         validate: {
-            validator: nameSanitary,
+            validator: isSanitary,
             message: "NAME CONTAINS ILLEGAL CHARACTERS"
         }
     },
@@ -29,7 +25,7 @@ const MerchantSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: [true, "MUST PROVIDE A PASSWORD"],
     },
     pos: {
         type: String,
@@ -51,7 +47,7 @@ const MerchantSchema = new mongoose.Schema({
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Ingredient",
-            required: true
+            required: [true, "MUST PROVIDE THE INGREDIENT"]
         },
         quantity: {
             type: Number,

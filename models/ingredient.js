@@ -1,10 +1,6 @@
-const helper = require("../controllers/helper.js");
+const isSanitary = require("../controllers/helper.js").isSanitary;
 
 const mongoose = require("mongoose");
-
-let sanitary = (value)=>{
-    return helper.isSanitary(value);
-}
 
 const IngredientSchema = new mongoose.Schema({
     name: {
@@ -12,7 +8,7 @@ const IngredientSchema = new mongoose.Schema({
         minlength: [2, "INGREDIENT NAME MUST CONTAIN AT LEAST 2 CHARACTERS"],
         required: [true, "INGREDIENT NAME IS REQUIRED"],
         validate: {
-            validator: sanitary,
+            validator: isSanitary,
             message: "INGREDIENT NAME CONTAINS ILLEGAL CHARACTERS"
         }
     },
@@ -21,13 +17,13 @@ const IngredientSchema = new mongoose.Schema({
         minlength: [2, "INGREDIENT CATEGORY MUST CONTAIN AT LEAST 2 CHARACTERS"],
         required: [true, "INGREDIENT CATEGORY IS REQUIRED"],
         validate: {
-            validator: sanitary,
+            validator: isSanitary,
             message: "INGREDIENT CATEGORY CONTAINS ILLEGAL CHARACTERS"
         }
     },
     unitType: {
         type: String,
-        required: true
+        required: [true, "UNIT TYPE IS REQUIRED"]
     },
     specialUnit: String,
     unitSize: String
