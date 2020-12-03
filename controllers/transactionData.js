@@ -119,6 +119,10 @@ module.exports = {
 
         let locations = {};
         for(let i = 0; i < array[0].length; i++){
+            if(array[0][i] === undefined){
+                continue;
+            }
+
             switch(array[0][i].toLowerCase()){
                 case "date": locations.date = i; break;
                 case "recipes": locations.recipes = i; break;
@@ -129,7 +133,7 @@ module.exports = {
         Merchant.findOne({_id: req.session.user})
             .populate("recipes")
             .populate("inventory.ingredient")
-            .then((merchant)=>{       
+            .then((merchant)=>{
                 let transaction = new Transaction({
                     merchant: req.session.user,
                     recipes: []
@@ -143,9 +147,13 @@ module.exports = {
                 
                 let ingredients = [];
                 for(let i = 1; i < array.length; i++){
+                    if(array[i][locations.recipes] === undefined){
+                        continue;
+                    }
+
                     let exists = false;
                     for(let j = 0; j < merchant.recipes.length; j++){
-                        if(merchant.recipes[j].name.toLowerCase() === array[i][locations.recipes]){
+                        if(merchant.recipes[j].name.toLowerCase() === array[i][locations.recipes].toLowerCase()){
                             transaction.recipes.push({
                                 recipe: merchant.recipes[j],
                                 quantity: array[i][locations.quantity]
