@@ -123,6 +123,7 @@ let newOrder = {
             });
     },
 
+    //TODO: Remove this function, it should be on the order
     convertPrice: function(ingredient, price){
         if(ingredient.specialUnit === "bottle"){
             return price / ingredient.unitSize;
@@ -174,12 +175,12 @@ let newOrder = {
                         merchant.addOrder(response[i], true);
                     }
 
-                    banner.createNotification("ORDERS CREATED AND INGREDIENTS UPDATE SUCCESSFULLY");
+                    banner.createNotification("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY");
                     controller.openStrand("orders");
                 }
             })
             .catch((err)=>{
-                banner.createError("UNABLE TO DISPLAY NEW ORDERS. PLEASE REFRESH THE PAGE.");
+                banner.createError("UNABLE TO DISPLAY NEW ORDER. PLEASE REFRESH THE PAGE.");
             })
             .finally(()=>{
                 loader.style.display = "none";

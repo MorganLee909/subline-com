@@ -146,46 +146,6 @@ module.exports = {
             .catch(()=>{});
     },
 
-    /*
-    DELETE - Remove an order from the database
-    */
-    removeOrder: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let merchant = {};
-        let order = {}
-        Merchant.findOne({_id: req.session.user})
-            .then((response)=>{
-                merchant = response;
-                return Order.findOne({_id: req.params.id});
-            })
-            .then((response)=>{
-                order = response;
-
-                return Order.deleteOne({_id: req.params.id})
-            })
-            .then((response)=>{
-                res.json({});
-
-                for(let i = 0; i < order.ingredients.length; i++){
-                    for(let j = 0; j < merchant.inventory.length; j++){
-                        if(order.ingredients[i].ingredient.toString() === merchant.inventory[j].ingredient.toString()){
-                            merchant.inventory[j].quantity -= order.ingredients[i].quantity;
-                            break;
-                        }
-                    }
-                }
-
-                return merchant.save();
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO REMOVE ORDER");
-            });
-    },
-
     createFromSpreadsheet: function(req, res){
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
@@ -232,7 +192,7 @@ module.exports = {
                 let orders = [];
                 let currentOrder = {};
                 for(let i = 1; i < array.length; i++){
-                    if(array[i].length === 0){
+                    if(array[i].length === 0 || array[i][locations.ingredients] === undefined){
                         continue;
                     }
 
@@ -256,7 +216,7 @@ module.exports = {
 
                     let exists = false;
                     for(let j = 0; j < merchant.inventory.length; j++){
-                        if(merchant.inventory[j].ingredient.name.toLowerCase() === array[i][locations.ingredients]){
+                        if(merchant.inventory[j].ingredient.name.toLowerCase() === array[i][locations.ingredients].toLowerCase()){
                             const baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);
                             currentOrder.ingredients.push({
                                 ingredient: merchant.inventory[j].ingredient._id,
@@ -331,5 +291,45 @@ module.exports = {
                 });
             })
             .catch((err)=>{});
+    },
+
+    /*
+    DELETE - Remove an order from the database
+    */
+    removeOrder: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        let merchant = {};
+        let order = {}
+        Merchant.findOne({_id: req.session.user})
+            .then((response)=>{
+                merchant = response;
+                return Order.findOne({_id: req.params.id});
+            })
+            .then((response)=>{
+                order = response;
+
+                return Order.deleteOne({_id: req.params.id})
+            })
+            .then((response)=>{
+                res.json({});
+
+                for(let i = 0; i < order.ingredients.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(order.ingredients[i].ingredient.toString() === merchant.inventory[j].ingredient.toString()){
+                            merchant.inventory[j].quantity -= order.ingredients[i].quantity;
+                            break;
+                        }
+                    }
+                }
+
+                return merchant.save();
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO REMOVE ORDER");
+            });
     }
 }
