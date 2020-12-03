@@ -415,7 +415,7 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-
+        
         Merchant.findOne({_id: req.session.user})
             .populate("inventory.ingredient")
             .then((merchant)=>{
@@ -427,6 +427,12 @@ module.exports = {
                 
                 for(let i = 0; i < merchant.inventory.length; i++){
                     workbookData.push(["", "", "", "", "", merchant.inventory[i].ingredient.name, merchant.inventory[i].defaultUnit]);
+                }
+
+                if(workbookData.length < 5){
+                    for(let i = workbookData.length - 1; i < 5; i++){
+                        workbookData.push(["", "", "", ""]);
+                    }
                 }
 
                 workbookData[1][0] = "Example Recipe 1";
