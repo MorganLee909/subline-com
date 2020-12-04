@@ -32,6 +32,7 @@ let newOrder = {
         div.ingredient = ingredient;
         div.children[0].children[1].onclick = ()=>{this.removeIngredient(div, element)};
 
+        //TODO: this should be handled by the class
         //Display units depending on the whether it is a special unit
         if(ingredient.ingredient.specialUnit === "bottle"){
             div.children[0].children[0].innerText = `${ingredient.ingredient.name} (BOTTLES)`;
