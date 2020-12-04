@@ -415,7 +415,9 @@ module.exports = {
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
-
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO CREATE YOUR INGREDIENTS");
             });
     },
