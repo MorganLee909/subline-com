@@ -2,11 +2,6 @@ const Order = require("../models/order.js");
 const Merchant = require("../models/merchant.js");
 
 const ObjectId = require("mongoose").Types.ObjectId;
-const Validator = require("./validator.js");
-const helper = require("./helper.js");
-
-const xlsx = require("xlsx");
-const fs = require("fs");
 
 module.exports = {
     /*
@@ -45,6 +40,12 @@ module.exports = {
                 return res.json(orders);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE YOUR ORDERS");
             });
     },
@@ -91,6 +92,12 @@ module.exports = {
                 return res.json(orders);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE YOUR TRANSACTIONS");
             });
     },
@@ -113,11 +120,6 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator.order(req.body);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
         let newOrder = new Order(req.body);
         newOrder.merchant = req.session.user;
         newOrder.save()
@@ -125,6 +127,12 @@ module.exports = {
                 res.json(response);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO SAVE ORDER");
             });
 
@@ -329,6 +337,12 @@ module.exports = {
                 return merchant.save();
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO REMOVE ORDER");
             });
     }

@@ -3,25 +3,11 @@ const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 
 const helper = require("./helper.js");
-const validator = require("./validator.js");
 
 const xlsx = require("xlsx");
 const fs = require("fs");
 
 module.exports = {
-    //GET - gets a list of all database ingredients
-    //Returns:
-    //  ingredients: list containing all ingredients
-    getIngredients: function(req, res){
-        Ingredient.find()
-            .then((ingredients)=>{
-                return res.json(ingredients);
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE INGREDIENTS");
-            });
-    },
-
     /*
     POST - create a single ingredient and then add to the merchant
     req.body = {
@@ -40,23 +26,6 @@ module.exports = {
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
-        }
-
-        let validation = validator.ingredient(req.body.ingredient);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
-        validation = validator.quantity(req.body.quantity);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
-        if(req.body.ingredient.unitSize){
-            validation = validator.quantity(req.body.ingredient.unitSize);
-            if(validation !== true){
-                return res.json(validation);
-            }
         }
 
         let newIngredient = {};
@@ -96,7 +65,13 @@ module.exports = {
                 return res.json(newIngredient);
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO CREATE NEW INGREDIENT");
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
+                return res.json("ERROR: UNABLE TO CREATE THE INGREDIENT");
             });
     },
 
@@ -116,17 +91,12 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-
-        const ingredientCheck = validator.ingredient(req.body);
-        if(ingredientCheck !== true){
-            return res.json(ingredientCheck);
-        }
-
         let updatedIngredient = {};
         Ingredient.findOne({_id: req.body.id})
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
                 ingredient.category = req.body.category
+                //TODO: Handle this in the class
                 if(ingredient.specialUnit === "bottle"){
                     ingredient.unitSize = req.body.unitSize;
                 }
@@ -166,7 +136,13 @@ module.exports = {
                 return res.json(updatedIngredient);
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO UPDATE INGREDIENT");
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
+                return res.json("ERROR: UNABLE TO UDATE THE INGREDIENT");
             });
     },
 
@@ -226,6 +202,7 @@ module.exports = {
                 ingredient.unitSize = helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);
             }else{
                 let unitType = "";
+                //TODO: this should probably be in a helper
                 switch(array[i][locations.unit].toLowerCase()){
                     case "g": unitType = "mass"; break;
                     case "kg": unitType = "mass"; break;
@@ -256,11 +233,8 @@ module.exports = {
         }
 
         //Update the database
-        let createdIngredients = [];
         Ingredient.create(ingredients)
             .then((ingredients)=>{
-                createdIngredients = ingredients;
-
                 return Merchant.findOne({_id: req.session.user});
             })
             .then((merchant)=>{
@@ -274,6 +248,12 @@ module.exports = {
                 return res.json(merchantData);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return "ERROR: UNABLE TO CREATE YOUR INGREDIENTS";
             });
     },
@@ -324,6 +304,12 @@ module.exports = {
                 return res.json({});
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },

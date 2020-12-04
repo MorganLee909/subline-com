@@ -26,7 +26,6 @@ module.exports = function(app){
     app.post("/merchant/password", merchantData.updatePassword);
 
     //Ingredients
-    app.get("/ingredients", ingredientData.getIngredients);
     app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", ingredientData.updateIngredient);
     app.post("/ingredients/create/spreadsheet", upload.single("ingredients"), ingredientData.createFromSpreadsheet);
