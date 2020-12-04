@@ -2,8 +2,6 @@ const Recipe = require("../models/recipe.js");
 const Merchant = require("../models/merchant.js");
 const ArchivedRecipe = require("../models/archivedRecipe.js");
 
-const validator = require("./validator.js");
-
 const axios = require("axios");
 const xlsxUtils = require("xlsx").utils;
 
@@ -26,11 +24,6 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = validator.recipe(req.body);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
         let recipe = new Recipe({
             merchant: req.session.user,
             name: req.body.name,
@@ -38,26 +31,26 @@ module.exports = {
             ingredients: req.body.ingredients
         });
 
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                merchant.recipes.push(recipe);
-                merchant.save()
-                    .catch((err)=>{
-                        return res.json("ERROR: UNABLE TO SAVE RECIPE");
-                    });
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
-            });
-
         recipe.save()
             .then((newRecipe)=>{
                 return res.json(newRecipe);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO SAVE INGREDIENT");
             });
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                merchant.recipes.push(recipe);
+                return merchant.save();
+            })
+            .catch((err)=>{});
     },
 
     /*
@@ -76,11 +69,6 @@ module.exports = {
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
-        }
-
-        let validation = validator.recipe(req.body);
-        if(validation !== true){
-            return res.json(validation);
         }
 
         Recipe.findOne({_id: req.body.id})
@@ -103,6 +91,12 @@ module.exports = {
                 res.json(recipe);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO UPDATE RECIPE");
             });
     },
@@ -138,6 +132,12 @@ module.exports = {
                 return res.json({});
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },
@@ -204,12 +204,17 @@ module.exports = {
                 return res.json({new: newRecipes, removed: deletedRecipes});
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE MERCHANT DATA");
             });
     },
 
     updateRecipesSquare: function(req, res){
-        
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
             return res.redirect("/");
@@ -296,7 +301,13 @@ module.exports = {
                 return res.json({new: newRecipes, removed: merchantRecipes});
             })
             .catch((err)=>{
-                return "ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE";
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
+                return res.json("ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE");
             });
     },
 
@@ -330,7 +341,7 @@ module.exports = {
                     });
                 }
 
-                return Recipe.create(recipes)
+                return Recipe.create(recipes);
             })
             .then((recipes)=>{
                 for(let i = 0; i < recipes.length; i++){
