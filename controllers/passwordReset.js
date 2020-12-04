@@ -89,7 +89,13 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                req.session.error = "ERROR: UNABLE TO UPDATE YOUR PASSWORD AT THIS TIME";
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors.name.properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO UPDATE YOUR PASSWORD AT THIS TIME";
+                }
                 return res.redirect("/");
             });
     }
