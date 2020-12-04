@@ -9,7 +9,7 @@ const bcrypt = require("bcryptjs");
 
 module.exports = {
     /*
-    POST - Create a new merchant with no POS system
+    POST - Create a new merchant with no POS system1
     req.body = {
         name: retaurant name,
         email: registration email,
@@ -20,16 +20,19 @@ module.exports = {
     */
     createMerchantNone: async function(req, res){
         if(req.body.password.length < 10){
-            throw "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
+            req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
+            return res.redirect("/");
         }
 
         if(req.body.password !== req.body.confirmPassword){
-            throw "PASSWORDS DO NOT MATCH";
+            req.session.error = "PASSWORDS DO NOT MATCH";
+            return res.redirect("/");
         }
 
         const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
         if(merchantFind !== null){
-            throw "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
+            req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
+            return res.redirect("/");
         }
 
         let salt = bcrypt.genSaltSync(10);
