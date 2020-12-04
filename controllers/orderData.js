@@ -2,7 +2,6 @@ const Order = require("../models/order.js");
 const Merchant = require("../models/merchant.js");
 
 const ObjectId = require("mongoose").Types.ObjectId;
-const Validator = require("./validator.js");
 
 module.exports = {
     /*
@@ -119,11 +118,6 @@ module.exports = {
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
-        }
-
-        let validation = Validator.order(req.body);
-        if(validation !== true){
-            return res.json(validation);
         }
 
         let newOrder = new Order(req.body);

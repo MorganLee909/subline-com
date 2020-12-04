@@ -1,13 +1,8 @@
 const Merchant = require("../models/merchant");
 
-const ingredientData = require("./ingredientData.js");
-const recipeData = require("./recipeData.js");
-
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const path = require("path");
-const fs = require("fs");
-const xlsx = require("xlsx");
 
 module.exports = {
     /*
