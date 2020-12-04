@@ -203,7 +203,7 @@ module.exports = {
                 let orders = [];
                 let currentOrder = {};
                 for(let i = 1; i < array.length; i++){
-                    if(array[i].length === 0 || array[i][locations.ingredients] === undefined){
+                    if(array[i].length === 0 || array[i][locations.ingredients] === undefined || array[i][locations.quantity === 0]){
                         continue;
                     }
 
@@ -256,7 +256,9 @@ module.exports = {
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
-
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO CREATE YOUR ORDERS");
             });
     },
@@ -290,7 +292,6 @@ module.exports = {
                 ]);
 
                 for(let i = 1; i < merchant.inventory.length; i++){
-                    console.log("workbooking");
                     workbookData.push(["", "", "", "", merchant.inventory[i].ingredient.name, 0, 0]);
                 }
 
@@ -300,9 +301,7 @@ module.exports = {
                     fs.unlink("SublineOrder.xlsx", ()=>{});
                 });
             })
-            .catch((err)=>{
-                console.log(err)
-            });
+            .catch((err)=>{});
     },
 
     /*
