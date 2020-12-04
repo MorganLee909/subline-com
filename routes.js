@@ -75,8 +75,8 @@ module.exports = function(app){
 
     //Email verification
     app.get("/verify/email/:id", emailVerification.sendVerifyEmail);
-    app.get("/verify/:id", emailVerification.verifyPage);
-    app.post("/verify", emailVerification.verify);
+    app.post("/verify/resend", emailVerification.resendEmail);
+    app.get("/verify/:id/:code", emailVerification.verify);
 
     //Password reset
     app.get("/reset/email", passwordReset.enterEmail);

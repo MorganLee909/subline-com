@@ -3018,8 +3018,8 @@ module.exports = transactionFilter;
 },{}],19:[function(require,module,exports){
 let analytics = {
     isPopulated: false,
-    ingredient: {},
-    recipe: {},
+    ingredient: undefined,
+    recipe: undefined,
     transactionsByDate: [],
 
     display: function(Transaction){
@@ -3038,9 +3038,15 @@ let analytics = {
 
             this.populateButtons();
 
-            this.ingredient = merchant.ingredients[0].ingredient;
-            this.recipe = merchant.recipes[0];
+            let hasIngredients
 
+            if(merchant.ingredients.length > 0){
+                this.ingredient = merchant.ingredients[0].ingredient;
+            }
+            if(merchant.recipes.length > 0){
+                this.recipe = merchant.recipes[0];
+            }
+            
             this.newDates(Transaction);
             
             this.isPopulated = true;
@@ -3115,6 +3121,9 @@ let analytics = {
     },
 
     displayIngredient: function(ingredient){
+        if(this.ingredient === undefined  || this.transactionsByDate.length === 0){
+            return;
+        }
         //break down data into dates and quantities
         let dates = [];
         let quantities = [];
@@ -3187,6 +3196,10 @@ let analytics = {
     },
 
     displayRecipe: function(){
+        if(this.recipes === undefined || this.transactionsByDate.length === 0){
+            return;
+        }
+
         //break down data into dates and quantities
         let dates = [];
         let quantities = [];
@@ -3235,7 +3248,7 @@ let analytics = {
         avg = avg / quantities.length;
 
         document.getElementById("recipeAvgUse").innerText = avg.toFixed(2);
-        document.getElementById("recipeAvgRevenue").innerText = `$${(avg * this.recipe.price).toFixed(2)}`
+        document.getElementById("recipeAvgRevenue").innerText = `$${(avg * this.recipe.price).toFixed(2)}`;
     },
 
     switchDisplay: function(){

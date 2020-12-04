@@ -2,6 +2,7 @@ const Merchant = require("../models/merchant.js");
 
 const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 const verifyEmail = require("../emails/verifyEmail.js");
+const { db } = require("../models/merchant.js");
 
 module.exports = {
     sendVerifyEmail: function(req, res){
@@ -13,13 +14,13 @@ module.exports = {
                     subject: "Email verification",
                     html: verifyEmail({
                         name: merchant.name,
-                        link: `${process.env.SITE}/verify/${merchant._id}`,
-                        code: merchant.verifyId
+                        link: `${process.env.SITE}/verify/${merchant._id}/${merchant.verifyId}`,
                     })
                 };
                 mailgun.messages().send(mailgunData, (err, body)=>{});
 
-                return res.redirect(`/verify/${merchant._id}`);
+
+                return res.render(`verifyPage/verify`, {id: merchant._id, email: merchant.email});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO SEND VERIFICATION EMAIL";
@@ -27,17 +28,40 @@ module.exports = {
             });
     },
 
-    verifyPage: function(req, res){
-        return res.render("verifyPage/verify", {id: req.params.id});
+    resendEmail: function(req, res){
+        Merchant.findOne({email: req.body.email.toLowerCase()})
+            .then((merchant)=>{
+                if(merchant){
+                    throw "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
+                }
+
+                return Merchant.findOne({_id: req.body.id});
+            })
+            .then((merchant)=>{
+                merchant.email = req.body.email.toLowerCase();
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return res.redirect(`/verify/email/${merchant._id}`);
+            })
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO CHANGE YOUR EMAIL ADDRESS";
+                }
+                return res.redirect("/");
+            });
     },
 
     verify: function(req, res){
-        Merchant.findOne({_id: req.body.id})
+        Merchant.findOne({_id: req.params.id})
             .then((merchant)=>{
-                if(req.body.code !== merchant.verifyId){
-                    req.session.error = "INCORRECT CODE";
-                    
-                    return res.redirect(`/verify/${merchant._id}`);
+                if(req.params.code !== merchant.verifyId){
+                    throw "UNABLE TO VERIFY EMAIL ADDRESS.  INCORRECT LINK";
                 }
 
                 merchant.verifyId = undefined;
@@ -60,7 +84,11 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                req.session.error = "ERROR: UNABLE TO VERIFY EMAIL ADDRESS";
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO VERIFY EMAIL ADDRESS"
+                }
 
                 return res.redirect("/");
             });

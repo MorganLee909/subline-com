@@ -12,21 +12,17 @@
     <body>
         <% include ../shared/header %>
 
-        <h1 class="title">Verify your email address</h1>
+        <h1 class="title">An email has been sent to <%=email%>.  Use the link in the email to verify your account.</h1>
 
-        <p class="text">Please enter the 15 character code sent to your email address</p>
+        <p class="text">If you did not recieve an email or need to change your email address, enter it below and click submit.</p>
 
-        <form class="form" action="/verify" method="post">
-            <input class="code" name="code" type="text">
+        <form class="form" action="/verify/resend" method="post">
+            <input class="email" name="email" type="email" required>
 
             <input name="id" type="hidden" value="<%=id%>">
 
-            <input class="button" type="submit" value="VERIFY">
+            <input class="button" type="submit" value="SUBMIT">
         </form>
-
-        <p class="resend">Didn't recieve an email?</p>
-
-        <a href="/verify/email/<%=id%>">Resend email</a>
     </body>
 
     <script>
