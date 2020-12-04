@@ -3,6 +3,9 @@ const Merchant = require("../models/merchant.js");
 
 const ObjectId = require("mongoose").Types.ObjectId;
 
+const xlsx = require("xlsx");
+const fs = require("fs");
+
 module.exports = {
     /*
     GET - get the 25 most recent orders
@@ -273,24 +276,23 @@ module.exports = {
                 let workbook = xlsx.utils.book_new();
                 workbook.SheetNames.push("Order");
                 let workbookData = [];
+                let now = new Date().toISOString();
 
-                workbookData.push(["Name", "Date", "Taxes", "Fees", "Ingredients", "Quantity", "Price", "<- Price Per Unit", "Ingredient Reference"]);
+                workbookData.push(["Name", "Date", "Taxes", "Fees", "Ingredients", "Quantity", "Price", "<- Price Per Unit"]);
+                workbookData.push([
+                    "<<Order Name>>",
+                    now.slice(0, 10),
+                    0,
+                    0,
+                    merchant.inventory[0].ingredient.name,
+                    0,
+                    0
+                ]);
 
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    let data = ["", "", "", "", "", "", "", "", merchant.inventory[i].ingredient.name];
-                    workbookData.push(data);
+                for(let i = 1; i < merchant.inventory.length; i++){
+                    console.log("workbooking");
+                    workbookData.push(["", "", "", "", merchant.inventory[i].ingredient.name, 0, 0]);
                 }
-
-                workbookData[1][0] = "My Order Name";
-                workbookData[1][1] = "2020-02-29";
-                workbookData[1][2] = 10.99;
-                workbookData[1][3] = 5.98;
-                workbookData[1][4] = "Example ingredient 1";
-                workbookData[1][5] = 100;
-                workbookData[1][6] = 1.99;
-                workbookData[2][4] = "Example ingredient 2";
-                workbookData[2][5] = 55;
-                workbookData[2][6] = 0.95;
 
                 workbook.Sheets.Order = xlsx.utils.aoa_to_sheet(workbookData);
                 xlsx.writeFile(workbook, "SublineOrder.xlsx");
@@ -298,7 +300,9 @@ module.exports = {
                     fs.unlink("SublineOrder.xlsx", ()=>{});
                 });
             })
-            .catch((err)=>{});
+            .catch((err)=>{
+                console.log(err)
+            });
     },
 
     /*
