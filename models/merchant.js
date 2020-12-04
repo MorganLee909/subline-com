@@ -51,8 +51,7 @@ const MerchantSchema = new mongoose.Schema({
         },
         quantity: {
             type: Number,
-            required: [true, "INGREDIENT QUANTITY IS REQUIRED"],
-            min: [0, "QUANTITY CANNOT BE A NEGATIVE NUMBER"]
+            required: [true, "INGREDIENT QUANTITY IS REQUIRED"]
         },
         defaultUnit: {
             type: String,

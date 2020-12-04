@@ -2,6 +2,7 @@ const Transaction = require("../models/transaction");
 const Merchant = require("../models/merchant");
 
 const helper = require("./helper.js");
+
 const ObjectId = require("mongoose").Types.ObjectId;
 const xlsx = require("xlsx");
 const fs = require("fs");
@@ -153,7 +154,7 @@ module.exports = {
                 
                 let ingredients = [];
                 for(let i = 1; i < array.length; i++){
-                    if(array[i][locations.recipes] === undefined){
+                    if(array[i][locations.recipes] === undefined || array[i][locations.quantity === 0]){
                         continue;
                     }
 
@@ -202,7 +203,9 @@ module.exports = {
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
-
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO CREATE YOUR TRANSACTION");
             });
     },
@@ -219,18 +222,14 @@ module.exports = {
                 let workbook = xlsx.utils.book_new();
                 workbook.SheetNames.push("Transaction");
                 let workbookData = [];
+                let now = new Date().toISOString();
 
-                workbookData.push(["Date", "Recipes", "Quantity", "", "Recipes Reference"]);
+                workbookData.push(["Date", "Recipes", "Quantity"]);
+                workbookData.push([now.slice(0, 10), merchant.recipes[0].name, 0]);
 
-                for(let i = 0; i < merchant.recipes.length; i++){
-                    workbookData.push(["", "", "", "", merchant.recipes[i].name]);
+                for(let i = 1; i < merchant.recipes.length; i++){
+                    workbookData.push(["", merchant.recipes[i].name, 0]);
                 }
-
-                workbookData[1][0] = "2020-02-29";
-                workbookData[1][1] = "Example Recipe 1";
-                workbookData[1][2] = 12;
-                workbookData[2][1] = "Example Recipe 2";
-                workbookData[2][2] = 7;
 
                 workbook.Sheets.Transaction = xlsx.utils.aoa_to_sheet(workbookData);
                 xlsx.writeFile(workbook, "SublineTransaction.xlsx");
