@@ -2,7 +2,6 @@ const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 
-const validator = require("./validator.js");
 const helper = require("./helper.js");
 
 const axios = require("axios");
@@ -21,19 +20,16 @@ module.exports = {
     */
     createMerchantNone: async function(req, res){
         if(req.body.password.length < 10){
-            req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
-            return res.redirect("/");
+            throw "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
         }
 
         if(req.body.password !== req.body.confirmPassword){
-            req.session.error = "PASSWORDS DO NOT MATCH";
-            return res.redirect("/");
+            throw "PASSWORDS DO NOT MATCH";
         }
 
         const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
         if(merchantFind !== null){
-            req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
-            return res.redirect("/");
+            throw "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
         }
 
         let salt = bcrypt.genSaltSync(10);
@@ -57,9 +53,10 @@ module.exports = {
                 return res.redirect(`/verify/email/${merchant._id}`);
             })
             .catch((err)=>{
-                const error = err.errors.name.properties;
-                if(error.type === "user defined"){
-                    req.session.error = error.message;
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors.name.properties.message;
                 }else{
                     req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
                 }
@@ -115,7 +112,14 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors.name.properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
+                }
+                
                 return res.redirect("/");
             });
     },
@@ -196,7 +200,14 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                banner.createError("ERROR: UNABLE TO CREATE NEW USER AT THIS TIME");
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors.name.properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
+                }
+                return res.redirect("/");
             });
     },
 
@@ -247,9 +258,11 @@ module.exports = {
                 return;
             })
             .catch((err)=>{
-                const error = err.errors.name.properties;
-                if(error.type === "user defined" || error.type === "minlength"){
-                    return res.json(error.message);
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
                 }
                 return res.json("ERROR: UNABLE TO UPDATE DATA");
             });        
@@ -264,24 +277,16 @@ module.exports = {
     }
     */
     updatePassword: function(req, res){
-        let validation = validator.password(req.body.pass, req.body.confirmPass);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
-        if(req.body.pass.length < 10){
-            req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
-            return res.redirect("/");
-        }
-
-        if(req.body.pass !== req.body.confirmPass){
-            req.session.error = "PASSWORDS DO NOT MATCH";
-            return res.redirect("/");
-        }
-
         Merchant.findOne({password: req.body.hash})
             .then((merchant)=>{
                 if(merchant){
+                    if(req.body.pass.length < 10){
+                        throw "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
+                    }
+                    if(req.body.pass !== req.body.confirmPass){
+                        throw "PASSWORDS DO NOT MATCH";
+                    }
+
                     let salt = bcrypt.genSaltSync(10);
                     let hash = bcrypt.hashSync(req.body.pass, salt);
 
@@ -297,6 +302,14 @@ module.exports = {
                 req.session.error = "PASSWORD SUCCESSFULLY RESET. PLEASE LOG IN";
                 return res.redirect("/");
             })
-            .catch((err)=>{});
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
+                return res.json("ERROR: UNABLE TO UPDATE YOUR PASSWORD");
+            });
     }
 }
