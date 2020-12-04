@@ -149,6 +149,12 @@ module.exports = {
                 return res.json(response);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO CREATE NEW TRANSACTION");
             });
     },
@@ -192,6 +198,12 @@ module.exports = {
                 return merchant.save();
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors.name.properties.message);
+                }
                 return res.json("ERROR: UNABLE TO DELETE THE TRANSACTION");
             });
     },
