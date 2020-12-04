@@ -69,7 +69,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO CREATE THE INGREDIENT");
             });
@@ -140,7 +140,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO UDATE THE INGREDIENT");
             });
@@ -252,7 +252,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return "ERROR: UNABLE TO CREATE YOUR INGREDIENTS";
             });
@@ -308,7 +308,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });

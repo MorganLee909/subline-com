@@ -56,7 +56,7 @@ module.exports = {
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){
-                    req.session.error = err.errors.name.properties.message;
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
                 }else{
                     req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
                 }
@@ -115,7 +115,7 @@ module.exports = {
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){
-                    req.session.error = err.errors.name.properties.message;
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
                 }else{
                     req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
                 }
@@ -203,7 +203,7 @@ module.exports = {
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){
-                    req.session.error = err.errors.name.properties.message;
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
                 }else{
                     req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
                 }
@@ -262,7 +262,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO UPDATE DATA");
             });        
@@ -307,7 +307,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO UPDATE YOUR PASSWORD");
             });

@@ -48,7 +48,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO RETRIEVE YOUR ORDERS");
             });
@@ -100,7 +100,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO RETRIEVE YOUR TRANSACTIONS");
             });
@@ -135,7 +135,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO SAVE ORDER");
             });
@@ -258,7 +258,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO CREATE YOUR ORDERS");
             });
@@ -345,7 +345,7 @@ module.exports = {
                     return res.json(err);
                 }
                 if(err.name === "ValidationError"){
-                    return res.json(err.errors.name.properties.message);
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
                 return res.json("ERROR: UNABLE TO REMOVE ORDER");
             });

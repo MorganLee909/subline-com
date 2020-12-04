@@ -92,7 +92,7 @@ module.exports = {
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){
-                    req.session.error = err.errors.name.properties.message;
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
                 }else{
                     req.session.error = "ERROR: UNABLE TO UPDATE YOUR PASSWORD AT THIS TIME";
                 }
