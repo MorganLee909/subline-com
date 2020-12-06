@@ -197,6 +197,9 @@ module.exports = {
             }
 
             if(array[i][locations.bottle] === true){
+                let quantity = array[i][locations.quantity] * array[i][locations.bottleSize];
+                merchantItem.quantity = helper.convertQuantityToBaseUnit(quantity, array[i][locations.unit]);
+                
                 ingredient.unitType = "volume";
                 ingredient.specialUnit = "bottle";
                 ingredient.unitSize = helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);

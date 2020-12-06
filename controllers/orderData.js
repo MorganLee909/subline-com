@@ -6,6 +6,7 @@ const helper = require("./helper.js");
 const ObjectId = require("mongoose").Types.ObjectId;
 const xlsx = require("xlsx");
 const fs = require("fs");
+const { base } = require("../models/merchant.js");
 
 module.exports = {
     /*
