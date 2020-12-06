@@ -230,12 +230,26 @@ module.exports = {
                     let exists = false;
                     for(let j = 0; j < merchant.inventory.length; j++){
                         if(merchant.inventory[j].ingredient.name.toLowerCase() === array[i][locations.ingredients].toLowerCase()){
-                            const baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);
-                            currentOrder.ingredients.push({
-                                ingredient: merchant.inventory[j].ingredient._id,
-                                quantity: baseQuantity,
-                                pricePerUnit: helper.convertPrice(array[i][locations.price] * 100, merchant.inventory[j].defaultUnit)
-                            });
+                            let baseQuantity = 0;
+                            if(merchant.inventory[j].ingredient.specialUnit === "bottle"){
+                                baseQuantity = array[i][locations.quantity] * merchant.inventory[j].ingredient.unitSize * 1000;
+                                console.log(array[i][locations.price]);
+                                console.log((array[i][locations.price] * 100));
+                                console.log(merchant.inventory[j].ingredient.unitSize);
+                                console.log((array[i][locations.price] * 100) / merchant.inventory[j].ingredient.unitSize);
+                                currentOrder.ingredients.push({
+                                    ingredient: merchant.inventory[j].ingredient._id,
+                                    quantity: baseQuantity,
+                                    pricePerUnit: (array[i][locations.price] * 100) / merchant.inventory[j].ingredient.unitSize / 1000
+                                });
+                            }else{
+                                baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);
+                                currentOrder.ingredients.push({
+                                    ingredient: merchant.inventory[j].ingredient._id,
+                                    quantity: baseQuantity,
+                                    pricePerUnit: helper.convertPrice(array[i][locations.price] * 100, merchant.inventory[j].defaultUnit)
+                                });
+                            }
 
                             merchant.inventory[j].quantity += baseQuantity;
 
@@ -255,6 +269,7 @@ module.exports = {
                 return res.json(response[0]);
             })
             .catch((err)=>{
+                console.log(err);
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
