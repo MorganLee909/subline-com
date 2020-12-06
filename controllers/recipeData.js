@@ -1,9 +1,12 @@
-const axios = require("axios");
-
 const Recipe = require("../models/recipe.js");
 const Merchant = require("../models/merchant.js");
 const ArchivedRecipe = require("../models/archivedRecipe.js");
-const Validator = require("./validator.js");
+
+const helper = require("./helper.js");
+
+const axios = require("axios");
+const xlsx = require("xlsx");
+const fs = require("fs");
 
 module.exports = {
     /*
@@ -24,11 +27,6 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator.recipe(req.body);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
         let recipe = new Recipe({
             merchant: req.session.user,
             name: req.body.name,
@@ -36,26 +34,26 @@ module.exports = {
             ingredients: req.body.ingredients
         });
 
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                merchant.recipes.push(recipe);
-                merchant.save()
-                    .catch((err)=>{
-                        return res.json("ERROR: UNABLE TO SAVE RECIPE");
-                    });
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
-            });
-
         recipe.save()
             .then((newRecipe)=>{
                 return res.json(newRecipe);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
                 return res.json("ERROR: UNABLE TO SAVE INGREDIENT");
             });
+
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                merchant.recipes.push(recipe);
+                return merchant.save();
+            })
+            .catch((err)=>{});
     },
 
     /*
@@ -74,11 +72,6 @@ module.exports = {
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
-        }
-
-        let validation = Validator.recipe(req.body);
-        if(validation !== true){
-            return res.json(validation);
         }
 
         Recipe.findOne({_id: req.body.id})
@@ -101,6 +94,12 @@ module.exports = {
                 res.json(recipe);
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
                 return res.json("ERROR: UNABLE TO UPDATE RECIPE");
             });
     },
@@ -136,6 +135,12 @@ module.exports = {
                 return res.json({});
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },
@@ -202,12 +207,17 @@ module.exports = {
                 return res.json({new: newRecipes, removed: deletedRecipes});
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE MERCHANT DATA");
             });
     },
 
     updateRecipesSquare: function(req, res){
-        
         if(!req.session.user){
             req.session.error = "Must be logged in to do that";
             return res.redirect("/");
@@ -294,7 +304,170 @@ module.exports = {
                 return res.json({new: newRecipes, removed: merchantRecipes});
             })
             .catch((err)=>{
-                return "ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE";
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE");
             });
+    },
+
+    createFromSpreadsheet: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        //read file, get the correct sheet, create array from sheet
+        let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
+
+        let sheets = Object.keys(workbook.Sheets);
+        let sheet = {};
+        for(let i = 0; i < sheets.length; i++){
+            let str = sheets[i].toLowerCase();
+            if(str === "recipe" || str === "recipes"){
+                sheet = workbook.Sheets[sheets[i]];
+            }
+        }
+
+        const array = xlsx.utils.sheet_to_json(sheet, {
+            header: 1
+        });
+
+        //get property locations
+        let locations = {};
+        for(let i = 0; i < array[0].length; i++){
+            switch(array[0][i].toLowerCase()){
+                case "name": locations.name = i; break;
+                case "price": locations.price = i; break;
+                case "ingredients": locations.ingredient = i; break;
+                case "ingredient amount": locations.amount = i; break;
+            }
+        }
+
+        let merchant = {};
+        let ingredients = [];
+        Merchant.findOne({_id: req.session.user})
+            .populate("inventory.ingredient")
+            .then((response)=>{
+                merchant = response;
+
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    ingredients.push({
+                        id: merchant.inventory[i].ingredient._id,
+                        name: merchant.inventory[i].ingredient.name.toLowerCase(),
+                        unit: merchant.inventory[i].defaultUnit
+                    });
+                }
+
+                let recipes = [];
+                let currentRecipe = {};
+                for(let i = 1; i < array.length; i++){
+                    if(array[i].length === 0){
+                        continue;
+                    }
+
+                    if(array[i][locations.name] !== undefined){
+                        currentRecipe = {
+                            merchant: req.session.user,
+                            name: array[i][locations.name],
+                            price: parseInt(array[i][locations.price] * 100),
+                            ingredients: []
+                        }
+
+                        recipes.push(currentRecipe);
+                    }
+
+                    let exists = false;
+                    for(let j = 0; j < ingredients.length; j++){
+                        if(ingredients[j].name === array[i][locations.ingredient]){
+                            currentRecipe.ingredients.push({
+                                ingredient: ingredients[j].id,
+                                quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)
+                            });
+
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if(exists === false){
+                        throw `CANNOT FIND INGREDIENT ${array[i][locations.ingredient]} FROM RECIPE ${array[i][locations.name]}`;
+                    }
+                }
+                
+                return Recipe.create(recipes);
+            })
+            .then((response)=>{
+                recipes = response;
+
+                for(let i = 0; i < recipes.length; i++){
+                    merchant.recipes.push(recipes[i]._id);
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return res.json(recipes);
+            })
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO CREATE YOUR INGREDIENTS");
+            });
+    },
+
+    spreadsheetTemplate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+        
+        Merchant.findOne({_id: req.session.user})
+            .populate("inventory.ingredient")
+            .then((merchant)=>{
+                let workbook = xlsx.utils.book_new();
+                workbook.SheetNames.push("Recipes");
+                let workbookData = [];
+
+                workbookData.push(["Name", "Price", "Ingredients", "Ingredient Amount", "", "Ingredients Reference", "Ingredient Unit"]);
+                
+                for(let i = 0; i < merchant.inventory.length; i++){
+                    workbookData.push(["", "", "", "", "", merchant.inventory[i].ingredient.name, merchant.inventory[i].defaultUnit]);
+                }
+
+                if(workbookData.length < 5){
+                    for(let i = workbookData.length - 1; i < 5; i++){
+                        workbookData.push(["", "", "", ""]);
+                    }
+                }
+
+                workbookData[1][0] = "Example Recipe 1";
+                workbookData[1][1] = 10.98;
+                workbookData[1][2] = "Example Ingredient 1";
+                workbookData[1][3] = 1.2;
+                workbookData[2][2] = "Example Ingredient 2";
+                workbookData[2][3] =  0.55;
+                workbookData[3][0] = "Example Recipe 2";
+                workbookData[3][1] = 5.54;
+                workbookData[3][2] = "Example Ingredient 3";
+                workbookData[3][3] = 1;
+                workbookData[4][2] = "Example Ingredient 4";
+                workbookData[4][3] = 1.53; 
+
+                workbook.Sheets.Recipes = xlsx.utils.aoa_to_sheet(workbookData);
+                xlsx.writeFile(workbook, "SublineRecipes.xlsx");
+                return res.download("SublineRecipes.xlsx", (err)=>{
+                    fs.unlink("SublineRecipes.xlsx", ()=>{});
+                });
+            })
+            .catch((err)=>{});
     }
 }

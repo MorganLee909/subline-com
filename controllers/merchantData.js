@@ -1,15 +1,15 @@
-const axios = require("axios");
-const bcrypt = require("bcryptjs");
-
 const Merchant = require("../models/merchant");
 const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
-const Validator = require("./validator.js");
-const Helper = require("./helper.js");
+
+const helper = require("./helper.js");
+
+const axios = require("axios");
+const bcrypt = require("bcryptjs");
 
 module.exports = {
     /*
-    POST - Create a new merchant with no POS system
+    POST - Create a new merchant with no POS system1
     req.body = {
         name: retaurant name,
         email: registration email,
@@ -19,43 +19,53 @@ module.exports = {
     Redirects to /dashboard
     */
     createMerchantNone: async function(req, res){
-        let validation =  await Validator.merchant(req.body);
-        if(validation !== true){
-            req.session.error = validation;
+        if(req.body.password.length < 10){
+            req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
             return res.redirect("/");
         }
 
-        if(req.body.password === req.body.confirmPassword){
-            let salt = bcrypt.genSaltSync(10);
-            let hash = bcrypt.hashSync(req.body.password, salt);
-
-            let merchant = new Merchant({
-                name: req.body.name,
-                email: req.body.email.toLowerCase(),
-                password: hash,
-                pos: "none",
-                lastUpdatedTime: Date.now(),
-                createdAt: Date.now(),
-                status: ["unverified"],
-                inventory: [],
-                recipes: [],
-                verifyId: Helper.generateId(15)
-            });
-
-            merchant.save()
-                .then((merchant)=>{
-                    return res.redirect(`/verify/email/${merchant._id}`);
-                })
-                .catch((err)=>{
-                    req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
-
-                    return res.redirect("/");
-                });
-        }else{
+        if(req.body.password !== req.body.confirmPassword){
             req.session.error = "PASSWORDS DO NOT MATCH";
-
             return res.redirect("/");
         }
+
+        const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
+        if(merchantFind !== null){
+            req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
+            return res.redirect("/");
+        }
+
+        let salt = bcrypt.genSaltSync(10);
+        let hash = bcrypt.hashSync(req.body.password, salt);
+
+        let merchant = new Merchant({
+            name: req.body.name,
+            email: req.body.email.toLowerCase(),
+            password: hash,
+            pos: "none",
+            lastUpdatedTime: Date.now(),
+            createdAt: Date.now(),
+            status: ["unverified"],
+            inventory: [],
+            recipes: [],
+            verifyId: helper.generateId(15)
+        });
+
+        merchant.save()
+            .then((merchant)=>{
+                return res.redirect(`/verify/email/${merchant._id}`);
+            })
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO CREATE ACCOUNT AT THIS TIME";
+                }
+                
+                return res.redirect("/");
+            });
     },
 
     /*
@@ -105,7 +115,14 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
+                }
+                
                 return res.redirect("/");
             });
     },
@@ -186,32 +203,14 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                banner.createError("ERROR: UNABLE TO CREATE NEW USER AT THIS TIME");
-            });
-    },
-
-    //PUT - Update the default unit for a single ingredient
-    ingredientDefaultUnit: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(merchant.inventory[i].ingredient.toString() === req.params.id){
-                        merchant.inventory[i].defaultUnit =req.params.unit;
-                    }
+                if(typeof(err) === "string"){
+                    req.session.error = err;
+                }else if(err.name === "ValidationError"){
+                    req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
+                }else{
+                    req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
                 }
-
-                return merchant.save()
-            })
-            .then((merchant)=>{
-                return res.json({});
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO UPDATE DEFAULT UNIT");
+                return res.redirect("/");
             });
     },
 
@@ -228,21 +227,15 @@ module.exports = {
             return res.redirect("/");
         }
 
-        for(let i = 0; i < req.body.length; i++){
-            let validation = Validator.quantity(req.body[i].quantity);
-            if(validation !== true){
-                return res.json(validation);
-            }
-        }
-
         let adjustments = [];
-
+        let changedIngredients = [];
         Merchant.findOne({_id: req.session.user})
+            .populate("inventory.ingredient")
             .then((merchant)=>{
                 for(let i = 0; i < req.body.length; i++){
                     let updateIngredient;
                     for(let j = 0; j < merchant.inventory.length; j++){
-                        if(merchant.inventory[j].ingredient.toString() === req.body[i].id){
+                        if(merchant.inventory[j].ingredient._id.toString() === req.body[i].id){
                             updateIngredient = merchant.inventory[j];
                             break;
                         }
@@ -255,18 +248,25 @@ module.exports = {
                         quantity: req.body[i].quantity - updateIngredient.quantity,
                     }));
 
-                    updateIngredient.quantity = req.body[i].quantity;
+                    updateIngredient.quantity = helper.convertQuantityToBaseUnit(req.body[i].quantity, updateIngredient.defaultUnit);
+                    changedIngredients.push(updateIngredient);
                 }
 
                 return merchant.save();
             })
             .then((newMerchant)=>{
-                res.json({});
+                res.json(changedIngredients);
 
                 InventoryAdjustment.create(adjustments).catch(()=>{});
                 return;
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
                 return res.json("ERROR: UNABLE TO UPDATE DATA");
             });        
     },
@@ -280,14 +280,16 @@ module.exports = {
     }
     */
     updatePassword: function(req, res){
-        let validation = Validator.password(req.body.pass, req.body.confirmPass);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
         Merchant.findOne({password: req.body.hash})
             .then((merchant)=>{
                 if(merchant){
+                    if(req.body.pass.length < 10){
+                        throw "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
+                    }
+                    if(req.body.pass !== req.body.confirmPass){
+                        throw "PASSWORDS DO NOT MATCH";
+                    }
+
                     let salt = bcrypt.genSaltSync(10);
                     let hash = bcrypt.hashSync(req.body.pass, salt);
 
@@ -303,6 +305,14 @@ module.exports = {
                 req.session.error = "PASSWORD SUCCESSFULLY RESET. PLEASE LOG IN";
                 return res.redirect("/");
             })
-            .catch((err)=>{});
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO UPDATE YOUR PASSWORD");
+            });
     }
 }

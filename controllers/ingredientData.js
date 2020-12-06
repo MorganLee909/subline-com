@@ -2,23 +2,12 @@ const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 
-const Helper = require("./helper.js");
-const Validator = require("./validator.js");
+const helper = require("./helper.js");
+
+const xlsx = require("xlsx");
+const fs = require("fs");
 
 module.exports = {
-    //GET - gets a list of all database ingredients
-    //Returns:
-    //  ingredients: list containing all ingredients
-    getIngredients: function(req, res){
-        Ingredient.find()
-            .then((ingredients)=>{
-                return res.json(ingredients);
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE INGREDIENTS");
-            });
-    },
-
     /*
     POST - create a single ingredient and then add to the merchant
     req.body = {
@@ -39,23 +28,6 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let validation = Validator.ingredient(req.body.ingredient);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
-        validation = Validator.quantity(req.body.quantity);
-        if(validation !== true){
-            return res.json(validation);
-        }
-
-        if(req.body.ingredient.unitSize){
-            validation = Validator.quantity(req.body.ingredient.unitSize);
-            if(validation !== true){
-                return res.json(validation);
-            }
-        }
-
         let newIngredient = {};
         if(req.body.ingredient.specialUnit === "bottle"){
             newIngredient = new Ingredient({
@@ -63,7 +35,7 @@ module.exports = {
                 category: req.body.ingredient.category,
                 unitType: req.body.ingredient.unitType,
                 specialUnit: req.body.ingredient.specialUnit,
-                unitSize: Helper.convertQuantityToBaseUnit(req.body.ingredient.unitSize, req.body.defaultUnit)
+                unitSize: helper.convertQuantityToBaseUnit(req.body.ingredient.unitSize, req.body.defaultUnit)
             });
         }else{
             newIngredient = new Ingredient(req.body.ingredient);
@@ -82,7 +54,7 @@ module.exports = {
                 if(response[0].specialUnit === "bottle"){
                     newIngredient.quantity = req.body.quantity * response[0].unitSize;
                 }else{
-                    newIngredient.quantity = Helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
+                    newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
                 }
 
                 response[1].inventory.push(newIngredient);
@@ -93,7 +65,13 @@ module.exports = {
                 return res.json(newIngredient);
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO CREATE NEW INGREDIENT");
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO CREATE THE INGREDIENT");
             });
     },
 
@@ -113,17 +91,12 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-
-        const ingredientCheck = Validator.ingredient(req.body);
-        if(ingredientCheck !== true){
-            return res.json(ingredientCheck);
-        }
-
         let updatedIngredient = {};
         Ingredient.findOne({_id: req.body.id})
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
                 ingredient.category = req.body.category
+                //TODO: Handle this in the class
                 if(ingredient.specialUnit === "bottle"){
                     ingredient.unitSize = req.body.unitSize;
                 }
@@ -150,7 +123,7 @@ module.exports = {
                             merchant.inventory[i].quantity = req.body.quantity;
                         }
 
-                        updatedIngredient.quantity = req.body.quantity;
+                        updatedIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.unit);
                         updatedIngredient.unit = req.body.unit;
                         
                         break;
@@ -163,8 +136,147 @@ module.exports = {
                 return res.json(updatedIngredient);
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO UPDATE INGREDIENT");
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO UDATE THE INGREDIENT");
             });
+    },
+
+    createFromSpreadsheet: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        //read file, get the correct sheet, create array from sheet
+        let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
+
+        let sheets = Object.keys(workbook.Sheets);
+        let sheet = {};
+        for(let i = 0; i < sheets.length; i++){
+            let str = sheets[i].toLowerCase();
+            if(str === "ingredient" || str === "ingredients"){
+                sheet = workbook.Sheets[sheets[i]];
+            }
+        }
+        const array = xlsx.utils.sheet_to_json(sheet, {
+            header: 1
+        });
+
+        //get property locations
+        let locations = {};
+        for(let i = 0; i < array[0].length; i++){
+            switch(array[0][i].toLowerCase()){
+                case "name": locations.name = i; break;
+                case "category": locations.category = i; break;
+                case "quantity": locations.quantity = i; break;
+                case "unit": locations.unit = i; break;
+                case "bottle": locations.bottle = i; break;
+                case "bottle size": locations.bottleSize = i; break;
+            }
+        }
+
+        //Create ingredients
+        let ingredients = [];
+        let merchantData = [];
+        for(let i = 1; i < array.length; i++){
+            let ingredient = new Ingredient({
+                name: array[i][locations.name],
+                category: array[i][locations.category]
+            });
+
+            let merchantItem = {
+                ingredient: ingredient,
+                quantity: helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
+                defaultUnit: array[i][locations.unit]
+            }
+
+            if(array[i][locations.bottle] === true){
+                ingredient.unitType = "volume";
+                ingredient.specialUnit = "bottle";
+                ingredient.unitSize = helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);
+            }else{
+                let unitType = "";
+                //TODO: this should probably be in a helper
+                switch(array[i][locations.unit].toLowerCase()){
+                    case "g": unitType = "mass"; break;
+                    case "kg": unitType = "mass"; break;
+                    case "oz": unitType = "mass"; break;
+                    case "lb": unitType = "mass"; break;
+                    case "ml": unitType = "volume"; break;
+                    case "l": unitType = "volume"; break;
+                    case "tsp": unitType = "volume"; break;
+                    case "tbsp": unitType = "volume"; break;
+                    case "ozfl": unitType = "volume"; break;
+                    case "cup": unitType = "volume"; break;
+                    case "pt": unitType = "volume"; break;
+                    case "qt": unitType = "volume"; break;
+                    case "gal": unitType = "volume"; break;
+                    case "mm": unitType = "length"; break;
+                    case "cm": unitType = "length"; break;
+                    case "m": unitType = "length"; break;
+                    case "in": unitType = "length"; break;
+                    case "ft": unitType = "length"; break;
+                    default: unitType = "other";
+                }
+
+                ingredient.unitType = unitType;
+            }
+
+            merchantData.push(merchantItem);
+            ingredients.push(ingredient);
+        }
+
+        //Update the database
+        Ingredient.create(ingredients)
+            .then((ingredients)=>{
+                return Merchant.findOne({_id: req.session.user});
+            })
+            .then((merchant)=>{
+                for(let i = 0; i < merchantData.length; i++){
+                    merchant.inventory.push(merchantData[i]);
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return res.json(merchantData);
+            })
+            .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return "ERROR: UNABLE TO CREATE YOUR INGREDIENTS";
+            });
+    },
+
+    spreadsheetTemplate: function(req, res){
+        if(!req.session.user){
+            req.session.error = "MUST BE LOGGED IN TO DO THAT";
+            return res.redirect("/");
+        }
+
+        let workbook = xlsx.utils.book_new();
+        workbook.SheetNames.push("Ingredients");
+        let workbookData = [];
+
+        workbookData.push(["Name", "Category", "Quantity", "Unit", "Bottle", "Bottle Size"]);
+        workbookData.push(["Example Ingredient 1", "Produce", 100, "lbs"]);
+        workbookData.push(["Example Ingredient Two", "Beverage", 5, "ml", "TRUE", 750]);
+
+        workbook.Sheets.Ingredients = xlsx.utils.aoa_to_sheet(workbookData);
+        xlsx.writeFile(workbook, "SublineIngredients.xlsx");
+        return res.download("SublineIngredients.xlsx", (err)=>{
+            fs.unlink("SublineIngredients.xlsx", ()=>{});
+        });
     },
 
     //DELETE - Removes an ingredient from the merchant's inventory
@@ -192,6 +304,12 @@ module.exports = {
                 return res.json({});
             })
             .catch((err)=>{
+                if(typeof(err) === "string"){
+                    return res.json(err);
+                }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
     },

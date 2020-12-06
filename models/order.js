@@ -1,39 +1,42 @@
+const isSanitary = require("../controllers/helper.js").isSanitary;
+
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema({
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
-        required: true
+        required: [true, "MUST PROVIDE THE MERCHANT"]
     },
-    name: String,
+    name: {
+        type: String,
+        minlength: [2, "ORDER NAME MUST CONTAIN AT LEAST 2 CHARACTERS"],
+        validate: {
+            validator: isSanitary,
+            message: "ORDER NAME CONTAINS ILLEGAL CHARACTERS"
+        }
+    },
     date: {
         type: Date,
         default: Date.now,
-        required: true
+        required: [true, "MUST PROVIDE A DATE FOR THE ORDER"]
     },
-    taxes: {
-        type: Number,
-        required: true
-    },
-    fees: {
-        type: Number,
-        required: true
-    },
+    taxes: Number,
+    fees: Number,
     ingredients: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Ingredient",
-            required: true
+            required: [true, "MUST PROVIDE THE INGREDIENT"]
         },
         quantity: {
             type: Number,
-            required: true,
-            min: 0
+            required: [true, "MUST PROVIDE THE QUANTITY FOR EVERY INGREDIENT IN THE ORDER"],
+            min: [0, "INGREDIENT QUANTITY IN AN ORDER CANNOT BE LESS THAN 0"]
         },
         pricePerUnit: {
             type: Number,
-            min: 0
+            min: [0, "PRICE PER UNIT CANNOT BE A NEGATIVE NUMBER"]
         }
     }]
 });

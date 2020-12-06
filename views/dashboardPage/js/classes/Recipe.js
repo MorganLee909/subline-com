@@ -111,8 +111,9 @@ class Recipe{
         this._ingredients = [];
 
         for(let i = 0; i < ingredients.length; i++){
+            const ingredient = parent.getIngredient(ingredients[i].ingredient);
             const recipeIngredient = new RecipeIngredient(
-                ingredients[i].ingredient,
+                ingredient.ingredient,
                 ingredients[i].quantity
             );
 

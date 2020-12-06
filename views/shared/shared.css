@@ -159,6 +159,7 @@ form{
     font-size: 20px;
     font-weight: bold;
     min-width: 100px;
+    margin: 5px;
 } 
 
     .buttonWithBorder {
@@ -177,17 +178,29 @@ form{
 }
 
 .button-small{
-    background: none;
-    border: 2px solid rgb(255, 99, 107);
+    background: rgb(255, 99, 107);
+    border: none;
     text-decoration: none;
-    border-radius: 10px;
-    padding: 3px 5px;
-    color: #001b2d;
-    cursor: pointer;
+    border-radius: 4px;
+    margin: 5px;
+    padding: 3px;
+    color: white;
+    transition: 0.3s;
+    text-align: center;
     font-size: 15px;
-    box-shadow: 1px 1px 1px black;
-    margin: 0 2px;
-    transition: 0.3s; 
+    font-weight: bold;
+    min-width: 100px;
+    cursor: pointer;
+}
+
+.linkButton{
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 15px;
 }
 
 .public-buttons {

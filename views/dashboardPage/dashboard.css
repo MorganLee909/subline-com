@@ -151,6 +151,28 @@ Multi-strand use classes
             font-weight: bold;
         }
 
+.fileUpload{
+    background: rgb(240, 252, 255);
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+    .fileUpload::file-selector-button{
+        background: rgb(0, 27, 45);
+        border-radius: 5px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        margin: auto 0;
+    }
+
+        .fileUpload::file-selector-button:hover{
+            background: rgb(201, 201, 201);
+            color: black;
+        }
+
 /* 
 Home Strand 
 */
@@ -532,6 +554,42 @@ Transactions Strand
         overflow-y: auto;
         margin-top: 50px;
     }
+
+/*
+Modal
+*/
+.modal{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 27, 45, 0.75);
+}
+
+    .modalBox{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+        .modalBox svg{
+            color: rgb(255, 99, 107);
+            cursor: pointer;
+        }
+
+        .modalSpreadsheetUpload{
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0;
+            padding: 25px;
+        }
+
+            .modalSpreadsheetUpload > *{
+                margin-top: 15px;
+            }
 
 @media screen and (max-width: 1000px){
     body{

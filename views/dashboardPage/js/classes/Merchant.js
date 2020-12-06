@@ -1,10 +1,9 @@
+const Order = require("./Order.js");
+const Recipe = require("./Recipe.js");
+const Transaction = require("./Transaction.js");
+
 class MerchantIngredient{
     constructor(ingredient, quantity){
-        if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
-            return false;
-        }
-        
         this._quantity = quantity;
         this._ingredient = ingredient;
     }
@@ -123,7 +122,7 @@ class Merchant{
                 for(let k = 0; k < this._ingredients.length; k++){
                     if(ingredient.ingredient === this._ingredients[k].ingredient.id){
                         ingredients.push({
-                            ingredient: this._ingredients[k].ingredient,
+                            ingredient: this._ingredients[k].ingredient.id,
                             quantity: ingredient.quantity
                         });
                         break;
@@ -174,8 +173,31 @@ class Merchant{
         return this._ingredients;
     }
 
-    addIngredient(ingredient, quantity){
-        const merchantIngredient = new MerchantIngredient(ingredient, quantity);
+    /*
+    ingredient: {
+        _id: String,
+        name: String,
+        category: String,
+        unitType: String,
+        specialUnit: String || undefined,
+        unitSize: Number || undefined
+    }
+    quantity: Number
+    defaultUnit: String
+    */
+    addIngredient(ingredient, quantity, defaultUnit){
+        const createdIngredient = new this._modules.Ingredient(
+            ingredient._id,
+            ingredient.name,
+            ingredient.category,
+            ingredient.unitType,
+            defaultUnit,
+            this,
+            ingredient.specialUnit,
+            ingredient.unitSize
+        )
+
+        const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);
 
         this._modules.home.isPopulated = false;
@@ -194,18 +216,6 @@ class Merchant{
         this._modules.ingredients.isPopulated = false;
     }
 
-    updateIngredient(ingredient, quantity){
-        const index = this._ingredients.indexOf(ingredient);
-        if(index === undefined){
-            return false;
-        }
-
-        this._ingredients[index].quantity = quantity;
-
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
-    }
-
     getIngredient(id){
         for(let i = 0; i < this._ingredients.length; i++){
             if(this._ingredients[i].ingredient.id === id){
@@ -218,7 +228,9 @@ class Merchant{
         return this._recipes;
     }
 
-    addRecipe(recipe){
+    addRecipe(id, name, price, ingredients){
+        let recipe = new Recipe(id, name, price, ingredients, this);
+
         this._recipes.push(recipe);
 
         this._modules.recipeBook.isPopulated = false;
@@ -272,6 +284,10 @@ class Merchant{
         this._modules.recipeBook.isPopulated = false;
     }
 
+    get transactions(){
+        return this._transactions;
+    }
+
     getTransactions(from = 0, to = new Date()){
         if(merchant._transactions.length <= 0){
             return [];
@@ -287,6 +303,13 @@ class Merchant{
     }
 
     addTransaction(transaction){
+        transaction = new Transaction(
+            transaction._id,
+            transaction.date,
+            transaction.recipes,
+            this
+        );
+
         this._transactions.push(transaction);
         this._transactions.sort((a, b)=>{
             if(a.date > b.date){
@@ -362,7 +385,17 @@ class Merchant{
         return this._orders;
     }
 
-    addOrder(order, isNew = false){
+    addOrder(data, isNew = false){
+        let order = new Order(
+            data._id,
+            data.name,
+            data.date,
+            data.taxes,
+            data.fees,
+            data.ingredients,
+            this
+        );
+
         this._orders.push(order);
 
         if(isNew){

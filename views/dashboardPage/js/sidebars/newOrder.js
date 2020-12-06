@@ -2,6 +2,7 @@ let newOrder = {
     display: function(Order){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("newOrderIngredientList").style.display = "flex";
+        document.getElementById("orderFileUpload").addEventListener("click", ()=>{controller.openModal("orderSpreadsheet")});
 
         let selectedList = document.getElementById("selectedIngredientList");
         while(selectedList.children.length > 0){
@@ -31,6 +32,7 @@ let newOrder = {
         div.ingredient = ingredient;
         div.children[0].children[1].onclick = ()=>{this.removeIngredient(div, element)};
 
+        //TODO: this should be handled by the class
         //Display units depending on the whether it is a special unit
         if(ingredient.ingredient.specialUnit === "bottle"){
             div.children[0].children[0].innerText = `${ingredient.ingredient.name} (BOTTLES)`;
@@ -108,17 +110,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    let order = new Order(
-                        response._id,
-                        response.name,
-                        response.date,
-                        response.taxes,
-                        response.fees,
-                        response.ingredients,
-                        merchant
-                    );
-
-                    merchant.addOrder(order, true);
+                    merchant.addOrder(response, true);
                     
                     controller.openStrand("orders", merchant.orders);
                     banner.createNotification("NEW ORDER CREATED");
@@ -132,6 +124,7 @@ let newOrder = {
             });
     },
 
+    //TODO: Remove this function, it should be on the order
     convertPrice: function(ingredient, price){
         if(ingredient.specialUnit === "bottle"){
             return price / ingredient.unitSize;
@@ -157,6 +150,42 @@ let newOrder = {
             case "in": return price * 39.3701; 
             case "ft": return price * 3.2808; 
         }
+    },
+
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("orders", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/orders/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addOrder(response[i], true);
+                    }
+
+                    banner.createNotification("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY");
+                    controller.openStrand("orders");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("UNABLE TO DISPLAY NEW ORDER. PLEASE REFRESH THE PAGE.");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 

@@ -15,6 +15,7 @@ let newRecipe = {
 
         document.getElementById("ingredientCount").onchange = ()=>{this.changeIngredientCount(categories)};
         document.getElementById("submitNewRecipe").onclick = ()=>{this.submit(Recipe)};
+        document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
     },
 
     //Updates the number of ingredient inputs displayed for new recipes
@@ -108,13 +109,12 @@ let newRecipe = {
                         }
                     }
 
-                    merchant.addRecipe(new Recipe(
+                    merchant.addRecipe(
                         response._id,
                         response.name,
                         response.price,
-                        ingredients,
-                        merchant
-                    ));
+                        ingredients
+                    );
 
                     banner.createNotification("RECIPE CREATED");
                     controller.openStrand("recipeBook");
@@ -127,6 +127,47 @@ let newRecipe = {
                 loader.style.display = "none";
             });
     },
+
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("recipes", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipes/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "String"){
+                    banner.createError(response);
+                }else{
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addRecipe(
+                            response[i]._id,
+                            response[i].name,
+                            response[i].price,
+                            response[i].ingredients
+                        );
+                    }
+
+                    banner.createNotification("ALL INGREDIENTS SUCCESSFULLY CREATED");
+                    controller.openStrand("recipeBook");
+                }
+            })
+            .catch((err)=>{
+                banner.createError("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    }
 }
 
 module.exports = newRecipe;

@@ -8,10 +8,8 @@ module.exports = (data)=>{
             </header>
 
             <h1 style="text-align:center;">Email Verification for ${data.name}</h1>
-
-            <p>Please enter the following code on the previous page.  Or use the link below to reopen the page.</p>
-
-            <p>CODE: ${data.code}</p>
+            
+            <p>Use the following link to verify your email:</p>
 
             <p>${data.link}</p>
         </div>

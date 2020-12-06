@@ -64,6 +64,24 @@ class Transaction{
     get recipes(){
         return this._recipes;
     }
+
+    /*
+    Gets the quantity for a given ingredient
+    */
+    getIngredientQuantity(ingredient){
+        let quantity = 0;
+
+        for(let i = 0; i < this._recipes.length; i++){
+            const recipe = this._recipes[i].recipe;
+            for(let j = 0; j < recipe.ingredients.length; j++){
+                if(recipe.ingredients[j].ingredient === ingredient){
+                    quantity += recipe.ingredients[j].quantity;
+                }
+            }
+        }
+
+        return quantity;
+    }
 }
 
 module.exports = Transaction;

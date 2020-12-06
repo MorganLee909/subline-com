@@ -1,10 +1,8 @@
+const Merchant = require("../models/merchant");
+
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const path = require("path");
-const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
-const VerifyEmail = require("../emails/verifyEmail.js");
-
-const Merchant = require("../models/merchant");
 
 module.exports = {
     /*

@@ -231,7 +231,7 @@
                         <span class="slider"><p>INGREDIENTS</p><p>RECIPES</p></span>
                     </label>
 
-                    <div>
+                    <!-- <div>
                         <label>FROM:
                             <input id="analStartDate" type="date">
                         </label>
@@ -241,11 +241,23 @@
                         </label>
     
                         <button id="analDateBtn" class="button">SUBMIT</button>
+                    </div> -->
+
+                    <div class="dateRange">
+                        <h3>Date Range:</h3>
+                        <div class="dateRangeInput">
+                            <input id="analStartDate" type="date">
+                            <p> - </p>
+                            <input id="analEndDate" type="date">
+                        </div>
+
+                        <button id="analDateBtn" class="button-small">SUBMIT</button>
                     </div>
+                    
                 </div>
 
                 <div id="analIngredientContent" class="analContent">
-                    <ul id="itemsList" class="itemsList"></ul>
+                    <div id="analIngredientList" class="itemsList"></div>
 
                     <div class="analData">
                         <div id="itemUseGraph" class="card analCard"></div>
@@ -402,6 +414,7 @@
         </div>
 
         <% include ../shared/loader %>
+        <% include ./modal %>
 
         <script>
             let data = {

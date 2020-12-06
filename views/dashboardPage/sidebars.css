@@ -377,10 +377,6 @@ Add Recipe
                 color: rgb(255, 99, 107);
             }
 
-    #addRecipe button:last-of-type{
-        margin-top: auto;
-    }
-
 /*
 EDIT RECIPE
 */
@@ -532,6 +528,11 @@ EDIT RECIPE
 
     #newIngredient .button{
         margin: 15px auto;
+    }
+
+    #newIngredient h2{
+        text-align: center;
+        margin-bottom: 25px;
     }
 
 /* Order Details */

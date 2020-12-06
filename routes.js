@@ -9,6 +9,9 @@ const informationPages = require("./controllers/informationPages.js");
 const emailVerification = require("./controllers/emailVerification.js");
 const passwordReset = require("./controllers/passwordReset.js");
 
+const multer = require("multer");
+const upload = multer({dest: "uploads/"});
+
 module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
@@ -19,15 +22,16 @@ module.exports = function(app){
     app.post("/merchant/create/none", merchantData.createMerchantNone);
     app.get("/merchant/create/clover", merchantData.createMerchantClover);
     app.get("/merchant/create/square", merchantData.createMerchantSquare);
-    app.put("/merchant/ingredients/update/:id/:unit", merchantData.ingredientDefaultUnit);
     app.put("/merchant/ingredients/update", merchantData.updateMerchantIngredient); //also updates some data in ingredients
     app.post("/merchant/password", merchantData.updatePassword);
 
     //Ingredients
-    app.get("/ingredients", ingredientData.getIngredients);
     app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", ingredientData.updateIngredient);
+    app.post("/ingredients/create/spreadsheet", upload.single("ingredients"), ingredientData.createFromSpreadsheet);
+    app.get("/ingredients/download/spreadsheet", ingredientData.spreadsheetTemplate);
     app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
+    
 
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);
@@ -35,18 +39,24 @@ module.exports = function(app){
     app.delete("/recipe/remove/:id", recipeData.removeRecipe);
     app.get("/recipe/update/clover", recipeData.updateRecipesClover);
     app.get("/recipe/update/square", recipeData.updateRecipesSquare);
+    app.post("/recipes/create/spreadsheet", upload.single("recipes"), recipeData.createFromSpreadsheet);
+    app.get("/recipes/download/spreadsheet", recipeData.spreadsheetTemplate);
 
     //Orders
     app.get("/order", orderData.getOrders);
     app.post("/order", orderData.orderFilter);
     app.post("/order/create", orderData.createOrder);
+    app.post("/orders/create/spreadsheet", upload.single("orders"), orderData.createFromSpreadsheet);
+    app.get("/orders/download/spreadsheet", orderData.spreadsheetTemplate);
     app.delete("/order/:id", orderData.removeOrder);
 
     //Transactions
     app.post("/transaction", transactionData.getTransactions);
     app.post("/transaction/create", transactionData.createTransaction);
+    app.post("/transactions/create/spreadsheet", upload.single("transactions"), transactionData.createFromSpreadsheet);
+    app.get("/transactions/download/spreadsheet", transactionData.spreadsheetTemplate);
     app.delete("/transaction/:id", transactionData.remove);
-    app.post("/transaction/retrieve", transactionData.getTransactionsByDate);
+    app.get("/transactions/:from/:to", transactionData.getTransactionsByDate);
     app.get("/populatesometransactions", transactionData.populate);
 
     //Other
@@ -65,8 +75,8 @@ module.exports = function(app){
 
     //Email verification
     app.get("/verify/email/:id", emailVerification.sendVerifyEmail);
-    app.get("/verify/:id", emailVerification.verifyPage);
-    app.post("/verify", emailVerification.verify);
+    app.post("/verify/resend", emailVerification.resendEmail);
+    app.get("/verify/:id/:code", emailVerification.verify);
 
     //Password reset
     app.get("/reset/email", passwordReset.enterEmail);

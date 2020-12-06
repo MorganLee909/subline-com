@@ -1,0 +1,18 @@
+<div id="modal" class="modal" style="display:none;">
+    <div class="modalBox">
+        <svg id="modalClose" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+
+        <div id="modalContent">
+            <form id="modalSpreadsheetUpload" class="modalSpreadsheetUpload" method="post">
+                <h3>Choose a file to upload your <span id="modalSpreadsheetTitle"></span></h3>
+                <input id="spreadsheetInput" class="fileUpload" name="file" type="file">
+                <input type="hidden" name="type">
+                <input class="button" type="submit" value="SUBMIT">
+                <a id="spreadsheetDownload">download template</a>
+            </form>
+        </div>
+    </div>
+</div>

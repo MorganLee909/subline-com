@@ -178,8 +178,6 @@ controller = {
                     choosables[i].classList.remove("active");
                 }
             }
-
-            
         }
         sidebar.classList = "sidebarHide";
 
@@ -188,6 +186,54 @@ controller = {
             document.getElementById("mobileMenuSelector").style.display = "block";
             document.getElementById("sidebarCloser").style.display = "none";
         }
+    },
+
+    openModal: function(str){
+        let modal = document.getElementById("modal");
+        modal.style.display = "flex";
+        document.getElementById("modalClose").addEventListener("click", this.closeModal);
+        let content = {};
+
+        switch(str){
+            case "ingredientSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "ingredients";
+                document.getElementById("spreadsheetDownload").href = "/ingredients/download/spreadsheet";
+                content.onsubmit = newIngredient.submitSpreadsheet;
+                break;
+            case "recipeSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "recipes";
+                document.getElementById("spreadsheetDownload").href = "/recipes/download/spreadsheet";
+                content.onsubmit = newRecipe.submitSpreadsheet;
+                break;
+            case "orderSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "orders";
+                document.getElementById("spreadsheetDownload").href = "/orders/download/spreadsheet";
+                content.onsubmit = newOrder.submitSpreadsheet;
+                break;
+            case "transactionSpreadsheet":
+                content = document.getElementById("modalSpreadsheetUpload");
+                content.style.display = "flex";
+                document.getElementById("modalSpreadsheetTitle").innerText = "transactions";
+                document.getElementById("spreadsheetDownload").href = "/transactions/download/spreadsheet";
+                content.onsubmit = newTransaction.submitSpreadsheet;
+        }
+    },
+
+    closeModal: function(){
+        let modal = document.getElementById("modal");
+        let modalContent = document.getElementById("modalContent");
+
+        for(let i = 0; i < modalContent.children.length; i++){
+            modalContent.children[i].style.display = "none";
+        }
+
+        modal.style.display = "none";
     },
 
     changeMenu: function(){

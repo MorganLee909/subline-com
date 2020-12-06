@@ -19,12 +19,12 @@
                 <li><a href="#dashboard">Dashboard</a></li>
                 <li><a href="#ingredients">Ingredients</a>
                     <ul class="indent">
+                        <li><a href="#ingredientsDetails">Ingredient Details</a></li>
                         <li><a href="#ingredientsNew">New Ingredients</a>
                             <ul class="indent">
                                 <li><a href="#ingredientsNewBottles">Bottle Unit</a></li>
                             </ul>
                         </li>
-                        <li><a href="#ingredientsDetails">Ingredient Details</a></li>
                     </ul>
                 </li>
                 <li><a href="#recipeBook">Recipe Book</a>
@@ -49,6 +49,14 @@
                     <ul class="indent">
                         <li><a href="#transactionsDetails">Transaction Details</a></li>
                         <li><a href="#transactionsNew">New Transactions</a></li>
+                    </ul>
+                </li>
+                <li><a href="#spreadsheets">Uploading Spreadsheets</a>
+                    <ul class="indent">
+                        <li><a href="#ingredientsSpreadsheet">Ingredients Spreadsheet</a></li>
+                        <li><a href="#recipesSpreadsheet">Recipes Spreadsheet</a></li>
+                        <li><a href="#orderSpreadsheet">Order Spreadsheet</a></li>
+                        <li><a href="#transactionSpreadsheet">Transaction Spreadsheet</a></li>
                     </ul>
                 </li>
                 <li><a href="#contact">Contact Us</a></li>
@@ -89,16 +97,16 @@
 
             <p>Near the top of the page and on the right is a "sort by" option.  If you click on this then a dropdown will appear with several options.  The "Ingredient" option will display an uncategorized list of all ingredients in alphabetical order.  The "Category" option will show a categorized list, which is the default display.  The "Unit of Measurement" option will categorize your ingredients based on their measurement units, similar to "Category".  Click on the red "X" at any time to revert to the default.</p>
 
+            <h3 id="ingredientsDetails">INGREDIENT DETAILS</h3>
+            <p>You can click on any of the ingredients to get more details on it.  After clicking on an ingredient, a sidebar should appear to the right.  At the top of this is the category and name of the ingredient.  Next is the current stock that you should have for this item.  After that is the average daily use for the past 30 days.  As the name suggests, this show how much you use this ingredient every day, on average.  Last is the recipes.  This simply shows all of your recipes that contain this ingredient.  You can click on the recipes to get further information on that recipe.  We discuss recipes further down.</p>
+
+            <p>At the top of the sidebar are three icons.  The arrow on the left will close the sidebar.  The trash can on the right will delete the ingredient.  In order to delete an ingredient, it must first be removed from all recipes that contain the ingredient.  Be careful, this cannot be undone.  The pencil icon in the center will allow you to edit the ingredient.  You can update the name, category and current stock of the current ingredient.  Also, you can change the units that want to use.  So, if you use pounds for an ingredient, but decide to switch over to metric, then your can change it to kilograms.  Or the other way around.  Click save to make the changes, or cancel to cancel them.</p>
+
             <h3 id="ingredientsNew">NEW INGREDIENTS</h3>
             <p>There is a button in the top right of the ingredients page labeled "NEW".  Clicking on this will open a sidebar on the right that allows you to create a new ingredient.  There are 4 fields that you need to fill out in order to create a new ingredient.  The name is whatever you want to call the ingredient and the category can be used to group it together with other similar ingredients.  The quantity is the number amount that you have in stock of that particular ingredient.  Match this with a unit in the next field.  When choosing a unit, keep in mind that you will be able to freely change the unit in the future.  However, you can only change units with the same type.  For example, you can change LB (mass), to KG (mass), but you cannot change LB (mass) to GAL(volume).</p>
 
             <h4 id="ingredientsNewBottles">BOTTLE UNIT</h4>
             <p>One of the special type of ingredients that can choose is the bottle type.  Bottles, obviously, are for things that purchase as bottles (i.e. liquour, wine) but tend to sell as smaller units(i.e. shots, glasses).  If you choose the bottle option, then another field will appear asking for bottle size.  Here you need to choose the unit (volume) that the bottle is measured in and then the quantity of each bottle.  The unit for the bottle can be changed at any time.  When creating recipes for bottle items, which is discussed further down, you will add in the volume that the recipe has and it will update the amount of the ingredient in bottles automatically</p>
-
-            <h3 id="ingredientsDetails">INGREDIENT DETAILS</h3>
-            <p>You can click on any of the ingredients to get more details on it.  After clicking on an ingredient, a sidebar should appear to the right.  At the top of this is the category and name of the ingredient.  Next is the current stock that you should have for this item.  After that is the average daily use for the past 30 days.  As the name suggests, this show how much you use this ingredient every day, on average.  Last is the recipes.  This simply shows all of your recipes that contain this ingredient.  You can click on the recipes to get further information on that recipe.  We discuss recipes further down.</p>
-
-            <p>At the top of the sidebar are three icons.  The arrow on the left will close the sidebar.  The trash can on the right will delete the ingredient.  In order to delete an ingredient, it must first be removed from all recipes that contain the ingredient.  Be careful, this cannot be undone.  The pencil icon in the center will allow you to edit the ingredient.  You can update the name, category and current stock of the current ingredient.  Also, you can change the units that want to use.  So, if you use pounds for an ingredient, but decide to switch over to metric, then your can change it to kilograms.  Or the other way around.  Click save to make the changes, or cancel to cancel them.</p>
 
             <h2 id="recipeBook">RECIPE BOOK</h2>
             <p>The third option on the menu is the "RECIPE BOOK".  Here you will find all of the information that you need about all of your recipes.  The recipes are displayed individual with the price of that recipe.</p>
@@ -173,6 +181,26 @@
             <p>Creating a transaction is pretty simple.  First, choose the date of the transaction at the top.  Below that you will a list of all of your recipes.  For each recipe enter the number sold in the box to the right of the recipe name.  for recipes that were not sold in the transaction, simply leave the field blank.  Since it is impractical to enter every single transaction from your business, we recommend creating one transaction per day for all recipes sold.</p>
 
             <p>When finished entering in all information, click the "CREATE" button at the bottom of the sidebar.  This will add your new transaction.  Also, all of your ingredients will be automatically updated based on the quantity of recipes sold, and the quantity of each ingredient within the recipe.  You can return to the ingredients page after creating a new transaction to find that the quantities of your ingredients have already been updated.</p>
+
+            <h2 id="spreadsheets">UPLOADING SPREADSHEETS</h2>
+            <p>In order to make the process of entering your data simpler, you have the option to use a spreadsheet to upload your data to the site.  This can be especially helpful if you need to create a large amount of data at once, such as for the initial uploading of ingredients or recipes.  The ability to upload data from a spreadsheet is available for ingredients, recipes, orders and transactions.  You will find a link to do this in the corresponding sidebar for creating new items, it should be located at the bottom of the sidebar.  Clicking on this link will open a window that will allow you to choose a file to submit, or you can download a template that can help you enter the data correctly.  All of the data must be carefully formatted, so it is recommended to use the template.  See below for instructions for each spreadsheet.</p>
+
+            <h3 id="ingredientsSpreadsheet">INGREDIENTS SPREADSHEET</h3>
+            <p>The first row of the ingredients spreadsheet is the header and must contain six column headers: name, category, quantity, unit, bottle, bottle size.  They may be in any order and capitalization does not matter.  From there, fill in the necessary data.  If the unit is a bottle, then enter TRUE in that column and the size of the bottle (based on the unit) in the "bottle size" column.  Otherwise leave these two columns blank.</p>
+
+            <h3 id="recipesSpreadsheet">RECIPES SPREADSHEET</h3>
+            <p>The first row of the recipes spreadsheet is the header and must contain four column headers: name, price, ingredients and ingredient amount.  The headers may be in any order and capitalization does not matter.  The name of the ingredient need only be filled in on the first row of the ingredient, then put each ingredient of the recipe in a seperate row, along with the quantity of that ingredient within the recipe.  It is recommended to download the template for an example.  If you download the template, then you will have all of your ingredients listed in column F, and their corresponding unit in column G.  Ingredient names must be entered exactly as they are listed (capitalization does not matter) in order to match them to your current ingredients.  You will be given an error telling you which ingredient failed to match if there is a mistake in the spreadsheet.  The ingredient amount is assumed to be in the same unit as the ingredient itself.</p>
+
+            <h3 id="orderSpreadsheet">ORDER SPREADSHEET</h3>
+            <p>It is strongly recommended that you download the template spreadsheet for orders.  This spreadsheet will contain seven headers: name, date, taxes, fees, ingredients, quantity and price.  Change the name(A2) to anything that you would like, such as the order id.  The date will be autofilled with the current date, but you may change it if you wish.  Be sure to enter the date in the same format (yyyy-mm-dd).  Taxes and fees are defaulted to 0, but may be changed.  The ingredients column contains a list of all of your ingredients, do not change anything in this column.  The quantity column(F) and the price column(G) are where you input the information for your order.  For any ingredients that you did not purchase in this particular order, you can lave it as 0.</p>
+
+            <p>NOTE: Price is price per measurement unit.  If the item is measured in lbs, then you need to enter the price per pound.</p>
+            <p>NOTE: Each spreadsheet may only contain a single order.  If you need to enter more than one order, then you must change the data and upload the file again.</p>
+
+            <h3 id="transactionSpreadsheet">TRANSACTION SPREADSHEET</h3>
+            <p>It is strongly recommended that you download the template spreadsheet for transactions.  This spreadsheet will contain three headers: date, recipes and quantity.  The date will be autofilled with the current date, but you may change it if you wish.  Be sure to enter the date in the same format (yyy-mm-dd). The recipes column(B) will contain a list of all of your recipes, do not change anything in this column.  The quantity column(C) are where you input the information for the transaction.  Simply enter a whole number for each recipe that was sold in the transaction.  Leave the 0 for any recipes that were not sold in the transaction.</p>
+
+            <p>NOTE: Each spreadsheet may only contain a single transaction.  If you need to enter more than on transaction, then you must change the data and upload the file again.</p>
 
             <h2 id="contact">CONTACT US</h2>
             <p>If you have found any problems with the site, or need help that is not covered here, please reach out to us.</p>

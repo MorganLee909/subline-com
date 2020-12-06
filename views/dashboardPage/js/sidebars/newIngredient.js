@@ -10,6 +10,7 @@ let newIngredient = {
 
         selector.onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
+        document.getElementById("ingredientFileUpload").addEventListener("click", ()=>{controller.openModal("ingredientSpreadsheet")});
     },
 
     unitChange: function(){
@@ -22,7 +23,7 @@ let newIngredient = {
         }
     },
 
-    submit: function(Ingredient){
+    submit: function(){
         let unitSelector = document.getElementById("unitSelector");
         let options = document.querySelectorAll("#unitSelector option");
         const quantityValue = parseFloat(document.getElementById("newIngQuantity").value);
@@ -63,25 +64,13 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     banner.createError(response);
                 }else{
-                    const ingredient = new Ingredient(
-                        response.ingredient._id,
-                        response.ingredient.name,
-                        response.ingredient.category,
-                        response.ingredient.unitType,
-                        response.defaultUnit,
-                        merchant,
-                        response.ingredient.specialUnit,
-                        response.ingredient.unitSize
-                    )
-
-                    merchant.addIngredient(ingredient, response.quantity);
+                    merchant.addIngredient(response.ingredient, response.quantity, response.defaultUnit);
                     controller.openStrand("ingredients");
 
                     banner.createNotification("INGREDIENT CREATED");
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
             })
             .finally(()=>{
@@ -89,7 +78,41 @@ let newIngredient = {
             });
     },
 
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
 
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("ingredients", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/ingredients/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    banner.createError(response);
+                }else{
+                    for(let i = 0; i < response.length; i++){
+                        merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
+
+                        controller.openStrand("ingredients");
+                    }
+                }
+                
+            })
+            .catch((err)=>{
+                banner.createError("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    }
 }
 
 module.exports = newIngredient;

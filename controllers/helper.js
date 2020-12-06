@@ -235,6 +235,30 @@ module.exports = {
         }
     },
 
+    convertPrice: function(price, unit){
+        switch(unit){
+            case "g":return price; 
+            case "kg": return price / 1000;
+            case "oz": return price / 28.3495;
+            case "lb": return price / 453.5924;
+            case "ml": return price * 1000;
+            case "l": return price;
+            case "tsp": return price * 202.8842;
+            case "tbsp": return price * 67.6278;
+            case "ozfl": return price * 33.8141;
+            case "cup": return price * 4.1667;
+            case "pt": return price * 2.1134;
+            case "qt": return price * 1.0567;
+            case "gal": return price / 3.7854;
+            case "mm": return price * 1000;
+            case "cm": return price * 100;
+            case "m": return price;
+            case "in": return price * 39.3701;
+            case "ft": return price * 3.2808;
+            default: return price;
+        }
+    },
+
     generateId: function(length){
         let result = "";
         let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -244,5 +268,19 @@ module.exports = {
         }
         
         return result;
+    },
+
+    isSanitary: function(strings){
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+
+        for(let i = 0; i < strings.length; i++){
+            for(let j = 0; j < disallowed.length; j++){
+                if(strings[i].includes(disallowed[j])){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

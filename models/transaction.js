@@ -4,11 +4,11 @@ const TransactionSchema = new mongoose.Schema({
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
-        required: [true, "Transaction must contain a reference to a merchant"]
+        required: [true, "MERCHANT IS REQUIRED FOR A TRANSACTION"]
     },
     date: {
         type: Date,
-        required: [true, "Must provide date and time transacted"]
+        required: [true, "DATE MUST BE PROVIDED FOR A TRANSACTION"]
     },
     device: String,
     recipes: [{
@@ -18,7 +18,7 @@ const TransactionSchema = new mongoose.Schema({
         },
         quantity: {
             type: Number,
-            min: [0, "Must be a positive number"]
+            min: [0, "RECIPE QUANTITIES MUST BE A POSITIVE NUMBER"]
         }
     }],
     posId: String
