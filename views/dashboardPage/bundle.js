@@ -1561,13 +1561,13 @@ controller = {
         banner.children[1].innerText = text;
         container.appendChild(banner);
 
-        // let timer = setTimeout(()=>{
-        //     container.removeChild(banner);
-        // }, 10000);
-
-        document.getElementById("closeBanner").addEventListener("click", ()=>{
+        let timer = setTimeout(()=>{
             container.removeChild(banner);
-            // clearTimeout(timer);
+        }, 10000);
+
+        banner.children[2].addEventListener("click", ()=>{
+            container.removeChild(banner);
+            clearTimeout(timer);
         });
 
         
