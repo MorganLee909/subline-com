@@ -24,7 +24,7 @@ let newTransaction = {
         let date = document.getElementById("newTransactionDate").valueAsDate;
         
         if(date > new Date()){
-            banner.createError("CANNOT HAVE A DATE IN THE FUTURE");
+            controller.createBanner("CANNOT HAVE A DATE IN THE FUTURE", "error");
             return;
         }
         
@@ -52,7 +52,7 @@ let newTransaction = {
                     }
                 }
             }else if(quantity < 0){
-                banner.createError("CANNOT HAVE NEGATIVE VALUES");
+                controller.createBanner("CANNOT HAVE NEGATIVE VALUES", "error");
                 return;
             }
         }
@@ -71,16 +71,16 @@ let newTransaction = {
                 .then(response => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
-                        banner.createError(response);
+                        controller.createBanner(response, "error");
                     }else{
                         merchant.addTransaction(response);
 
                         controller.openStrand("transactions", merchant.getTransactions());
-                        banner.createNotification("TRANSACTION CREATED");
+                        controller.createBanner("TRANSACTION CREATED", "success");
                     }
                 })
                 .catch((err)=>{
-                    banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+                    controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
                 })
                 .finally(()=>{
                     loader.style.display = "none";
@@ -106,7 +106,7 @@ let newTransaction = {
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     for(let i = 0; i < response.recipes.length; i++){
                         response.recipes[i].recipe = response.recipes[i].recipe._id;
@@ -114,11 +114,11 @@ let newTransaction = {
                     merchant.addTransaction(response);
 
                     controller.openStrand("transactions", merchant.transactions);
-                    banner.createNotification("TRANSACTION SUCCESSFULLY CREATED.  INGREDIENTS UPDATED");
+                    controller.createBanner("TRANSACTION SUCCESSFULLY CREATED.  INGREDIENTS UPDATED", "success");
                 }
             })
             .catch((err)=>{
-                banner.createError("UNABLE TO DISPLAY NEW TRANSACTIONS.  PLEASE REFRESH THE PAGE");
+                controller.createBanner("UNABLE TO DISPLAY NEW TRANSACTIONS.  PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

@@ -108,17 +108,17 @@ let editIngredient = {
         .then(response => response.json())
         .then((response)=>{
             if(typeof(response) === "string"){
-                banner.createError(response);
+                controller.createBanner(response, "error");
             }else{
                 merchant.removeIngredient(merchant.getIngredient(response.ingredient._id));
                 merchant.addIngredient(response.ingredient, response.quantity, response.unit);
 
                 controller.openStrand("ingredients");
-                banner.createNotification("INGREDIENT UPDATED");
+                controller.createBanner("INGREDIENT UPDATED", "success");
             }
         })
         .catch((err)=>{
-            banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
+            controller.createBanner("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE", "error");
         })
         .finally(()=>{
             loader.style.display = "none";

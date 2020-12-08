@@ -62,16 +62,16 @@ let newIngredient = {
             .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     merchant.addIngredient(response.ingredient, response.quantity, response.defaultUnit);
                     controller.openStrand("ingredients");
 
-                    banner.createNotification("INGREDIENT CREATED");
+                    controller.createBanner("INGREDIENT CREATED", "success");
                 }
             })
             .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -96,18 +96,19 @@ let newIngredient = {
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     for(let i = 0; i < response.length; i++){
                         merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
 
+                        controller.createBanner("INGREDINETS SUCCESSFULLY ADDED", "success");
                         controller.openStrand("ingredients");
                     }
                 }
                 
             })
             .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE");
+                controller.createBanner("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

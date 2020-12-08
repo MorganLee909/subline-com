@@ -55,7 +55,7 @@ let newOrder = {
         let ingredients = document.getElementById("selectedIngredientList").children;
 
         if(date === ""){
-            banner.createError("DATE IS REQUIRED FOR ORDERS");
+            controller.createBanner("DATE IS REQUIRED FOR ORDERS", "error");
             return;
         }
 
@@ -72,12 +72,12 @@ let newOrder = {
             let price = ingredients[i].children[1].children[1].value;
 
             if(quantity === "" || price === ""){
-                banner.createError("MUST PROVIDE QUANTITY AND PRICE PER UNIT FOR ALL INGREDIENTS");
+                controller.createBanner("MUST PROVIDE QUANTITY AND PRICE PER UNIT FOR ALL INGREDIENTS", "error");
                 return;
             }
 
             if(quantity < 0 || price < 0){
-                banner.createError("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS");
+                controller.createBanner("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS", "error");
             }
 
             if(ingredients[i].ingredient.ingredient.specialUnit === "bottle"){
@@ -108,16 +108,16 @@ let newOrder = {
             .then((response)=>response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     merchant.addOrder(response, true);
                     
                     controller.openStrand("orders", merchant.orders);
-                    banner.createNotification("NEW ORDER CREATED");
+                    controller.createBanner("NEW ORDER CREATED", "success");
                 }
             })
             .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
+                controller.createBanner("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -170,18 +170,18 @@ let newOrder = {
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     for(let i = 0; i < response.length; i++){
                         merchant.addOrder(response[i], true);
                     }
 
-                    banner.createNotification("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY");
+                    controller.createBanner("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY", "success");
                     controller.openStrand("orders");
                 }
             })
             .catch((err)=>{
-                banner.createError("UNABLE TO DISPLAY NEW ORDER. PLEASE REFRESH THE PAGE.");
+                controller.createBanner("UNABLE TO DISPLAY NEW ORDER. PLEASE REFRESH THE PAGE.", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

@@ -42,7 +42,7 @@ let orderFilter = {
         }
 
         if(data.startDate >= data.endDate){
-            banner.createError("START DATE CANNOT BE AFTER END DATE");
+            controller.createBanner("START DATE CANNOT BE AFTER END DATE", "error");
             return;
         }
 
@@ -73,9 +73,9 @@ let orderFilter = {
         .then((response)=>{
             let orders = [];
             if(typeof(response) === "string"){
-                banner.createError(response);
+                controller.createBanner(response, "error");
             }else if(response.length === 0){
-                banner.createError("NO ORDERS MATCH YOUR SEARCH");
+                controller.createBanner("NO ORDERS MATCH YOUR SEARCH", "error");
             }else{
                 for(let i = 0; i < response.length; i++){
                     orders.push(new Order(
@@ -93,7 +93,7 @@ let orderFilter = {
             controller.openStrand("orders", orders);
         })
         .catch((err)=>{
-            banner.createError("UNABLE TO DISPLAY THE ORDERS");
+            controller.createBanner("UNABLE TO DISPLAY THE ORDERS", "error");
         })
         .finally(()=>{
             loader.style.display = "none";

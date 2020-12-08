@@ -56,16 +56,16 @@ let transactionDetails = {
         })
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     merchant.removeTransaction(this.transaction);
 
                     controller.openStrand("transactions", merchant.getTransactions());
-                    banner.createNotification("TRANSACTION REMOVED");
+                    controller.createBanner("TRANSACTION REMOVED", "success");
                 }
             })
             .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

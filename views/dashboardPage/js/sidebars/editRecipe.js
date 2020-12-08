@@ -105,15 +105,15 @@ let editRecipe = {
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     merchant.updateRecipe(response);
                     controller.openStrand("recipeBook");
-                    banner.createNotification("RECIPE UPDATED");
+                    controller.createBanner("RECIPE UPDATED", "success");
                 }
             })
             .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE");
+                controller.createBanner("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

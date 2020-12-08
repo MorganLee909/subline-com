@@ -225,7 +225,7 @@ let home = {
                     lis[i].children[1].children[1].changed = false;
                 }
             }else{
-                banner.createError("CANNOT HAVE NEGATIVE INGREDIENTS");
+                controller.createBanner("CANNOT HAVE NEGATIVE INGREDIENTS", "error");
                 return;
             }
         }
@@ -244,17 +244,17 @@ let home = {
                 .then(response => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
-                        banner.createError(response);
+                        controller.createBanner(response, "error");
                     }else{
                         for(let i = 0; i < response.length; i++){
                             merchant.removeIngredient(merchant.getIngredient(response[i].ingredient._id));
                             merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
                         }
-                        banner.createNotification("INGREDIENTS UPDATED");
+                        controller.createBanner("INGREDIENTS UPDATED", "success");
                     }
                 })
                 .catch((err)=>{
-                    banner.createError("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE");
+                    controller.createBanner("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE", "error");
                 })
                 .finally(()=>{
                     loader.style.display = "none";

@@ -286,23 +286,32 @@ form{
             color: rgb(255, 99, 107);
         }
 
-/* Banner partial */
-.banner{
-    justify-content: center;
+/*
+Banner
+*/
+#banner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    font-size: 20px;
-    color: white;
-    position: absolute;
-    padding: 5px 0;
 }
 
-    .notification{
-        background: rgba(1, 140, 15, 0.75);
+    .banner{
+        width: 75%;
+        margin: 10px 0;
+        padding: 10px 0;
     }
 
-    .error{
-        background: rgba(255, 0, 0, 0.75);
-    }
+        .banner > div{
+            height: 100%;
+            width: 25%;
+        }
+
+        .banner > p{
+            font-size: 20px;
+            font-weight: bold;
+            width: 75%;
+        }
 
 /* Footer Partial */
 .spacer{

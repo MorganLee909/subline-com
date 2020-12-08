@@ -93,7 +93,7 @@ let newRecipe = {
             .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     let ingredients = [];
                     for(let i = 0; i < response.ingredients.length; i++){
@@ -116,12 +116,12 @@ let newRecipe = {
                         ingredients
                     );
 
-                    banner.createNotification("RECIPE CREATED");
+                    controller.createBanner("RECIPE CREATED", "success");
                     controller.openStrand("recipeBook");
                 }
             })
             .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -146,7 +146,7 @@ let newRecipe = {
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "String"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     for(let i = 0; i < response.length; i++){
                         merchant.addRecipe(
@@ -157,12 +157,12 @@ let newRecipe = {
                         );
                     }
 
-                    banner.createNotification("ALL INGREDIENTS SUCCESSFULLY CREATED");
+                    controller.createBanner("ALL INGREDIENTS SUCCESSFULLY CREATED", "success");
                     controller.openStrand("recipeBook");
                 }
             })
             .catch((err)=>{
-                banner.createError("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE");
+                controller.createBanner("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

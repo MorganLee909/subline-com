@@ -57,7 +57,7 @@ let ingredientDetails = {
         for(let i = 0; i < merchant.recipes.length; i++){
             for(let j = 0; j < merchant.recipes[i].ingredients.length; j++){
                 if(ingredient.ingredient === merchant.recipes[i].ingredients[j].ingredient){
-                    banner.createError("MUST REMOVE INGREDIENT FROM ALL RECIPES BEFORE REMOVING FROM INVENTORY");
+                    controller.createBanner("MUST REMOVE INGREDIENT FROM ALL RECIPES BEFORE REMOVING FROM INVENTORY", "error");
                     return;
                 }
             }
@@ -72,15 +72,17 @@ let ingredientDetails = {
             .then((response) => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else{
                     merchant.removeIngredient(ingredient);
                     
                     controller.openStrand("ingredients");
-                    banner.createNotification("INGREDIENT REMOVED");
+                    controller.createBanner("INGREDIENT REMOVED", "success");
                 }
             })
-            .catch((err)=>{})
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
             .finally(()=>{
                 loader.style.display = "none";
             });

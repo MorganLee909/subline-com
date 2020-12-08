@@ -1,11 +1,11 @@
 class Ingredient{
     constructor(id, name, category, unitType, unit, parent, specialUnit = undefined, unitSize = undefined){
         if(!this.isSanitaryString(name)){
-            banner.createError("NAME CONTAINS ILLEGAL CHARCTERS");
+            controller.createBanner("NAME CONTAINS ILLEGAL CHARCTERS", "error");
             return false;
         }
         if(!this.isSanitaryString(category)){
-            banner.createError("CATEGORY CONTAINS ILLEGAL CHARACTERS");
+            controller.createBanner("CATEGORY CONTAINS ILLEGAL CHARACTERS", "error");
             return false;
         }
 

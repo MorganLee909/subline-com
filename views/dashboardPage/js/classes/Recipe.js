@@ -1,7 +1,7 @@
 class RecipeIngredient{
     constructor(ingredient, quantity){
         if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
             return false;
         }
         this._ingredient = ingredient;
@@ -42,7 +42,7 @@ class RecipeIngredient{
 
     set quantity(quantity){
         if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
             return false;
         }
 
@@ -97,11 +97,11 @@ parent = merchant that it belongs to
 class Recipe{
     constructor(id, name, price, ingredients, parent){
         if(price < 0){
-            banner.createError("PRICE CANNOT BE A NEGATIVE NUMBER");
+            controller.createBanner("PRICE CANNOT BE A NEGATIVE NUMBER", "error");
             return false;
         }
         if(!this.isSanitaryString(name)){
-            banner.createError("NAME CONTAINS ILLEGAL CHARACTERS");
+            controller.createBanner("NAME CONTAINS ILLEGAL CHARACTERS", "error");
             return false;
         }
         this._id = id;
@@ -159,7 +159,7 @@ class Recipe{
 
     addIngredient(ingredient, quantity){
         if(quantity < 0){
-            banner.createError("QUANTITY CANNOT BE A NEGATIVE NUMBER");
+            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
             return false;
         }
 

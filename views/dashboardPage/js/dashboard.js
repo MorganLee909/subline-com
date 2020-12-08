@@ -236,6 +236,33 @@ controller = {
         modal.style.display = "none";
     },
 
+    createBanner: function(text, status){
+        let container = document.getElementById("banner");
+        let template = document.getElementById("banner").content.children[0];
+        let banner = template.cloneNode(true);
+
+        switch(status){
+            case "error":
+                banner.children[0].backgroundColor = "red";
+                banner.children[0].children[0].style.display = "block";
+                break;
+            case "alert":
+                banner.children[0].backgroundColor = "yellow";
+                banner.children[0].children[1].style.display = "block";
+                break;
+            case "success":
+                banner.children[0].backgroundColor = "green";
+                banner.children[0].children[2].style.display = "block";
+                break;
+        }
+
+        banner.children[1].innerText = text;
+        container.appendChild(banner);
+        // setTimeout(()=>{
+        //     container.removeChild(banner);
+        // }, 10000);
+    },
+
     changeMenu: function(){
         let menu = document.querySelector(".menu");
         let buttons = document.querySelectorAll(".menuButton");

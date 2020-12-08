@@ -44,7 +44,7 @@ let transactionFilter = {
         }
 
         if(data.startDate >= data.endDate){
-            banner.createError("START DATE CANNOT BE AFTER END DATE");
+            controller.createBanner("START DATE CANNOT BE AFTER END DATE", "error");
             return;
         }
 
@@ -75,9 +75,9 @@ let transactionFilter = {
             .then((response)=>{
                 let transactions = [];
                 if(typeof(response) === "string"){
-                    banner.createError(response);
+                    controller.createBanner(response, "error");
                 }else if(response.length === 0){
-                    banner.createError("NO TRANSACTIONS MATCH YOUR SEARCH");
+                    controller.createBanner("NO TRANSACTIONS MATCH YOUR SEARCH", "error");
                 }else{
                     for(let i = 0; i < response.length; i++){
                         transactions.push(new Transaction(
@@ -92,7 +92,7 @@ let transactionFilter = {
                 controller.openStrand("transactions", transactions);
             })
             .catch((err)=>{
-                banner.createError("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
