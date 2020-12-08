@@ -237,30 +237,38 @@ controller = {
     },
 
     createBanner: function(text, status){
-        let container = document.getElementById("banner");
+        let container = document.getElementById("bannerContainer");
         let template = document.getElementById("banner").content.children[0];
         let banner = template.cloneNode(true);
 
         switch(status){
             case "error":
-                banner.children[0].backgroundColor = "red";
+                banner.children[0].style.backgroundColor = "rgb(200, 0, 0)";
                 banner.children[0].children[0].style.display = "block";
                 break;
             case "alert":
-                banner.children[0].backgroundColor = "yellow";
+                banner.children[0].style.backgroundColor = "rgb(230, 210, 0)";
                 banner.children[0].children[1].style.display = "block";
                 break;
             case "success":
-                banner.children[0].backgroundColor = "green";
+                banner.children[0].style.backgroundColor = "rgb(0, 145, 55)";
                 banner.children[0].children[2].style.display = "block";
                 break;
         }
 
         banner.children[1].innerText = text;
         container.appendChild(banner);
-        // setTimeout(()=>{
+
+        // let timer = setTimeout(()=>{
         //     container.removeChild(banner);
         // }, 10000);
+
+        document.getElementById("closeBanner").addEventListener("click", ()=>{
+            container.removeChild(banner);
+            // clearTimeout(timer);
+        });
+
+        
     },
 
     changeMenu: function(){
