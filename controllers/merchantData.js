@@ -302,7 +302,7 @@ module.exports = {
                 }
             })
             .then((merchant)=>{
-                req.session.error = "PASSWORD SUCCESSFULLY RESET. PLEASE LOG IN";
+                req.session.success = "PASSWORD SUCCESSFULLY RESET. PLEASE LOG IN";
                 return res.redirect("/");
             })
             .catch((err)=>{

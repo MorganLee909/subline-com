@@ -35,7 +35,7 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
-                req.session.error = "PASSWORD RESET EMAIL SENT";
+                req.session.success = "PASSWORD RESET EMAIL SENT";
                 return res.redirect("/");
             })
             .catch((err)=>{
@@ -45,15 +45,7 @@ module.exports = {
     },
 
     enterPassword: function(req, res){
-        let error = {};
-        if(req.session.error){
-            error = req.session.error;
-            req.session.error = undefined;
-        }else{
-            error = null;
-        }
-
-        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code, error: error});
+        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code});
     },
 
     resetPassword: function(req, res){
@@ -84,7 +76,7 @@ module.exports = {
             })
             .then((merchant)=>{
                 if(merchant !== undefined){
-                    req.session.error = "PASSWORD SUCCESSFULLY UPDATED.  PLEASE LOG IN";
+                    req.session.success = "PASSWORD SUCCESSFULLY UPDATED.  PLEASE LOG IN";
                     return res.redirect("/");
                 }
             })

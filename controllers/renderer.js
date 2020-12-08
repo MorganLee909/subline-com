@@ -30,8 +30,14 @@ module.exports = {
         }else{
             error = null;
         }
+        if(req.session.success){
+            success = req.session.success;
+            req.session.success = undefined;
+        }else{
+            success = null;
+        }
 
-        return res.render("landingPage/landing", {error: error, isLoggedIn: isLoggedIn});
+        return res.render("landingPage/landing", {error: error, success: success, isLoggedIn: isLoggedIn});
     },
 
     /*

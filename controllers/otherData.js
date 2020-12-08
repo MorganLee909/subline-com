@@ -89,7 +89,7 @@ module.exports = {
                             return res.redirect("/dashboard");
                         })
                         .catch((err)=>{
-                            req.session.error("ERROR: UNABLE TO CREATE MERCHANT");
+                            req.session.error = "ERROR: UNABLE TO CREATE MERCHANT";
                             return res.redirect("/")
                         });
                 }else{

@@ -22,6 +22,24 @@ let controller = {
             });
         }
 
+        if(success){
+            let bannerContainer = document.getElementById("bannerContainer");
+            let banner = document.getElementById("banner").content.children[0].cloneNode(true);
+            banner.children[0].style.backgroundColor = "rgb(0, 145, 55)";
+            banner.children[0].children[2].style.display = "block";
+            banner.children[1].innerText = success;
+            bannerContainer.appendChild(banner);
+
+            let timer = setTimeout(()=>{
+                bannerContainer.removeChild(banner);
+            }, 10000);
+
+            banner.children[2].addEventListener("click", ()=>{
+                bannerContainer.removeChild(banner);
+                clearTimeout(timer);
+            });
+        }
+
         publicObj.display();
     },
 
