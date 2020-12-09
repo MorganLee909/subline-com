@@ -473,7 +473,7 @@ class Merchant{
         }]
     */
     getIngredientsSold(from = 0, to = new Date()){
-        if(from = 0){
+        if(from === 0){
             from = this._ingredients[0].date;
         }
         
@@ -488,6 +488,7 @@ class Merchant{
                     if(ingredientList[k].ingredient === recipes[i].recipe.ingredients[j].ingredient){
                         exists = true;
                         ingredientList[k].quantity += recipes[i].quantity * recipes[i].recipe.ingredients[j].quantity;
+                        break;
                     }
                 }
 
@@ -544,7 +545,7 @@ class Merchant{
         }]
     */
     getRecipesSold(from = 0, to = new Date()){
-        if(from = 0){
+        if(from === 0){
             from = this._transactions[0].date;
         }
 
@@ -656,7 +657,9 @@ class Merchant{
 
     getTransactionIndices(from, to){
         let start, end;
-        to.setDate(to.getDate() + 1);
+        console.log(from);
+        console.log(to);
+        
 
         for(let i = this._transactions.length - 1; i >= 0; i--){
             if(this._transactions[i].date >= from){
@@ -676,9 +679,9 @@ class Merchant{
             return false;
         }
 
-        //these are switched due to the order of the transactions in the merchant
-        return {start: end, end: start};
+        return {start: start, end: end};
     }
+
 
     isSanitaryString(str){
         let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
