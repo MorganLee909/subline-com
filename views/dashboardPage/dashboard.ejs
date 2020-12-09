@@ -262,18 +262,6 @@
                         <span class="slider"><p>INGREDIENTS</p><p>RECIPES</p></span>
                     </label>
 
-                    <!-- <div>
-                        <label>FROM:
-                            <input id="analStartDate" type="date">
-                        </label>
-    
-                        <label>TO:
-                            <input id="analEndDate" type="date">
-                        </label>
-    
-                        <button id="analDateBtn" class="button">SUBMIT</button>
-                    </div> -->
-
                     <div class="dateRange">
                         <h3>Date Range:</h3>
                         <div class="dateRangeInput">
@@ -284,7 +272,6 @@
 
                         <button id="analDateBtn" class="button-small">SUBMIT</button>
                     </div>
-                    
                 </div>
 
                 <div id="analIngredientContent" class="analContent">
@@ -390,6 +377,8 @@
                         <button id="orderFilterBtn" class="button mobileHide">FILTER</button>
 
                         <button id="newOrderBtn" class="button mobileHide">NEW</button>
+
+                        <button id="orderCalcBtn" class="button mobileHide">CALCULATOR</button>
                     </div>
                     
                 </div>
@@ -437,6 +426,7 @@
             <% include ./sidebars/newRecipe %>
             <% include ./sidebars/orderDetails %>
             <% include ./sidebars/newOrder %>
+            <% include ./sidebars/orderCalculator %>
             <% include ./sidebars/transactionDetails %>
             <% include ./sidebars/newTransaction %>
             <% include ./sidebars/editRecipe %>

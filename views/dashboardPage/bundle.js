@@ -1316,6 +1316,7 @@ const editRecipe = require("./sidebars/editRecipe.js");
 const newTransaction = require("./sidebars/newTransaction.js");
 const orderDetails = require("./sidebars/orderDetails.js");
 const orderFilter = require("./sidebars/orderFilter.js");
+const orderCalculator = require("./sidebars/orderCalculator.js");
 const recipeDetails = require("./sidebars/recipeDetails.js");
 const transactionDetails = require("./sidebars/transactionDetails.js");
 const transactionFilter = require("./sidebars/transactionFilter.js");
@@ -1435,6 +1436,9 @@ controller = {
                 break;
             case "newOrder":
                 newOrder.display(Order);
+                break;
+            case "orderCalculator":
+                orderCalculator.display();
                 break;
             case "transactionDetails":
                 transactionDetails.display(data);
@@ -1671,7 +1675,7 @@ document.getElementById("ordersBtn").onclick = async ()=>{
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 
 controller.openStrand("home");
-},{"./classes/Ingredient.js":1,"./classes/Merchant.js":2,"./classes/Order.js":3,"./classes/Recipe.js":4,"./classes/Transaction.js":5,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderDetails.js":14,"./sidebars/orderFilter.js":15,"./sidebars/recipeDetails.js":16,"./sidebars/transactionDetails.js":17,"./sidebars/transactionFilter.js":18,"./strands/analytics.js":19,"./strands/home.js":20,"./strands/ingredients.js":21,"./strands/orders.js":22,"./strands/recipeBook.js":23,"./strands/transactions.js":24}],7:[function(require,module,exports){
+},{"./classes/Ingredient.js":1,"./classes/Merchant.js":2,"./classes/Order.js":3,"./classes/Recipe.js":4,"./classes/Transaction.js":5,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderCalculator.js":14,"./sidebars/orderDetails.js":15,"./sidebars/orderFilter.js":16,"./sidebars/recipeDetails.js":17,"./sidebars/transactionDetails.js":18,"./sidebars/transactionFilter.js":19,"./strands/analytics.js":20,"./strands/home.js":21,"./strands/ingredients.js":22,"./strands/orders.js":23,"./strands/recipeBook.js":24,"./strands/transactions.js":25}],7:[function(require,module,exports){
 let editIngredient = {
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");
@@ -2637,6 +2641,14 @@ let newTransaction = {
 
 module.exports = newTransaction;
 },{}],14:[function(require,module,exports){
+let orderCalculator = {
+    display: function(){
+        console.log("something");
+    }
+}
+
+module.exports = orderCalculator;
+},{}],15:[function(require,module,exports){
 let orderDetails = {
     display: function(order){
         document.getElementById("removeOrderBtn").onclick = ()=>{this.remove(order)};
@@ -2708,7 +2720,7 @@ let orderDetails = {
 }
 
 module.exports = orderDetails;
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 let orderFilter = {
     display: function(Order){
         let now = new Date();
@@ -2813,7 +2825,7 @@ let orderFilter = {
 }
 
 module.exports = orderFilter;
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
@@ -2872,7 +2884,7 @@ let recipeDetails = {
 }
 
 module.exports = recipeDetails;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 let transactionDetails = {
     transaction: {},
 
@@ -2949,7 +2961,7 @@ let transactionDetails = {
 }
 
 module.exports = transactionDetails;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 let transactionFilter = {
     display: function(){
         //Set default dates
@@ -3053,7 +3065,7 @@ let transactionFilter = {
 }
 
 module.exports = transactionFilter;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 let analytics = {
     isPopulated: false,
     ingredient: undefined,
@@ -3320,7 +3332,7 @@ let analytics = {
 }
 
 module.exports = analytics;
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 let home = {
     isPopulated: false,
 
@@ -3587,7 +3599,7 @@ let home = {
 }
 
 module.exports = home;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 let ingredients = {
     isPopulated: false,
     ingredients: [],
@@ -3691,12 +3703,13 @@ let ingredients = {
 }
 
 module.exports = ingredients;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 let orders = {
 
     display: function(){
-        document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
-        document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
+        document.getElementById("orderFilterBtn").addEventListener("click", ()=>{controller.openSidebar("orderFilter")});
+        document.getElementById("newOrderBtn").addEventListener("click", ()=>{controller.openSidebar("newOrder")});
+        document.getElementById("orderCalcBtn").addEventListener("click", ()=>{controller.openSidebar("orderCalculator")});
 
         let orderList = document.getElementById("orderList");
         let template = document.getElementById("order").content.children[0];
@@ -3766,7 +3779,7 @@ let orders = {
 }
 
 module.exports = orders;
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
@@ -3881,7 +3894,7 @@ let recipeBook = {
 }
 
 module.exports = recipeBook;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 let transactions = {
     transactions: [],
 

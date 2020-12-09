@@ -1,8 +1,9 @@
 let orders = {
 
     display: function(){
-        document.getElementById("orderFilterBtn").onclick = ()=>{controller.openSidebar("orderFilter")};
-        document.getElementById("newOrderBtn").onclick = ()=>{controller.openSidebar("newOrder")};
+        document.getElementById("orderFilterBtn").addEventListener("click", ()=>{controller.openSidebar("orderFilter")});
+        document.getElementById("newOrderBtn").addEventListener("click", ()=>{controller.openSidebar("newOrder")});
+        document.getElementById("orderCalcBtn").addEventListener("click", ()=>{controller.openSidebar("orderCalculator")});
 
         let orderList = document.getElementById("orderList");
         let template = document.getElementById("order").content.children[0];

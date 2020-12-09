@@ -588,6 +588,16 @@ ORDER FILTER
     }
 
 /*
+ORDER CALCULATOR
+*/
+#orderCalculator{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/*
 TRANSACTION DETAILS
 */
 .transactionDetails{
