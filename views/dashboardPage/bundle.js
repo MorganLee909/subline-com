@@ -1289,7 +1289,7 @@ class Transaction{
             const recipe = this._recipes[i].recipe;
             for(let j = 0; j < recipe.ingredients.length; j++){
                 if(recipe.ingredients[j].ingredient === ingredient){
-                    quantity += recipe.ingredients[j].quantity;
+                    quantity += recipe.ingredients[j].quantity * this._recipes[i].quantity;
                 }
             }
         }
