@@ -3224,7 +3224,7 @@ let analytics = {
             });
     },
 
-    displayIngredient: function(ingredient){
+    displayIngredient: function(){
         if(this.ingredient === undefined  || this.transactionsByDate.length === 0){
             return;
         }
