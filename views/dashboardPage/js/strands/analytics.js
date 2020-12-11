@@ -72,30 +72,36 @@ let analytics = {
                 }else{
                     this.transactionsByDate = [];
 
+                    let startOfDay = new Date(from.getTime());
+                    startOfDay.setHours(0, 0, 0, 0);
+                    let endOfDay = new Date(from.getTime());
+                    endOfDay.setDate(endOfDay.getDate() + 1);
+                    endOfDay.setHours(0, 0, 0, 0);
+                    
+                    let transactionIndex = 0;
+                    while(startOfDay <= to){
+                        let currentTransactions = [];
 
-                    let nextDay = new Date(from.getTime());
-                    nextDay.setDate(nextDay.getDate() + 1);
-                    let currentTransactions = [];
-                    for(let i = 0; i < response.length; i++){
-                        response[i].date = new Date(response[i].date);
-                        if(response[i].date >= from && response[i].date < nextDay){
+                        while(transactionIndex < response.length && new Date(response[transactionIndex].date) < endOfDay){
                             currentTransactions.push(new Transaction(
-                                response[i]._id,
-                                response[i].date,
-                                response[i].recipes,
+                                response[transactionIndex]._id,
+                                response[transactionIndex].date,
+                                response[transactionIndex].recipes,
                                 merchant
                             ));
-                        }else{
-                            this.transactionsByDate.push({
-                                date: new Date(from.getTime()),
-                                transactions: currentTransactions
-                            });
-                            from.setDate(from.getDate() + 1);
-                            nextDay.setDate(nextDay.getDate() + 1);
-                            currentTransactions = [];
-                        }
-                    }
 
+                            transactionIndex++;
+                        }
+
+                        let thing = {
+                            date: new Date(startOfDay.getTime()),
+                            transactions: currentTransactions
+                        };
+                        this.transactionsByDate.push(thing);
+
+                        startOfDay.setDate(startOfDay.getDate() + 1);
+                        endOfDay.setDate(endOfDay.getDate() + 1);
+                    }
                 }
             })
             .catch((err)=>{

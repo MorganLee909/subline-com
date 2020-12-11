@@ -112,7 +112,6 @@ module.exports = {
                 return res.json(response);
             })
             .catch((err)=>{
-                console.log(err);
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
