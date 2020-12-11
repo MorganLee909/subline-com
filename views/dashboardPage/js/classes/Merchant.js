@@ -657,25 +657,22 @@ class Merchant{
 
     getTransactionIndices(from, to){
         let start, end;
-        console.log(from);
-        console.log(to);
         
-
         for(let i = this._transactions.length - 1; i >= 0; i--){
             if(this._transactions[i].date >= from){
-                start = i;
+                end = i;
                 break;
             }
         }
         
         for(let i = 0; i < this._transactions.length; i++){
             if(this._transactions[i].date < to){
-                end = i;
+                start = i;
                 break;
             }
         }
 
-        if(start === undefined){
+        if(end === undefined){
             return false;
         }
 

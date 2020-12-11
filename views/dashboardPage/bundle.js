@@ -784,25 +784,22 @@ class Merchant{
 
     getTransactionIndices(from, to){
         let start, end;
-        console.log(from);
-        console.log(to);
         
-
         for(let i = this._transactions.length - 1; i >= 0; i--){
             if(this._transactions[i].date >= from){
-                start = i;
+                end = i;
                 break;
             }
         }
         
         for(let i = 0; i < this._transactions.length; i++){
             if(this._transactions[i].date < to){
-                end = i;
+                start = i;
                 break;
             }
         }
 
-        if(start === undefined){
+        if(end === undefined){
             return false;
         }
 
@@ -2646,20 +2643,51 @@ module.exports = newTransaction;
 },{}],14:[function(require,module,exports){
 let orderCalculator = {
     display: function(){
+        let calculatorItems = document.getElementById("calculatorItems");
+        let template = document.getElementById("calculatorItem").content.children[0];
         let calculations = this.getDailyAverages();
 
-        // console.log(calculations);
-
+        for(let i = 0; i < calculations.length; i++){
+            let item = template.cloneNode(true);
+            item.children[0].innerText = calculations[i].ingredient.name,
+            item.children[1].innerText = `${calculations[i].output.toFixed(2)} ${calculations[i].ingredient.unit.toUpperCase()}`;
+            calculatorItems.appendChild(item);
+        }
     },
 
     getDailyAverages: function(){
         let now = new Date();
         let yesterday = new Date();
         yesterday.setHours(0, 0, 0, 0);
-        let past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+        let monthAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+        let weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    
+        let calculations = [];
 
-        let ingredients = merchant.getIngredientsSold(past, yesterday);
-        console.log(ingredients);
+        let month = merchant.getIngredientsSold(monthAgo, yesterday);
+        let week = merchant.getIngredientsSold(weekAgo, yesterday);
+
+        let weights = {
+            month: 0.33,
+            week: 0.67
+        }
+
+        for(let i = 0; i < month.length; i++){
+            for(let j = 0; j < week.length; j++){
+                if(month[i].ingredient.id === week[j].ingredient.id){
+                    let monthAverage = (month[i].quantity / 30) * weights.month;
+                    let weekAverage = (week[i].quantity / 7) * weights.week;
+
+                    let calc = {
+                        ingredient: month[i].ingredient,
+                        output: monthAverage + weekAverage
+                    };
+                    calculations.push(calc);
+                }
+            }
+        }
+
+        return calculations;
     }
 }
 
@@ -3104,8 +3132,6 @@ let analytics = {
 
             this.populateButtons();
 
-            let hasIngredients
-
             if(merchant.ingredients.length > 0){
                 this.ingredient = merchant.ingredients[0].ingredient;
             }
@@ -3140,7 +3166,7 @@ let analytics = {
             button.classList.add("choosable");
             button.onclick = ()=>{
                 this.recipe = merchant.recipes[i];
-                this.displayRecipe()
+                this.displayRecipe();
             };
             recipeButtons.appendChild(button);
         }
@@ -3158,24 +3184,30 @@ let analytics = {
                 }else{
                     this.transactionsByDate = [];
 
-                    for(let i = 0; i < response.length; i++){
-                        const date = new Date(response[i].date);
-                        let newDate = {
-                            date: date,
-                            transactions: []
-                        };
 
-                        for(let j = 0; j < response[i].transactions.length; j++){
-                            newDate.transactions.push(new Transaction(
-                                response[i].transactions[j]._id,
-                                date,
-                                response[i].transactions[j].recipes,
+                    let nextDay = new Date(from.getTime());
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    let currentTransactions = [];
+                    for(let i = 0; i < response.length; i++){
+                        response[i].date = new Date(response[i].date);
+                        if(response[i].date >= from && response[i].date < nextDay){
+                            currentTransactions.push(new Transaction(
+                                response[i]._id,
+                                response[i].date,
+                                response[i].recipes,
                                 merchant
                             ));
+                        }else{
+                            this.transactionsByDate.push({
+                                date: new Date(from.getTime()),
+                                transactions: currentTransactions
+                            });
+                            from.setDate(from.getDate() + 1);
+                            nextDay.setDate(nextDay.getDate() + 1);
+                            currentTransactions = [];
                         }
-
-                        this.transactionsByDate.push(newDate);
                     }
+
                 }
             })
             .catch((err)=>{
@@ -3190,6 +3222,7 @@ let analytics = {
         if(this.ingredient === undefined  || this.transactionsByDate.length === 0){
             return;
         }
+
         //break down data into dates and quantities
         let dates = [];
         let quantities = [];
@@ -3262,7 +3295,7 @@ let analytics = {
     },
 
     displayRecipe: function(){
-        if(this.recipes === undefined || this.transactionsByDate.length === 0){
+        if(this.recipe === undefined || this.transactionsByDate.length === 0){
             return;
         }
 
@@ -3336,6 +3369,9 @@ let analytics = {
     newDates: async function(Transaction){
         const from = document.getElementById("analStartDate").valueAsDate;
         const to = document.getElementById("analEndDate").valueAsDate;
+        from.setHours(0, 0, 0, 0);
+        to.setDate(to.getDate() + 1);
+        to.setHours(0, 0, 0, 0);
 
         await this.getData(from, to, Transaction);
 

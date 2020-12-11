@@ -84,13 +84,35 @@ module.exports = {
             recipes: req.body.recipes
         });
 
-        helper.updateIngredientQuantities(req.body.ingredientUpdates, req.session.user);
+        Merchant.findOne({_id: req.session.user})
+            .then((merchant)=>{
+                let keys = Object.keys(req.body.ingredientUpdates);
 
-        newTransaction.save()
+                for(let i = 0; i < keys.length; i++){
+                    for(let j = 0; j < merchant.inventory.length; j++){
+                        if(merchant.inventory[j].ingredient._id.toString() === keys[i]){
+                            merchant.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
+
+                            break;
+                        }
+                    }
+                }
+
+                return merchant.save();
+            })
+            .then((merchant)=>{
+                return new Transaction({
+                    merchant: req.session.user,
+                    date: new Date(req.body.date),
+                    device: "none",
+                    recipes: req.body.recipes
+                }).save();
+            })
             .then((response)=>{
                 return res.json(response);
             })
             .catch((err)=>{
+                console.log(err);
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
@@ -149,12 +171,16 @@ module.exports = {
                 if(array[1][0] === undefined){
                     transaction.date = new Date();
                 }else{
-                    transaction.date = new Date(array[1][0]);
+                    transaction.date = new Date(array[1][locations.date]);
                 }
                 
                 let ingredients = [];
                 for(let i = 1; i < array.length; i++){
-                    if(array[i][locations.recipes] === undefined || array[i][locations.quantity === 0]){
+                    if(
+                        array[i][locations.recipes] === undefined || 
+                        array[i][locations.quantity] === 0 ||
+                        array[i][locations.quantity] === undefined
+                    ){
                         continue;
                     }
 
@@ -308,7 +334,6 @@ module.exports = {
 
         const from = new Date(req.params.from);
         const to = new Date(req.params.to);
-        to.setDate(to.getDate() + 1);
 
         Transaction.aggregate([
             {$match: {
@@ -317,25 +342,6 @@ module.exports = {
                     $gte: from,
                     $lt: to
                 }
-            }},
-            {$group: {
-                _id: {$function: {
-                    body: "function(year, month, date){return `${year}-${month}-${date}`;}",
-                    args: [{$year: "$date"}, {$month: "$date"}, {$dayOfMonth: "$date"}],
-                    lang: "js"
-                }},
-                transactions: {$push: {
-                    _id: "$_id",
-                    recipes: "$recipes"
-                }}
-            }},
-            {$project: {
-                _id: 0,
-                date: {$convert: {
-                    input: "$_id",
-                    to: "date"
-                }},
-                transactions: 1
             }},
             {$sort: {
                 date: 1
