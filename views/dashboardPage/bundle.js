@@ -2643,9 +2643,13 @@ module.exports = newTransaction;
 },{}],14:[function(require,module,exports){
 let orderCalculator = {
     display: function(){
-        let calculatorItems = document.getElementById("calculatorItems");
+        let calculatorItems = document.getElementById("calculatorItemsBody");
         let template = document.getElementById("calculatorItem").content.children[0];
         let calculations = this.predict();
+
+        while(calculatorItems.children.length > 0){
+            calculatorItems.removeChild(calculatorItems.firstChild);
+        }
 
         for(let i = 0; i < calculations.length; i++){
             let item = template.cloneNode(true);
