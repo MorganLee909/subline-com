@@ -71,19 +71,10 @@ let newOrder = {
             let quantity = ingredients[i].children[1].children[0].value;
             let price = ingredients[i].children[1].children[1].value;
 
-            if(quantity === "" || price === ""){
-                controller.createBanner("MUST PROVIDE QUANTITY AND PRICE PER UNIT FOR ALL INGREDIENTS", "error");
-                return;
-            }
-
-            if(quantity < 0 || price < 0){
-                controller.createBanner("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS", "error");
-            }
-
             if(ingredients[i].ingredient.ingredient.specialUnit === "bottle"){
                 data.ingredients.push({
                     ingredient: ingredients[i].ingredient.ingredient.id,
-                    quantity: quantity * ingredients[i].ingredient.ingredient.unitSize,
+                    quantity: quantity * ingredients[i].ingredient.ingredient.getBaseUnitSize(),
                     pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
                 });
             }else{
@@ -127,7 +118,7 @@ let newOrder = {
     //TODO: Remove this function, it should be on the order
     convertPrice: function(ingredient, price){
         if(ingredient.specialUnit === "bottle"){
-            return price / ingredient.unitSize;
+            return price / ingredient.getBaseUnitSize();
         }
 
         switch(ingredient.unit){

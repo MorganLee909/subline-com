@@ -14,7 +14,7 @@ class OrderIngredient{
 
     get quantity(){
         if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient.unitSize;
+            return this._quantity / this._ingredient._unitSize;
         }
 
         switch(this._ingredient.unit){
@@ -74,7 +74,7 @@ class OrderIngredient{
 
     get pricePerUnit(){
         if(this._ingredient.specialUnit === "bottle"){
-            return (this._pricePerUnit * this._ingredient.unitSize) / 100;
+            return (this._pricePerUnit * this._ingredient._unitSize) / 100;
         }
 
         switch(this._ingredient.unit){

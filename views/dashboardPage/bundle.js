@@ -102,6 +102,10 @@ class Ingredient{
         this._unitSize = unitSize;
     }
 
+    getBaseUnitSize(){
+        return this._unitSize;
+    }
+
     getNameAndUnit(){
         if(this._specialUnit === "bottle"){
             return `${this._name} (BOTTLES)`;
@@ -838,7 +842,7 @@ class OrderIngredient{
 
     get quantity(){
         if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient.unitSize;
+            return this._quantity / this._ingredient._unitSize;
         }
 
         switch(this._ingredient.unit){
@@ -898,7 +902,7 @@ class OrderIngredient{
 
     get pricePerUnit(){
         if(this._ingredient.specialUnit === "bottle"){
-            return (this._pricePerUnit * this._ingredient.unitSize) / 100;
+            return (this._pricePerUnit * this._ingredient._unitSize) / 100;
         }
 
         switch(this._ingredient.unit){
@@ -2217,19 +2221,10 @@ let newOrder = {
             let quantity = ingredients[i].children[1].children[0].value;
             let price = ingredients[i].children[1].children[1].value;
 
-            if(quantity === "" || price === ""){
-                controller.createBanner("MUST PROVIDE QUANTITY AND PRICE PER UNIT FOR ALL INGREDIENTS", "error");
-                return;
-            }
-
-            if(quantity < 0 || price < 0){
-                controller.createBanner("QUANTITY AND PRICE MUST BE NON-NEGATIVE NUMBERS", "error");
-            }
-
             if(ingredients[i].ingredient.ingredient.specialUnit === "bottle"){
                 data.ingredients.push({
                     ingredient: ingredients[i].ingredient.ingredient.id,
-                    quantity: quantity * ingredients[i].ingredient.ingredient.unitSize,
+                    quantity: quantity * ingredients[i].ingredient.ingredient.getBaseUnitSize(),
                     pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
                 });
             }else{
@@ -2273,7 +2268,7 @@ let newOrder = {
     //TODO: Remove this function, it should be on the order
     convertPrice: function(ingredient, price){
         if(ingredient.specialUnit === "bottle"){
-            return price / ingredient.unitSize;
+            return price / ingredient.getBaseUnitSize();
         }
 
         switch(ingredient.unit){
@@ -2725,6 +2720,7 @@ let orderDetails = {
             
             let ingredientDisplay = ingredientDiv.children[1];
             if(ingredient.specialUnit === "bottle"){
+                console.log(order.ingredients[i].pricePerUnit);
                 ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${order.ingredients[i].pricePerUnit.toFixed(2)}`;
             }else{
                 ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${order.ingredients[i].pricePerUnit.toFixed(2)}`;

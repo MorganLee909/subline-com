@@ -101,6 +101,10 @@ class Ingredient{
         this._unitSize = unitSize;
     }
 
+    getBaseUnitSize(){
+        return this._unitSize;
+    }
+
     getNameAndUnit(){
         if(this._specialUnit === "bottle"){
             return `${this._name} (BOTTLES)`;
