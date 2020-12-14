@@ -233,11 +233,11 @@ module.exports = {
                         if(merchant.inventory[j].ingredient.name.toLowerCase() === array[i][locations.ingredients].toLowerCase()){
                             let baseQuantity = 0;
                             if(merchant.inventory[j].ingredient.specialUnit === "bottle"){
-                                baseQuantity = array[i][locations.quantity] * merchant.inventory[j].ingredient.unitSize * 1000;
+                                baseQuantity = array[i][locations.quantity] * merchant.inventory[j].ingredient.unitSize;
                                 currentOrder.ingredients.push({
                                     ingredient: merchant.inventory[j].ingredient._id,
                                     quantity: baseQuantity,
-                                    pricePerUnit: (array[i][locations.price] * 100) / merchant.inventory[j].ingredient.unitSize / 1000
+                                    pricePerUnit: (array[i][locations.price] * 100) / merchant.inventory[j].ingredient.unitSize
                                 });
                             }else{
                                 baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);

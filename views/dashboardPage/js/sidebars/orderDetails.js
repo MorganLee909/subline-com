@@ -26,7 +26,6 @@ let orderDetails = {
             
             let ingredientDisplay = ingredientDiv.children[1];
             if(ingredient.specialUnit === "bottle"){
-                console.log(order.ingredients[i].pricePerUnit);
                 ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} bottles x $${order.ingredients[i].pricePerUnit.toFixed(2)}`;
             }else{
                 ingredientDisplay.innerText = `${order.ingredients[i].quantity.toFixed(2)} ${ingredient.unit.toUpperCase()} X $${order.ingredients[i].pricePerUnit.toFixed(2)}`;
