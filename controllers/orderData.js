@@ -124,7 +124,6 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-        console.log(req.body);
 
         let newOrder = new Order(req.body);
         newOrder.merchant = req.session.user;

@@ -296,6 +296,8 @@ Banner
     width: 100%;
     position: absolute;
     margin-top: 15px;
+    pointer-events: none;
+    z-index: 100;
 }
 
     .banner{
@@ -334,6 +336,7 @@ Banner
             right: -10px;
             cursor: pointer;
             color: white;
+            pointer-events: all;
         }
 
 /* Footer Partial */
