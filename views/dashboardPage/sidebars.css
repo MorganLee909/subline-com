@@ -597,6 +597,35 @@ ORDER CALCULATOR
     width: 100%;
 }
 
+    .scroller{
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+    .calculatorItems{
+        width: 100%;
+    }
+
+        .calculatorItems thead tr th:nth-child(1){
+            text-align: left;
+        }
+
+        .calculatorItems thead tr th:nth-child(2){
+            text-align: right;
+        }
+
+        .calculatorItem:nth-child(odd){
+            background: rgb(201, 201, 201);
+        }
+
+        .calcUsage{
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            font-weight: bold;
+            padding: 5px;
+        }
+
 /*
 TRANSACTION DETAILS
 */
