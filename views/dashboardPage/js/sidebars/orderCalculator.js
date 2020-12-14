@@ -2,7 +2,7 @@ let orderCalculator = {
     display: function(){
         let calculatorItems = document.getElementById("calculatorItems");
         let template = document.getElementById("calculatorItem").content.children[0];
-        let calculations = this.getDailyAverages();
+        let calculations = this.predict();
 
         for(let i = 0; i < calculations.length; i++){
             let item = template.cloneNode(true);
@@ -12,7 +12,7 @@ let orderCalculator = {
         }
     },
 
-    getDailyAverages: function(){
+    predict: function(){
         let now = new Date();
         let yesterday = new Date();
         yesterday.setHours(0, 0, 0, 0);
