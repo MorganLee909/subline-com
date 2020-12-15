@@ -2604,6 +2604,7 @@ let newTransaction = {
         const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
         data.append("transactions", file);
+        data.append("timeOffset", new Date().getTimezoneOffset());
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";

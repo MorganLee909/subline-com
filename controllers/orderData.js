@@ -7,6 +7,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 const xlsx = require("xlsx");
 const fs = require("fs");
 const { base } = require("../models/merchant.js");
+const { parse } = require("path");
 
 module.exports = {
     /*
@@ -190,10 +191,10 @@ module.exports = {
                 let serverOffset = new Date().getTimezoneOffset();
                 spreadsheetDate.setMinutes(spreadsheetDate.getMinutes()  - serverOffset);
                 spreadsheetDate.setMinutes(spreadsheetDate.getMinutes() + parseFloat(req.body.timeOffset));
+                
                 break;
             }
         }
-
 
         const array = xlsx.utils.sheet_to_json(sheet, {
             header: 1

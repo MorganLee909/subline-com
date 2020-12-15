@@ -141,6 +141,23 @@ module.exports = {
             }
         }
 
+        let spreadsheetDate = {};
+        let keys = Object.keys(workbook.Sheets.Transaction);
+        for(let i = 0; i < keys.length; i++){
+            if(keys[i][0] === "!"){
+                continue;
+            }
+
+            if(workbook.Sheets.Transaction[keys[i]].w.toLowerCase() === "date"){
+                spreadsheetDate = new Date(workbook.Sheets.Transaction[`${keys[i][0]}2`].w);
+                let serverOffset = new Date().getTimezoneOffset();
+                spreadsheetDate.setMinutes(spreadsheetDate.getMinutes()  - serverOffset);
+                spreadsheetDate.setMinutes(spreadsheetDate.getMinutes() + parseFloat(req.body.timeOffset));
+
+                break;
+            }
+        }
+
         const array = xlsx.utils.sheet_to_json(sheet, {
             header: 1
         });
@@ -164,14 +181,9 @@ module.exports = {
             .then((merchant)=>{
                 let transaction = new Transaction({
                     merchant: req.session.user,
+                    date: spreadsheetDate,
                     recipes: []
                 });
-
-                if(array[1][0] === undefined){
-                    transaction.date = new Date();
-                }else{
-                    transaction.date = new Date(array[1][locations.date]);
-                }
                 
                 let ingredients = [];
                 for(let i = 1; i < array.length; i++){
