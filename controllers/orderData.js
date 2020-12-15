@@ -178,6 +178,23 @@ module.exports = {
             }
         }
 
+        let spreadsheetDate = {};
+        let keys = Object.keys(workbook.Sheets.Order);
+        for(let i = 0; i < keys.length; i++){
+            if(keys[i][0] === "!"){
+                continue;
+            }
+
+            if(workbook.Sheets.Order[keys[i]].w.toLowerCase() === "date"){
+                spreadsheetDate = new Date(workbook.Sheets.Order[`${keys[i][0]}2`].w);
+                let serverOffset = new Date().getTimezoneOffset();
+                spreadsheetDate.setMinutes(spreadsheetDate.getMinutes()  - serverOffset);
+                spreadsheetDate.setMinutes(spreadsheetDate.getMinutes() + parseFloat(req.body.timeOffset));
+                break;
+            }
+        }
+
+
         const array = xlsx.utils.sheet_to_json(sheet, {
             header: 1
         });
@@ -213,15 +230,10 @@ module.exports = {
                         currentOrder = {
                             merchant: req.session.user,
                             name: array[i][locations.name],
+                            date: spreadsheetDate,
                             taxes: parseInt(array[i][locations.taxes] * 100),
                             fees: parseInt(array[i][locations.fees] * 100),
                             ingredients: []
-                        }
-
-                        if(array[i][locations.date] === undefined){
-                            currentOrder.date = new Date();
-                        }else{
-                            currentOrder.date = new Date(array[i][locations.date]);
                         }
 
                         orders.push(currentOrder);

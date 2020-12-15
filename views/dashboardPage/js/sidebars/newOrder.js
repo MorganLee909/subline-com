@@ -1,5 +1,5 @@
 let newOrder = {
-    display: function(Order){
+    display: function(){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("newOrderIngredientList").style.display = "flex";
         document.getElementById("orderFileUpload").addEventListener("click", ()=>{controller.openModal("orderSpreadsheet")});
@@ -22,7 +22,7 @@ let newOrder = {
             ingredientList.appendChild(ingredient);
         }
 
-        document.getElementById("submitNewOrder").onclick = ()=>{this.submit(Order)};
+        document.getElementById("submitNewOrder").onclick = ()=>{this.submit()};
     },
 
     addIngredient: function(ingredient, element){
@@ -48,7 +48,7 @@ let newOrder = {
         element.style.display = "block";
     },
 
-    submit: function(Order){
+    submit: function(){
         let date = document.getElementById("newOrderDate").value;
         let taxes = document.getElementById("orderTaxes").value * 100;
         let fees = document.getElementById("orderFees").value * 100;
@@ -150,6 +150,7 @@ let newOrder = {
         const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
         data.append("orders", file);
+        data.append("timeOffset", new Date().getTimezoneOffset());
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";

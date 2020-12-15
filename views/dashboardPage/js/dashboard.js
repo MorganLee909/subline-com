@@ -133,7 +133,7 @@ controller = {
                 orderFilter.display(Order);
                 break;
             case "newOrder":
-                newOrder.display(Order);
+                newOrder.display();
                 break;
             case "orderCalculator":
                 orderCalculator.display();
