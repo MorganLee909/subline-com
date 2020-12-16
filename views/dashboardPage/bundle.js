@@ -1078,10 +1078,8 @@ class RecipeIngredient{
 
     getQuantityDisplay(){
         if(this._ingredient.specialUnit === "bottle"){
-            
             return `${this.quantity.toFixed(2)} BOTTLES`;
         }
-
         return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
     }
 
@@ -1293,7 +1291,13 @@ class Transaction{
             const recipe = this._recipes[i].recipe;
             for(let j = 0; j < recipe.ingredients.length; j++){
                 if(recipe.ingredients[j].ingredient === ingredient){
+                    if(recipe.ingredients[j].ingredient.specialUnit === "bottle"){
+                        let thing = recipe.ingredients[j]._quantity * recipe.ingredients[j].ingredient._unitSize * this._recipes[i]._quantity;
+                        quantity += thing;
+                    }
+
                     quantity += recipe.ingredients[j].quantity * this._recipes[i].quantity;
+                    break;
                 }
             }
         }
@@ -2400,7 +2404,7 @@ let newRecipe = {
                         for(let j = 0; j < merchant.ingredients.length; j++){
                             if(merchant.ingredients[j].ingredient.id === response.ingredients[i].ingredient){
                                 ingredients.push({
-                                    ingredient: merchant.ingredients[j].ingredient,
+                                    ingredient: merchant.ingredients[j].ingredient.id,
                                     quantity: response.ingredients[i].quantity
                                 });
 
@@ -3207,8 +3211,8 @@ let analytics = {
 
             let sum = 0;
             for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
-                let transactions = this.transactionsByDate[i].transactions[j];
-                sum += transactions.getIngredientQuantity(this.ingredient);
+                let transaction = this.transactionsByDate[i].transactions[j];
+                sum += transaction.getIngredientQuantity(this.ingredient);
             }
             
             quantities.push(sum);

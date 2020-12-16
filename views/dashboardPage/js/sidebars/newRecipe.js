@@ -100,7 +100,7 @@ let newRecipe = {
                         for(let j = 0; j < merchant.ingredients.length; j++){
                             if(merchant.ingredients[j].ingredient.id === response.ingredients[i].ingredient){
                                 ingredients.push({
-                                    ingredient: merchant.ingredients[j].ingredient,
+                                    ingredient: merchant.ingredients[j].ingredient.id,
                                     quantity: response.ingredients[i].quantity
                                 });
 

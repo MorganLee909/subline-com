@@ -359,7 +359,9 @@ module.exports = {
                     ingredients.push({
                         id: merchant.inventory[i].ingredient._id,
                         name: merchant.inventory[i].ingredient.name.toLowerCase(),
-                        unit: merchant.inventory[i].defaultUnit
+                        unit: merchant.inventory[i].defaultUnit,
+                        specialUnit: merchant.inventory[i].specialUnit,
+                        unitSize: merchant.inventory[i].unitSize
                     });
                 }
 
@@ -384,10 +386,17 @@ module.exports = {
                     let exists = false;
                     for(let j = 0; j < ingredients.length; j++){
                         if(ingredients[j].name === array[i][locations.ingredient]){
-                            currentRecipe.ingredients.push({
-                                ingredient: ingredients[j].id,
-                                quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)
-                            });
+                            if(ingrediens[j].specialUnit = "bottle"){
+                                currentRecipe.ingredients.push({
+                                    ingredient: ingredients[j].id,
+                                    quantity: array[i][locations.amount]
+                                });
+                            }else{
+                                currentRecipe.ingredients.push({
+                                    ingredient: ingredients[j].id,
+                                    quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)
+                                });
+                            }
 
                             exists = true;
                             break;
