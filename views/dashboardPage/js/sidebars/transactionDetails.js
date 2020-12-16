@@ -59,6 +59,7 @@ let transactionDetails = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.removeTransaction(this.transaction);
+                    controller.updateAnalytics();
 
                     controller.openStrand("transactions", merchant.getTransactions());
                     controller.createBanner("TRANSACTION REMOVED", "success");
