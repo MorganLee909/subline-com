@@ -75,21 +75,31 @@ let editRecipe = {
         let ingredients = document.getElementById("editRecipeIngList").children;
         for(let i = 0; i < ingredients.length; i++){
             const quantity = parseFloat(ingredients[i].children[3].value);
+            let newIngredient = {};
+            let ingredient = {};
 
             if(ingredients[i].children[1].style.display === "none"){
                 let selector = ingredients[i].children[2];
-                let ingredient = selector.options[selector.selectedIndex].ingredient;
+                ingredient = selector.options[selector.selectedIndex].ingredient;
 
-                data.ingredients.push({
+                newIngredient = {
                     ingredient: ingredient.ingredient.id,
                     quantity: ingredient.convertToBase(quantity)
-                });
+                };
             }else{
-                data.ingredients.push({
-                    ingredient: ingredients[i].ingredient.ingredient.id,
+                ingredient = ingredients[i].ingredient;
+
+                newIngredient = {
+                    ingredient: ingredient.ingredient.id,
                     quantity: ingredients[i].ingredient.convertToBase(quantity)
-                });
+                };
             }
+
+            if(ingredient.ingredient.specialUnit === "bottle"){
+                newIngredient.quantity = quantity;
+            }
+
+            data.ingredients.push(newIngredient);
         }
 
         let loader = document.getElementById("loaderContainer");

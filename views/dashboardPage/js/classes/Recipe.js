@@ -14,7 +14,7 @@ class RecipeIngredient{
 
     get quantity(){
         if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient.unitSize;
+            return this._quantity;
         }
 
         switch(this._ingredient.unit){

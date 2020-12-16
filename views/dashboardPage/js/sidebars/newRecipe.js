@@ -74,10 +74,16 @@ let newRecipe = {
             let sel = inputs[i].children[1].children[0];
             let ingredient = sel.options[sel.selectedIndex].ingredient;
 
-            newRecipe.ingredients.push({
+            let newIngredient = {
                 ingredient: ingredient.ingredient.id,
                 quantity: ingredient.convertToBase(inputs[i].children[2].children[0].value)
-            });
+            };
+
+            if(ingredient.ingredient.specialUnit === "bottle"){
+                newIngredient.quantity = inputs[i].children[2].children[0].value;
+            }
+
+            newRecipe.ingredients.push(newIngredient);
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -145,7 +151,7 @@ let newRecipe = {
         })
             .then(response => response.json())
             .then((response)=>{
-                if(typeof(response) === "String"){
+                if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
                     for(let i = 0; i < response.length; i++){

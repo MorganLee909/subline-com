@@ -7,6 +7,7 @@ const helper = require("./helper.js");
 const axios = require("axios");
 const xlsx = require("xlsx");
 const fs = require("fs");
+const { Console } = require("console");
 
 module.exports = {
     /*
@@ -386,7 +387,7 @@ module.exports = {
                     let exists = false;
                     for(let j = 0; j < ingredients.length; j++){
                         if(ingredients[j].name === array[i][locations.ingredient]){
-                            if(ingrediens[j].specialUnit = "bottle"){
+                            if(ingredients[j].specialUnit = "bottle"){
                                 currentRecipe.ingredients.push({
                                     ingredient: ingredients[j].id,
                                     quantity: array[i][locations.amount]
@@ -429,7 +430,7 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO CREATE YOUR INGREDIENTS");
+                return res.json("ERROR: UNABLE TO CREATE YOUR RECIPES");
             });
     },
 

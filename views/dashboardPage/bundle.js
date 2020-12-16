@@ -1041,7 +1041,7 @@ class RecipeIngredient{
 
     get quantity(){
         if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient.unitSize;
+            return this._quantity;
         }
 
         switch(this._ingredient.unit){
@@ -1856,21 +1856,31 @@ let editRecipe = {
         let ingredients = document.getElementById("editRecipeIngList").children;
         for(let i = 0; i < ingredients.length; i++){
             const quantity = parseFloat(ingredients[i].children[3].value);
+            let newIngredient = {};
+            let ingredient = {};
 
             if(ingredients[i].children[1].style.display === "none"){
                 let selector = ingredients[i].children[2];
-                let ingredient = selector.options[selector.selectedIndex].ingredient;
+                ingredient = selector.options[selector.selectedIndex].ingredient;
 
-                data.ingredients.push({
+                newIngredient = {
                     ingredient: ingredient.ingredient.id,
                     quantity: ingredient.convertToBase(quantity)
-                });
+                };
             }else{
-                data.ingredients.push({
-                    ingredient: ingredients[i].ingredient.ingredient.id,
+                ingredient = ingredients[i].ingredient;
+
+                newIngredient = {
+                    ingredient: ingredient.ingredient.id,
                     quantity: ingredients[i].ingredient.convertToBase(quantity)
-                });
+                };
             }
+
+            if(ingredient.ingredient.specialUnit === "bottle"){
+                newIngredient.quantity = quantity;
+            }
+
+            data.ingredients.push(newIngredient);
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -2378,10 +2388,16 @@ let newRecipe = {
             let sel = inputs[i].children[1].children[0];
             let ingredient = sel.options[sel.selectedIndex].ingredient;
 
-            newRecipe.ingredients.push({
+            let newIngredient = {
                 ingredient: ingredient.ingredient.id,
                 quantity: ingredient.convertToBase(inputs[i].children[2].children[0].value)
-            });
+            };
+
+            if(ingredient.ingredient.specialUnit === "bottle"){
+                newIngredient.quantity = inputs[i].children[2].children[0].value;
+            }
+
+            newRecipe.ingredients.push(newIngredient);
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -2449,7 +2465,7 @@ let newRecipe = {
         })
             .then(response => response.json())
             .then((response)=>{
-                if(typeof(response) === "String"){
+                if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
                     for(let i = 0; i < response.length; i++){
