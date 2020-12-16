@@ -220,24 +220,18 @@ module.exports = {
             .then((response)=>{
                 merchant = response;
 
-                let orders = [];
-                let currentOrder = {};
+                let order = new Order({
+                    merchant: req.session.user,
+                    name: array[1][locations.name],
+                    date: spreadsheetDate,
+                    taxes: parseInt(array[1][locations.taxes] * 100),
+                    fees: parseInt(array[1][locations.fees] * 100),
+                    ingredients: []
+                });
+
                 for(let i = 1; i < array.length; i++){
                     if(array[i].length === 0 || array[i][locations.ingredients] === undefined || array[i][locations.quantity === 0]){
                         continue;
-                    }
-
-                    if(array[i][locations.name] !== undefined){
-                        currentOrder = {
-                            merchant: req.session.user,
-                            name: array[i][locations.name],
-                            date: spreadsheetDate,
-                            taxes: parseInt(array[i][locations.taxes] * 100),
-                            fees: parseInt(array[i][locations.fees] * 100),
-                            ingredients: []
-                        }
-
-                        orders.push(currentOrder);
                     }
 
                     let exists = false;
@@ -245,15 +239,15 @@ module.exports = {
                         if(merchant.inventory[j].ingredient.name.toLowerCase() === array[i][locations.ingredients].toLowerCase()){
                             let baseQuantity = 0;
                             if(merchant.inventory[j].ingredient.specialUnit === "bottle"){
-                                baseQuantity = array[i][locations.quantity] * merchant.inventory[j].ingredient.unitSize;
-                                currentOrder.ingredients.push({
+                                baseQuantity = array[i][locations.quantity];
+                                order.ingredients.push({
                                     ingredient: merchant.inventory[j].ingredient._id,
                                     quantity: baseQuantity,
                                     pricePerUnit: (array[i][locations.price] * 100) / merchant.inventory[j].ingredient.unitSize
                                 });
                             }else{
                                 baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);
-                                currentOrder.ingredients.push({
+                                order.ingredients.push({
                                     ingredient: merchant.inventory[j].ingredient._id,
                                     quantity: baseQuantity,
                                     pricePerUnit: helper.convertPrice(array[i][locations.price] * 100, merchant.inventory[j].defaultUnit)
@@ -272,7 +266,7 @@ module.exports = {
                     }
                 }
 
-                return Promise.all([Order.create(orders), merchant.save()]);
+                return Promise.all([order.save(), merchant.save()]);
             })
             .then((response)=>{
                 return res.json(response[0]);

@@ -1,7 +1,3 @@
-const Order = require("./Order.js");
-const Recipe = require("./Recipe.js");
-const Transaction = require("./Transaction.js");
-
 class MerchantIngredient{
     constructor(ingredient, quantity){
         this._quantity = quantity;
@@ -229,7 +225,7 @@ class Merchant{
     }
 
     addRecipe(id, name, price, ingredients){
-        let recipe = new Recipe(id, name, price, ingredients, this);
+        let recipe = new this._modules.Recipe(id, name, price, ingredients, this);
 
         this._recipes.push(recipe);
 
@@ -303,7 +299,7 @@ class Merchant{
     }
 
     addTransaction(transaction){
-        transaction = new Transaction(
+        transaction = new this._modules.Transaction(
             transaction._id,
             transaction.date,
             transaction.recipes,
@@ -386,7 +382,7 @@ class Merchant{
     }
 
     addOrder(data, isNew = false){
-        let order = new Order(
+        let order = new this._modules.Order(
             data._id,
             data.name,
             data.date,

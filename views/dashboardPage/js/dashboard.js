@@ -34,7 +34,8 @@ merchant = new Merchant(data.merchant, data.transactions, {
     orders: orders,
     Ingredient: Ingredient,
     Recipe: Recipe,
-    Transaction: Transaction
+    Transaction: Transaction,
+    Order: Order
 });
 
 controller = {

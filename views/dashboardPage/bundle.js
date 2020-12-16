@@ -129,10 +129,6 @@ class Ingredient{
 
 module.exports = Ingredient;
 },{}],2:[function(require,module,exports){
-const Order = require("./Order.js");
-const Recipe = require("./Recipe.js");
-const Transaction = require("./Transaction.js");
-
 class MerchantIngredient{
     constructor(ingredient, quantity){
         this._quantity = quantity;
@@ -360,7 +356,7 @@ class Merchant{
     }
 
     addRecipe(id, name, price, ingredients){
-        let recipe = new Recipe(id, name, price, ingredients, this);
+        let recipe = new this._modules.Recipe(id, name, price, ingredients, this);
 
         this._recipes.push(recipe);
 
@@ -434,7 +430,7 @@ class Merchant{
     }
 
     addTransaction(transaction){
-        transaction = new Transaction(
+        transaction = new this._modules.Transaction(
             transaction._id,
             transaction.date,
             transaction.recipes,
@@ -517,7 +513,7 @@ class Merchant{
     }
 
     addOrder(data, isNew = false){
-        let order = new Order(
+        let order = new this._modules.Order(
             data._id,
             data.name,
             data.date,
@@ -825,7 +821,7 @@ class Merchant{
 }
 
 module.exports = Merchant;
-},{"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5}],3:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
         if(quantity < 0){
@@ -1340,7 +1336,8 @@ merchant = new Merchant(data.merchant, data.transactions, {
     orders: orders,
     Ingredient: Ingredient,
     Recipe: Recipe,
-    Transaction: Transaction
+    Transaction: Transaction,
+    Order: Order
 });
 
 controller = {
