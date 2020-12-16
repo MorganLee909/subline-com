@@ -75,12 +75,8 @@ class Transaction{
             const recipe = this._recipes[i].recipe;
             for(let j = 0; j < recipe.ingredients.length; j++){
                 if(recipe.ingredients[j].ingredient === ingredient){
-                    if(recipe.ingredients[j].ingredient.specialUnit === "bottle"){
-                        let thing = recipe.ingredients[j]._quantity * recipe.ingredients[j].ingredient._unitSize * this._recipes[i]._quantity;
-                        quantity += thing;
-                    }
-
                     quantity += recipe.ingredients[j].quantity * this._recipes[i].quantity;
+
                     break;
                 }
             }

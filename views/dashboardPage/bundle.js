@@ -1291,12 +1291,8 @@ class Transaction{
             const recipe = this._recipes[i].recipe;
             for(let j = 0; j < recipe.ingredients.length; j++){
                 if(recipe.ingredients[j].ingredient === ingredient){
-                    if(recipe.ingredients[j].ingredient.specialUnit === "bottle"){
-                        let thing = recipe.ingredients[j]._quantity * recipe.ingredients[j].ingredient._unitSize * this._recipes[i]._quantity;
-                        quantity += thing;
-                    }
-
                     quantity += recipe.ingredients[j].quantity * this._recipes[i].quantity;
+
                     break;
                 }
             }
@@ -3244,10 +3240,15 @@ let analytics = {
             }
         }
 
+        let yaxis = `QUANTITY (${this.ingredient.unit.toUpperCase()})`;
+        if(this.ingredient.specialUnit === "bottle"){
+            yaxis = `QUANTITY (${this.ingredient.specialUnit.toUpperCase()})`
+        }
+
         const layout = {
             title: this.ingredient.name.toUpperCase(),
             xaxis: {title: "DATE"},
-            yaxis: {title: `QUANTITY (${this.ingredient.unit.toUpperCase()})`}
+            yaxis: {title: yaxis}
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
