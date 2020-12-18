@@ -1,5 +1,4 @@
 let orders = {
-
     display: function(){
         document.getElementById("orderFilterBtn").addEventListener("click", ()=>{controller.openSidebar("orderFilter")});
         document.getElementById("newOrderBtn").addEventListener("click", ()=>{controller.openSidebar("newOrder")});

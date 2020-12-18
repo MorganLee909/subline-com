@@ -919,7 +919,8 @@ class OrderIngredient{
             case "cm": return (this._pricePerUnit / 100) / 100; 
             case "m": return this._pricePerUnit / 100;
             case "in": return (this._pricePerUnit / 39.3701) / 100; 
-            case "ft": return (this._pricePerUnit / 3.2808) / 100; 
+            case "ft": return (this._pricePerUnit / 3.2808) / 100;
+            default: return this._pricePerUnit / 100;
         }
     }
 
@@ -945,10 +946,6 @@ parent = the merchant that it belongs to
 */
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
-        if(taxes < 0){
-            return false;
-        }
-
         this._id = id;
         this._name = name;
         this._date = new Date(date);
@@ -964,11 +961,12 @@ class Order{
         for(let i = 0; i < ingredients.length; i++){
             for(let j = 0; j < merchant.ingredients.length; j++){
                 if(merchant.ingredients[j].ingredient.id === ingredients[i].ingredient){
-                    this._ingredients.push(new OrderIngredient(
+                    let thing = new OrderIngredient(
                         merchant.ingredients[j].ingredient,
                         ingredients[i].quantity,
                         ingredients[i].pricePerUnit
-                    ));
+                    );
+                    this._ingredients.push(thing);
                     break;
                 }
             }
@@ -3755,7 +3753,6 @@ let ingredients = {
 module.exports = ingredients;
 },{}],23:[function(require,module,exports){
 let orders = {
-
     display: function(){
         document.getElementById("orderFilterBtn").addEventListener("click", ()=>{controller.openSidebar("orderFilter")});
         document.getElementById("newOrderBtn").addEventListener("click", ()=>{controller.openSidebar("newOrder")});
