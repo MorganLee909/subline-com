@@ -2950,7 +2950,6 @@ let transactionDetails = {
         let dateString = `${days[transaction.date.getDay()]}, ${months[transaction.date.getMonth()]} ${transaction.date.getDate()}, ${transaction.date.getFullYear()}`;
 
         document.getElementById("transactionDate").innerText = dateString;
-        document.getElementById("transactionTime").innerText = transaction.date.toLocaleTimeString();
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
         document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
 
@@ -3945,7 +3944,7 @@ module.exports = recipeBook;
 let transactions = {
     transactions: [],
 
-    display: function(Transaction){
+    display: function(){
         document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("transactionFilter")};
         document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
 
@@ -3981,7 +3980,7 @@ let transactions = {
                 totalPrice += transactions[i].recipes[j].recipe.price * transactions[i].recipes[j].quantity;
             }
 
-            transactionDiv.children[0].innerText = `${transactions[i].date.toLocaleDateString()} ${transactions[i].date.toLocaleTimeString()}`;
+            transactionDiv.children[0].innerText = transactions[i].date.toLocaleDateString();
             transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
             transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
 

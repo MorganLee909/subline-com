@@ -1,7 +1,7 @@
 let transactions = {
     transactions: [],
 
-    display: function(Transaction){
+    display: function(){
         document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("transactionFilter")};
         document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
 
@@ -37,7 +37,7 @@ let transactions = {
                 totalPrice += transactions[i].recipes[j].recipe.price * transactions[i].recipes[j].quantity;
             }
 
-            transactionDiv.children[0].innerText = `${transactions[i].date.toLocaleDateString()} ${transactions[i].date.toLocaleTimeString()}`;
+            transactionDiv.children[0].innerText = transactions[i].date.toLocaleDateString();
             transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
             transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
 

@@ -35,7 +35,6 @@ let transactionDetails = {
         let dateString = `${days[transaction.date.getDay()]}, ${months[transaction.date.getMonth()]} ${transaction.date.getDate()}, ${transaction.date.getFullYear()}`;
 
         document.getElementById("transactionDate").innerText = dateString;
-        document.getElementById("transactionTime").innerText = transaction.date.toLocaleTimeString();
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
         document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
 
