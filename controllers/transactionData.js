@@ -76,13 +76,7 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-
-        let newTransaction = new Transaction({
-            merchant: req.session.user,
-            date: new Date(req.body.date),
-            device: "none",
-            recipes: req.body.recipes
-        });
+        
 
         Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
@@ -101,6 +95,10 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
+                if(req.body.date === null){
+                    throw "NEW TRANSACTIONS MUST CONTAIN A DATE";
+                }
+
                 return new Transaction({
                     merchant: req.session.user,
                     date: new Date(req.body.date),
