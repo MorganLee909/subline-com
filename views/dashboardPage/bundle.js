@@ -3133,15 +3133,23 @@ let analytics = {
         let ingredientButtons = document.getElementById("analIngredientList");
         let recipeButtons = document.getElementById("analRecipeList");
 
+        while(ingredientButtons.children.length > 0){
+            ingredientButtons.removeChild(ingredientButtons.firstChild);
+        }
+
         for(let i = 0; i < merchant.ingredients.length; i++){
             let button = document.createElement("button");
             button.innerText = merchant.ingredients[i].ingredient.name;
             button.classList.add("choosable");
             button.onclick = ()=>{
                 this.ingredient = merchant.ingredients[i].ingredient;
-                this.displayIngredient()
+                this.displayIngredient();
             };
             ingredientButtons.appendChild(button);
+        }
+
+        while(recipeButtons.children.length > 0){
+            recipeButtons.removeChild(recipeButtons.firstChild);
         }
 
         for(let i = 0; i < merchant.recipes.length; i++){
