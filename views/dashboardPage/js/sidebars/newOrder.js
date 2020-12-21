@@ -32,13 +32,7 @@ let newOrder = {
         div.ingredient = ingredient;
         div.children[0].children[1].onclick = ()=>{this.removeIngredient(div, element)};
 
-        //TODO: this should be handled by the class
-        //Display units depending on the whether it is a special unit
-        if(ingredient.ingredient.specialUnit === "bottle"){
-            div.children[0].children[0].innerText = `${ingredient.ingredient.name} (BOTTLES)`;
-        }else{
-            div.children[0].children[0].innerText = `${ingredient.ingredient.name} (${ingredient.ingredient.unit.toUpperCase()})`;
-        }
+        div.children[0].children[0].innerText = `${ingredient.ingredient.name} (${ingredient.ingredient.unit.toUpperCase()})`;
 
         document.getElementById("selectedIngredientList").appendChild(div);
     },
@@ -71,19 +65,12 @@ let newOrder = {
             let quantity = ingredients[i].children[1].children[0].value;
             let price = ingredients[i].children[1].children[1].value;
 
-            if(ingredients[i].ingredient.ingredient.specialUnit === "bottle"){
-                data.ingredients.push({
-                    ingredient: ingredients[i].ingredient.ingredient.id,
-                    quantity: quantity * ingredients[i].ingredient.ingredient.getBaseUnitSize(),
-                    pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
-                });
-            }else{
-                data.ingredients.push({
-                    ingredient: ingredients[i].ingredient.ingredient.id,
-                    quantity: ingredients[i].ingredient.convertToBase(quantity),
-                    pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
-                });
-            }
+            data.ingredients.push({
+                ingredient: ingredients[i].ingredient.ingredient.id,
+                quantity: ingredients[i].ingredient.convertToBase(quantity),
+                //TODO: this should be done in a class and not here
+                pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
+            });
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -117,10 +104,6 @@ let newOrder = {
 
     //TODO: Remove this function, it should be on the order
     convertPrice: function(ingredient, price){
-        if(ingredient.specialUnit === "bottle"){
-            return price / ingredient.getBaseUnitSize();
-        }
-
         switch(ingredient.unit){
             case "g": return price;
             case "kg": return price / 1000; 
@@ -139,7 +122,8 @@ let newOrder = {
             case "cm": return price * 100; 
             case "m": return price;
             case "in": return price * 39.3701; 
-            case "ft": return price * 3.2808; 
+            case "ft": return price * 3.2808;
+            default: return price;
         }
     },
 
