@@ -79,10 +79,6 @@ let newRecipe = {
                 quantity: ingredient.convertToBase(inputs[i].children[2].children[0].value)
             };
 
-            if(ingredient.ingredient.specialUnit === "bottle"){
-                newIngredient.quantity = inputs[i].children[2].children[0].value;
-            }
-
             newRecipe.ingredients.push(newIngredient);
         }
 
