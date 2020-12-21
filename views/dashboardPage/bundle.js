@@ -89,6 +89,27 @@ class Ingredient{
     getNameAndUnit(){
         return `${this._name} (${this._unit.toUpperCase()})`;
     }
+
+    getPotentialUnits(){
+        let mass = ["g", "kg", "oz", "lb"];
+        let volume = ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
+        let length = ["mm", "cm", "m", "in", "ft"];
+
+        if(mass.includes(this._unit)){
+            return mass;
+        }
+        if(volume.includes(this._unit)){
+            return volume;
+        }
+        if(length.includes(this._unit)){
+            return length;
+        }
+        if(this._unit === "bottle"){
+            return volume;
+        }
+        return [];
+
+    }
 }
 
 module.exports = Ingredient;
@@ -169,12 +190,6 @@ class Merchant{
         this._recipes = [];
         this._transactions = [];
         this._orders = [];
-        this._units = {
-            mass: ["g", "kg", "oz", "lb"],
-            volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
-            length: ["mm", "cm", "m", "in", "ft"],
-            other: ["each", "bottle"]
-        }
         
         //populate ingredients
         for(let i = 0; i < oldMerchant.inventory.length; i++){
@@ -185,7 +200,6 @@ class Merchant{
                 oldMerchant.inventory[i].ingredient.unitType,
                 oldMerchant.inventory[i].defaultUnit,
                 this,
-                oldMerchant.inventory[i].ingredient.specialUnit,
                 oldMerchant.inventory[i].ingredient.unitSize
             );
 
@@ -276,9 +290,8 @@ class Merchant{
             ingredient.unitType,
             defaultUnit,
             this,
-            ingredient.specialUnit,
             ingredient.unitSize
-        )
+        );
 
         const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);
@@ -1595,27 +1608,12 @@ let editIngredient = {
         quantLabel.innerText = `CURRENT STOCK (${ingredient.ingredient.unit.toUpperCase()})`;
         document.getElementById("editIngSubmit").onclick = ()=>{this.submit(ingredient)};
 
-        //Populate the unit buttons
-        const units = merchant.units[ingredient.ingredient.unitType];
-
-        for(let i = 0; i < units.length; i++){
-            let button = document.createElement("button");
-            button.classList.add("unitButton");
-            button.innerText = units[i].toUpperCase();
-            button.onclick = ()=>{this.changeUnit(button)};
-            buttonList.appendChild(button);
-
-            if(units[i] === ingredient.ingredient.unit){
-                button.classList.add("unitActive");
-            }
-        }
-        
         //Make any changes for special ingredients
         if(ingredient.ingredient.unit === "bottle"){
-            quantLabel.innerText = "CURRENT STOCK (BOTTLES):";
+            // quantLabel.innerText = "CURRENT STOCK (BOTTLES):";
 
             specialLabel.style.display = "flex";
-            specialLabel.innerText = `BOTTLE SIZE (${ingredient.ingredient.unit.toUpperCase()}):`;
+            specialLabel.innerText = `BOTTLE SIZE (${ingredient.ingredient.unitType.toUpperCase()}):`;
             
             let sizeInput = document.createElement("input");
             sizeInput.id = "editIngSpecialSize";
@@ -1626,6 +1624,21 @@ let editIngredient = {
             specialLabel.appendChild(sizeInput);
         }else{
             specialLabel.style.display = "none";
+        }
+
+        //Populate the unit buttons
+        const units = ingredient.ingredient.getPotentialUnits();
+
+        for(let i = 0; i < units.length; i++){
+            let button = document.createElement("button");
+            button.classList.add("unitButton");
+            button.innerText = units[i].toUpperCase();
+            button.onclick = ()=>{this.changeUnit(button)};
+            buttonList.appendChild(button);
+
+            if(units[i] === ingredient.ingredient.unitType){
+                button.classList.add("unitActive");
+            }
         }
 
         let quantInput = document.createElement("input");

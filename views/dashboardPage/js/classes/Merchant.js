@@ -74,12 +74,6 @@ class Merchant{
         this._recipes = [];
         this._transactions = [];
         this._orders = [];
-        this._units = {
-            mass: ["g", "kg", "oz", "lb"],
-            volume: ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"],
-            length: ["mm", "cm", "m", "in", "ft"],
-            other: ["each", "bottle"]
-        }
         
         //populate ingredients
         for(let i = 0; i < oldMerchant.inventory.length; i++){
@@ -90,7 +84,6 @@ class Merchant{
                 oldMerchant.inventory[i].ingredient.unitType,
                 oldMerchant.inventory[i].defaultUnit,
                 this,
-                oldMerchant.inventory[i].ingredient.specialUnit,
                 oldMerchant.inventory[i].ingredient.unitSize
             );
 
@@ -181,9 +174,8 @@ class Merchant{
             ingredient.unitType,
             defaultUnit,
             this,
-            ingredient.specialUnit,
             ingredient.unitSize
-        )
+        );
 
         const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);

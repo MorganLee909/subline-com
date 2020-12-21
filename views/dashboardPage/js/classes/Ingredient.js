@@ -88,6 +88,27 @@ class Ingredient{
     getNameAndUnit(){
         return `${this._name} (${this._unit.toUpperCase()})`;
     }
+
+    getPotentialUnits(){
+        let mass = ["g", "kg", "oz", "lb"];
+        let volume = ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
+        let length = ["mm", "cm", "m", "in", "ft"];
+
+        if(mass.includes(this._unit)){
+            return mass;
+        }
+        if(volume.includes(this._unit)){
+            return volume;
+        }
+        if(length.includes(this._unit)){
+            return length;
+        }
+        if(this._unit === "bottle"){
+            return volume;
+        }
+        return [];
+
+    }
 }
 
 module.exports = Ingredient;
