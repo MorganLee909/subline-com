@@ -7,10 +7,6 @@ class Ingredient{
         this._unitType = unitType;
         this._unit = unit;
         this._parent = parent;
-        if(specialUnit){
-            this._specialUnit = specialUnit;
-            this._unitSize = unitSize;
-        }
     }
 
     get id(){
@@ -90,10 +86,6 @@ class Ingredient{
     }
 
     getNameAndUnit(){
-        if(this._specialUnit === "bottle"){
-            return `${this._name} (BOTTLES)`;
-        }
-
         return `${this._name} (${this._unit.toUpperCase()})`;
     }
 }
@@ -111,10 +103,6 @@ class MerchantIngredient{
     }
 
     get quantity(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient._unitSize;
-        }
-
         switch(this._ingredient.unit){
             case "g":return this._quantity; 
             case "kg": return this._quantity / 1000;
@@ -167,10 +155,6 @@ class MerchantIngredient{
     }
 
     getQuantityDisplay(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return `${this.quantity.toFixed(2)} BOTTLES`;
-        }
-
         return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
     }
 }
@@ -722,12 +706,8 @@ class Merchant{
 
             if(!unitExists){
                 let unit = "";
-                if(innerIngredient.specialUnit === "bottle"){
-                    unit = "bottle";
-                }else{
-                    unit = innerIngredient.unit;
-                }
-
+                unit = innerIngredient.unit;
+                
                 ingredientsByUnit.push({
                     name: unit,
                     ingredients: [this.ingredients[i]]
@@ -808,10 +788,6 @@ class OrderIngredient{
     }
 
     get quantity(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient._unitSize;
-        }
-
         switch(this._ingredient.unit){
             case "g":return this._quantity;
             case "kg": return this._quantity / 1000;
@@ -868,10 +844,6 @@ class OrderIngredient{
     }
 
     get pricePerUnit(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return (this._pricePerUnit * this._ingredient._unitSize) / 100;
-        }
-
         switch(this._ingredient.unit){
             case "g": return this._pricePerUnit / 100;
             case "kg": return (this._pricePerUnit * 1000) / 100; 
@@ -1005,10 +977,6 @@ class RecipeIngredient{
     }
 
     get quantity(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity;
-        }
-
         switch(this._ingredient.unit){
             case "g":return this._quantity;
             case "kg": return this._quantity / 1000;
@@ -1042,9 +1010,6 @@ class RecipeIngredient{
     }
 
     getQuantityDisplay(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return `${this.quantity.toFixed(2)} BOTTLES`;
-        }
         return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
     }
 

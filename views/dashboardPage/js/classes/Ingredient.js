@@ -6,10 +6,6 @@ class Ingredient{
         this._unitType = unitType;
         this._unit = unit;
         this._parent = parent;
-        if(specialUnit){
-            this._specialUnit = specialUnit;
-            this._unitSize = unitSize;
-        }
     }
 
     get id(){
@@ -89,10 +85,6 @@ class Ingredient{
     }
 
     getNameAndUnit(){
-        if(this._specialUnit === "bottle"){
-            return `${this._name} (BOTTLES)`;
-        }
-
         return `${this._name} (${this._unit.toUpperCase()})`;
     }
 }

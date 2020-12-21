@@ -24,9 +24,7 @@ const IngredientSchema = new mongoose.Schema({
     unitType: {
         type: String,
         required: [true, "UNIT TYPE IS REQUIRED"]
-    },
-    specialUnit: String,
-    unitSize: String
+    }
 });
 
 module.exports = mongoose.model("Ingredient", IngredientSchema);

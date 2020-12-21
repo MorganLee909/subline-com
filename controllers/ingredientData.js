@@ -298,12 +298,9 @@ module.exports = {
                     }
                 }
 
-                return merchant.save()
+                return Promise.all([merchant.save(), Ingredient.deleteOne({_id: req.params.id})]);
             })
-            .then((merchant)=>{
-                return Ingredient.deleteOne({_id: req.params.id});
-            })
-            .then((ingredient)=>{
+            .then((response)=>{
                 return res.json({});
             })
             .catch((err)=>{

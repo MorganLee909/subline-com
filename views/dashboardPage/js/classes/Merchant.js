@@ -9,10 +9,6 @@ class MerchantIngredient{
     }
 
     get quantity(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return this._quantity / this._ingredient._unitSize;
-        }
-
         switch(this._ingredient.unit){
             case "g":return this._quantity; 
             case "kg": return this._quantity / 1000;
@@ -65,10 +61,6 @@ class MerchantIngredient{
     }
 
     getQuantityDisplay(){
-        if(this._ingredient.specialUnit === "bottle"){
-            return `${this.quantity.toFixed(2)} BOTTLES`;
-        }
-
         return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
     }
 }
@@ -620,12 +612,8 @@ class Merchant{
 
             if(!unitExists){
                 let unit = "";
-                if(innerIngredient.specialUnit === "bottle"){
-                    unit = "bottle";
-                }else{
-                    unit = innerIngredient.unit;
-                }
-
+                unit = innerIngredient.unit;
+                
                 ingredientsByUnit.push({
                     name: unit,
                     ingredients: [this.ingredients[i]]
