@@ -47,11 +47,7 @@ let ingredients = {
                 ingredientDiv._name = ingredient.ingredient.name.toLowerCase();
                 ingredientDiv._unit = ingredient.ingredient.unit.toLowerCase();
                 
-                if(ingredient.ingredient.specialUnit === "bottle"){
-                    ingredientDiv.children[2].innerText = `${ingredient.quantity.toFixed(2)} BOTTLES`
-                }else{
-                    ingredientDiv.children[2].innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-                }
+                ingredientDiv.children[2].innerText = `${ingredient.quantity.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
 
                 categoryDiv.children[1].appendChild(ingredientDiv);
                 this.ingredients.push(ingredientDiv);
