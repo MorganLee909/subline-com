@@ -3394,14 +3394,9 @@ let home = {
                 input.value--;
                 input.changed = true;
             };
-            if(ingredient.ingredient.specialUnit === "bottle"){
-                input.value = ingredient.quantity.toFixed(2);
-                ingredientCheck.children[2].innerText = "BOTTLES";
-            }else{
-                input.value = ingredient.quantity.toFixed(2);
-                ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
-            }
 
+            input.value = ingredient.quantity.toFixed(2);
+            ingredientCheck.children[2].innerText = ingredient.ingredient.unit.toUpperCase();
             
             ingredientCheck.children[1].children[2].onclick = ()=>{
                 input.value++;
