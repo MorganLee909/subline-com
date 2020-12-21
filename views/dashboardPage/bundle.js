@@ -1858,11 +1858,7 @@ let ingredientDetails = {
 
         let dailyUse = sum / quantities.length;
         const dailyUseDiv = document.getElementById("dailyUse");
-        if(ingredient.ingredient.specialUnit === "bottle"){
-            dailyUseDiv.innerText = `${dailyUse.toFixed(2)} BOTTLES`;
-        }else{
-            dailyUseDiv.innerText = `${dailyUse.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
-        }
+        dailyUseDiv.innerText = `${dailyUse.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
 
         //Show recipes that this ingredient is a part of
         let recipeList = document.getElementById("ingredientRecipeList");
