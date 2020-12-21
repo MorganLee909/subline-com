@@ -237,22 +237,13 @@ module.exports = {
                     let exists = false;
                     for(let j = 0; j < merchant.inventory.length; j++){
                         if(merchant.inventory[j].ingredient.name.toLowerCase() === array[i][locations.ingredients].toLowerCase()){
-                            let baseQuantity = 0;
-                            if(merchant.inventory[j].ingredient.specialUnit === "bottle"){
-                                baseQuantity = array[i][locations.quantity];
-                                order.ingredients.push({
-                                    ingredient: merchant.inventory[j].ingredient._id,
-                                    quantity: baseQuantity,
-                                    pricePerUnit: (array[i][locations.price] * 100) / merchant.inventory[j].ingredient.unitSize
-                                });
-                            }else{
-                                baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);
-                                order.ingredients.push({
-                                    ingredient: merchant.inventory[j].ingredient._id,
-                                    quantity: baseQuantity,
-                                    pricePerUnit: helper.convertPrice(array[i][locations.price] * 100, merchant.inventory[j].defaultUnit)
-                                });
-                            }
+                            let baseQuantity = helper.convertQuantityToBaseUnit(array[i][locations.quantity], merchant.inventory[j].defaultUnit);
+                            order.ingredients.push({
+                                ingredient: merchant.inventory[j].ingredient._id,
+                                quantity: baseQuantity,
+                                //TODO: this should not be storing based on the default unit, but the base unit
+                                pricePerUnit: helper.convertPrice(array[i][locations.price] * 100, merchant.inventory[j].defaultUnit)
+                            });
 
                             merchant.inventory[j].quantity += baseQuantity;
 
