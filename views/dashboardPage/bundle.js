@@ -1,12 +1,13 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 class Ingredient{
-    constructor(id, name, category, unitType, unit, parent, specialUnit = undefined, unitSize = undefined){
+    constructor(id, name, category, unitType, unit, parent, unitSize = undefined){
         this._id = id;
         this._name = name;
         this._category = category;
         this._unitType = unitType;
         this._unit = unit;
         this._parent = parent;
+        this._unitSize = unitSize;
     }
 
     get id(){
@@ -1963,11 +1964,8 @@ let newIngredient = {
 
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
-            newIngredient.ingredient.unitType = "volume";
+            newIngredient.ingredient.unitType = document.getElementById("bottleUnits").value;
             newIngredient.ingredient.unitSize = document.getElementById("bottleSize").value;
-            newIngredient.defaultUnit = document.getElementById("bottleUnits").value;
-            newIngredient.ingredient.specialUnit = unit;
-            newIngredient.quantity = quantityValue;
         }
     
         let loader = document.getElementById("loaderContainer");

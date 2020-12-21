@@ -24,6 +24,10 @@ const IngredientSchema = new mongoose.Schema({
     unitType: {
         type: String,
         required: [true, "UNIT TYPE IS REQUIRED"]
+    },
+    unitSize: {
+        type: Number,
+        min: [0, "SIZE CANNOT BE A NEGATIVE NUMBER"]
     }
 });
 

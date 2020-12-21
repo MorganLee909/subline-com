@@ -42,11 +42,8 @@ let newIngredient = {
 
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
-            newIngredient.ingredient.unitType = "volume";
+            newIngredient.ingredient.unitType = document.getElementById("bottleUnits").value;
             newIngredient.ingredient.unitSize = document.getElementById("bottleSize").value;
-            newIngredient.defaultUnit = document.getElementById("bottleUnits").value;
-            newIngredient.ingredient.specialUnit = unit;
-            newIngredient.quantity = quantityValue;
         }
     
         let loader = document.getElementById("loaderContainer");
