@@ -1610,7 +1610,7 @@ let editIngredient = {
         }
         
         //Make any changes for special ingredients
-        if(ingredient.ingredient.specialUnit === "bottle"){
+        if(ingredient.ingredient.unit === "bottle"){
             quantLabel.innerText = "CURRENT STOCK (BOTTLES):";
 
             specialLabel.style.display = "flex";
@@ -1655,14 +1655,7 @@ let editIngredient = {
             category: document.getElementById("editIngCategory").value
         }
 
-        //Add data based on unit type
-        if(ingredient.ingredient.specialUnit === "bottle"){
-            let unitSize = ingredient.convertToBase(parseFloat(document.getElementById("editSpecialLabel").children[0].value));
-            data.quantity = quantity * unitSize;
-            data.unitSize = unitSize;
-        }else{
-            data.quantity = quantity;
-        }
+        data.quantity = quantity;
 
         //Get the measurement unit
         let units = document.getElementById("unitButtons");
