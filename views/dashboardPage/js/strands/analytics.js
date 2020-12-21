@@ -152,9 +152,6 @@ let analytics = {
         }
 
         let yaxis = `QUANTITY (${this.ingredient.unit.toUpperCase()})`;
-        if(this.ingredient.specialUnit === "bottle"){
-            yaxis = `QUANTITY (${this.ingredient.specialUnit.toUpperCase()})`
-        }
 
         const layout = {
             title: this.ingredient.name.toUpperCase(),
