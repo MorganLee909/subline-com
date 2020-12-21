@@ -29,17 +29,7 @@ module.exports = {
         }
 
         let newIngredient = {};
-        if(req.body.ingredient.specialUnit === "bottle"){
-            newIngredient = new Ingredient({
-                name: req.body.ingredient.name,
-                category: req.body.ingredient.category,
-                unitType: req.body.ingredient.unitType,
-                specialUnit: req.body.ingredient.specialUnit,
-                unitSize: helper.convertQuantityToBaseUnit(req.body.ingredient.unitSize, req.body.defaultUnit)
-            });
-        }else{
-            newIngredient = new Ingredient(req.body.ingredient);
-        }
+        newIngredient = new Ingredient(req.body.ingredient);
 
         let ingredientPromise = newIngredient.save();
         let merchantPromise = Merchant.findOne({_id: req.session.user});
@@ -51,11 +41,8 @@ module.exports = {
                     defaultUnit: req.body.defaultUnit
                 }
 
-                if(response[0].specialUnit === "bottle"){
-                    newIngredient.quantity = req.body.quantity * response[0].unitSize;
-                }else{
-                    newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
-                }
+                //TODO this should come in as the base unit
+                newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
 
                 response[1].inventory.push(newIngredient);
 
@@ -83,7 +70,6 @@ module.exports = {
         quantity: new quantity of the unit (in grams),
         category: new category of the unit,
         unit: new default unit of the ingredient,
-        unitSize: unit size for special unit, if any
     }
     */
     updateIngredient: function(req, res){
@@ -96,10 +82,6 @@ module.exports = {
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
                 ingredient.category = req.body.category
-                //TODO: Handle this in the class
-                if(ingredient.specialUnit === "bottle"){
-                    ingredient.unitSize = req.body.unitSize;
-                }
 
                 return ingredient.save();
             })
