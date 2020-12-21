@@ -387,17 +387,10 @@ module.exports = {
                     let exists = false;
                     for(let j = 0; j < ingredients.length; j++){
                         if(ingredients[j].name === array[i][locations.ingredient]){
-                            if(ingredients[j].specialUnit = "bottle"){
-                                currentRecipe.ingredients.push({
-                                    ingredient: ingredients[j].id,
-                                    quantity: array[i][locations.amount]
-                                });
-                            }else{
-                                currentRecipe.ingredients.push({
-                                    ingredient: ingredients[j].id,
-                                    quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)
-                                });
-                            }
+                            currentRecipe.ingredients.push({
+                                ingredient: ingredients[j].id,
+                                quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)
+                            });
 
                             exists = true;
                             break;
