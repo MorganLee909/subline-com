@@ -2526,10 +2526,7 @@ let orderCalculator = {
         }
 
         for(let i = 0; i < calculations.length; i++){
-            let outputString = `${calculations[i].output.toFixed(2)} ${calculations[i].ingredient.unit.toUpperCase()}`
-            if(calculations[i].ingredient.specialUnit === "bottle"){
-                outputString = `${calculations[i].output.toFixed(2)} BOTTLES`;
-            }
+            let outputString = `${calculations[i].output.toFixed(2)} ${calculations[i].ingredient.unit.toUpperCase()}`;
         
             let item = template.cloneNode(true);
             item.children[0].innerText = calculations[i].ingredient.name,
