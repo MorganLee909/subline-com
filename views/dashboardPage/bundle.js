@@ -1796,10 +1796,6 @@ let editRecipe = {
                 };
             }
 
-            if(ingredient.ingredient.specialUnit === "bottle"){
-                newIngredient.quantity = quantity;
-            }
-
             data.ingredients.push(newIngredient);
         }
 
