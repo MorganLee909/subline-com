@@ -28,8 +28,12 @@ module.exports = {
             return res.redirect("/");
         }
 
-        let newIngredient = {};
-        newIngredient = new Ingredient(req.body.ingredient);
+        let newIngredient = {...req.body};
+        if(req.body.defaultUnit === "bottle"){
+            newIngredient.ingredient.unitSize = helper.convertQuantityToBaseUnit(newIngredient.ingredient.unitSize, newIngredient.ingredient.unitType);
+        }
+
+        newIngredient = new Ingredient(newIngredient.ingredient);
 
         let ingredientPromise = newIngredient.save();
         let merchantPromise = Merchant.findOne({_id: req.session.user});

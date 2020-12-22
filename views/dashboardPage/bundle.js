@@ -1975,7 +1975,7 @@ let newIngredient = {
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
             newIngredient.ingredient.unitType = document.getElementById("bottleUnits").value;
-            newIngredient.ingredient.unitSize = document.getElementById("bottleSize").value;
+            newIngredient.ingredient.unitSize = parseFloat(document.getElementById("bottleSize").value);
         }
     
         let loader = document.getElementById("loaderContainer");
