@@ -1,7 +1,6 @@
 const axios = require("axios");
 
 const Transaction = require("../models/transaction.js");
-const Merchant = require("../models/merchant.js");
 
 module.exports = {
     getCloverData: async function(merchant){
@@ -186,12 +185,10 @@ module.exports = {
 
     convertQuantityToBaseUnit: function(quantity, unit){
         switch(unit){
-            case "g":return quantity; 
             case "kg": return quantity * 1000;
             case "oz": return quantity * 28.3495;
             case "lb": return quantity * 453.5924;
             case "ml": return quantity / 1000;
-            case "l": return quantity;
             case "tsp": return quantity / 202.8842;
             case "tbsp": return quantity / 67.6278;
             case "ozfl": return quantity / 33.8141;
@@ -201,7 +198,6 @@ module.exports = {
             case "gal": return quantity * 3.7854;
             case "mm": return quantity / 1000;
             case "cm": return quantity / 100;
-            case "m": return quantity;
             case "in": return quantity / 39.3701;
             case "ft": return quantity / 3.2808;
             default: return quantity;
@@ -255,5 +251,33 @@ module.exports = {
         }
 
         return true;
+    },
+
+    getUnitType: function(unit){
+        let unitType = "";
+
+        switch(unit){
+            case "g": unitType = "mass"; break;
+            case "kg": unitType = "mass"; break;
+            case "oz": unitType = "mass"; break;
+            case "lb": unitType = "mass"; break;
+            case "ml": unitType = "volume"; break;
+            case "l": unitType = "volume"; break;
+            case "tsp": unitType = "volume"; break;
+            case "tbsp": unitType = "volume"; break;
+            case "ozfl": unitType = "volume"; break;
+            case "cup": unitType = "volume"; break;
+            case "pt": unitType = "volume"; break;
+            case "qt": unitType = "volume"; break;
+            case "gal": unitType = "volume"; break;
+            case "mm": unitType = "length"; break;
+            case "cm": unitType = "length"; break;
+            case "m": unitType = "length"; break;
+            case "in": unitType = "length"; break;
+            case "ft": unitType = "length"; break;
+            default: unitType = "other"; break;
+        }
+
+        return unitType;
     }
 }

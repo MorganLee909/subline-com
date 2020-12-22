@@ -27,7 +27,8 @@ const IngredientSchema = new mongoose.Schema({
     },
     unitSize: {
         type: Number,
-        min: [0, "SIZE CANNOT BE A NEGATIVE NUMBER"]
+        min: [0, "SIZE CANNOT BE A NEGATIVE NUMBER"],
+        required: false
     }
 });
 

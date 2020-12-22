@@ -97,10 +97,10 @@ let newIngredient = {
                 }else{
                     for(let i = 0; i < response.length; i++){
                         merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
-
-                        controller.createBanner("INGREDINETS SUCCESSFULLY ADDED", "success");
-                        controller.openStrand("ingredients");
                     }
+
+                    controller.createBanner("INGREDIENTS SUCCESSFULLY ADDED", "success");
+                    controller.openStrand("ingredients");
                 }
                 
             })

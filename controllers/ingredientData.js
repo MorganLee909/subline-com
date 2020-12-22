@@ -158,8 +158,8 @@ module.exports = {
                 case "category": locations.category = i; break;
                 case "quantity": locations.quantity = i; break;
                 case "unit": locations.unit = i; break;
-                case "bottle": locations.bottle = i; break;
                 case "bottle size": locations.bottleSize = i; break;
+                case "bottle unit": locations.bottleUnit = i; break;
             }
         }
 
@@ -169,67 +169,35 @@ module.exports = {
         for(let i = 1; i < array.length; i++){
             let ingredient = new Ingredient({
                 name: array[i][locations.name],
-                category: array[i][locations.category]
+                category: array[i][locations.category],
+                unitType: helper.getUnitType(array[i][locations.unit].toLowerCase())
             });
+
+            if(array[i][locations.unit] === "bottle"){
+                ingredient.unitType = array[i][locations.bottleUnit];
+                ingredient.unitSize = helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.bottleUnit]);
+            }
 
             let merchantItem = {
                 ingredient: ingredient,
                 quantity: helper.convertQuantityToBaseUnit(array[i][locations.quantity], array[i][locations.unit]),
                 defaultUnit: array[i][locations.unit]
             }
-
-            if(array[i][locations.bottle] === true){
-                let quantity = array[i][locations.quantity] * array[i][locations.bottleSize];
-                merchantItem.quantity = helper.convertQuantityToBaseUnit(quantity, array[i][locations.unit]);
-                
-                ingredient.unitType = "volume";
-                ingredient.specialUnit = "bottle";
-                ingredient.unitSize = helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.unit]);
-            }else{
-                let unitType = "";
-                //TODO: this should probably be in a helper
-                switch(array[i][locations.unit].toLowerCase()){
-                    case "g": unitType = "mass"; break;
-                    case "kg": unitType = "mass"; break;
-                    case "oz": unitType = "mass"; break;
-                    case "lb": unitType = "mass"; break;
-                    case "ml": unitType = "volume"; break;
-                    case "l": unitType = "volume"; break;
-                    case "tsp": unitType = "volume"; break;
-                    case "tbsp": unitType = "volume"; break;
-                    case "ozfl": unitType = "volume"; break;
-                    case "cup": unitType = "volume"; break;
-                    case "pt": unitType = "volume"; break;
-                    case "qt": unitType = "volume"; break;
-                    case "gal": unitType = "volume"; break;
-                    case "mm": unitType = "length"; break;
-                    case "cm": unitType = "length"; break;
-                    case "m": unitType = "length"; break;
-                    case "in": unitType = "length"; break;
-                    case "ft": unitType = "length"; break;
-                    default: unitType = "other";
-                }
-
-                ingredient.unitType = unitType;
-            }
-
+            
             merchantData.push(merchantItem);
             ingredients.push(ingredient);
         }
 
         //Update the database
-        Ingredient.create(ingredients)
-            .then((ingredients)=>{
-                return Merchant.findOne({_id: req.session.user});
-            })
+        Merchant.findOne({_id: req.session.user})
             .then((merchant)=>{
                 for(let i = 0; i < merchantData.length; i++){
                     merchant.inventory.push(merchantData[i]);
                 }
 
-                return merchant.save();
+                return Promise.all([Ingredient.create(ingredients), merchant.save()]);
             })
-            .then((merchant)=>{
+            .then((response)=>{
                 return res.json(merchantData);
             })
             .catch((err)=>{
@@ -295,5 +263,5 @@ module.exports = {
                 }
                 return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
             });
-    },
+    }
 }
