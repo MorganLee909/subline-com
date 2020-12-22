@@ -68,7 +68,6 @@ let newOrder = {
             data.ingredients.push({
                 ingredient: ingredients[i].ingredient.ingredient.id,
                 quantity: ingredients[i].ingredient.convertToBase(quantity),
-                //TODO: this should be done in a class and not here
                 pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
             });
         }
@@ -102,7 +101,6 @@ let newOrder = {
             });
     },
 
-    //TODO: Remove this function, it should be on the order
     convertPrice: function(ingredient, price){
         switch(ingredient.unit){
             case "g": return price;

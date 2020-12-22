@@ -241,7 +241,6 @@ module.exports = {
                             order.ingredients.push({
                                 ingredient: merchant.inventory[j].ingredient._id,
                                 quantity: baseQuantity,
-                                //TODO: this should not be storing based on the default unit, but the base unit
                                 pricePerUnit: helper.convertPrice(array[i][locations.price] * 100, merchant.inventory[j].defaultUnit)
                             });
 

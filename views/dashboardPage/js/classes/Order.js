@@ -14,12 +14,10 @@ class OrderIngredient{
 
     get quantity(){
         switch(this._ingredient.unit){
-            case "g":return this._quantity;
             case "kg": return this._quantity / 1000;
             case "oz": return this._quantity / 28.3495;
             case "lb": return this._quantity / 453.5924;
             case "ml": return this._quantity * 1000;
-            case "l": return this._quantity;
             case "tsp": return this._quantity * 202.8842;
             case "tbsp": return this._quantity * 67.6278;
             case "ozfl": return this._quantity * 33.8141;
@@ -29,7 +27,6 @@ class OrderIngredient{
             case "gal": return this._quantity / 3.7854;
             case "mm": return this._quantity * 1000;
             case "cm": return this._quantity * 100;
-            case "m": return this._quantity;
             case "in": return this._quantity * 39.3701;
             case "ft": return this._quantity * 3.2808;
             default: return this._quantity;

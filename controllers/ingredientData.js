@@ -41,7 +41,6 @@ module.exports = {
                     defaultUnit: req.body.defaultUnit
                 }
 
-                //TODO this should come in as the base unit
                 newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
 
                 response[1].inventory.push(newIngredient);
