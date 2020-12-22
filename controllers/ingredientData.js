@@ -253,9 +253,10 @@ module.exports = {
         workbook.SheetNames.push("Ingredients");
         let workbookData = [];
 
-        workbookData.push(["Name", "Category", "Quantity", "Unit", "Bottle", "Bottle Size"]);
+        workbookData.push(["Name", "Category", "Quantity", "Unit", "Bottle Size", "Bottle Unit"]);
         workbookData.push(["Example Ingredient 1", "Produce", 100, "lbs"]);
-        workbookData.push(["Example Ingredient Two", "Beverage", 5, "ml", "TRUE", 750]);
+        workbookData.push(["Example Ingredient 2", "Fruit", 3.24, "kg"]);
+        workbookData.push(["Example Ingredient 3", "Beverage", 5, "bottle", 750, "ml"]);
 
         workbook.Sheets.Ingredients = xlsx.utils.aoa_to_sheet(workbookData);
         xlsx.writeFile(workbook, "SublineIngredients.xlsx");
