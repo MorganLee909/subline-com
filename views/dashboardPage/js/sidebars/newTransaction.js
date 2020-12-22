@@ -22,11 +22,13 @@ let newTransaction = {
     submit: function(Transaction){
         let recipeDivs = document.getElementById("newTransactionRecipes");
         let date = document.getElementById("newTransactionDate").valueAsDate;
-        
-        if(date > new Date()){
-            controller.createBanner("CANNOT HAVE A DATE IN THE FUTURE", "error");
+
+        if(date === null){
+            controller.createBanner("DATE IS REQUIRED FOR TRANSACTIONS", "error");
             return;
         }
+
+        date.setHours(0, 0, 0, 0);
         
         let data = {
             date: date,

@@ -43,15 +43,17 @@ let newOrder = {
     },
 
     submit: function(){
-        let date = document.getElementById("newOrderDate").value;
+        let date = document.getElementById("newOrderDate").valueAsDate;
         let taxes = document.getElementById("orderTaxes").value * 100;
         let fees = document.getElementById("orderFees").value * 100;
         let ingredients = document.getElementById("selectedIngredientList").children;
-
-        if(date === ""){
+        
+        if(date === null){
             controller.createBanner("DATE IS REQUIRED FOR ORDERS", "error");
             return;
         }
+    
+        date.setHours(0, 0, 0, 0);
 
         let data = {
             name: document.getElementById("newOrderName").value,
