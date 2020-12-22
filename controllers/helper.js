@@ -184,8 +184,6 @@ module.exports = {
     },
 
     convertQuantityToBaseUnit: function(quantity, unit){
-        console.log(quantity);
-        console.log(unit);
         switch(unit){
             case "kg": return quantity * 1000;
             case "oz": return quantity * 28.3495;

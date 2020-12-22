@@ -2195,9 +2195,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    for(let i = 0; i < response.length; i++){
-                        merchant.addOrder(response[i], true);
-                    }
+                    merchant.addOrder(response, true);
 
                     controller.createBanner("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY", "success");
                     controller.openStrand("orders");
