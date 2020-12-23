@@ -6,105 +6,59 @@ const helper = require("./helper.js");
 const ObjectId = require("mongoose").Types.ObjectId;
 const xlsx = require("xlsx");
 const fs = require("fs");
-const { base } = require("../models/merchant.js");
-const { parse } = require("path");
 
 module.exports = {
+    
     /*
-    GET - get the 25 most recent orders
-    return = [
-        _id: id of order,
-        name: user created id for order,
-        date: date order was created,
-        ingredients: [{
-            _id: unused id of this object,
-            ingredient: id of the ingredient,
-            price: price per unit of the ingredient,
-            quantity: quantity of ingredient in this order
-        }]
-    ]
+    GET: gets orders based on queries
+    req.body = {
+        from: Date (starting date/time)
+        to: Date (ending date/time)
+        ingredients: [id] (list of transactions to search for)
+            empty list gets all
+    }
     */
     getOrders: function(req, res){
         if(!req.session.user){
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
+        let from = new Date(req.body.from);
+        let to = new Date(req.body.to);
+
+        let match = {};
+        let objectifiedIngredients = [];
+        if(req.body.ingredients.length === 0){
+            match = {$exists: true};
+        }else{  
+            for(let i = 0; i < req.body.ingredients; i++){
+                objectifiedIngredients.push(new ObjectId(req.body.ingredients[i]));
+            }
+
+            match = {
+                $elemMatch: {
+                    ingredient: {
+                        $in: objectifiedIngredients
+                    }
+                }
+            }
+        }
 
         Order.aggregate([
-            {$match: {merchant: ObjectId(req.session.user)}},
-            {$sort: {date: -1}},
-            {$limit: 25},
-            {$project: {
-                name: 1,
-                date: 1,
-                taxes: 1,
-                fees: 1,
-                ingredients: 1
+            {$match:{
+                merchant: new ObjectId(req.session.user),
+                date: {
+                    $gte: from,
+                    $lt: to
+                },
+                ingredients: match
             }}
         ])
             .then((orders)=>{
                 return res.json(orders);
             })
             .catch((err)=>{
-                if(typeof(err) === "string"){
-                    return res.json(err);
-                }
-                if(err.name === "ValidationError"){
-                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
-                }
                 return res.json("ERROR: UNABLE TO RETRIEVE YOUR ORDERS");
-            });
-    },
-
-    /*
-    POST - retrieves a list of transactions based on the filter
-    req.body = {
-        startDate: starting date to filter on,
-        endDate: ending date to filter on,
-        ingredients: list of recipes.to filter on
-    }
-    */
-    orderFilter: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let objectifiedIngredients = [];
-        for(let i = 0; i < req.body.ingredients.length; i++){
-            objectifiedIngredients.push(new ObjectId(req.body.ingredients[i]));
-        }
-        let startDate = new Date(req.body.startDate);
-        let endDate = new Date(req.body.endDate);
-        endDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1);
-        Order.aggregate([
-            {$match: {
-                merchant: new ObjectId(req.session.user),
-                date: {
-                    $gte: startDate,
-                    $lt: endDate
-                },
-                ingredients: {
-                    $elemMatch: {
-                        ingredient: {
-                            $in: objectifiedIngredients
-                        }
-                    }
-                }
-            }},
-            {$sort: {date: -1}}
-        ])
-            .then((orders)=>{
-                return res.json(orders);
-            })
-            .catch((err)=>{
-                if(typeof(err) === "string"){
-                    return res.json(err);
-                }
-                if(err.name === "ValidationError"){
-                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
-                }
-                return res.json("ERROR: UNABLE TO RETRIEVE YOUR TRANSACTIONS");
             });
     },
 

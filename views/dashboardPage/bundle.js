@@ -3681,44 +3681,54 @@ let orders = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        return fetch("/order", {
-            method: "get",
+        let to = new Date();
+        let from = new Date(to.getFullYear(), to.getMonth(), to.getDate() - 30);
+        from.setHours(0, 0, 0, 0);
+
+        let body = {
+            to: to.toUTCString(),
+            from: from.toUTCString(),
+            ingredients: []};
+
+        return fetch("/orders/get", {
+            method: "post",
+            body: JSON.stringify(body),
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
             }
         })
-        .then(response => response.json())
-        .then((response)=>{
-            if(typeof(response) === "string"){
-                controller.createBanner(response, "error");
-            }else{
-                let orders = [];
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    let orders = [];
 
-                for(let i = 0; i < response.length; i++){
-                    orders.push(new Order(
-                        response[i]._id,
-                        response[i].name,
-                        response[i].date,
-                        response[i].taxes,
-                        response[i].fees,
-                        response[i].ingredients,
-                        merchant
-                    ));
+                    for(let i = 0; i < response.length; i++){
+                        orders.push(new Order(
+                            response[i]._id,
+                            response[i].name,
+                            response[i].date,
+                            response[i].taxes,
+                            response[i].fees,
+                            response[i].ingredients,
+                            merchant
+                        ));
+                    }
+
+                    if(merchant.orders.length === 0){
+                        merchant.setOrders(orders);
+                    }
+
+                    return orders;
                 }
-
-                if(merchant.orders.length === 0){
-                    merchant.setOrders(orders);
-                }
-
-                return orders;
-            }
-        })
-        .catch((err)=>{
-            controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
-        })
-        .finally(()=>{
-            loader.style.display = "none";
-        });
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 
