@@ -1390,7 +1390,7 @@ controller = {
                 transactionDetails.display(data);
                 break;
             case "transactionFilter":
-                transactionFilter.display();
+                transactionFilter.display(Transaction);
                 break;
             case "newTransaction":
                 newTransaction.display(Transaction);
@@ -2391,7 +2391,7 @@ let newRecipe = {
 module.exports = newRecipe;
 },{}],13:[function(require,module,exports){
 let newTransaction = {
-    display: function(Transaction){
+    display: function(){
         let recipeList = document.getElementById("newTransactionRecipes");
         let template = document.getElementById("createTransaction").content.children[0];
         document.getElementById("transactionFileUpload").addEventListener("click", ()=>{controller.openModal("transactionSpreadsheet")});
@@ -2408,10 +2408,10 @@ let newTransaction = {
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
 
-        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit(Transaction)};
+        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit()};
     },
 
-    submit: function(Transaction){
+    submit: function(){
         let recipeDivs = document.getElementById("newTransactionRecipes");
         let date = document.getElementById("newTransactionDate").valueAsDate;
 
@@ -2885,7 +2885,7 @@ let transactionDetails = {
 module.exports = transactionDetails;
 },{}],19:[function(require,module,exports){
 let transactionFilter = {
-    display: function(){
+    display: function(Transaction){
         //Set default dates
         let today = new Date();
         let monthAgo = new Date(today);
@@ -2911,7 +2911,7 @@ let transactionFilter = {
         }
 
         //Submit button
-        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit()};
+        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit(Transaction)};
     },
 
     toggleActive: function(element){
@@ -2922,12 +2922,15 @@ let transactionFilter = {
         }
     },
 
-    submit: function(){
+    submit: function(Transaction){
         let data = {
-            startDate: document.getElementById("transFilterDateStart").valueAsDate,
-            endDate: document.getElementById("transFilterDateEnd").valueAsDate,
+            from: document.getElementById("transFilterDateStart").valueAsDate,
+            to: document.getElementById("transFilterDateEnd").valueAsDate,
             recipes: []
         }
+
+        data.from.setHours(0, 0, 0, 0);
+        data.to.setHours(0, 0, 0, 0);
 
         if(data.startDate >= data.endDate){
             controller.createBanner("START DATE CANNOT BE AFTER END DATE", "error");

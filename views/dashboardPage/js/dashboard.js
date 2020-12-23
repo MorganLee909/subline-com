@@ -143,7 +143,7 @@ controller = {
                 transactionDetails.display(data);
                 break;
             case "transactionFilter":
-                transactionFilter.display();
+                transactionFilter.display(Transaction);
                 break;
             case "newTransaction":
                 newTransaction.display(Transaction);

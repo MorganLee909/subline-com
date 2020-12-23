@@ -1,5 +1,5 @@
 let newTransaction = {
-    display: function(Transaction){
+    display: function(){
         let recipeList = document.getElementById("newTransactionRecipes");
         let template = document.getElementById("createTransaction").content.children[0];
         document.getElementById("transactionFileUpload").addEventListener("click", ()=>{controller.openModal("transactionSpreadsheet")});
@@ -16,10 +16,10 @@ let newTransaction = {
             recipeDiv.children[0].innerText = merchant.recipes[i].name;
         }
 
-        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit(Transaction)};
+        document.getElementById("submitNewTransaction").onclick = ()=>{this.submit()};
     },
 
-    submit: function(Transaction){
+    submit: function(){
         let recipeDivs = document.getElementById("newTransactionRecipes");
         let date = document.getElementById("newTransactionDate").valueAsDate;
 

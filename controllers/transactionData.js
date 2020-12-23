@@ -11,12 +11,10 @@ module.exports = {
     /*
     POST - retrieves a list of transactions based on the filter
     req.body = {
-        startDate: starting date to filter on,
-        endDate: ending date to filter on,
+        from: starting date to filter on,
+        to: ending date to filter on,
         recipes: list of recipes to filter on
     }
-    NOTE: May be a good idea to search recipes with for looping rather than query
-        Needs some testing and playing with if so
     */
     getTransactions: function(req, res){
         if(!req.session.user){
@@ -24,28 +22,35 @@ module.exports = {
             return res.redirect("/");
         }
 
+        let from = new Date(req.body.from);
+        let to = new Date(req.body.to);
+
         let objectifiedRecipes = [];
-        for(let i = 0; i < req.body.recipes.length; i++){
-            objectifiedRecipes.push(new ObjectId(req.body.recipes[i]));
+        let query = {};
+        if(req.body.length === 0){
+            query = {$exists: false};
+        }else{
+            for(let i = 0; i < req.body.recipes.length; i++){
+                objectifiedRecipes.push(new ObjectId(req.body.recipes[i]));
+            }
+
+            query = {
+                $elemMatch: {
+                    recipe: {
+                        $in: objectifiedRecipes
+                    }
+                }
+            }
         }
-        let startDate = new Date(req.body.startDate);
-        let endDate = new Date(req.body.endDate);
-        endDate.setDate(endDate.getDate() + 1);
 
         Transaction.aggregate([
             {$match: {
                 merchant: ObjectId(req.session.user),
                 date: {
-                    $gte: startDate,
-                    $lt: endDate
+                    $gte: from,
+                    $lt: to
                 },
-                recipes: {
-                    $elemMatch: {
-                        recipe: {
-                            $in: objectifiedRecipes
-                        }
-                    }
-                }
+                recipes: query
             }},
             {$sort: {date: -1}}
         ])

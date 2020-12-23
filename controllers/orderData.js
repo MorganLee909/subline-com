@@ -52,7 +52,8 @@ module.exports = {
                     $lt: to
                 },
                 ingredients: match
-            }}
+            }},
+            {$sort: {date: -1}}
         ])
             .then((orders)=>{
                 return res.json(orders);

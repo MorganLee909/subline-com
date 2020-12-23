@@ -1,5 +1,5 @@
 let transactionFilter = {
-    display: function(){
+    display: function(Transaction){
         //Set default dates
         let today = new Date();
         let monthAgo = new Date(today);
@@ -25,7 +25,7 @@ let transactionFilter = {
         }
 
         //Submit button
-        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit()};
+        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit(Transaction)};
     },
 
     toggleActive: function(element){
@@ -36,12 +36,15 @@ let transactionFilter = {
         }
     },
 
-    submit: function(){
+    submit: function(Transaction){
         let data = {
-            startDate: document.getElementById("transFilterDateStart").valueAsDate,
-            endDate: document.getElementById("transFilterDateEnd").valueAsDate,
+            from: document.getElementById("transFilterDateStart").valueAsDate,
+            to: document.getElementById("transFilterDateEnd").valueAsDate,
             recipes: []
         }
+
+        data.from.setHours(0, 0, 0, 0);
+        data.to.setHours(0, 0, 0, 0);
 
         if(data.startDate >= data.endDate){
             controller.createBanner("START DATE CANNOT BE AFTER END DATE", "error");
