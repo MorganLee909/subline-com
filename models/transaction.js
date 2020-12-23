@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema({
@@ -8,7 +9,11 @@ const TransactionSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: [true, "DATE MUST BE PROVIDED FOR A TRANSACTION"]
+        required: [true, "DATE MUST BE PROVIDED FOR A TRANSACTION"],
+        validate: {
+            validator: date => date < new Date,
+            message: "TRANSACTION DATE CANNOT BE SET TO THE FUTURE"
+        }
     },
     device: String,
     recipes: [{

@@ -18,8 +18,11 @@ const OrderSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now,
-        required: [true, "MUST PROVIDE A DATE FOR THE ORDER"]
+        required: [true, "MUST PROVIDE A DATE FOR THE ORDER"],
+        validate: {
+            validator: date => date < new Date,
+            message: "ORDER DATE CANNOT BE SET TO THE FUTURE"
+        }
     },
     taxes: Number,
     fees: Number,
