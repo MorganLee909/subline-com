@@ -31,7 +31,7 @@ module.exports = {
         if(req.body.ingredients.length === 0){
             match = {$exists: true};
         }else{  
-            for(let i = 0; i < req.body.ingredients; i++){
+            for(let i = 0; i < req.body.ingredients.length; i++){
                 objectifiedIngredients.push(new ObjectId(req.body.ingredients[i]));
             }
 

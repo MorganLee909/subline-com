@@ -78,7 +78,7 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                orders.orders = data;
+                merchant.setOrders(data);
                 orders.display(Order);
                 break;
             case "transactions":

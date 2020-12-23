@@ -36,15 +36,13 @@ let orderFilter = {
 
     submit: function(Order){
         let data = {
-            startDate: document.getElementById("orderFilterDateFrom").valueAsDate,
-            endDate: document.getElementById("orderFilterDateTo").valueAsDate,
+            from: document.getElementById("orderFilterDateFrom").valueAsDate,
+            to: document.getElementById("orderFilterDateTo").valueAsDate,
             ingredients: []
         }
 
-        if(data.startDate >= data.endDate){
-            controller.createBanner("START DATE CANNOT BE AFTER END DATE", "error");
-            return;
-        }
+        data.from.setHours(0, 0, 0, 0);
+        data.to.setHours(0, 0, 0, 0);
 
         let ingredients = document.getElementById("orderFilterIngredients").children;
         for(let i = 0; i < ingredients.length; i++){
@@ -53,16 +51,10 @@ let orderFilter = {
             }
         }
 
-        if(data.ingredients.length === 0){
-            for(let i = 0; i < merchant.ingredients.length; i++){
-                data.ingredients.push(merchant.ingredients[i].ingredient.id);
-            }
-        }
-
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/order", {
+        fetch("/orders/get", {
             method: "post",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"

@@ -394,7 +394,7 @@ class Merchant{
     }
 
     setOrders(orders){
-        this._orders = orders
+        this._orders = orders;
     }
 
     removeOrder(order){
