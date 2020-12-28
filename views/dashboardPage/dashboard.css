@@ -618,6 +618,27 @@ Modal
             display: none;
         }
 
+    .strandHead{
+        /* flex-direction: column; */
+        justify-content: center;
+        align-items: center;
+    }
+
+        .strandTitle{
+            padding: 0;
+            margin: -11px 15px 0 0;
+            font-size: 20px;
+        }
+
+    .choosable{
+        background: white;
+        color: rgb(0, 27, 45);
+    }
+
+    .buttonBox{
+        margin-top: 0;
+    }
+
     /*
     Home
     */
@@ -657,19 +678,20 @@ Modal
             width: 50px;
         }
 
-        .ingredient{
-            color: white;
-            width: 75%;
-            border: 2px solid rgb(201, 201, 201);
-            padding: 5px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            box-shadow: 1px 1px gray;
+        .ingredientsDiv{
+            width: 100%;
+            align-items: center;
         }
 
-        .ingredient > *{
-            width: 50%;
-        }
+            .ingredient{
+                width: 90%;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            .ingredient > *{
+                width: 50%;
+            }
 
     /*
     Recipe Book
@@ -699,5 +721,21 @@ Modal
     */
     .transactionsList{
         width: 100%;
+        margin-top: 25px;
+    }
+
+    #transactionsStrand .strandHead{
+        justify-content: right;
+        margin-top: 8px;
+    }
+
+    #transactionsStrand .strandTitle{
+        margin: 0;
+    }
+
+    #filterTransactionsButton{
+        padding: 5px;
+        min-width: 0;
+        margin-left: 50px;
     }
 }
