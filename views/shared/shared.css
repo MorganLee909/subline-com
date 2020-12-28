@@ -270,6 +270,10 @@ form{
             margin-left: 10px;
         }
 
+        .mobileHomeButton{
+            display: none;
+        }
+
     .headerEnd{
         display: flex;
         align-items: center;
@@ -371,6 +375,30 @@ Banner
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .mobileHide{
+        display: none;
+    }
+
+    .headerStart{
+        width: 0;
+    }
+
+        .mobileHomeButton{
+            display: flex;
+            align-items: center;
+            margin: auto 25px auto 0;
+            background: rgb(255, 99, 107);
+            box-shadow: 0 0 10px rgb(255, 99, 107);
+            border-radius: 25px;
+            border: none;
+            color: white;
+            padding: 15px;
+        }
+
+            .mobileHomeButton svg{
+                margin: auto;
+            }
 }
 
 label {
