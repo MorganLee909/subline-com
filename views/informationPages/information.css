@@ -57,3 +57,23 @@ HELP PAGE
         text-align: left;
         font-size: 20px;
     }
+
+@media screen and (max-width: 600px){
+    .helpMenu{
+        position: static;
+        padding: 0;
+    }
+
+    .helpContent{
+        padding: 0;
+        width: 90%;
+    }
+
+    .helpContent h2, .helpContent h3, .helpContent h4{
+        text-align: center;
+    }
+
+    .helpContent p{
+        text-align: justify;
+    }
+}
