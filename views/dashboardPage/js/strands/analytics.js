@@ -69,8 +69,6 @@ let analytics = {
     },
 
     getData: function(from, to, Transaction){
-        console.log(from);
-        console.log(to);
         let data = {
             from: from,
             to: to,
@@ -92,8 +90,8 @@ let analytics = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    console.log(response);
                     this.transactionsByDate = [];
+                    response.reverse();
 
                     let startOfDay = new Date(from.getTime());
                     startOfDay.setHours(0, 0, 0, 0);
@@ -125,12 +123,9 @@ let analytics = {
                         startOfDay.setDate(startOfDay.getDate() + 1);
                         endOfDay.setDate(endOfDay.getDate() + 1);
                     }
-
-                    console.log(this.transactionsByDate);
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 controller.createBanner("UNABLE TO UPDATE THE PAGE", "error");
             })
             .finally(()=>{

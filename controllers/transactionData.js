@@ -21,7 +21,6 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
-        console.log(req.body);
 
         let from = new Date(req.body.from);
         let to = new Date(req.body.to);
@@ -43,8 +42,6 @@ module.exports = {
                 }
             }
         }
-
-        console.log(query);
 
         Transaction.aggregate([
             {$match: {
