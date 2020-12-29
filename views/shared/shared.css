@@ -377,7 +377,7 @@ Banner
     }
 
     .mobileHide{
-        display: none;
+        display: none !important;
     }
 
     .headerStart{

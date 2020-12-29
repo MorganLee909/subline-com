@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
         <link rel="stylesheet" href="/shared/shared.css">
@@ -263,7 +264,7 @@
                     </label>
 
                     <div class="dateRange">
-                        <h3>Date Range:</h3>
+                        <h3 class="mobileHide">Date Range:</h3>
                         <div class="dateRangeInput">
                             <input id="analStartDate" type="date">
                             <p> - </p>
@@ -278,7 +279,7 @@
                     <div id="analIngredientList" class="itemsList"></div>
 
                     <div class="analData">
-                        <div id="itemUseGraph" class="card analCard"></div>
+                        <div id="itemUseGraph" class="card analCard mobileHide"></div>
 
                         <div class="dataRow">
                             <div class="card analCard">
@@ -300,7 +301,7 @@
                             </div>
                         </div>
 
-                        <div class="dataRow">
+                        <div class="mobileHide dataRow">
                             <div class="card analCard">
                                 <p>Sunday Average</p>
 
@@ -346,11 +347,11 @@
                     </div>
                 </div>
 
-                <div id="analRecipeContent">
+                <div id="analRecipeContent" class="analContent">
                     <ul id="analRecipeList" class="itemsList"></ul>
 
                     <div class="analData">
-                        <div id="recipeSalesGraph" class="card analCard"></div>
+                        <div id="recipeSalesGraph" class="card analCard mobileHide"></div>
 
                         <div class="dataRow">
                             <div class="card analCard">
