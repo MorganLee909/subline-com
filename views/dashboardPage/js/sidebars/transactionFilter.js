@@ -58,12 +58,6 @@ let transactionFilter = {
             }
         }
 
-        if(data.recipes.length === 0){
-            for(let i = 0; i < merchant.recipes.length; i++){
-                data.recipes.push(merchant.recipes[i].id);
-            }
-        }
-
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 

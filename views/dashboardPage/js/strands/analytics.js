@@ -69,15 +69,30 @@ let analytics = {
     },
 
     getData: function(from, to, Transaction){
+        console.log(from);
+        console.log(to);
+        let data = {
+            from: from,
+            to: to,
+            recipes: []
+        }
+        
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        return fetch(`/transactions/${from.toISOString()}/${to.toISOString()}`)
+        return fetch("/transaction", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
+                    console.log(response);
                     this.transactionsByDate = [];
 
                     let startOfDay = new Date(from.getTime());
@@ -110,9 +125,12 @@ let analytics = {
                         startOfDay.setDate(startOfDay.getDate() + 1);
                         endOfDay.setDate(endOfDay.getDate() + 1);
                     }
+
+                    console.log(this.transactionsByDate);
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 controller.createBanner("UNABLE TO UPDATE THE PAGE", "error");
             })
             .finally(()=>{

@@ -21,14 +21,15 @@ module.exports = {
             req.session.error = "MUST BE LOGGED IN TO DO THAT";
             return res.redirect("/");
         }
+        console.log(req.body);
 
         let from = new Date(req.body.from);
         let to = new Date(req.body.to);
 
         let objectifiedRecipes = [];
         let query = {};
-        if(req.body.length === 0){
-            query = {$exists: false};
+        if(req.body.recipes.length === 0){
+            query = {$ne: false};
         }else{
             for(let i = 0; i < req.body.recipes.length; i++){
                 objectifiedRecipes.push(new ObjectId(req.body.recipes[i]));
@@ -42,6 +43,8 @@ module.exports = {
                 }
             }
         }
+
+        console.log(query);
 
         Transaction.aggregate([
             {$match: {
