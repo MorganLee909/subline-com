@@ -29,3 +29,14 @@ body{
         font-size: 25px;
         padding: 5px;
     }
+
+@media all and (max-width: 1200px){
+    .title{
+        font-size: 25px;
+        padding: 5px;
+    }
+
+    .text{
+        padding: 5px;
+    }
+}
