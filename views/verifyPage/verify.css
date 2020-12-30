@@ -30,7 +30,7 @@ body{
         padding: 5px;
     }
 
-@media all and (max-width: 1200px){
+@media all and (max-width: 1400px){
     .title{
         font-size: 25px;
         padding: 5px;

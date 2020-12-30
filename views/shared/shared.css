@@ -364,7 +364,7 @@ Banner
         margin: 0 25px;
     }
 
-@media screen and (max-width: 1200px){
+@media screen and (max-width: 1400px){
     .button{
         font-size: 15px;
     }

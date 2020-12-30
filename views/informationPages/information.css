@@ -58,7 +58,7 @@ HELP PAGE
         font-size: 20px;
     }
 
-@media screen and (max-width: 1200px){
+@media screen and (max-width: 1400px){
     @media (orientation: portrait){
         .helpMenu{
             position: static;

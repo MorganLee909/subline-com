@@ -591,202 +591,189 @@ Modal
                 margin-top: 15px;
             }
 
-@media screen and (max-width: 1200px){
-    body{
-        flex-direction: column;
-        background: rgb(0, 27, 45);
-        color: white;
+@media screen and (orientation: portrait){
+    .mobileMenuSelector{
+        z-index: 10;
     }
-
-        .contentBlock{
-            padding: 0;
+    
+    @media screen and (max-width: 1400px){
+        body{
+            flex-direction: column;
+            background: rgb(0, 27, 45);
+            color: white;
         }
 
-            .banner{
-                display: none;
-            }
-
-            .strandHead{
+            .contentBlock{
                 padding: 0;
             }
 
-                .strandTitle{
-                    margin-top: 35px;
+                .banner{
+                    display: none;
                 }
 
-    .strandHead{
-        /* flex-direction: column; */
-        justify-content: center;
-        align-items: center;
-    }
+                .strandHead{
+                    padding: 0;
+                }
 
-        .strandTitle{
-            padding: 0;
-            margin: -11px 15px 0 0;
-            font-size: 20px;
-        }
+                    .strandTitle{
+                        margin-top: 35px;
+                    }
 
-    .choosable{
-        background: white;
-        color: rgb(0, 27, 45);
-    }
-
-    .buttonBox{
-        margin-top: 0;
-    }
-
-    /*
-    Home
-    */
-    .card{
-        margin: 5px 10px;
-        background: white;
-        color: black;
-    }
-
-    #homeStrand .flexRow:nth-child(3){
-        flex-grow: 2;
-    }
-
-    #inventoryCheckCard{
-        display: none;
-    }
-
-    #popularIngredientsCard{
-        padding-bottom: 10px;
-    }
-
-    .flexRow{
-        flex-direction: column;
-        margin: 0;
-    }
-
-    /*
-    Ingredients
-    */
-    #categoryList{
-        width: 95%;
-        color: black;
-    }
-
-        .categoryDiv > div:first-of-type p{
-            padding: 5px 0 5px 5px;
-        }
-
-        .categoryDiv div:first-of-type button{
-            height: 50px;
-            width: 50px;
-        }
-
-        .ingredientsDiv{
-            width: 100%;
+        .strandHead{
+            justify-content: center;
             align-items: center;
         }
 
-            .ingredient{
-                width: 90%;
-                margin-top: 5px;
+            .strandTitle{
+                padding: 0;
+                margin: -11px 15px 0 0;
+                font-size: 20px;
+                
+            }
+
+        .choosable{
+            background: white;
+            color: rgb(0, 27, 45);
+        }
+
+        .buttonBox{
+            margin-top: 0;
+        }
+
+        /*
+        Home
+        */
+        .card{
+            margin: 5px 10px;
+            background: white;
+            color: black;
+        }
+
+        #homeStrand .flexRow:nth-child(3){
+            flex-grow: 2;
+        }
+
+        #inventoryCheckCard{
+            display: none;
+        }
+
+        #popularIngredientsCard{
+            padding-bottom: 10px;
+        }
+
+        .flexRow{
+            flex-direction: column;
+            margin: 0;
+        }
+
+        /*
+        Ingredients
+        */
+        #categoryList{
+            width: 95%;
+            color: black;
+        }
+
+            .categoryDiv > div:first-of-type p{
+                padding: 5px 0 5px 5px;
+            }
+
+            .categoryDiv div:first-of-type button{
+                height: 50px;
+                width: 50px;
+            }
+
+            .ingredientsDiv{
+                width: 100%;
+                align-items: center;
+            }
+
+                .ingredient{
+                    width: 90%;
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
+
+                .ingredient > *{
+                    width: 50%;
+                }
+
+        /*
+        Recipe Book
+        */
+        .searchBar{
+            padding: 0;
+        }
+
+        #recipeSearch{
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        #recipeList{
+            width: 95%;
+        }
+
+        /*
+        ANALYTICS
+        */
+        #analyticsStrand .strandHead{
+            flex-direction: column;
+            height: 20%;
+            margin-top: 25px;
+        }
+
+        .analContent{
+            flex-direction: column;
+            height: 70%;
+        }
+
+            .itemsList{
+                width: 100%;
+                max-height: 40%;
                 margin-bottom: 5px;
             }
 
-            .ingredient > *{
-                width: 50%;
+            .dataRow{
+                flex-direction: column;
             }
 
-    /*
-    Recipe Book
-    */
-    .searchBar{
-        padding: 0;
-    }
+            .switch{
+                margin: 3px 0;
+            }
 
-    #recipeSearch{
-        border-radius: 5px;
-        width: 100%;
-    }
+        /*
+        Orders
+        */
+        #orderList{
+            width: 95%;
+        }
 
-    #recipeList{
-        width: 95%;
-    }
-
-    /*
-    ANALYTICS
-    */
-    #analyticsStrand .strandHead{
-        flex-direction: column;
-        height: 20%;
-        margin-top: 25px;
-    }
-
-    .analContent{
-        flex-direction: column;
-        height: 70%;
-    }
-
-        .itemsList{
+        /*
+        Transactions
+        */
+        .transactionsList{
             width: 100%;
-            max-height: 40%;
-            margin-bottom: 5px;
+            margin-top: 25px;
         }
 
-        .dataRow{
-            flex-direction: column;
+        #transactionsStrand .strandHead{
+            justify-content: right;
+            margin-top: 8px;
         }
 
-        .switch{
-            margin: 3px 0;
+        #transactionsStrand .strandTitle{
+            margin: 0;
         }
 
-    /*
-    Orders
-    */
-    #orderList{
-        width: 95%;
-    }
-
-    /*
-    Transactions
-    */
-    .transactionsList{
-        width: 100%;
-        margin-top: 25px;
-    }
-
-    #transactionsStrand .strandHead{
-        justify-content: right;
-        margin-top: 8px;
-    }
-
-    #transactionsStrand .strandTitle{
-        margin: 0;
-    }
-
-    #filterTransactionsButton{
-        padding: 5px;
-        min-width: 0;
-        margin-left: 50px;
-    }
-
-    @media all and (orientation: portrait){
-
-    }
-
-    @media all and (orientation: landscape){
-        #homeStrand{
-            align-items: flex-end;
-            flex-direction: row;
+        #filterTransactionsButton{
+            padding: 5px;
+            min-width: 0;
+            margin-left: 50px;
         }
 
-            .strandHead{
-                width: initial;
-                position: fixed;
-                top: 10px;
-                left: 0;
-                right: 0;
-            }
+        @media screen and (min-width: 601px){
 
-        .flexRow{
-            height: 80%
         }
     }
 }

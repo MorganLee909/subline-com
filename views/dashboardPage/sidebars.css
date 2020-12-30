@@ -691,13 +691,7 @@ NEW TRANSACTION
         padding: 5px 0;
     }
 
-@media screen and (max-width: 1400px){
-    .sidebar{
-        width: 30vw;
-    }
-}
-
-@media screen and (max-width: 1000px){
+@media screen and (max-width: 600px) {
     .sidebar{
         width: 100vw;
     }
