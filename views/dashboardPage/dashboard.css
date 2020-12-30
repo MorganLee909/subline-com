@@ -645,6 +645,10 @@ Modal
             color: black;
         }
 
+        #homeStrand .flexRow:nth-child(3){
+            flex-grow: 2;
+        }
+
         #inventoryCheckCard{
             display: none;
         }

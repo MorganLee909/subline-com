@@ -189,6 +189,15 @@ let home = {
                     showticklabels: false
                 }
             }
+
+            if(screen.width < 1000){
+                layout.margin = {
+                    l: 10,
+                    r: 10,
+                    t: 100,
+                    b: 100
+                };
+            }
             
             Plotly.newPlot("popularIngredientsCard", [trace], layout);
         }else{
