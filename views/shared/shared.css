@@ -369,6 +369,23 @@ Banner
         font-size: 15px;
     }
 
+    .header{
+        height: 30px;
+    }
+
+        .headerStart{
+            margin-left: 10px;
+        }
+
+        .headerEnd{
+            font-size: 8px;
+        }
+
+        .headerLogo{
+            white-space: nowrap;
+            font-size: 10px;
+        }
+
     .truncateLong{
         max-width: 100px;
         white-space: nowrap;
@@ -383,22 +400,6 @@ Banner
     .headerStart{
         width: 0;
     }
-
-        .mobileHomeButton{
-            display: flex;
-            align-items: center;
-            margin: auto 25px auto 0;
-            background: rgb(255, 99, 107);
-            box-shadow: 0 0 10px rgb(255, 99, 107);
-            border-radius: 25px;
-            border: none;
-            color: white;
-            padding: 15px;
-        }
-
-            .mobileHomeButton svg{
-                margin: auto;
-            }
 }
 
 label {
