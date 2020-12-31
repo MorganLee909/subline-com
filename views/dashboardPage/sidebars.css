@@ -691,50 +691,68 @@ NEW TRANSACTION
         padding: 5px 0;
     }
 
-@media screen and (max-width: 600px) {
-    .sidebar{
-        width: 100vw;
-    }
-
-    .sidebarIconButtons > .iconButton{
-        display: none;
-    }
-
-    .menu{
-        display: none;
-        width: 100vw;
-        height: 100vh;
-    }
-
-        .menuHead{
-            padding: 0;
-            margin-bottom: 15px;
+@media screen and (orientation: portrait){
+    @media screen and (max-width: 1400px){
+        body{
+            background:rgb(0, 27, 45);
         }
 
-            .menuHead a{
-                display: flex;
-                justify-content: right;
-                width: 70%;
-            }
+        .mobileMenuSelector{
+            color:rgb(240, 252, 255);
+        }
 
-        .menuShifter{
+        .strandTitle{
+            color: white;
+            position: fixed;
+            top: 15px;
+            left: 0;
+            right: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        /* MENU */
+        #menu{
+            display: none;
+            width: 100vw;
+        }
+    
+            .menuShifter{
+                display: none;
+            }
+    
+        .mobileMenuSelector{
+            z-index: 10;
+        }
+
+        /* HOME */
+        #inventoryCheckCard{
             display: none;
         }
 
-    .mobileMenuSelector{
-        display: block;
-        z-index: 20;
-    }
-
-    #orderIngredients{
-        width: 100%;
-    }
-    
-        .orderIngredient{
-            color: black;
+        #graphCard{
+            display: none;
         }
 
-    #ingredientRecipeList li{
-        color: black;
+        .card{
+            background: white;
+        }
+
+        @media screen and (min-width: 601px){
+            .strandTitle{
+                font-size: 40px;
+            }
+
+            .mobileMenuSelector{
+                left: 40px;
+                top: 20px;
+            }
+
+            /* HOME */
+            #graphCard{
+                display: flex;
+            }
+        }
     }
 }
