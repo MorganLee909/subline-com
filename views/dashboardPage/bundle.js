@@ -1568,11 +1568,6 @@ controller = {
     }
 }
 
-if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
-    controller.changeMenu();
-    document.getElementById("menuShifter2").style.display = "none";
-}
-
 //Add click listeners for menu buttons
 document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")};
 document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};

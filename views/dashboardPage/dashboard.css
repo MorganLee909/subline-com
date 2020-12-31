@@ -792,9 +792,13 @@ Modal
 }
 
 @media screen and (orientation: landscape){
-    @media screen and (max-width: 1400px){
+    @media screen and (max-width: 1200px){
         body{
             background: rgb(0, 27, 45);
+        }
+
+        .contentBlock{
+            padding: 0;
         }
 
         .button{
@@ -802,16 +806,81 @@ Modal
         }
 
         .mobileMenuSelector{
+            display: flex;
             color: rgb(240, 252, 255);
             z-index: 10;
         }
 
-        .strandTitle{
+        .strandHead{
             color: white;
+            position: fixed;
+            top: 5px;
+            left: 25px;
+            right: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 20px;
         }
 
-        @media screen and (min-width: 601px){
+        /* HOME */
+        #homeStrand{
+            flex-direction: row;
+            padding: 0;
+            align-items: flex-end;
+        }
 
+            #graphCard{
+                display: none;
+            }
+
+            #inventoryCheckCard{
+                display: none;
+            }
+
+            .flexRow{
+                height: 80%;
+            }
+
+                .flexRow:nth-child(3){
+                    flex-grow: 2;
+                }
+
+                .card{
+                    background: white;
+                }
+
+                #popularIngredientsCard{
+                    max-height: 100%;
+                    padding: 0;
+                }
+
+        @media screen and (min-width: 1000px){
+            .mobileMenuSelector{
+                top: 20px;
+                left: 40px;
+            }
+
+            /* HOME */
+            #homeStrand{
+                flex-direction: column;
+                justify-content: flex-end;
+            }
+
+                #graphCard{
+                    display: flex;
+                }
+
+                .flexRow{
+                    max-height: 40vh;
+                }
+
+                .flexRow:nth-child(2){
+                    flex-grow: 2;
+                }
+
+                .flexRow:nth-child(3){
+                    flex-grow: 1;
+                }
         }
     }
 }
