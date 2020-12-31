@@ -822,6 +822,19 @@ Modal
             font-size: 20px;
         }
 
+            .strandTitle{
+                margin: 0;
+            }
+
+        .searchInput{
+            border-radius: 10px;
+        }
+
+        .choosable{
+            background: rgb(201, 201, 201);
+            color: black;
+        }
+
         /* HOME */
         #homeStrand{
             flex-direction: row;
@@ -851,13 +864,47 @@ Modal
 
                 #popularIngredientsCard{
                     max-height: 100%;
-                    padding: 0;
+                    padding-bottom: 5px;
                 }
+
+        /* INGREDIENTS */
+        #ingredientsStrand{
+            padding-bottom: 10px;
+            justify-content: flex-end;
+        }
+
+        #categoryList{
+            height: 70%;
+        }
+
+            .categoryDiv{
+                margin: 3px;
+            }
+
+                .categoryDiv > div:first-of-type p{
+                    padding: 5px 10px;
+                }
+
+                .categoryDiv > div:first-of-type button{
+                    padding: 0;
+                    height: initial;
+                    width: initial;
+                    display: flex;
+                    align-items: center;
+                }
+            
+            .ingredientsDiv{
+                width: 90%;
+            }
 
         @media screen and (min-width: 1000px){
             .mobileMenuSelector{
                 top: 20px;
                 left: 40px;
+            }
+
+            .strandTitle{
+                margin: 15px;
             }
 
             /* HOME */
@@ -881,6 +928,11 @@ Modal
                 .flexRow:nth-child(3){
                     flex-grow: 1;
                 }
+
+            /* INGREDIENTS */
+            #categoryList{
+                height: 80%;
+            }
         }
     }
 }
