@@ -92,7 +92,7 @@ controller = {
         activeButton.classList = "menuButton active";
         activeButton.disabled = true;
 
-        if(screen.width < 1400 && screen.height > screen.width){
+        if(screen.height > screen.width || screen.width < 1200){
             this.closeMenu();
         }
     },
