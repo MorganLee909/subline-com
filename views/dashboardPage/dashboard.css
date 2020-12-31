@@ -22,6 +22,18 @@ body{
     padding-bottom: 25px;
 }
 
+.mobileMenuSelector{
+    display: none;
+    position: fixed;
+    left: 13px;
+    top: -2px;
+    font-size: 40px;
+}
+
+    .mobileMenuSelector:active{
+        color: rgb(255, 99, 107);
+    }
+
 /* 
 Multi-strand use classes 
 */
@@ -593,10 +605,53 @@ Modal
 
 @media screen and (orientation: portrait){
     @media screen and (max-width: 1400px){
-        
+        body{
+            background:rgb(0, 27, 45);
+        }
+
+        .mobileMenuSelector{
+            color:rgb(240, 252, 255);
+            z-index: 10;
+        }
+
+        .strandTitle{
+            color: white;
+            position: fixed;
+            top: 15px;
+            left: 0;
+            right: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        /* HOME */
+        #inventoryCheckCard{
+            display: none;
+        }
+
+        #graphCard{
+            display: none;
+        }
+
+        .card{
+            background: white;
+        }
 
         @media screen and (min-width: 601px){
+            .strandTitle{
+                font-size: 40px;
+            }
 
+            .mobileMenuSelector{
+                left: 40px;
+                top: 20px;
+            }
+
+            /* HOME */
+            #graphCard{
+                display: flex;
+            }
         }
     }
 }
