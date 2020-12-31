@@ -609,6 +609,10 @@ Modal
             background:rgb(0, 27, 45);
         }
 
+        .button{
+            padding: 3px 0;
+        }
+
         .mobileMenuSelector{
             color:rgb(240, 252, 255);
             z-index: 10;
@@ -728,6 +732,19 @@ Modal
                 display: none;
             }
 
+        /* ORDERS */
+        #ordersStrand .strandHead{
+            justify-content: center;
+        }
+
+        #orderList{
+            width: 90%;
+        }
+
+        #orderList > div p:nth-child(2){
+            display: none;
+        }
+
         @media screen and (min-width: 601px){
             .strandTitle{
                 font-size: 40px;
@@ -746,6 +763,11 @@ Modal
             /* RECIPE BOOK */
             #recipeList{
                 width: 75%;
+            }
+
+            /* ORDERS */
+            #ordersStrand .strandHead{
+                margin-top: 25px;
             }
         }
     }
