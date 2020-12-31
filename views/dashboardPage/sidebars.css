@@ -748,6 +748,7 @@ NEW TRANSACTION
 
                 .menuHead a{
                     width: initial;
+                    justify-content: center;
                 }
 
                     .menuLogo{
@@ -764,7 +765,18 @@ NEW TRANSACTION
                     padding-left: 0;
                     border-radius: 5px;
                     box-shadow: 0 0 5px white;
-                    height: 35px;
+                    height: 10vh;
                 }
+
+        @media screen and (min-width: 1000px){
+            .menuLogo{
+                max-height: initial;
+                max-width: 300px;
+            }
+
+            .menuHead a p{
+                font-size: 35px;
+            }
+        }
     }
 }
