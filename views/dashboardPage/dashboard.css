@@ -677,6 +677,57 @@ Modal
             width: 90%;
         }
 
+        /* ANALYTICS */
+        #analyticsStrand .strandHead{
+            height: 23vh;
+            flex-direction: column;
+        }
+
+            #analyticsStrand .strandTitle{
+                position: static;
+            }
+
+            .switch{
+                margin-top: 0;
+            }
+
+            .analDateRange{
+                display: none;
+            }
+
+        .analContent{
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+            height: 70vh;
+        }
+
+            .itemsList{
+                width: 90%;
+                height: 47%;
+                margin-bottom: 10px;
+            }
+
+            .analData{
+                height: 47%;
+            }
+
+                .dataRow{
+                    flex-direction: column;
+                }
+
+            #itemUseGraph{
+                display: none;
+            }
+
+            #analDailyAverages{
+                display: none;
+            }
+
+            #recipeSalesGraph{
+                display: none;
+            }
+
         @media screen and (min-width: 601px){
             .strandTitle{
                 font-size: 40px;
