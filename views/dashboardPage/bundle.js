@@ -3152,7 +3152,13 @@ let analytics = {
         const layout = {
             title: this.ingredient.name.toUpperCase(),
             xaxis: {title: "DATE"},
-            yaxis: {title: yaxis}
+            yaxis: {title: yaxis},
+            margin: {
+                l: 40,
+                r: 10,
+                b: 20,
+                t: 30
+            }
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
@@ -3233,7 +3239,13 @@ let analytics = {
         const layout = {
             title: this.recipe.name.toUpperCase(),
             xaxis: {title: "DATE"},
-            yaxis: {title: "QUANTITY"}
+            yaxis: {title: "QUANTITY"},
+            margin: {
+                l: 40,
+                r: 10,
+                b: 20,
+                t: 30
+            }
         }
 
         Plotly.newPlot("recipeSalesGraph", [trace], layout);

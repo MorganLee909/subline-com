@@ -897,6 +897,72 @@ Modal
                 width: 90%;
             }
 
+        /* RECIPE BOOK */
+        #recipeBookStrand{
+            padding-bottom: 10px;
+            justify-content: flex-end;
+        }
+
+            #recipeList{
+                height: 70%;
+            }
+
+        /* ANALYTICS */
+        #analyticsStrand{
+            padding-bottom: 10px;
+            justify-content: space-between;
+        }
+
+            #analyticsStrand .strandHead{
+                position: static;
+                height: unset;
+                flex-wrap: wrap;
+            }
+
+                #analyticsStrand .strandTitle{
+                    width: 100%;
+                    margin-top: -13px;
+                    margin-left: 10px;
+                }
+
+                .switch{
+                    margin-top: -15px;
+                    font-size: 15px;
+                }
+
+                #analyticsStrand .dateRange{
+                    margin-top: -55px;
+                }
+
+                .analDateRange{
+                    display: none;
+                }
+
+            .analContent{
+                padding: 0;
+                height: 70%;
+            }
+
+                .itemsList{
+                    width: 23%;
+                }
+
+                .analData{
+                    width: 73%
+                }
+
+                .dataRow{
+                    display: none;
+                }
+
+                .modebar-container{
+                    display: none;
+                }
+
+            #analRecipeContent{
+                height: 70%;
+            }
+
         @media screen and (min-width: 1000px){
             .mobileMenuSelector{
                 top: 20px;
@@ -931,6 +997,25 @@ Modal
 
             /* INGREDIENTS */
             #categoryList{
+                height: 80%;
+            }
+
+            /* RECIPE BOOK */
+            #recipeList{
+                height: 80%;
+            }
+
+            /* ANALYTICS */
+            #analyticsStrand .strandTitle{
+                margin-top: 8px;
+                margin-left: 30px;
+            }
+
+            .analDateRange{
+                display: block;
+            }
+
+            #analRecipeContent, .analContent{
                 height: 80%;
             }
         }
