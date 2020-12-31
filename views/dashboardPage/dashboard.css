@@ -672,7 +672,10 @@ Modal
                     width: 90%;
                 }
 
-
+        /* RECIPE BOOK */
+        #recipeList{
+            width: 90%;
+        }
 
         @media screen and (min-width: 601px){
             .strandTitle{
@@ -687,6 +690,11 @@ Modal
             /* HOME */
             #graphCard{
                 display: flex;
+            }
+
+            /* RECIPE BOOK */
+            #recipeList{
+                width: 75%;
             }
         }
     }
