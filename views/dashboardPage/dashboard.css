@@ -980,6 +980,19 @@ Modal
                 height: 70%;
             }
 
+        /* TRANSACTIONS */
+        #transactionsStrand{
+            justify-content: flex-end;
+        }
+
+            #transactionsStrand .buttonBox{
+                margin: 0;
+            }
+
+            #transactionsList{
+                height: 70%;
+            }
+
         @media screen and (min-width: 1000px){
             .mobileMenuSelector{
                 top: 20px;
@@ -1038,6 +1051,11 @@ Modal
 
             /* ORDERS */
             #orderList{
+                height: 80%;
+            }
+
+            /* TRANSACTIONS */
+            #transactionsList{
                 height: 80%;
             }
         }
