@@ -829,6 +829,11 @@ NEW TRANSACTION
                 display: none;
             }
 
+            /* TRANSACTION DETAILS */
+            #transactionRecipesLabel, .transactionRecipes, #transactionDetails .lineBorder{
+                display: none;
+            }
+
         @media screen and (min-width: 1000px){
             .menuLogo{
                 max-height: initial;
@@ -854,6 +859,12 @@ NEW TRANSACTION
 
             /* ORDER DETAILS */
             #orderIngredients{
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* TRANSACTION DETAILS */
+            #transactionRecipesLabel, .transactionRecipes, #transactionDetails .lineBorder{
                 display: flex;
                 flex-direction: column;
             }
