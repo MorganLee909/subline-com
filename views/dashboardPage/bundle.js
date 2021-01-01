@@ -1397,7 +1397,7 @@ controller = {
                 break;
         }
 
-        if(window.screen.availWidth <= 1000){
+        if(screen.height > screen.width || screen.width < 1200){
             document.querySelector(".contentBlock").style.display = "none";
             document.getElementById("mobileMenuSelector").style.display = "none";
             document.getElementById("sidebarCloser").style.display = "block";
@@ -1433,7 +1433,7 @@ controller = {
         }
         sidebar.classList = "sidebarHide";
 
-        if(window.screen.availWidth <= 1000){
+        if(screen.height > screen.width || screen.width < 1200){
             document.querySelector(".contentBlock").style.display = "flex";
             document.getElementById("mobileMenuSelector").style.display = "block";
             document.getElementById("sidebarCloser").style.display = "none";
@@ -1519,8 +1519,6 @@ controller = {
             container.removeChild(banner);
             clearTimeout(timer);
         });
-
-        
     },
 
     changeMenu: function(){
