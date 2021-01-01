@@ -824,6 +824,11 @@ NEW TRANSACTION
                 margin-top: 3px;
             }
 
+            /* ORDER DETAILS */
+            #orderIngredients{
+                display: none;
+            }
+
         @media screen and (min-width: 1000px){
             .menuLogo{
                 max-height: initial;
@@ -845,6 +850,12 @@ NEW TRANSACTION
 
             #orderFilterSubmit{
                 margin-top: 15px;
+            }
+
+            /* ORDER DETAILS */
+            #orderIngredients{
+                display: flex;
+                flex-direction: column;
             }
         }
     }
