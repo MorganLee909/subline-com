@@ -1,0 +1,28 @@
+<div id="recipeBookStrand" class="strand">
+    <div class="strandHead">
+        <h1 class="strandTitle">RECIPE BOOK</h1>
+
+        <% if(merchant.pos === "none"){ %>
+            <button class="button mobileHide" onclick="controller.openSidebar('addRecipe')">NEW</button>
+        <% }else{ %>
+            <button id="posUpdateRecipe" class="button mobileHide">UPDATE</button>
+        <% } %>
+    </div>
+
+    <div class="searchBar">
+        <svg class="searchButton" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input id="recipeSearch" class="searchInput" type="text" placeholder="SEARCH">
+    </div>
+
+    <div id="recipeList"></div>
+
+    <template id="recipe">
+        <div class="choosable tall">
+            <p></p>
+            <p></p>
+        </div>
+    </template>
+</div>

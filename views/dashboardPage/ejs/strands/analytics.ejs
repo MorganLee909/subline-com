@@ -1,0 +1,115 @@
+<div id="analyticsStrand" class="strand">
+    <div class="strandHead">
+        <h1 class="strandTitle">ANALYTICS</h1>
+
+        <label class="switch">
+            <input id="analSlider" type="checkbox">
+            <span class="slider"><p>INGREDIENTS</p><p>RECIPES</p></span>
+        </label>
+
+        <div class="dateRange">
+            <h3 class="analDateRange">Date Range:</h3>
+            <div class="dateRangeInput">
+                <input id="analStartDate" type="date">
+                <p> - </p>
+                <input id="analEndDate" type="date">
+            </div>
+
+            <button id="analDateBtn" class="button-small">SUBMIT</button>
+        </div>
+    </div>
+
+    <div id="analIngredientContent" class="analContent">
+        <div id="analIngredientList" class="itemsList"></div>
+
+        <div class="analData">
+            <div id="itemUseGraph" class="card analCard"></div>
+
+            <div class="dataRow">
+                <div class="card analCard">
+                    <p>MINIMUM DAILY USE</p>
+
+                    <h1 id="analMinUse"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>AVERAGE DAILY USE</p>
+
+                    <h1 id="analAvgUse"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>MAXIMUM DAILY USE</p>
+
+                    <h1 id="analMaxUse"></h1>
+                </div>
+            </div>
+
+            <div id="analDailyAverages" class="dataRow">
+                <div class="card analCard">
+                    <p>Sunday Average</p>
+
+                    <h1 id="analDayOne"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>Monday Average</p>
+
+                    <h1 id="analDayTwo"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>Tuesday Average</p>
+
+                    <h1 id="analDayThree"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>Wednesday Average</p>
+
+                    <h1 id="analDayFour"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>Thursday Average</p>
+
+                    <h1 id="analDayFive"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>Friday Average</p>
+
+                    <h1 id="analDaySix"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>Saturday Average</p>
+
+                    <h1 id="analDaySeven"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="analRecipeContent" class="analContent">
+        <ul id="analRecipeList" class="itemsList"></ul>
+
+        <div class="analData">
+            <div id="recipeSalesGraph" class="card analCard"></div>
+
+            <div class="dataRow">
+                <div class="card analCard">
+                    <p>Average Daily Sales</p>
+
+                    <h1 id="recipeAvgUse"></h1>
+                </div>
+
+                <div class="card analCard">
+                    <p>Average Daily Revenue</p>
+
+                    <h1 id="recipeAvgRevenue"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
