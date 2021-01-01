@@ -834,6 +834,23 @@ NEW TRANSACTION
                 display: none;
             }
 
+            /* FILTER TRANSACTIONS */
+            #transactionFilter > *{
+                margin: 0;
+            }
+
+            #transactionFilterDateLabel{
+                display: none;
+            }
+
+            #transactionFilter .dateRange{
+                margin-bottom: 5px;
+            }
+
+            #transFilterSubmit{
+                margin-top: 5px;
+            }
+
         @media screen and (min-width: 1000px){
             .menuLogo{
                 max-height: initial;
@@ -867,6 +884,11 @@ NEW TRANSACTION
             #transactionRecipesLabel, .transactionRecipes, #transactionDetails .lineBorder{
                 display: flex;
                 flex-direction: column;
+            }
+
+            /* TRANSACTION FILTER */
+            #transFilterRecipeList{
+                max-height: 70%;
             }
         }
     }
