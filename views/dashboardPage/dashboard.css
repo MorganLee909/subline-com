@@ -963,6 +963,23 @@ Modal
                 height: 70%;
             }
 
+            #newOrderBtn{
+                display: none;
+            }
+
+        /* ORDERS */
+        #ordersStrand{
+            justify-content: flex-end;
+        }
+
+            #ordersStrand .buttonBox{
+                margin: 0;
+            }
+
+            #orderList{
+                height: 70%;
+            }
+
         @media screen and (min-width: 1000px){
             .mobileMenuSelector{
                 top: 20px;
@@ -1016,6 +1033,11 @@ Modal
             }
 
             #analRecipeContent, .analContent{
+                height: 80%;
+            }
+
+            /* ORDERS */
+            #orderList{
                 height: 80%;
             }
         }
