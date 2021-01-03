@@ -1,4 +1,4 @@
-<div id="orderFilter">
+<div id="transactionFilter" class="transactionFilter">
     <div class="sidebarIconButtons">
         <button class="iconButton" onclick="controller.closeSidebar()">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -8,24 +8,24 @@
         </button>
     </div>
 
-    <h1>FILTER ORDERS</h1>
+    <h1>FILTER TRANSACTIONS</h1>
 
     <div class="dateRange">
-        <h3>Date Range:</h3>
+        <h3 id="transactionFilterDateLabel">Date Range:</h3>
         <div class="dateRangeInput">
-            <input id="orderFilterDateFrom" type="date">
+            <input id="transFilterDateStart" type="date">
             <p> - </p>
-            <input id="orderFilterDateTo" type="date">
+            <input id="transFilterDateEnd" type="date">
         </div>
     </div>
 
     <div class="lineBorder"></div>
 
-    <h3>Ingredients</h3>
+    <h3>Recipes</h3>
 
-    <div id="orderFilterIngredients"></div>
+    <div id="transFilterRecipeList"></div>
 
     <div class="lineBorder"></div>
 
-    <button id="orderFilterSubmit" class="button">SUBMIT</button>
+    <button id="transFilterSubmit" class="button">SUBMIT</button>
 </div>

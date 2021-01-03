@@ -69,16 +69,29 @@ let analytics = {
     },
 
     getData: function(from, to, Transaction){
+        let data = {
+            from: from,
+            to: to,
+            recipes: []
+        }
+        
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        return fetch(`/transactions/${from.toISOString()}/${to.toISOString()}`)
+        return fetch("/transaction", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
                     this.transactionsByDate = [];
+                    response.reverse();
 
                     let startOfDay = new Date(from.getTime());
                     startOfDay.setHours(0, 0, 0, 0);
@@ -156,7 +169,13 @@ let analytics = {
         const layout = {
             title: this.ingredient.name.toUpperCase(),
             xaxis: {title: "DATE"},
-            yaxis: {title: yaxis}
+            yaxis: {title: yaxis},
+            margin: {
+                l: 40,
+                r: 10,
+                b: 20,
+                t: 30
+            }
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
@@ -237,7 +256,13 @@ let analytics = {
         const layout = {
             title: this.recipe.name.toUpperCase(),
             xaxis: {title: "DATE"},
-            yaxis: {title: "QUANTITY"}
+            yaxis: {title: "QUANTITY"},
+            margin: {
+                l: 40,
+                r: 10,
+                b: 20,
+                t: 30
+            }
         }
 
         Plotly.newPlot("recipeSalesGraph", [trace], layout);

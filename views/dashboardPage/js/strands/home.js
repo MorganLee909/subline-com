@@ -68,13 +68,20 @@ let home = {
             }
         }
 
-        const layout = {
+        let layout = {
             title: "REVENUE",
             xaxis: {
                 title: "DATE"
             },
             yaxis: {
                 title: "$"
+            }
+        }
+
+        if(screen.width < 1400){
+            layout.margin = {
+                l: 35,
+                r: 0
             }
         }
 
@@ -180,7 +187,9 @@ let home = {
             }
 
             let layout = {
-                title: "MOST POPULAR INGREDIENTS",
+                title: {
+                    text: "MOST POPULAR INGREDIENTS"
+                },
                 xaxis: {
                     zeroline: false,
                     title: "QUANTITY"
@@ -189,6 +198,16 @@ let home = {
                     showticklabels: false
                 }
             }
+
+            if(screen.width < 1400){
+                layout.margin = {
+                    l: 10,
+                    r: 10,
+                    t: 80,
+                    b: 40
+                };
+            }
+
             
             Plotly.newPlot("popularIngredientsCard", [trace], layout);
         }else{

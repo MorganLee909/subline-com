@@ -270,6 +270,10 @@ form{
             margin-left: 10px;
         }
 
+        .mobileHomeButton{
+            display: none;
+        }
+
     .headerEnd{
         display: flex;
         align-items: center;
@@ -360,16 +364,41 @@ Banner
         margin: 0 25px;
     }
 
-@media screen and (max-width: 600px){
+@media screen and (max-width: 1400px){
     .button{
         font-size: 15px;
     }
+
+    .header{
+        height: 30px;
+    }
+
+        .headerStart{
+            margin-left: 10px;
+        }
+
+        .headerEnd{
+            font-size: 8px;
+        }
+
+        .headerLogo{
+            white-space: nowrap;
+            font-size: 10px;
+        }
 
     .truncateLong{
         max-width: 100px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .mobileHide{
+        display: none !important;
+    }
+
+    .headerStart{
+        width: 0;
     }
 }
 

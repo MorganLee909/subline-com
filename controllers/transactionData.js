@@ -27,8 +27,8 @@ module.exports = {
 
         let objectifiedRecipes = [];
         let query = {};
-        if(req.body.length === 0){
-            query = {$exists: false};
+        if(req.body.recipes.length === 0){
+            query = {$ne: false};
         }else{
             for(let i = 0; i < req.body.recipes.length; i++){
                 objectifiedRecipes.push(new ObjectId(req.body.recipes[i]));

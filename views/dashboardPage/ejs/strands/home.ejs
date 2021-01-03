@@ -1,0 +1,47 @@
+<div id="homeStrand" class="strand">
+    <div class="strandHead">
+        <h1 class="strandTitle">DASHBOARD</h1>
+    </div>
+
+    <div class="flexRow">
+        <div id="revenueCard" class="card">
+            <p>Total Revenue (month)</p>
+
+            <p id="revenue"></p>
+
+            <div id="revenueChange">
+                <img alt="revenue">
+
+                <p></p>
+            </div>
+        </div>
+
+        <div id="graphCard" class="card"></div>
+    </div>
+
+    <div class="flexRow">
+        <div id="inventoryCheckCard" class="card">
+            <p>Inventory Check</p>
+
+            <ul></ul>
+
+            <button id="inventoryCheck" class="button">Update</button>
+        </div>
+
+        <div id=popularIngredientsCard class="card"></div>
+    </div>
+
+    <template id="ingredientCheck">
+        <li class="ingredientCheck flexRow">
+            <p></p>
+
+            <div class="numberInput">
+                <button>-</button>
+                <input type="number" min="0" step="0.01">
+                <button>+</button>
+            </div>
+            
+            <p></p>
+        </li>
+    </template>
+</div>

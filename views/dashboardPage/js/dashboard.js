@@ -92,7 +92,7 @@ controller = {
         activeButton.classList = "menuButton active";
         activeButton.disabled = true;
 
-        if(window.screen.availWidth <= 1000){
+        if(screen.height > screen.width || screen.width < 1200){
             this.closeMenu();
         }
     },
@@ -150,7 +150,7 @@ controller = {
                 break;
         }
 
-        if(window.screen.availWidth <= 1000){
+        if(screen.height > screen.width || screen.width < 1200){
             document.querySelector(".contentBlock").style.display = "none";
             document.getElementById("mobileMenuSelector").style.display = "none";
             document.getElementById("sidebarCloser").style.display = "block";
@@ -186,7 +186,7 @@ controller = {
         }
         sidebar.classList = "sidebarHide";
 
-        if(window.screen.availWidth <= 1000){
+        if(screen.height > screen.width || screen.width < 1200){
             document.querySelector(".contentBlock").style.display = "flex";
             document.getElementById("mobileMenuSelector").style.display = "block";
             document.getElementById("sidebarCloser").style.display = "none";
@@ -272,8 +272,6 @@ controller = {
             container.removeChild(banner);
             clearTimeout(timer);
         });
-
-        
     },
 
     changeMenu: function(){
@@ -321,10 +319,6 @@ controller = {
     }
 }
 
-if(window.screen.availWidth > 1000 && window.screen.availWidth <= 1400){
-    this.changeMenu();
-    document.getElementById("menuShifter2").style.display = "none";
-}
 //Add click listeners for menu buttons
 document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")};
 document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};

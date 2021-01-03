@@ -1,0 +1,43 @@
+<div id="ingredientsStrand" class="strand">
+    <div class="strandHead">
+        <h1 class="strandTitle">INGREDIENT INVENTORY</h1>
+
+        <button class="button mobileHide" onclick="controller.openSidebar('newIngredient')">NEW</button>
+    </div>
+
+    <div class="searchBar">
+        <svg class="searchButton" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input id="ingredientSearch" class="searchInput" type="text" placeholder="SEARCH">
+    </div>
+
+    <div id="categoryList"></div>
+
+    <template id="categoryDiv">
+        <div class="categoryDiv">
+            <div>
+                <p></p>
+
+                <button>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="ingredientsDiv"></div>
+        </div>
+    </template>
+
+    <template id="ingredient">
+        <div class="ingredient choosable tall">
+            <p></p>
+
+            <hr class="ingredientSpacer mobileHide">
+
+            <p></p>
+        </div>
+    </template>
+</div>
