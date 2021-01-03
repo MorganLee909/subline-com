@@ -452,11 +452,7 @@ class Merchant{
             quantity: quantity of ingredient sold in default unit
         }]
     */
-    getIngredientsSold(from = 0, to = new Date()){
-        if(from === 0){
-            from = this._ingredients[0].date;
-        }
-        
+    getIngredientsSold(from, to = new Date()){
         let recipes = this.getRecipesSold(from, to);
         let ingredientList = [];
 

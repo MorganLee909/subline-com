@@ -7,7 +7,6 @@ const helper = require("./helper.js");
 const axios = require("axios");
 const xlsx = require("xlsx");
 const fs = require("fs");
-const { Console } = require("console");
 
 module.exports = {
     /*

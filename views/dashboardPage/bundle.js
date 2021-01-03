@@ -568,11 +568,7 @@ class Merchant{
             quantity: quantity of ingredient sold in default unit
         }]
     */
-    getIngredientsSold(from = 0, to = new Date()){
-        if(from === 0){
-            from = this._ingredients[0].date;
-        }
-        
+    getIngredientsSold(from, to = new Date()){
         let recipes = this.getRecipesSold(from, to);
         let ingredientList = [];
 
@@ -2523,20 +2519,20 @@ let orderCalculator = {
     display: function(){
         let calculatorItems = document.getElementById("calculatorItemsBody");
         let template = document.getElementById("calculatorItem").content.children[0];
-        let calculations = this.predict();
+        let calculations = this.mlPredict();
 
-        while(calculatorItems.children.length > 0){
-            calculatorItems.removeChild(calculatorItems.firstChild);
-        }
+        // while(calculatorItems.children.length > 0){
+        //     calculatorItems.removeChild(calculatorItems.firstChild);
+        // }
 
-        for(let i = 0; i < calculations.length; i++){
-            let outputString = `${calculations[i].output.toFixed(2)} ${calculations[i].ingredient.unit.toUpperCase()}`;
+        // for(let i = 0; i < calculations.length; i++){
+        //     let outputString = `${calculations[i].output.toFixed(2)} ${calculations[i].ingredient.unit.toUpperCase()}`;
         
-            let item = template.cloneNode(true);
-            item.children[0].innerText = calculations[i].ingredient.name,
-            item.children[1].innerText = outputString;
-            calculatorItems.appendChild(item);
-        }
+        //     let item = template.cloneNode(true);
+        //     item.children[0].innerText = calculations[i].ingredient.name,
+        //     item.children[1].innerText = outputString;
+        //     calculatorItems.appendChild(item);
+        // }
     },
 
     predict: function(){
@@ -2572,6 +2568,92 @@ let orderCalculator = {
         }
 
         return calculations;
+    },
+
+    mlPredict: function(){
+        let data = {
+            to: new Date(),
+            recipes: []
+        }
+
+        data.from = new Date(data.to.getFullYear() - 2, data.to.getMonth(), data.to.getDate());
+
+        fetch("/transaction", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    const options = {
+                        task: "regression",
+                        debug: false
+                    }
+
+                    const nn = ml5.neuralNetwork(options);
+
+                    this.createData(nn, response);
+                    nn.normalizeData();
+                    nn.train(()=>{
+                        nn.predict({
+                            month: 0,
+                            day: 0
+                        }, (err, results)=>{
+                            console.log(results[0].value);
+                        });
+                    });
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING'S FUCKY...", "error");
+            });
+    },
+
+    createData: function(nn, transactions){
+        let today = new Date(transactions[transactions.length-1].date);
+        today.setHours(0, 0, 0, 0);
+        let tomorrow = new Date(transactions[transactions.length-1].date);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        let dailySum = 0;
+
+        for(let i = transactions.length - 1; i >= 0; i--){
+        // for(let i = 100; i >= 0; i--){
+            transactions[i].date = new Date(transactions[i].date);
+
+            if(transactions[i].date >= tomorrow){
+                let inputs = {
+                    month: today.getMonth(),
+                    day: today.getDay()
+                };
+
+                let output = {quantity: dailySum};
+
+                nn.addData(inputs, output);
+                dailySum = 0;
+                today.setDate(today.getDate() + 1);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+            }
+
+            for(let j = 0; j < transactions[i].recipes.length; j++){
+                for(let k = 0; k < merchant.recipes.length; k++){
+                    if(merchant.recipes[k].id === transactions[i].recipes[j].recipe){
+                        for(let l = 0; l < merchant.recipes[k].ingredients.length; l++){
+                            if(merchant.recipes[k].ingredients[l].ingredient === merchant.ingredients[5].ingredient){
+                                dailySum += merchant.recipes[k].ingredients[l].quantity * transactions[i].recipes[j].quantity;
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 
