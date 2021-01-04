@@ -9,9 +9,13 @@ let orderCalculator = {
 
         document.getElementById("predictDateFrom").valueAsDate = from;
         document.getElementById("predictDateTo").valueAsDate = to;
-        document.getElementById("predictButton").addEventListener("click", ()=>{this.predict()});
+        document.getElementById("predictButton").onclick = ()=>{this.predict()};
 
         let selector = document.getElementById("predictSelector");
+        while(selector.children.length > 0){
+            selector.removeChild(selector.firstChild);
+        }
+
         for(let i = 0; i < merchant.ingredients.length; i++){
             let option = document.createElement("option");
             option.innerText = merchant.ingredients[i].ingredient.name;
@@ -116,9 +120,9 @@ let orderCalculator = {
                         for(let l = 0; l < merchant.recipes[k].ingredients.length; l++){
                             if(merchant.recipes[k].ingredients[l].ingredient === ingredient){
                                 dailySum += merchant.recipes[k].ingredients[l].quantity * transactions[i].recipes[j].quantity;
-                            }
 
-                            break;
+                                break;
+                            }
                         }
 
                         break;
