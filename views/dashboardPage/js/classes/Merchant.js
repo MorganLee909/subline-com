@@ -268,6 +268,11 @@ class Merchant{
         return this._transactions;
     }
 
+    //TODO: remove this, just for testing purposes
+    clearTransactions(){
+        this._transactions = [];
+    }
+
     getTransactions(from = 0, to = new Date()){
         if(merchant._transactions.length <= 0){
             return [];
@@ -488,11 +493,7 @@ class Merchant{
         to = end Date
     return: quantity sold in default unit
     */
-    getSingleIngredientSold(ingredient, from = 0, to = new Date()){
-        if(from === 0){
-            from = this._transactions[0].date;
-        }
-
+    getSingleIngredientSold(ingredient, from, to = new Date()){
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
