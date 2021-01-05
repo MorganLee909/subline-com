@@ -29,7 +29,7 @@ module.exports = {
         let match = {};
         let objectifiedIngredients = [];
         if(req.body.ingredients.length === 0){
-            match = {$exists: true};
+            match = {$ne: false};
         }else{  
             for(let i = 0; i < req.body.ingredients.length; i++){
                 objectifiedIngredients.push(new ObjectId(req.body.ingredients[i]));
