@@ -3226,7 +3226,8 @@ let analytics = {
                 r: 10,
                 b: 20,
                 t: 30
-            }
+            },
+            paper_bgcolor: "rgba(0, 0, 0, 0)"
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
@@ -3313,7 +3314,8 @@ let analytics = {
                 r: 10,
                 b: 20,
                 t: 30
-            }
+            },
+            paper_bgcolor: "rgba(0, 0, 0, 0)"
         }
 
         Plotly.newPlot("recipeSalesGraph", [trace], layout);
@@ -3442,10 +3444,11 @@ let home = {
             },
             yaxis: {
                 title: "$"
-            }
+            },
+            paper_bgcolor: "rgba(0, 0, 0, 0)"
         }
 
-        if(screen.width < 1400){
+        if(screen.width < 1200){
             layout.margin = {
                 l: 35,
                 r: 0
@@ -3563,10 +3566,11 @@ let home = {
                 },
                 yaxis: {
                     showticklabels: false
-                }
+                },
+                paper_bgcolor: "rgba(0, 0, 0, 0)"
             }
 
-            if(screen.width < 1400){
+            if(screen.width < 1200){
                 layout.margin = {
                     l: 10,
                     r: 10,
