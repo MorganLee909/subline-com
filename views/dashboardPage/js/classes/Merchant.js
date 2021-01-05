@@ -370,6 +370,10 @@ class Merchant{
         return this._orders;
     }
 
+    clearOrders(){
+        this._orders = [];
+    }
+
     addOrder(data, isNew = false){
         let order = new this._modules.Order(
             data._id,
@@ -396,10 +400,6 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
-    }
-
-    setOrders(orders){
-        this._orders = orders;
     }
 
     removeOrder(order){

@@ -486,6 +486,10 @@ class Merchant{
         return this._orders;
     }
 
+    clearOrders(){
+        this._orders = [];
+    }
+
     addOrder(data, isNew = false){
         let order = new this._modules.Order(
             data._id,
@@ -512,10 +516,6 @@ class Merchant{
 
         this._modules.ingredients.isPopulated = false;
         this._modules.orders.isPopulated = false;
-    }
-
-    setOrders(orders){
-        this._orders = orders;
     }
 
     removeOrder(order){
@@ -1322,8 +1322,7 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                merchant.setOrders(data);
-                orders.display(Order);
+                orders.display();
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -1568,12 +1567,7 @@ document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")}
 document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
 document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
 document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
-document.getElementById("ordersBtn").onclick = async ()=>{
-    if(merchant.orders.length === 0){
-        merchant.setOrders(await orders.getOrders(Order));
-    }
-    controller.openStrand("orders", merchant.orders);
-}
+document.getElementById("ordersBtn").onclick = async ()=>{controller.openStrand("orders")};
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 
 controller.openStrand("home");
@@ -3753,34 +3747,33 @@ let ingredients = {
 module.exports = ingredients;
 },{}],23:[function(require,module,exports){
 let orders = {
+    isPopulated: false,
+
     display: function(){
         document.getElementById("orderFilterBtn").addEventListener("click", ()=>{controller.openSidebar("orderFilter")});
         document.getElementById("newOrderBtn").addEventListener("click", ()=>{controller.openSidebar("newOrder")});
         document.getElementById("orderCalcBtn").addEventListener("click", ()=>{controller.openSidebar("orderCalculator")});
 
-        let orderList = document.getElementById("orderList");
-        let template = document.getElementById("order").content.children[0];
-
-        while(orderList.children.length > 0){
-            orderList.removeChild(orderList.firstChild);
+        if(this.isPopulated === false){
+            this.getOrders()
+                .then((response)=>{
+                    if(typeof(response) === "string"){
+                        controller.createBanner(response, "error");
+                    }else{
+                        this.displayOrders();
+                    }
+                })
+                .catch((err)=>{
+                    controller.createBanner("UNABLE TO DISPLAY ORDERS", "error");
+                });
+        }else{
+            this.displayOrders();
         }
 
-        for(let i = 0; i < merchant.orders.length; i++){
-            let orderDiv = template.cloneNode(true);
-            orderDiv.order = merchant.orders[i];
-            orderDiv.children[0].innerText = merchant.orders[i].name;
-            orderDiv.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
-            orderDiv.children[2].innerText = merchant.orders[i].date.toLocaleDateString("en-US");
-            orderDiv.children[3].innerText = `$${merchant.orders[i].getTotalCost().toFixed(2)}`;
-            orderDiv.onclick = ()=>{
-                controller.openSidebar("orderDetails", merchant.orders[i]);
-                orderDiv.classList.add("active");
-            }
-            orderList.appendChild(orderDiv);
-        }
+        this.isPopulated = true;
     },
 
-    getOrders: function(Order){
+    getOrders: function(){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
@@ -3805,25 +3798,11 @@ let orders = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    let orders = [];
+                    merchant.clearOrders();
 
                     for(let i = 0; i < response.length; i++){
-                        orders.push(new Order(
-                            response[i]._id,
-                            response[i].name,
-                            response[i].date,
-                            response[i].taxes,
-                            response[i].fees,
-                            response[i].ingredients,
-                            merchant
-                        ));
+                        merchant.addOrder(response[i], true);
                     }
-
-                    if(merchant.orders.length === 0){
-                        merchant.setOrders(orders);
-                    }
-
-                    return orders;
                 }
             })
             .catch((err)=>{
@@ -3832,6 +3811,29 @@ let orders = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    displayOrders: function(){
+        let orderList = document.getElementById("orderList");
+        let template = document.getElementById("order").content.children[0];
+
+        while(orderList.children.length > 0){
+            orderList.removeChild(orderList.firstChild);
+        }
+
+        for(let i = 0; i < merchant.orders.length; i++){
+            let orderDiv = template.cloneNode(true);
+            orderDiv.order = merchant.orders[i];
+            orderDiv.children[0].innerText = merchant.orders[i].name;
+            orderDiv.children[1].innerText = `${merchant.orders[i].ingredients.length} ingredients`;
+            orderDiv.children[2].innerText = merchant.orders[i].date.toLocaleDateString("en-US");
+            orderDiv.children[3].innerText = `$${merchant.orders[i].getTotalCost().toFixed(2)}`;
+            orderDiv.onclick = ()=>{
+                controller.openSidebar("orderDetails", merchant.orders[i]);
+                orderDiv.classList.add("active");
+            }
+            orderList.appendChild(orderDiv);
+        }
     }
 }
 
