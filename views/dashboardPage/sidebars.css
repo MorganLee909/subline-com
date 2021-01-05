@@ -696,8 +696,8 @@ NEW TRANSACTION
             }
 
         /* ORDER CALCULATOR */
-        .calculatorItem:nth-child(2n+1){
-            color: black;
+        #orderCalcBtn{
+            display: none;
         }
     }
 
@@ -765,8 +765,8 @@ NEW TRANSACTION
                 }
             
             /* ORDER CALCULATOR */
-            .calculatorItem:nth-child(2n+1){
-                color: black;
+            #orderCalcBtn{
+                display: none;
             }
 
             /* INGREDIENT DETAILS */
