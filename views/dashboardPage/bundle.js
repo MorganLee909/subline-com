@@ -256,10 +256,7 @@ class Merchant{
     }
 
     set name(name){
-        if(this.isSanitaryString(name)){
-            this._name = name;
-        }
-        return false;
+        this._name = name;
     }
 
     get pos(){
@@ -544,9 +541,6 @@ class Merchant{
     }
 
     getRevenue(from, to = new Date()){
-        if(from === 0){
-            from = this._transactions[0].date;
-        }
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
@@ -738,28 +732,12 @@ class Merchant{
 
         return {start: start, end: end};
     }
-
-
-    isSanitaryString(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; i++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
-    }
 }
 
 module.exports = Merchant;
 },{}],3:[function(require,module,exports){
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
-        if(quantity < 0){
-            return false;
-        }
         this._ingredient = ingredient;
         this._quantity = quantity;
         this._pricePerUnit = pricePerUnit;
@@ -791,10 +769,6 @@ class OrderIngredient{
     }
 
     updateQuantity(quantity){
-        if(quantity < 0){
-            return false;
-        }
-
         this._quantity += this.convertToBase(quantity);
     }
 
@@ -876,10 +850,6 @@ class Order{
         this._ingredients = [];
         this._parent = parent;
 
-        if(date > new Date()){
-            return false;
-        }
-
         for(let i = 0; i < ingredients.length; i++){
             for(let j = 0; j < merchant.ingredients.length; j++){
                 if(merchant.ingredients[j].ingredient.id === ingredients[i].ingredient){
@@ -943,10 +913,6 @@ module.exports = Order;
 },{}],4:[function(require,module,exports){
 class RecipeIngredient{
     constructor(ingredient, quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
         this._ingredient = ingredient;
         this._quantity = quantity;
     }
@@ -980,11 +946,6 @@ class RecipeIngredient{
     }
 
     set quantity(quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-
         this_quantity = this.convertToBase(quantity);
     }
 
@@ -1030,14 +991,6 @@ parent = merchant that it belongs to
 */
 class Recipe{
     constructor(id, name, price, ingredients, parent){
-        if(price < 0){
-            controller.createBanner("PRICE CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-        if(!this.isSanitaryString(name)){
-            controller.createBanner("NAME CONTAINS ILLEGAL CHARACTERS", "error");
-            return false;
-        }
         this._id = id;
         this._name = name;
         this._price = price;
@@ -1064,10 +1017,6 @@ class Recipe{
     }
 
     set name(name){
-        if(!this.isSanitaryString(name)){
-            return false;
-        }
-
         this._name = name;
     }
 
@@ -1076,10 +1025,6 @@ class Recipe{
     }
 
     set price(price){
-        if(price < 0){
-            return false;
-        }
-
         this._price = price;
     }
 
@@ -1092,11 +1037,6 @@ class Recipe{
     }
 
     addIngredient(ingredient, quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-
         let recipeIngredient = new RecipeIngredient(ingredient, quantity);
         this._ingredients.push(recipeIngredient);
 
@@ -1107,32 +1047,12 @@ class Recipe{
     removeIngredients(){
         this._ingredients = [];
     }
-
-    isSanitaryString(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; i++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
-    }
 }
 
 module.exports = Recipe;
 },{}],5:[function(require,module,exports){
 class TransactionRecipe{
     constructor(recipe, quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-        if(quantity % 1 !== 0){
-            controller.createBanner("RECIPES WITHIN A TRANSACTION MUST BE WHOLE NUMBERS", "error");
-            return false;
-        }
         this._recipe = recipe;
         this._quantity = quantity;
     }
@@ -1149,10 +1069,6 @@ class TransactionRecipe{
 class Transaction{
     constructor(id, date, recipes, parent){
         date = new Date(date);
-        if(date > new Date()){
-            controller.createBanner("DATE CANNOT BE SET TO THE FUTURE", "error");
-            return false;
-        }
         this._id = id;
         this._parent = parent;
         this._date = date;

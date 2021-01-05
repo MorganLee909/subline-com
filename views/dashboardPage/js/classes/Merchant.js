@@ -140,10 +140,7 @@ class Merchant{
     }
 
     set name(name){
-        if(this.isSanitaryString(name)){
-            this._name = name;
-        }
-        return false;
+        this._name = name;
     }
 
     get pos(){
@@ -428,9 +425,6 @@ class Merchant{
     }
 
     getRevenue(from, to = new Date()){
-        if(from === 0){
-            from = this._transactions[0].date;
-        }
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
@@ -621,19 +615,6 @@ class Merchant{
         }
 
         return {start: start, end: end};
-    }
-
-
-    isSanitaryString(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; i++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
     }
 }
 
