@@ -22,7 +22,7 @@ module.exports = {
                 merchant.verifyId = helper.generateId(15);
                 
                 const mailgunData = {
-                    from: "The Subline <clientsupport@thesusbline.net>",
+                    from: "The Subline <clientsupport@thesubline.net>",
                     to: merchant.email,
                     subject: "Password Reset",
                     html: passwordReset({
