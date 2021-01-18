@@ -7,7 +7,9 @@ const fs = require("fs");
 const Merchant = require("./models/merchant.js");
 const helper = require("./controllers/helper.js");
 
-let protectedRoutes = [];
+let protectedRoutes = [
+    "/dashboard"
+];
 
 const app = express();
 
@@ -42,7 +44,6 @@ app.use(session({
 app.use((req, res, next)=>{
     if(protectedRoutes.includes(req.url)){
         if(req.session.user === undefined) return res.redirect("/");
-
         Merchant.findOne({"session.sessionId": req.session.user})
             .then((merchant)=>{
                 if(merchant === null){
@@ -64,10 +65,12 @@ app.use((req, res, next)=>{
             })
             .catch((err)=>{
                 if(err === "no merchant"){
-                    return res.redirect("PLEASE LOG IN");
+                    return res.redirect("/");
                 }
                 return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });
+    }else{
+        return next();
     }
 });
 app.use(express.urlencoded({extended: true}));

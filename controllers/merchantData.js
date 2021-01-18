@@ -38,6 +38,9 @@ module.exports = {
         let salt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(req.body.password, salt);
 
+        let expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 90);
+
         let merchant = new Merchant({
             name: req.body.name,
             email: req.body.email.toLowerCase(),
@@ -48,7 +51,11 @@ module.exports = {
             status: ["unverified"],
             inventory: [],
             recipes: [],
-            verifyId: helper.generateId(15)
+            verifyId: helper.generateId(15),
+            session: {
+                sessionId: helper.generateId(25),
+                expiration: expirationDate
+            }
         });
 
         merchant.save()

@@ -19,7 +19,7 @@ module.exports = {
                 if(merchant){
                     bcrypt.compare(req.body.password, merchant.password, (err, result)=>{
                         if(result){
-                            req.session.user = merchant._id;
+                            req.session.user = merchant.session.sessionId;
                             return res.redirect("/dashboard");
                         }else{
                             req.session.error = "INVALID EMAIL OR PASSWORD";

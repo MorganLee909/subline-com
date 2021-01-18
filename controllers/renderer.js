@@ -13,7 +13,6 @@ module.exports = {
     Renders landingPage
     */
     landingPage: function(req, res){
-        console.log(res.locals.otherData);
         new Activity({
             ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
             merchant: req.session.user,
@@ -61,49 +60,48 @@ module.exports = {
             .save()
             .catch(()=>{});
 
+
         let merchant2 = {};
-        Merchant.findOne(
-            {_id: req.session.user},
-            {
-                name: 1,
-                pos: 1,
-                posId: 1,
-                posAccessToken: 1,
-                lastUpdatedTime: 1,
-                inventory: 1,
-                recipes: 1,
-                squareLocation: 1,
-                status: 1
-            }
-        )
+        // Merchant.findOne(
+        //     {_id: res.locals.merchant._id},
+        //     {
+        //         name: 1,
+        //         pos: 1,
+        //         posId: 1,
+        //         posAccessToken: 1,
+        //         lastUpdatedTime: 1,
+        //         inventory: 1,
+        //         recipes: 1,
+        //         squareLocation: 1,
+        //         status: 1
+        //     }
+        // )
+        res.locals.merchant
             .populate("inventory.ingredient")
             .populate("recipes")
+            .execPopulate()
             .then(async (merchant)=>{
-                merchant2 = merchant;
-                if(merchant.status.includes("unverified")){
+                if(res.locals.merchant.status.includes("unverified")){
                     throw "unverified";
                 }
 
-                if(merchant.pos === "clover"){
-                    await helper.getCloverData(merchant);
-                }else if(merchant.pos === "square"){
-                    await helper.getSquareData(merchant);
+                if(res.locals.merchant.pos === "clover"){
+                    await helper.getCloverData(res.locals.merchant);
+                }else if(res.locals.merchant.pos === "square"){
+                    await helper.getSquareData(res.locals.merchant);
                 }else{
                     return;
                 }
 
-                return merchant.save();
+                return res.locals.merchant.save();
             })
             .then((merchant)=>{
-                if(merchant){
-                    merchant2 = merchant;
-                }
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
                 return Transaction.aggregate([
                     {$match: {
-                        merchant: new ObjectId(req.session.user),
+                        merchant: new ObjectId(res.locals.merchant._id),
                         date: {$gte: firstDay},
                     }},
                     {$sort: {date: -1}},
@@ -114,13 +112,13 @@ module.exports = {
                 ]);      
             })
             .then((transactions)=>{
-                merchant2._id = undefined;
-                merchant2.posAccessToken = undefined;
-                merchant2.lastUpdatedTime = undefined;
-                merchant2.accountStatus = undefined;
-                merchant2.status = undefined;
+                res.locals.merchant._id = undefined;
+                res.locals.merchant.posAccessToken = undefined;
+                res.locals.merchant.lastUpdatedTime = undefined;
+                res.locals.merchant.accountStatus = undefined;
+                res.locals.merchant.status = undefined;
 
-                return res.render("dashboardPage/dashboard", {merchant: merchant2, transactions: transactions});
+                return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
                 if(err === "unverified"){
