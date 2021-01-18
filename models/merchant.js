@@ -62,6 +62,10 @@ const MerchantSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Recipe"
     }],
+    session: {
+        sessionId: String,
+        expiration: Date
+    },
     verifyId: String
 });
 
