@@ -11,6 +11,7 @@ mongoose.connect(`${process.env.DB}/inventory-management`, {useNewUrlParser: tru
 
 app.set("view engine", "ejs");
 
+app.use(express.static(__dirname + "/views"));
 let httpsServer = {};
 if(process.env.NODE_ENV === "production"){
     httpsServer = https.createServer({
@@ -27,6 +28,10 @@ if(process.env.NODE_ENV === "production"){
     });
 }
 
+app.use((req, res, next)=>{
+    console.log(req.session);
+    next();
+});
 app.use(compression());
 app.use(session({
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen",
@@ -34,7 +39,7 @@ app.use(session({
     saveUninitialized: true,
     resave: false
 }));
-app.use(express.static(__dirname + "/views"));
+
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
