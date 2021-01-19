@@ -343,27 +343,6 @@ Banner
             pointer-events: all;
         }
 
-/* Footer Partial */
-.spacer{
-    flex: 1;
-}
-
-.footer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    background: rgb(240, 252, 255);
-}
-
-    .footer > *{
-        margin: 5px;
-    }
-
-    .footer div > *{
-        margin: 0 25px;
-    }
-
 @media screen and (max-width: 1400px){
     .button{
         font-size: 15px;

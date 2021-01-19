@@ -16,8 +16,10 @@ const upload = multer({dest: "uploads/"});
 module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
+    app.get("/login", renderer.loginPage);
     app.get("/dashboard", session, renderer.displayDashboard);
     app.get("/resetpassword/*", renderer.displayPassReset);
+    
 
     //Merchant
     app.post("/merchant/create/none", merchantData.createMerchantNone);

@@ -39,6 +39,11 @@ module.exports = {
         return res.render("landingPage/landing", {error: error, success: success, isLoggedIn: isLoggedIn});
     },
 
+    //GET: Renders the login page
+    loginPage: function(req, res){
+        return res.render("otherPages/login");
+    },
+
     /*
     GET - Displays the main inventory page for merchants
     Returns = the logged in merchant and his/her data
