@@ -75,54 +75,7 @@
             </div>
         </div>
 
-        <div id="registerStrand">
-            <form onsubmit="registerObj.submit()">
-                <h1> Join Subline </h1>
-
-                <label id="nameLabel">Restaurant Name
-                    <input class="input" id="regName" name="name" type="text" required>
-                </label>
         
-                <label>Email
-                    <input type="text" id="regEmail" name="email" type="email" required>
-                </label>
-        
-                <label>Password
-                    <input type="password" id="regPass" name="password" type="password" required>
-                </label>
-        
-                <label>Confirm Password
-                    <input type="password" id="regConfirmPass" name="confirmPassword" type="password" required>
-                </label>
-        
-                <div id="agreement">
-                    <label class="container">
-                        <input id="checkAgree" type="checkbox">
-
-                        <span class="checkmark"></span>
-        
-                        <p style="padding-top: 5px; padding-left: 7px;">I agree to the 
-                            <a class="link" href="/privacy">Privacy Policy</a> and the 
-                            <a class="link" href="/terms">Terms and Conditions</a>
-                        </p>
-                    </label>   
-                </div>
-
-                <input id="regButton" class="buttonDisabled" type="submit" value="Sign Up with Email">
-
-                <!-- <h1>OR</h1>
-
-                <a class="button buttonWithBorder" href="/cloverlogin">Sign Up with Clover</a>
-
-                <a class="button buttonWithBorder" href="/squarelogin">Sign Up with Square</a> -->
-
-                <h3 class="link" style="margin-top: 30px;" onclick="loginObj.display()"> Already have an account? Please Sign In </h3>
-            </form>
-        </div>
-
-        
-
-        <% include ../shared/footer %>
 
         <% include ../shared/loader %>
 

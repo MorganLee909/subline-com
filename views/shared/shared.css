@@ -114,36 +114,21 @@ button::-moz-focus-inner{
     border: 0;
 }
 
-.link {
+.link{
     cursor: pointer;
     color: gray;
     text-decoration: underline;
-    margin-top: 20px;
     text-align: center;
     font-size: 20px;
 }
 
-.link:hover {
-    color: #ff636b;
-    text-decoration: underline;
-    cursor: pointer;
-}
+    .link:hover {
+        color: #ff636b;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 
-form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border: 2px solid rgb(0, 27, 45);
-    padding: 50px;
-    border-radius: 10px;
-    margin: 10px;
-    background: rgb(240, 252, 255);
-    font-size: 16px;
-    margin-top: 40px;
-    width: 550px;
-    justify-content: space-evenly;
-    height: auto;
-}
+
 
 .button{
     display: initial;
@@ -379,8 +364,4 @@ Banner
     .headerStart{
         width: 0;
     }
-}
-
-label {
-    margin-top:20px ;
 }

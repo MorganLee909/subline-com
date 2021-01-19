@@ -44,6 +44,11 @@ module.exports = {
         return res.render("otherPages/login");
     },
 
+    //GET: Renders the registration page
+    registerPage: function(req, res){
+        return res.render("otherPages/register");
+    },
+
     /*
     GET - Displays the main inventory page for merchants
     Returns = the logged in merchant and his/her data
