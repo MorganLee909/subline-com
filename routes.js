@@ -21,8 +21,6 @@ module.exports = function(app){
 
     //Merchant
     app.post("/merchant/create/none", merchantData.createMerchantNone);
-    app.get("/merchant/create/clover", merchantData.createMerchantClover);
-    app.get("/merchant/create/square", merchantData.createMerchantSquare);
     app.put("/merchant/ingredients/update", session, merchantData.updateMerchantIngredient); //also updates some data in ingredients
     app.post("/merchant/password", merchantData.updatePassword); //TODO: change to work with session
 
@@ -58,11 +56,7 @@ module.exports = function(app){
     //Other
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
-    app.get("/cloverlogin", otherData.cloverRedirect);
-    app.get("/squarelogin", otherData.squareRedirect);
-    app.get("/cloverauth*", otherData.cloverAuth);
-    app.get("/squareauth", otherData.squareAuth);
-
+    
     //Information Pages
     app.get("/privacy", informationPages.privacy);
     app.get("/terms", informationPages.terms);
