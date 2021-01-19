@@ -101,11 +101,6 @@ module.exports = {
     },
 
     createFromSpreadsheet: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         //read file, get the correct sheet, create array from sheet
         let workbook = xlsx.readFile(req.file.path);
         fs.unlink(req.file.path, ()=>{});
@@ -155,13 +150,14 @@ module.exports = {
         }
 
         let merchant = {};
-        Merchant.findOne({_id: req.session.user})
+        res.locals.merchant
             .populate("inventory.ingredient")
+            .execPopulate()
             .then((response)=>{
                 merchant = response;
 
                 let order = new Order({
-                    merchant: req.session.user,
+                    merchant: res.locals.merchant._id,
                     name: array[1][locations.name],
                     date: spreadsheetDate,
                     taxes: parseInt(array[1][locations.taxes] * 100),
