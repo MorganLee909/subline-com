@@ -46,14 +46,9 @@ module.exports = {
     Renders inventoryPage
     */
     displayDashboard: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-        
         new Activity({
             ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-            merchant: req.session.user,
+            merchant: res.locals.merchant._id,
             route: "dashboard",
             date: new Date()
         })
@@ -62,20 +57,6 @@ module.exports = {
 
 
         let merchant2 = {};
-        // Merchant.findOne(
-        //     {_id: res.locals.merchant._id},
-        //     {
-        //         name: 1,
-        //         pos: 1,
-        //         posId: 1,
-        //         posAccessToken: 1,
-        //         lastUpdatedTime: 1,
-        //         inventory: 1,
-        //         recipes: 1,
-        //         squareLocation: 1,
-        //         status: 1
-        //     }
-        // )
         res.locals.merchant
             .populate("inventory.ingredient")
             .populate("recipes")
