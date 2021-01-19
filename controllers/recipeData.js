@@ -92,31 +92,18 @@ module.exports = {
 
     //DELETE - removes a single recipe from the merchant and the database
     removeRecipe: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
+        if(res.locals.merchant.pos === "clover"){
+            return res.json("YOU MUST EDIT YOUR RECIPES INSIDE CLOVER");
+        }
+        
+        for(let i = 0; i < res.locals.merchant.recipes.length; i++){
+            if(res.locals.merchant.recipes[i].toString() === req.params.id){
+                res.locals.merchant.recipes.splice(i, 1);
+                break;
+            }
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                if(merchant.pos === "clover"){
-                    return res.json("YOU MUST EDIT YOUR RECIPES INSIDE CLOVER");
-                }
-                
-                for(let i = 0; i < merchant.recipes.length; i++){
-                    if(merchant.recipes[i].toString() === req.params.id){
-                        merchant.recipes.splice(i, 1);
-                        break;
-                    }
-                }
-
-                merchant.save()
-                    .catch((err)=>{
-                        return res.json("ERROR: UNABLE TO SAVE DATA");
-                    })
-
-                return Recipe.deleteOne({_id: req.params.id});
-            })
+        Promise.all([Recipe.deleteOne({_id: req.params.id}), res.locals.merchant.save()])
             .then((response)=>{
                 return res.json({});
             })
