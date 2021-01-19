@@ -36,7 +36,7 @@ module.exports = {
             success = null;
         }
 
-        return res.render("landingPage/landing", {error: error, success: success, isLoggedIn: isLoggedIn});
+        return res.render("otherPages/landing", {error: error, success: success, isLoggedIn: isLoggedIn});
     },
 
     //GET: Renders the login page
