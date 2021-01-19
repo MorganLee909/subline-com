@@ -49,7 +49,7 @@ module.exports = function(app){
 
     //Transactions
     app.post("/transaction", session, transactionData.getTransactions);
-    app.post("/transaction/create", transactionData.createTransaction);
+    app.post("/transaction/create", session, transactionData.createTransaction);
     app.post("/transactions/create/spreadsheet", upload.single("transactions"), transactionData.createFromSpreadsheet);
     app.get("/transactions/download/spreadsheet", transactionData.spreadsheetTemplate);
     app.delete("/transaction/:id", transactionData.remove);

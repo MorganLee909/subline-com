@@ -72,35 +72,26 @@ module.exports = {
     }
     */
     createTransaction: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-        
+        let keys = Object.keys(req.body.ingredientUpdates);
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                let keys = Object.keys(req.body.ingredientUpdates);
+        for(let i = 0; i < keys.length; i++){
+            for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                if(res.locals.merchant.inventory[j].ingredient._id.toString() === keys[i]){
+                    res.locals.merchant.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
 
-                for(let i = 0; i < keys.length; i++){
-                    for(let j = 0; j < merchant.inventory.length; j++){
-                        if(merchant.inventory[j].ingredient._id.toString() === keys[i]){
-                            merchant.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
-
-                            break;
-                        }
-                    }
+                    break;
                 }
+            }
+        }
 
-                return merchant.save();
-            })
+        res.locals.merchant.save()
             .then((merchant)=>{
                 if(req.body.date === null){
                     throw "NEW TRANSACTIONS MUST CONTAIN A DATE";
                 }
 
                 return new Transaction({
-                    merchant: req.session.user,
+                    merchant: res.locals.merchant._id,
                     date: new Date(req.body.date),
                     device: "none",
                     recipes: req.body.recipes
