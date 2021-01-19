@@ -23,33 +23,25 @@ module.exports = {
         Same as above, with the _id
     */
     createIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let newIngredient = {...req.body};
         if(req.body.defaultUnit === "bottle"){
             newIngredient.ingredient.unitSize = helper.convertQuantityToBaseUnit(newIngredient.ingredient.unitSize, newIngredient.ingredient.unitType);
         }
 
         newIngredient = new Ingredient(newIngredient.ingredient);
-
-        let ingredientPromise = newIngredient.save();
-        let merchantPromise = Merchant.findOne({_id: req.session.user});
-
-        Promise.all([ingredientPromise, merchantPromise])
-            .then((response)=>{
+        
+        newIngredient.save()
+            .then((ingredient)=>{
                 newIngredient = {
-                    ingredient: response[0],
+                    ingredient: ingredient,
                     defaultUnit: req.body.defaultUnit
                 }
 
                 newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
 
-                response[1].inventory.push(newIngredient);
+                res.locals.merchant.inventory.push(newIngredient);
 
-                return response[1].save();
+                return res.locals.merchant.save();
             })
             .then((response)=>{
                 return res.json(newIngredient);
