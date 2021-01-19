@@ -8,6 +8,7 @@ const orderData = require("./controllers/orderData.js");
 const informationPages = require("./controllers/informationPages.js");
 const emailVerification = require("./controllers/emailVerification.js");
 const passwordReset = require("./controllers/passwordReset.js");
+const session = require("./verifySession.js");
 
 const multer = require("multer");
 const upload = multer({dest: "uploads/"});
@@ -15,7 +16,7 @@ const upload = multer({dest: "uploads/"});
 module.exports = function(app){
     //Render page
     app.get("/", renderer.landingPage);
-    app.get("/dashboard", renderer.displayDashboard);
+    app.get("/dashboard", session, renderer.displayDashboard);
     app.get("/resetpassword/*", renderer.displayPassReset);
 
     //Merchant
@@ -26,11 +27,11 @@ module.exports = function(app){
     app.post("/merchant/password", merchantData.updatePassword);
 
     //Ingredients
-    app.post("/ingredients/create", ingredientData.createIngredient);  //also adds to merchant
-    app.put("/ingredients/update", ingredientData.updateIngredient);
-    app.post("/ingredients/create/spreadsheet", upload.single("ingredients"), ingredientData.createFromSpreadsheet);
-    app.get("/ingredients/download/spreadsheet", ingredientData.spreadsheetTemplate);
-    app.delete("/ingredients/remove/:id", ingredientData.removeIngredient);
+    app.post("/ingredients/create", session, ingredientData.createIngredient);  //also adds to merchant
+    app.put("/ingredients/update", session, ingredientData.updateIngredient);
+    app.post("/ingredients/create/spreadsheet", session, upload.single("ingredients"), ingredientData.createFromSpreadsheet);
+    app.get("/ingredients/download/spreadsheet", session, ingredientData.spreadsheetTemplate);
+    app.delete("/ingredients/remove/:id", session, ingredientData.removeIngredient);
 
     //Recipes
     app.post("/recipe/create", recipeData.createRecipe);

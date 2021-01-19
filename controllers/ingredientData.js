@@ -1,4 +1,3 @@
-const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 
@@ -28,6 +27,7 @@ module.exports = {
             newIngredient.ingredient.unitSize = helper.convertQuantityToBaseUnit(newIngredient.ingredient.unitSize, newIngredient.ingredient.unitType);
         }
 
+        
         newIngredient = new Ingredient(newIngredient.ingredient);
         
         newIngredient.save()
@@ -210,22 +210,14 @@ module.exports = {
 
     //DELETE - Removes an ingredient from the merchant's inventory
     removeIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
+        for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+            if(req.params.id === res.locals.merchant.inventory[i].ingredient._id.toString()){
+                res.locals.merchant.inventory.splice(i, 1);
+                break;
+            }
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(req.params.id === merchant.inventory[i].ingredient._id.toString()){
-                        merchant.inventory.splice(i, 1);
-                        break;
-                    }
-                }
-
-                return Promise.all([merchant.save(), Ingredient.deleteOne({_id: req.params.id})]);
-            })
+        Promise.all([res.locals.merchant.save(), Ingredient.deleteOne({_id: req.params.id})])
             .then((response)=>{
                 return res.json({});
             })

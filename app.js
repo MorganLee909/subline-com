@@ -4,16 +4,6 @@ const mongoose = require("mongoose");
 const compression = require("compression");
 const https = require("https");
 const fs = require("fs");
-const Merchant = require("./models/merchant.js");
-const helper = require("./controllers/helper.js");
-
-let protectedRoutes = [
-    "/dashboard",
-    "/ingredients/create",
-    "/ingredients/update",
-    "/ingredients/create/spreadsheet",
-    "/ingredients/download/spreadsheet"
-];
 
 const app = express();
 
@@ -45,43 +35,6 @@ app.use(session({
     saveUninitialized: true,
     resave: false
 }));
-app.use((req, res, next)=>{
-    if(protectedRoutes.includes(req.url)){
-        if(req.session.user === undefined) {
-            req.session.error = "PLEASE LOG IN";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({"session.sessionId": req.session.user})
-            .then((merchant)=>{
-                if(merchant === null){
-                    throw "no merchant";
-                }
-
-                if(merchant.session.date < new Date()){
-                    let newExpiration = new Date();
-                    newExpiration.setDate(newExpiration.getDate() + 90);
-
-                    merchant.session.sessionId = helper.generateId(25);
-                    merchant.session.date = newExpiration;
-                    merchant.save();
-                    return res.redirect("/");
-                }
-
-                res.locals.merchant = merchant;
-                return next();
-            })
-            .catch((err)=>{
-                if(err === "no merchant"){
-                    req.session.error = "PLEASE LOG IN";
-                    return res.redirect("/");
-                }
-                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
-            });
-    }else{
-        return next();
-    }
-});
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
