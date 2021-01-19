@@ -117,11 +117,6 @@ module.exports = {
     },
 
     createFromSpreadsheet: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         //read file, get the correct sheet, create array from sheet
         let workbook = xlsx.readFile(req.file.path);
         fs.unlink(req.file.path, ()=>{});
@@ -176,15 +171,12 @@ module.exports = {
             ingredients.push(ingredient);
         }
 
-        //Update the database
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < merchantData.length; i++){
-                    merchant.inventory.push(merchantData[i]);
-                }
+        for(let i = 0; i < merchantData.length; i++){
+            res.locals.merchant.inventory.push(merchantData[i]);
+        }
 
-                return Promise.all([Ingredient.create(ingredients), merchant.save()]);
-            })
+        //Update the database
+        Promise.all([Ingredient.create(ingredients), res.locals.merchant.save()])
             .then((response)=>{
                 return res.json(merchantData);
             })
