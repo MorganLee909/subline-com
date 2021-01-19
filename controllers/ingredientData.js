@@ -68,11 +68,6 @@ module.exports = {
     }
     */
     updateIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-        let updatedIngredient = {};
         Ingredient.findOne({_id: req.body.id})
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
@@ -81,35 +76,33 @@ module.exports = {
                 return ingredient.save();
             })
             .then((ingredient)=>{
-                updatedIngredient.ingredient = ingredient;
-                return Merchant.findOne({_id: req.session.user});
-            })
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(merchant.inventory[i].ingredient.toString() === req.body.id){
-                        merchant.inventory[i].defaultUnit = req.body.unit;
+                let updatedIngredient = {};
+                for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+                    if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
+                        res.locals.merchant.inventory[i].defaultUnit = req.body.unit;
 
-                        if(merchant.inventory[i].quantity !== req.body.quantity){
+                        if(res.locals.merchant.inventory[i].quantity !== req.body.quantity){
                             new InventoryAdjustment({
                                 date: new Date(),
                                 merchant: req.session.user,
                                 ingredient: req.body.id,
-                                quantity: req.body.quantity - merchant.inventory[i].quantity
+                                quantity: req.body.quantity - res.locals.merchant.inventory[i].quantity
                             }).save().catch(()=>{});
 
-                            merchant.inventory[i].quantity = req.body.quantity;
+                            res.locals.merchant.inventory[i].quantity = req.body.quantity;
                         }
 
-                        updatedIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.unit);
-                        updatedIngredient.unit = req.body.unit;
+                        updatedIngredient = {
+                            ingredient: ingredient,
+                            quantity: helper.convertQuantityToBaseUnit(req.body.quantity, req.body.unit),
+                            unit: req.body.unit
+                        }
                         
                         break;
                     }
                 }
 
-                return merchant.save();
-            })
-            .then((merchant)=>{
+                res.locals.merchant.save().catch((err)=>{throw err});
                 return res.json(updatedIngredient);
             })
             .catch((err)=>{
@@ -119,7 +112,7 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO UDATE THE INGREDIENT");
+                return res.json("ERROR: UNABLE TO UPDATE THE INGREDIENT");
             });
     },
 

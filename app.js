@@ -9,7 +9,8 @@ const helper = require("./controllers/helper.js");
 
 let protectedRoutes = [
     "/dashboard",
-    "/ingredients/create"
+    "/ingredients/create",
+    "/ingredients/update"
 ];
 
 const app = express();
