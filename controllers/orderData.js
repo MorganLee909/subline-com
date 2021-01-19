@@ -212,13 +212,9 @@ module.exports = {
     GET - Creates and sends a template xlsx for uploading orders
     */
     spreadsheetTemplate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
+        res.locals.merchant
             .populate("inventory.ingredient")
+            .execPopulate()
             .then((merchant)=>{
                 let workbook = xlsx.utils.book_new();
                 workbook.SheetNames.push("Order");

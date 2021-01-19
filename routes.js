@@ -46,7 +46,7 @@ module.exports = function(app){
     app.post("/orders/get", session, orderData.getOrders);
     app.post("/order/create", session, orderData.createOrder);
     app.post("/orders/create/spreadsheet", session, upload.single("orders"), orderData.createFromSpreadsheet);
-    app.get("/orders/download/spreadsheet", orderData.spreadsheetTemplate);
+    app.get("/orders/download/spreadsheet", session, orderData.spreadsheetTemplate);
     app.delete("/order/:id", orderData.removeOrder);
 
     //Transactions
