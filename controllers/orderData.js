@@ -249,36 +249,21 @@ module.exports = {
     DELETE - Remove an order from the database
     */
     removeOrder: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let merchant = {};
-        let order = {}
-        Merchant.findOne({_id: req.session.user})
-            .then((response)=>{
-                merchant = response;
-                return Order.findOne({_id: req.params.id});
-            })
-            .then((response)=>{
-                order = response;
-
-                return Order.deleteOne({_id: req.params.id})
-            })
-            .then((response)=>{
-                res.json({});
-
+        Order.findOne({_id: req.params.id})
+            .then((order)=>{
                 for(let i = 0; i < order.ingredients.length; i++){
-                    for(let j = 0; j < merchant.inventory.length; j++){
-                        if(order.ingredients[i].ingredient.toString() === merchant.inventory[j].ingredient.toString()){
-                            merchant.inventory[j].quantity -= order.ingredients[i].quantity;
+                    for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                        if(order.ingredients[i].ingredient.toString() === res.locals.merchant.inventory[j].ingredient.toString()){
+                            res.locals.merchant.inventory[j].quantity -= order.ingredients[i].quantity;
                             break;
                         }
                     }
                 }
 
-                return merchant.save();
+                return Promise.all([Order.deleteOne({_id: req.params.id}), res.locals.merchant.save()]);
+            })
+            .then((response)=>{
+                res.json({});
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
