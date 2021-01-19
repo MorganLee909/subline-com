@@ -16,6 +16,10 @@
             </a>
         </div>
 
+        <% if(banner !== undefined){ %>
+            <% include ./banner.ejs %>
+        <% } %>
+
         <form action="/login" method="post">
             <h1> Welcome Back </h1>
     
@@ -41,5 +45,12 @@
         </form>
 
         <% include ../shared/footer %>
+
+        <script>
+            setTimeout(()=>{
+                let banner = document.getElementById("banner");
+                if(banner !== null) banner.style.display = "none";
+            }, 10000)
+        </script>
     </body>
 </html>

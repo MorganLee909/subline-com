@@ -21,12 +21,12 @@ module.exports = {
                             return res.redirect("/dashboard");
                         }else{
                             req.session.error = "INVALID EMAIL OR PASSWORD";
-                            return res.redirect("/");
+                            return res.redirect("/login");
                         }
                     });
                 }else{
                     req.session.error = "INVALID EMAIL OR PASSWORD";
-                    return res.redirect("/");
+                    return res.redirect("/login");
                 }
             })
             .catch((err)=>{

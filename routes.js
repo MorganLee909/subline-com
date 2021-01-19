@@ -8,16 +8,18 @@ const orderData = require("./controllers/orderData.js");
 const informationPages = require("./controllers/informationPages.js");
 const emailVerification = require("./controllers/emailVerification.js");
 const passwordReset = require("./controllers/passwordReset.js");
-const session = require("./verifySession.js");
+
+const session = require("./middleware.js").verifySession;
+const banner = require("./middleware.js").formatBanner;
 
 const multer = require("multer");
 const upload = multer({dest: "uploads/"});
 
 module.exports = function(app){
     //Render page
-    app.get("/", renderer.landingPage);
-    app.get("/login", renderer.loginPage);
-    app.get("/register", renderer.registerPage);
+    app.get("/", banner, renderer.landingPage);
+    app.get("/login", banner, renderer.loginPage);
+    app.get("/register", banner, renderer.registerPage);
     app.get("/dashboard", session, renderer.displayDashboard);
     app.get("/resetpassword/*", renderer.displayPassReset);
     

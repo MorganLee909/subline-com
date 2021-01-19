@@ -8,45 +8,21 @@ const helper = require("./helper.js");
 module.exports = {
     /*
     GET - Shows the public landing page
-    Return = a single error message (only if there is an error)
-    Renders landingPage
     */
     landingPage: function(req, res){
-        new Activity({
-            ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-            merchant: req.session.user,
-            route: "landing",
-            date: new Date()
-        })
-            .save()
-            .catch(()=>{});
-
-        let error = {};
-        let isLoggedIn = req.session.isLoggedIn || false;
-        if(req.session.error){
-            error = req.session.error;
-            req.session.error = undefined;
-        }else{
-            error = null;
-        }
-        if(req.session.success){
-            success = req.session.success;
-            req.session.success = undefined;
-        }else{
-            success = null;
-        }
-
-        return res.render("otherPages/landing", {error: error, success: success, isLoggedIn: isLoggedIn});
+        
+        return res.render("otherPages/landing", {banner: res.locals.banner});
     },
 
     //GET: Renders the login page
-    loginPage: function(req, res){
-        return res.render("otherPages/login");
+    loginPage: function(req, res){  
+        console.log(res.locals.banner);      
+        return res.render("otherPages/login", {banner: res.locals.banner});
     },
 
     //GET: Renders the registration page
     registerPage: function(req, res){
-        return res.render("otherPages/register");
+        return res.render("otherPages/register", {banner: res.locals.banner});
     },
 
     /*
