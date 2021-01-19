@@ -17,11 +17,6 @@ module.exports = {
     }
     */
     getTransactions: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let from = new Date(req.body.from);
         let to = new Date(req.body.to);
 
@@ -45,7 +40,7 @@ module.exports = {
 
         Transaction.aggregate([
             {$match: {
-                merchant: ObjectId(req.session.user),
+                merchant: ObjectId(res.locals.merchant._id),
                 date: {
                     $gte: from,
                     $lt: to
