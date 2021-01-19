@@ -34,7 +34,7 @@ module.exports = function(app){
     app.delete("/ingredients/remove/:id", session, ingredientData.removeIngredient);
 
     //Recipes
-    app.post("/recipe/create", recipeData.createRecipe);
+    app.post("/recipe/create", session, recipeData.createRecipe);
     app.put("/recipe/update", recipeData.updateRecipe);
     app.delete("/recipe/remove/:id", recipeData.removeRecipe);
     app.get("/recipe/update/clover", recipeData.updateRecipesClover);

@@ -2,7 +2,6 @@ const Merchant = require("../models/merchant");
 
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
-const path = require("path");
 
 module.exports = {
     /*

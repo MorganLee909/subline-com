@@ -1,5 +1,4 @@
 const Order = require("../models/order.js");
-const Merchant = require("../models/merchant.js");
 
 const helper = require("./helper.js");
 

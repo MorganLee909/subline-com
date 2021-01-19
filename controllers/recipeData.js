@@ -22,13 +22,8 @@ module.exports = {
     Return = newly created recipe in same form as above, with _id
     */
     createRecipe: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let recipe = new Recipe({
-            merchant: req.session.user,
+            merchant: res.locals.merchant._id,
             name: req.body.name,
             price: Math.round(req.body.price * 100),
             ingredients: req.body.ingredients
@@ -36,6 +31,9 @@ module.exports = {
 
         recipe.save()
             .then((newRecipe)=>{
+                res.locals.merchant.recipes.push(recipe);
+                res.locals.merchant.save().catch((err)=>{throw err});
+
                 return res.json(newRecipe);
             })
             .catch((err)=>{
@@ -47,13 +45,6 @@ module.exports = {
                 }
                 return res.json("ERROR: UNABLE TO SAVE INGREDIENT");
             });
-
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                merchant.recipes.push(recipe);
-                return merchant.save();
-            })
-            .catch((err)=>{});
     },
 
     /*
