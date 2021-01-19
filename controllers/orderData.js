@@ -72,13 +72,8 @@ module.exports = {
     } 
     */ 
     createOrder: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let newOrder = new Order(req.body);
-        newOrder.merchant = req.session.user;
+        newOrder.merchant = res.locals.merchant._id;
         newOrder.save()
             .then((response)=>{
                 res.json(response);
@@ -93,22 +88,16 @@ module.exports = {
                 return res.json("ERROR: UNABLE TO SAVE ORDER");
             });
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < req.body.ingredients.length; i++){
-                    for(let j = 0; j < merchant.inventory.length; j++){
-                        if(req.body.ingredients[i].ingredient === merchant.inventory[j].ingredient.toString()){
-                            merchant.inventory[j].quantity += parseFloat(req.body.ingredients[i].quantity);
-                        }
+        
+            for(let i = 0; i < req.body.ingredients.length; i++){
+                for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                    if(req.body.ingredients[i].ingredient === res.locals.merchant.inventory[j].ingredient.toString()){
+                        res.locals.merchant.inventory[j].quantity += parseFloat(req.body.ingredients[i].quantity);
                     }
                 }
+            }
 
-                return merchant.save();
-            })
-            .then((merchant)=>{
-                return;
-            })
-            .catch(()=>{});
+            res.locals.merchant.save().catch((err)=>{});
     },
 
     createFromSpreadsheet: function(req, res){
