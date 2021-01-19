@@ -303,39 +303,32 @@ module.exports = {
             return new Date(start.getTime() + Math.random() * (now.getTime() - start.getTime()));
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                let newTransactions = [];
+        let newTransactions = [];
+        for(let i = 0; i < 5000; i++){
+            let newTransaction = new Transaction({
+                merchant: res.locals.merchant._id,
+                date: randomDate(),
+                recipes: []
+            });
 
-                for(let i = 0; i < 5000; i++){
-                    let newTransaction = new Transaction({
-                        merchant: merchant._id,
-                        date: randomDate(),
-                        recipes: []
-                    });
+            let numberOfRecipes = Math.floor((Math.random() * 5) + 1);
 
-                    let numberOfRecipes = Math.floor((Math.random() * 5) + 1);
+            for(let j = 0; j < numberOfRecipes; j++){
+                let recipeNumber = Math.floor(Math.random() * res.locals.merchant.recipes.length);
+                let randQuantity = Math.floor((Math.random() * 3) + 1);
 
-                    for(let j = 0; j < numberOfRecipes; j++){
-                        let recipeNumber = Math.floor(Math.random() * merchant.recipes.length);
-                        let randQuantity = Math.floor((Math.random() * 3) + 1);
+                newTransaction.recipes.push({
+                    recipe: res.locals.merchant.recipes[recipeNumber],
+                    quantity: randQuantity
+                });
+            }
 
-                        newTransaction.recipes.push({
-                            recipe: merchant.recipes[recipeNumber],
-                            quantity: randQuantity
-                        });
-                    }
+            newTransactions.push(newTransaction);
+        }
 
-                    newTransactions.push(newTransaction);
-                }
-
-                Transaction.create(newTransactions)
-                    .then((transactions)=>{
-                        return res.redirect("/dashboard");
-                    })
-                    .catch((err)=>{
-                        return;
-                    });
+        Transaction.create(newTransactions)
+            .then((transactions)=>{
+                return res.redirect("/dashboard");
             })
             .catch((err)=>{
                 return;
