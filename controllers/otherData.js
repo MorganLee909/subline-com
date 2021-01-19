@@ -43,7 +43,7 @@ module.exports = {
     Redirects to /
     */
     logout: function(req, res){
-        req.session.user = undefined;
+        req.session.user = null;
 
         return res.redirect("/");
     },
@@ -143,9 +143,5 @@ module.exports = {
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM SQUARE";
                 return res.redirect("/");
             });
-    },
-
-    logo: function(req, res){
-        return res.sendFile(path.resolve("./views/shared/images/logo.png"));
     }
 }
