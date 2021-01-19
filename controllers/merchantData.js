@@ -1,10 +1,8 @@
 const Merchant = require("../models/merchant");
-const Recipe = require("../models/recipe");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 
 const helper = require("./helper.js");
 
-const axios = require("axios");
 const bcrypt = require("bcryptjs");
 
 module.exports = {

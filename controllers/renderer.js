@@ -1,6 +1,5 @@
 const ObjectId = require("mongoose").Types.ObjectId;
 
-const Merchant = require("../models/merchant.js");
 const Transaction = require("../models/transaction.js");
 const Activity = require("../models/activity.js");
 
