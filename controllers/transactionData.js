@@ -1,8 +1,6 @@
 const Transaction = require("../models/transaction");
 const Merchant = require("../models/merchant");
 
-const helper = require("./helper.js");
-
 const ObjectId = require("mongoose").Types.ObjectId;
 const xlsx = require("xlsx");
 const fs = require("fs");
@@ -295,54 +293,9 @@ module.exports = {
     },
 
     /*
-    GET - get transactions between two dates, sorted and group by date
-    params:
-        from: Date string
-        to: Date string
-    return:
-        [{
-            date: Date
-            transactions:[[Recipe]]
-        }]
-    */
-    getTransactionsByDate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        const from = new Date(req.params.from);
-        const to = new Date(req.params.to);
-
-        Transaction.aggregate([
-            {$match: {
-                merchant: ObjectId(req.session.user),
-                date: {
-                    $gte: from,
-                    $lt: to
-                }
-            }},
-            {$sort: {
-                date: 1
-            }}
-        ])
-            .then((transactions)=>{
-                return res.json(transactions);
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
-            });
-    },
-
-    /*
     GET - Creates 5000 transactions for logged in merchant for testing
     */
     populate: function(req, res){
-        if(!req.session.user){
-            res.session.error = "Must be logged in to do that";
-            return res.redirect("/");
-        }
-
         function randomDate() {
             let now = new Date();
             let start = new Date();
