@@ -43,7 +43,7 @@ module.exports = function(app){
     app.get("/recipes/download/spreadsheet", recipeData.spreadsheetTemplate);
 
     //Orders
-    app.post("/orders/get", orderData.getOrders);
+    app.post("/orders/get", session, orderData.getOrders);
     app.post("/order/create", orderData.createOrder);
     app.post("/orders/create/spreadsheet", upload.single("orders"), orderData.createFromSpreadsheet);
     app.get("/orders/download/spreadsheet", orderData.spreadsheetTemplate);

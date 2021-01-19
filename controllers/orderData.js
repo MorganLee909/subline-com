@@ -19,10 +19,6 @@ module.exports = {
     }
     */
     getOrders: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
         let from = new Date(req.body.from);
         let to = new Date(req.body.to);
 
@@ -46,7 +42,7 @@ module.exports = {
 
         Order.aggregate([
             {$match:{
-                merchant: new ObjectId(req.session.user),
+                merchant: new ObjectId(res.locals.merchant._id),
                 date: {
                     $gte: from,
                     $lt: to
