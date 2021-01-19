@@ -60,15 +60,10 @@ module.exports = {
     }
     */
     updateRecipe: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         Recipe.findOne({_id: req.body.id})
             .then((recipe)=>{
                 new ArchivedRecipe({
-                    merchant: req.session.user,
+                    merchant: res.locals.merchant._id,
                     name: recipe.name,
                     price: recipe.price,
                     date: new Date(),
