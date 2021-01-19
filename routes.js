@@ -37,7 +37,7 @@ module.exports = function(app){
     app.post("/recipe/create", session, recipeData.createRecipe);
     app.put("/recipe/update", session, recipeData.updateRecipe);
     app.delete("/recipe/remove/:id", session, recipeData.removeRecipe);
-    app.post("/recipes/create/spreadsheet", upload.single("recipes"), recipeData.createFromSpreadsheet);
+    app.post("/recipes/create/spreadsheet", session, upload.single("recipes"), recipeData.createFromSpreadsheet);
     app.get("/recipes/download/spreadsheet", recipeData.spreadsheetTemplate);
 
     //Orders
