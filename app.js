@@ -11,7 +11,8 @@ let protectedRoutes = [
     "/dashboard",
     "/ingredients/create",
     "/ingredients/update",
-    "/ingredients/create/spreadsheet"
+    "/ingredients/create/spreadsheet",
+    "/ingredients/download/spreadsheet"
 ];
 
 const app = express();

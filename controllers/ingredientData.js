@@ -192,11 +192,6 @@ module.exports = {
     },
 
     spreadsheetTemplate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let workbook = xlsx.utils.book_new();
         workbook.SheetNames.push("Ingredients");
         let workbookData = [];
