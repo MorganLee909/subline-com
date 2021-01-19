@@ -262,39 +262,26 @@ module.exports = {
     DELETE - Remove a transaction from the database
     */
     remove: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let merchant = {};
-        let transaction = {};
-        Merchant.findOne({_id: req.session.user})
-            .then((response)=>{
-                merchant = response;
-                return Transaction.findOne({_id: req.params.id}).populate("recipes.recipe");
-            })
-            .then((response)=>{
-                transaction = response;
-                return Transaction.deleteOne({_id: req.params.id});
-            })
-            .then((response)=>{
-                res.json();
-
+        Transaction.findOne({_id: req.params.id})
+            .populate("recipes.recipe")
+            .then((transaction)=>{
                 for(let i = 0; i < transaction.recipes.length; i++){
                     const recipe = transaction.recipes[i].recipe;
                     for(let j = 0; j < recipe.ingredients.length; j++){
                         const ingredient = recipe.ingredients[j].ingredient;
-                        for(let k = 0; k < merchant.inventory.length; k++){
-                            if(ingredient.toString() === merchant.inventory[k].ingredient.toString()){
-                                merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
+                        for(let k = 0; k < res.locals.merchant.inventory.length; k++){
+                            if(ingredient.toString() === res.locals.merchant.inventory[k].ingredient.toString()){
+                                res.locals.merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
                                 break;
                             }
                         }
                     }
                 }
-
-                return merchant.save();
+                
+                return Promise.all([Transaction.deleteOne({_id: req.params.id}), res.locals.merchant.save()]);
+            })
+            .then((response)=>{
+                res.json({});
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
