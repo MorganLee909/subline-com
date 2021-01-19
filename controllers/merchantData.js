@@ -229,15 +229,11 @@ module.exports = {
     }]
     */
     updateMerchantIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let adjustments = [];
         let changedIngredients = [];
-        Merchant.findOne({_id: req.session.user})
+        res.locals.merchant
             .populate("inventory.ingredient")
+            .execPopulate()
             .then((merchant)=>{
                 for(let i = 0; i < req.body.length; i++){
                     let updateIngredient;
