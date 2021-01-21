@@ -19,7 +19,7 @@ module.exports = {
                 mailgun.messages().send(mailgunData, (err, body)=>{});
 
 
-                return res.render(`verifyPage/verify`, {id: merchant._id, email: merchant.email});
+                return res.render(`verifyPage/verify`, {id: merchant._id, email: merchant.email, banner: res.locals.merchant});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO SEND VERIFICATION EMAIL";

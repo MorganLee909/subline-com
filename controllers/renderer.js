@@ -87,6 +87,7 @@ module.exports = {
             .catch((err)=>{
                 //TODO: add banners to the necessary pages
                 if(err === "unverified"){
+                    req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
                     return res.redirect(`/verify/email/${merchant2._id}`);
                 }
                 req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";

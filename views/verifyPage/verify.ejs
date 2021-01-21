@@ -12,6 +12,10 @@
     <body>
         <% include ../shared/header %>
 
+        <% if(banner !== undefined){ %>
+            <% include ./banner.ejs %>
+        <% } %>
+
         <h1 class="title">An email has been sent to <%=email%>.  Use the link in the email to verify your account.</h1>
 
         <p class="text">If you did not recieve an email or need to change your email address, enter it below and click submit.</p>
@@ -29,5 +33,11 @@
         document.getElementById("helpLink").style.display = "block";
         document.getElementById("privacyPolicyLink").style.display = "block";
         document.getElementById("termsLink").style.display = "block";
+    </script>
+    <script>
+        setTimeout(()=>{
+            let banner = document.getElementById("banner");
+            if(banner !== null) banner.style.display = "none";
+        }, 10000);
     </script>
 </html>

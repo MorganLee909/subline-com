@@ -12,8 +12,7 @@ const passwordReset = require("./controllers/passwordReset.js");
 const session = require("./middleware.js").verifySession;
 const banner = require("./middleware.js").formatBanner;
 
-const multer = require("multer");
-const upload = multer({dest: "uploads/"});
+const upload = require("multer")({dest: "uploads/"});
 
 module.exports = function(app){
     //Render page
@@ -67,13 +66,13 @@ module.exports = function(app){
     app.get("/help", informationPages.help);
 
     //Email verification
-    app.get("/verify/email/:id", emailVerification.sendVerifyEmail);
+    app.get("/verify/email/:id", banner, emailVerification.sendVerifyEmail);
     app.post("/verify/resend", emailVerification.resendEmail);
     app.get("/verify/:id/:code", emailVerification.verify);
 
     //Password reset
     app.get("/reset/email", passwordReset.enterEmail);
     app.post("/reset/email", passwordReset.generateCode);
-    app.get("/reset/:id/:code", passwordReset.enterPassword);
+    app.get("/reset/:id/:code", banner, passwordReset.enterPassword);
     app.post("/reset", passwordReset.resetPassword);
 }

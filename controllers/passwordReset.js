@@ -45,7 +45,7 @@ module.exports = {
     },
 
     enterPassword: function(req, res){
-        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code});
+        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code, banner: res.locals.banner});
     },
 
     resetPassword: function(req, res){
@@ -56,7 +56,6 @@ module.exports = {
                     return res.redirect("/");
                 }
 
-                //TODO: add banners to the relevant pages
                 if(req.body.password !== req.body.confirmPassword){
                     req.session.error = "PASSWORDS DO NOT MATCH";
                     return res.redirect(`/reset/${merchant._id}/${merchant.verifyId}`);
