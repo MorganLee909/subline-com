@@ -10,7 +10,20 @@
         <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
     </head>
     <body>
-        <% include ../shared/header %>
+        <div class="header">
+            <a class="headerStart" href="/" >
+                <img src="/shared/images/logo.png" alt="Subline">
+                <div class='headerLogo'>THE SUBLINE</div>
+            </a>
+        
+            <div class="headerEnd">
+                <a id="helpLink" class="headerHide" href="/help">HELP</a>
+        
+                <a id="privacyPolicyLink" class="headerHide" href="/privacy">PRIVACY POLICY</a>
+        
+                <a id="termsLink" class="headerHide" href="/terms">TERMS AND CONDITIONS</a>        
+            </div>
+        </div>
 
         <div class="content">
             <h1>The Subline, Terms and Conditions</h1>
@@ -293,10 +306,5 @@
 
             <p>16.3 All credit card transactions are processed using secure encryption are handled via Third Party Payment Providers.</p>
         </div>
-
-        <script>
-            document.getElementById("helpLink").classList.remove("headerHide");
-            document.getElementById("privacyPolicyLink").classList.remove("headerHide");
-        </script>
     </body>
 </html>
