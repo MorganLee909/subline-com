@@ -85,6 +85,7 @@ module.exports = {
                 return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
+                //TODO: add banners to the necessary pages
                 if(err === "unverified"){
                     return res.redirect(`/verify/email/${merchant2._id}`);
                 }

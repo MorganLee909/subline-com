@@ -56,6 +56,7 @@ module.exports = {
                     return res.redirect("/");
                 }
 
+                //TODO: add banners to the relevant pages
                 if(req.body.password !== req.body.confirmPassword){
                     req.session.error = "PASSWORDS DO NOT MATCH";
                     return res.redirect(`/reset/${merchant._id}/${merchant.verifyId}`);
@@ -77,7 +78,7 @@ module.exports = {
             .then((merchant)=>{
                 if(merchant !== undefined){
                     req.session.success = "PASSWORD SUCCESSFULLY UPDATED.  PLEASE LOG IN";
-                    return res.redirect("/");
+                    return res.redirect("/login");
                 }
             })
             .catch((err)=>{

@@ -19,18 +19,18 @@ module.exports = {
     createMerchantNone: async function(req, res){
         if(req.body.password.length < 10){
             req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
-            return res.redirect("/");
+            return res.redirect("/register");
         }
 
         if(req.body.password !== req.body.confirmPassword){
             req.session.error = "PASSWORDS DO NOT MATCH";
-            return res.redirect("/");
+            return res.redirect("/register");
         }
 
         const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
         if(merchantFind !== null){
             req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
-            return res.redirect("/");
+            return res.redirect("/register");
         }
 
         let salt = bcrypt.genSaltSync(10);
@@ -158,7 +158,7 @@ module.exports = {
             })
             .then((merchant)=>{
                 req.session.success = "PASSWORD SUCCESSFULLY RESET. PLEASE LOG IN";
-                return res.redirect("/");
+                return res.redirect("/login");
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){

@@ -4,7 +4,7 @@ module.exports = {
     verifySession: function(req, res, next){
         if(req.session.user === undefined) {
             req.session.error = "PLEASE LOG IN";
-            return res.redirect("/");
+            return res.redirect("/login");
         }
     
         Merchant.findOne({"session.sessionId": req.session.user})
@@ -20,7 +20,8 @@ module.exports = {
                     merchant.session.sessionId = helper.generateId(25);
                     merchant.session.date = newExpiration;
                     merchant.save();
-                    return res.redirect("/");
+                    req.session.error = "PLEASE LOG IN";
+                    return res.redirect("/login");
                 }
     
                 res.locals.merchant = merchant;
@@ -29,7 +30,7 @@ module.exports = {
             .catch((err)=>{
                 if(err === "no merchant"){
                     req.session.error = "PLEASE LOG IN";
-                    return res.redirect("/");
+                    return res.redirect("/login");
                 }
                 return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });
