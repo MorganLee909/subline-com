@@ -28,7 +28,9 @@
             </div>
         </div>
 
-        <div id="banner" class="banner" style="display:none;"></div>
+        <% if(banner !== undefined){ %>
+            <% include ./banner.ejs %>
+        <% } %>
 
         <div class="main-background">
             <div class="logo-text">
@@ -62,9 +64,10 @@
         <% include ../shared/loader %>
 
         <script>
-            let banner = <%- JSON.stringify(banner) %>;
-
-            console.log(banner);
+            setTimeout(()=>{
+                let banner = document.getElementById("banner");
+                if(banner !== null) banner.style.display = "none";
+            }, 10000)
         </script>
     </body>
 </html>

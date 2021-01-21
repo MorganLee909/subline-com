@@ -16,6 +16,10 @@
             </a>
         </div>
 
+        <% if(banner !== undefined){ %>
+            <% include ./banner.ejs %>
+        <% } %>
+
         <form action="/register" method="post">
             <h1> Join The Subline </h1>
 
@@ -56,5 +60,12 @@
         </form>
 
         <% include ../shared/footer %>
+
+        <script>
+            setTimeout(()=>{
+                let banner = document.getElementById("banner");
+                if(banner !== null) banner.style.display = "none";
+            }, 10000)
+        </script>
     </body>
 </html>

@@ -23,7 +23,6 @@ module.exports = function(app){
     app.get("/dashboard", session, renderer.displayDashboard);
     app.get("/resetpassword/*", renderer.displayPassReset);
     
-
     //Merchant
     app.post("/merchant/create/none", merchantData.createMerchantNone);
     app.put("/merchant/ingredients/update", session, merchantData.updateMerchantIngredient); //also updates some data in ingredients

@@ -10,13 +10,11 @@ module.exports = {
     GET - Shows the public landing page
     */
     landingPage: function(req, res){
-        
         return res.render("otherPages/landing", {banner: res.locals.banner});
     },
 
     //GET: Renders the login page
     loginPage: function(req, res){  
-        console.log(res.locals.banner);      
         return res.render("otherPages/login", {banner: res.locals.banner});
     },
 
