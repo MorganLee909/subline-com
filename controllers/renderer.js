@@ -14,7 +14,8 @@ module.exports = {
     },
 
     //GET: Renders the login page
-    loginPage: function(req, res){  
+    loginPage: function(req, res){
+        if(req.session.user !== undefined) return res.redirect("/dashboard");
         return res.render("otherPages/login", {banner: res.locals.banner});
     },
 
