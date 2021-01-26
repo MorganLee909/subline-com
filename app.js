@@ -7,7 +7,12 @@ const fs = require("fs");
 
 const app = express();
 
-mongoose.connect(`${process.env.DB}/inventory-management`, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`${process.env.DB}/inventory-management`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+});
 
 app.set("view engine", "ejs");
 
