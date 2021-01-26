@@ -43,8 +43,8 @@ let editIngredient = {
             button.innerText = units[i].toUpperCase();
             button.onclick = ()=>{this.changeUnit(button)};
             buttonList.appendChild(button);
-
-            if(units[i] === ingredient.ingredient.unitType){
+            
+            if(units[i] === ingredient.ingredient.unit){
                 button.classList.add("unitActive");
             }
         }
