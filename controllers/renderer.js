@@ -1,7 +1,6 @@
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const Transaction = require("../models/transaction.js");
-const Activity = require("../models/activity.js");
 
 const helper = require("./helper.js");
 
@@ -30,16 +29,6 @@ module.exports = {
     Renders inventoryPage
     */
     displayDashboard: function(req, res){
-        new Activity({
-            ipAddr: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-            merchant: res.locals.merchant._id,
-            route: "dashboard",
-            date: new Date()
-        })
-            .save()
-            .catch(()=>{});
-
-
         let merchant2 = {};
         res.locals.merchant
             .populate("inventory.ingredient")
