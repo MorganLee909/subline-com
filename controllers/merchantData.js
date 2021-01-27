@@ -80,7 +80,7 @@ module.exports = {
         quantity: change in quantity
     }]
     */
-    updateMerchantIngredient: function(req, res){
+    updateIngredientQuantities: function(req, res){
         let adjustments = [];
         let changedIngredients = [];
         res.locals.merchant
