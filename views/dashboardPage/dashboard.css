@@ -596,7 +596,10 @@ Modal
             align-items: center;
             justify-content: space-between;
             margin-top: 0;
-            padding: 25px;
+            padding: 25px 100px;
+            background: rgb(240, 252, 255);
+            border: 2px solid black;
+            border-radius: 10px;
         }
 
             .modalSpreadsheetUpload > *{
