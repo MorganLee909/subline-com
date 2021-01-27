@@ -78,9 +78,9 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
-                req.session.user = merchant._id;
+                req.session.success = "EMAIL VERIFIED.  PLEASE LOG IN";
 
-                return res.redirect("/dashboard");
+                return res.redirect("/login");
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
