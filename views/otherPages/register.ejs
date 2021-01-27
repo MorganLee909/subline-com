@@ -62,10 +62,16 @@
         <% include ../shared/footer %>
 
         <script>
-            setTimeout(()=>{
-                let banner = document.getElementById("banner");
+            let banner = document.getElementById("banner");
+            
+            let timer = setTimeout(()=>{
                 if(banner !== null) banner.style.display = "none";
-            }, 10000)
+            }, 10000);
+
+            document.getElementById("bannerButton").onclick = ()=>{
+                banner.style.display = "none";
+                clearTimeout(timer);
+            };
         </script>
     </body>
 </html>
