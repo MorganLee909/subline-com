@@ -175,7 +175,8 @@ let analytics = {
                 r: 10,
                 b: 20,
                 t: 30
-            }
+            },
+            paper_bgcolor: "rgba(0, 0, 0, 0)"
         }
 
         Plotly.newPlot("itemUseGraph", [trace], layout);
@@ -262,7 +263,8 @@ let analytics = {
                 r: 10,
                 b: 20,
                 t: 30
-            }
+            },
+            paper_bgcolor: "rgba(0, 0, 0, 0)"
         }
 
         Plotly.newPlot("recipeSalesGraph", [trace], layout);

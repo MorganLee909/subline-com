@@ -1,7 +1,4 @@
 const Transaction = require("../models/transaction");
-const Merchant = require("../models/merchant");
-
-const helper = require("./helper.js");
 
 const ObjectId = require("mongoose").Types.ObjectId;
 const xlsx = require("xlsx");
@@ -17,11 +14,6 @@ module.exports = {
     }
     */
     getTransactions: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let from = new Date(req.body.from);
         let to = new Date(req.body.to);
 
@@ -45,7 +37,7 @@ module.exports = {
 
         Transaction.aggregate([
             {$match: {
-                merchant: ObjectId(req.session.user),
+                merchant: ObjectId(res.locals.merchant._id),
                 date: {
                     $gte: from,
                     $lt: to
@@ -77,35 +69,26 @@ module.exports = {
     }
     */
     createTransaction: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-        
+        let keys = Object.keys(req.body.ingredientUpdates);
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                let keys = Object.keys(req.body.ingredientUpdates);
+        for(let i = 0; i < keys.length; i++){
+            for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                if(res.locals.merchant.inventory[j].ingredient._id.toString() === keys[i]){
+                    res.locals.merchant.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
 
-                for(let i = 0; i < keys.length; i++){
-                    for(let j = 0; j < merchant.inventory.length; j++){
-                        if(merchant.inventory[j].ingredient._id.toString() === keys[i]){
-                            merchant.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
-
-                            break;
-                        }
-                    }
+                    break;
                 }
+            }
+        }
 
-                return merchant.save();
-            })
+        res.locals.merchant.save()
             .then((merchant)=>{
                 if(req.body.date === null){
                     throw "NEW TRANSACTIONS MUST CONTAIN A DATE";
                 }
 
                 return new Transaction({
-                    merchant: req.session.user,
+                    merchant: res.locals.merchant._id,
                     date: new Date(req.body.date),
                     device: "none",
                     recipes: req.body.recipes
@@ -126,11 +109,6 @@ module.exports = {
     },
 
     createFromSpreadsheet: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         //read file, get the correct sheet, create array from sheet
         let workbook = xlsx.readFile(req.file.path);
         fs.unlink(req.file.path, ()=>{});
@@ -178,12 +156,13 @@ module.exports = {
             }
         }
 
-        Merchant.findOne({_id: req.session.user})
+        res.locals.merchant
             .populate("recipes")
             .populate("inventory.ingredient")
+            .execPopulate()
             .then((merchant)=>{
                 let transaction = new Transaction({
-                    merchant: req.session.user,
+                    merchant: res.locals.merchant._id,
                     date: spreadsheetDate,
                     recipes: []
                 });
@@ -251,13 +230,9 @@ module.exports = {
     },
 
     spreadsheetTemplate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
+        res.locals.merchant
             .populate("recipes")
+            .execPopulate()
             .then((merchant)=>{
                 let workbook = xlsx.utils.book_new();
                 workbook.SheetNames.push("Transaction");
@@ -284,39 +259,26 @@ module.exports = {
     DELETE - Remove a transaction from the database
     */
     remove: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let merchant = {};
-        let transaction = {};
-        Merchant.findOne({_id: req.session.user})
-            .then((response)=>{
-                merchant = response;
-                return Transaction.findOne({_id: req.params.id}).populate("recipes.recipe");
-            })
-            .then((response)=>{
-                transaction = response;
-                return Transaction.deleteOne({_id: req.params.id});
-            })
-            .then((response)=>{
-                res.json();
-
+        Transaction.findOne({_id: req.params.id})
+            .populate("recipes.recipe")
+            .then((transaction)=>{
                 for(let i = 0; i < transaction.recipes.length; i++){
                     const recipe = transaction.recipes[i].recipe;
                     for(let j = 0; j < recipe.ingredients.length; j++){
                         const ingredient = recipe.ingredients[j].ingredient;
-                        for(let k = 0; k < merchant.inventory.length; k++){
-                            if(ingredient.toString() === merchant.inventory[k].ingredient.toString()){
-                                merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
+                        for(let k = 0; k < res.locals.merchant.inventory.length; k++){
+                            if(ingredient.toString() === res.locals.merchant.inventory[k].ingredient.toString()){
+                                res.locals.merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
                                 break;
                             }
                         }
                     }
                 }
-
-                return merchant.save();
+                
+                return Promise.all([Transaction.deleteOne({_id: req.params.id}), res.locals.merchant.save()]);
+            })
+            .then((response)=>{
+                res.json({});
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
@@ -330,54 +292,9 @@ module.exports = {
     },
 
     /*
-    GET - get transactions between two dates, sorted and group by date
-    params:
-        from: Date string
-        to: Date string
-    return:
-        [{
-            date: Date
-            transactions:[[Recipe]]
-        }]
-    */
-    getTransactionsByDate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        const from = new Date(req.params.from);
-        const to = new Date(req.params.to);
-
-        Transaction.aggregate([
-            {$match: {
-                merchant: ObjectId(req.session.user),
-                date: {
-                    $gte: from,
-                    $lt: to
-                }
-            }},
-            {$sort: {
-                date: 1
-            }}
-        ])
-            .then((transactions)=>{
-                return res.json(transactions);
-            })
-            .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
-            });
-    },
-
-    /*
     GET - Creates 5000 transactions for logged in merchant for testing
     */
     populate: function(req, res){
-        if(!req.session.user){
-            res.session.error = "Must be logged in to do that";
-            return res.redirect("/");
-        }
-
         function randomDate() {
             let now = new Date();
             let start = new Date();
@@ -385,39 +302,32 @@ module.exports = {
             return new Date(start.getTime() + Math.random() * (now.getTime() - start.getTime()));
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                let newTransactions = [];
+        let newTransactions = [];
+        for(let i = 0; i < 5000; i++){
+            let newTransaction = new Transaction({
+                merchant: res.locals.merchant._id,
+                date: randomDate(),
+                recipes: []
+            });
 
-                for(let i = 0; i < 5000; i++){
-                    let newTransaction = new Transaction({
-                        merchant: merchant._id,
-                        date: randomDate(),
-                        recipes: []
-                    });
+            let numberOfRecipes = Math.floor((Math.random() * 5) + 1);
 
-                    let numberOfRecipes = Math.floor((Math.random() * 5) + 1);
+            for(let j = 0; j < numberOfRecipes; j++){
+                let recipeNumber = Math.floor(Math.random() * res.locals.merchant.recipes.length);
+                let randQuantity = Math.floor((Math.random() * 3) + 1);
 
-                    for(let j = 0; j < numberOfRecipes; j++){
-                        let recipeNumber = Math.floor(Math.random() * merchant.recipes.length);
-                        let randQuantity = Math.floor((Math.random() * 3) + 1);
+                newTransaction.recipes.push({
+                    recipe: res.locals.merchant.recipes[recipeNumber],
+                    quantity: randQuantity
+                });
+            }
 
-                        newTransaction.recipes.push({
-                            recipe: merchant.recipes[recipeNumber],
-                            quantity: randQuantity
-                        });
-                    }
+            newTransactions.push(newTransaction);
+        }
 
-                    newTransactions.push(newTransaction);
-                }
-
-                Transaction.create(newTransactions)
-                    .then((transactions)=>{
-                        return res.redirect("/dashboard");
-                    })
-                    .catch((err)=>{
-                        return;
-                    });
+        Transaction.create(newTransactions)
+            .then((transactions)=>{
+                return res.redirect("/dashboard");
             })
             .catch((err)=>{
                 return;

@@ -78,8 +78,7 @@ controller = {
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
                 document.getElementById("ordersStrand").style.display = "flex";
-                merchant.setOrders(data);
-                orders.display(Order);
+                orders.display();
                 break;
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
@@ -324,12 +323,7 @@ document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")}
 document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
 document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
 document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
-document.getElementById("ordersBtn").onclick = async ()=>{
-    if(merchant.orders.length === 0){
-        merchant.setOrders(await orders.getOrders(Order));
-    }
-    controller.openStrand("orders", merchant.orders);
-}
+document.getElementById("ordersBtn").onclick = async ()=>{controller.openStrand("orders")};
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 
 controller.openStrand("home");

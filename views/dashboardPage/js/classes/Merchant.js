@@ -140,10 +140,7 @@ class Merchant{
     }
 
     set name(name){
-        if(this.isSanitaryString(name)){
-            this._name = name;
-        }
-        return false;
+        this._name = name;
     }
 
     get pos(){
@@ -268,6 +265,11 @@ class Merchant{
         return this._transactions;
     }
 
+    //TODO: remove this, just for testing purposes
+    clearTransactions(){
+        this._transactions = [];
+    }
+
     getTransactions(from = 0, to = new Date()){
         if(merchant._transactions.length <= 0){
             return [];
@@ -365,6 +367,10 @@ class Merchant{
         return this._orders;
     }
 
+    clearOrders(){
+        this._orders = [];
+    }
+
     addOrder(data, isNew = false){
         let order = new this._modules.Order(
             data._id,
@@ -393,10 +399,6 @@ class Merchant{
         this._modules.orders.isPopulated = false;
     }
 
-    setOrders(orders){
-        this._orders = orders;
-    }
-
     removeOrder(order){
         const index = this._orders.indexOf(order);
         if(index === undefined){
@@ -423,9 +425,6 @@ class Merchant{
     }
 
     getRevenue(from, to = new Date()){
-        if(from === 0){
-            from = this._transactions[0].date;
-        }
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
@@ -452,11 +451,7 @@ class Merchant{
             quantity: quantity of ingredient sold in default unit
         }]
     */
-    getIngredientsSold(from = 0, to = new Date()){
-        if(from === 0){
-            from = this._ingredients[0].date;
-        }
-        
+    getIngredientsSold(from, to = new Date()){
         let recipes = this.getRecipesSold(from, to);
         let ingredientList = [];
 
@@ -492,11 +487,7 @@ class Merchant{
         to = end Date
     return: quantity sold in default unit
     */
-    getSingleIngredientSold(ingredient, from = 0, to = new Date()){
-        if(from === 0){
-            from = this._transactions[0].date;
-        }
-
+    getSingleIngredientSold(ingredient, from, to = new Date()){
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
@@ -587,35 +578,6 @@ class Merchant{
         return ingredientsByCategory;
     }
 
-    unitizeIngredients(){
-        let ingredientsByUnit = [];
-
-        for(let i = 0; i < this.ingredients.length; i++){
-            let unitExists = false;
-            const innerIngredient = this.ingredients[i].ingredient;
-            for(let j = 0; j < ingredientsByUnit.length; j++){
-                if(innerIngredient.unit === ingredientsByUnit[j].name || innerIngredient.specialUnit === ingredientsByUnit[j].name){
-                    ingredientsByUnit[j].ingredients.push(this.ingredients[i]);
-
-                    unitExists = true;
-                    break;
-                }
-            }
-
-            if(!unitExists){
-                let unit = "";
-                unit = innerIngredient.unit;
-                
-                ingredientsByUnit.push({
-                    name: unit,
-                    ingredients: [this.ingredients[i]]
-                });
-            }
-        }
-
-        return ingredientsByUnit;
-    }
-
     getRecipesForIngredient(ingredient){
         let recipes = [];
 
@@ -653,19 +615,6 @@ class Merchant{
         }
 
         return {start: start, end: end};
-    }
-
-
-    isSanitaryString(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; i++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
     }
 }
 

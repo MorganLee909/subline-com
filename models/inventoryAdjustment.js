@@ -13,7 +13,8 @@ let inventoryAdjustmentSchema = new mongoose.Schema({
     ingredient: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Ingredient",
-        required: [true, "Must provide the ingredient"]
+        required: [true, "Must provide the ingredient"],
+        index: true
     },
     quantity: {
         type: Number,

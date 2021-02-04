@@ -75,10 +75,11 @@ let home = {
             },
             yaxis: {
                 title: "$"
-            }
+            },
+            paper_bgcolor: "rgba(0, 0, 0, 0)"
         }
 
-        if(screen.width < 1400){
+        if(screen.width < 1200){
             layout.margin = {
                 l: 35,
                 r: 0
@@ -196,10 +197,11 @@ let home = {
                 },
                 yaxis: {
                     showticklabels: false
-                }
+                },
+                paper_bgcolor: "rgba(0, 0, 0, 0)"
             }
 
-            if(screen.width < 1400){
+            if(screen.width < 1200){
                 layout.margin = {
                     l: 10,
                     r: 10,

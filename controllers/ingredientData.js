@@ -1,4 +1,3 @@
-const Merchant = require("../models/merchant");
 const Ingredient = require("../models/ingredient");
 const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 
@@ -23,33 +22,26 @@ module.exports = {
         Same as above, with the _id
     */
     createIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let newIngredient = {...req.body};
         if(req.body.defaultUnit === "bottle"){
             newIngredient.ingredient.unitSize = helper.convertQuantityToBaseUnit(newIngredient.ingredient.unitSize, newIngredient.ingredient.unitType);
         }
 
+        
         newIngredient = new Ingredient(newIngredient.ingredient);
-
-        let ingredientPromise = newIngredient.save();
-        let merchantPromise = Merchant.findOne({_id: req.session.user});
-
-        Promise.all([ingredientPromise, merchantPromise])
-            .then((response)=>{
+        
+        newIngredient.save()
+            .then((ingredient)=>{
                 newIngredient = {
-                    ingredient: response[0],
+                    ingredient: ingredient,
                     defaultUnit: req.body.defaultUnit
                 }
 
                 newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
 
-                response[1].inventory.push(newIngredient);
+                res.locals.merchant.inventory.push(newIngredient);
 
-                return response[1].save();
+                return res.locals.merchant.save();
             })
             .then((response)=>{
                 return res.json(newIngredient);
@@ -76,11 +68,6 @@ module.exports = {
     }
     */
     updateIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-        let updatedIngredient = {};
         Ingredient.findOne({_id: req.body.id})
             .then((ingredient)=>{
                 ingredient.name = req.body.name,
@@ -89,35 +76,33 @@ module.exports = {
                 return ingredient.save();
             })
             .then((ingredient)=>{
-                updatedIngredient.ingredient = ingredient;
-                return Merchant.findOne({_id: req.session.user});
-            })
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(merchant.inventory[i].ingredient.toString() === req.body.id){
-                        merchant.inventory[i].defaultUnit = req.body.unit;
+                let updatedIngredient = {};
+                for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+                    if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
+                        res.locals.merchant.inventory[i].defaultUnit = req.body.unit;
 
-                        if(merchant.inventory[i].quantity !== req.body.quantity){
+                        if(res.locals.merchant.inventory[i].quantity !== req.body.quantity){
                             new InventoryAdjustment({
                                 date: new Date(),
                                 merchant: req.session.user,
                                 ingredient: req.body.id,
-                                quantity: req.body.quantity - merchant.inventory[i].quantity
+                                quantity: req.body.quantity - res.locals.merchant.inventory[i].quantity
                             }).save().catch(()=>{});
 
-                            merchant.inventory[i].quantity = req.body.quantity;
+                            res.locals.merchant.inventory[i].quantity = req.body.quantity;
                         }
 
-                        updatedIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.unit);
-                        updatedIngredient.unit = req.body.unit;
+                        updatedIngredient = {
+                            ingredient: ingredient,
+                            quantity: helper.convertQuantityToBaseUnit(req.body.quantity, req.body.unit),
+                            unit: req.body.unit
+                        }
                         
                         break;
                     }
                 }
 
-                return merchant.save();
-            })
-            .then((merchant)=>{
+                res.locals.merchant.save().catch((err)=>{throw err});
                 return res.json(updatedIngredient);
             })
             .catch((err)=>{
@@ -127,16 +112,11 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO UDATE THE INGREDIENT");
+                return res.json("ERROR: UNABLE TO UPDATE THE INGREDIENT");
             });
     },
 
     createFromSpreadsheet: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         //read file, get the correct sheet, create array from sheet
         let workbook = xlsx.readFile(req.file.path);
         fs.unlink(req.file.path, ()=>{});
@@ -191,15 +171,12 @@ module.exports = {
             ingredients.push(ingredient);
         }
 
-        //Update the database
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < merchantData.length; i++){
-                    merchant.inventory.push(merchantData[i]);
-                }
+        for(let i = 0; i < merchantData.length; i++){
+            res.locals.merchant.inventory.push(merchantData[i]);
+        }
 
-                return Promise.all([Ingredient.create(ingredients), merchant.save()]);
-            })
+        //Update the database
+        Promise.all([Ingredient.create(ingredients), res.locals.merchant.save()])
             .then((response)=>{
                 return res.json(merchantData);
             })
@@ -215,11 +192,6 @@ module.exports = {
     },
 
     spreadsheetTemplate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let workbook = xlsx.utils.book_new();
         workbook.SheetNames.push("Ingredients");
         let workbookData = [];
@@ -238,22 +210,14 @@ module.exports = {
 
     //DELETE - Removes an ingredient from the merchant's inventory
     removeIngredient: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
+        for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+            if(req.params.id === res.locals.merchant.inventory[i].ingredient._id.toString()){
+                res.locals.merchant.inventory.splice(i, 1);
+                break;
+            }
         }
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < merchant.inventory.length; i++){
-                    if(req.params.id === merchant.inventory[i].ingredient._id.toString()){
-                        merchant.inventory.splice(i, 1);
-                        break;
-                    }
-                }
-
-                return Promise.all([merchant.save(), Ingredient.deleteOne({_id: req.params.id})]);
-            })
+        Promise.all([res.locals.merchant.save(), Ingredient.deleteOne({_id: req.params.id})])
             .then((response)=>{
                 return res.json({});
             })

@@ -8,22 +8,20 @@
         </button>
     </div>
 
-    <h1>ORDER CALCULATOR</h1>
+    <h1>ORDER PREDICTION</h1>
 
-    <div class="scroller">
-        <table id="calculatorItems" class="calculatorItems" cellspacing="0" cellpadding="5px">
-            <thead>
-                <th>INGREDIENT</th>
-                <th>USAGE / DAY (PREDICTED)</th>
-            </thead>
-            <tbody id="calculatorItemsBody"></tbody>
-        </table>
+    <div class="dateRange">
+        <h3>Date Range:</h3>
+        <div class="dateRangeInput">
+            <input id="predictDateFrom" type="date">
+            <p> - </p>
+            <input id="predictDateTo" type="date">
+        </div>
     </div>
 
-    <template id="calculatorItem">
-        <tr class="calculatorItem">
-            <td></td>
-            <td class="calcUsage"></td>
-        </tr>
-    </template>
+    <select id="predictSelector"></select>
+
+    <button class="button" id="predictButton">PREDICT</button>
+
+    <h1 id="prediction"></h1>
 </div>

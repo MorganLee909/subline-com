@@ -2,7 +2,6 @@ const Merchant = require("../models/merchant.js");
 
 const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 const verifyEmail = require("../emails/verifyEmail.js");
-const { db } = require("../models/merchant.js");
 
 module.exports = {
     sendVerifyEmail: function(req, res){
@@ -20,7 +19,7 @@ module.exports = {
                 mailgun.messages().send(mailgunData, (err, body)=>{});
 
 
-                return res.render(`verifyPage/verify`, {id: merchant._id, email: merchant.email});
+                return res.render(`verifyPage/verify`, {id: merchant._id, email: merchant.email, banner: res.locals.merchant});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO SEND VERIFICATION EMAIL";
@@ -79,9 +78,9 @@ module.exports = {
                 return merchant.save();
             })
             .then((merchant)=>{
-                req.session.user = merchant._id;
+                req.session.success = "EMAIL VERIFIED.  PLEASE LOG IN";
 
-                return res.redirect("/dashboard");
+                return res.redirect("/login");
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>The Subline</title>
+        <link rel="icon" type="img/png" href="/shared/images/logo.png">
+        <link rel="stylesheet" href="/otherPages/style.css">
+        <link rel="stylesheet" href="/shared/shared.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
+    </head>
+    <body id="register">
+        <div class="header">
+            <a class="headerStart" href="/" >
+                <img src="/shared/images/logo.png" alt="Subline">
+                <div class='headerLogo'>THE SUBLINE</div>
+            </a>
+        </div>
+
+        <% if(banner !== undefined){ %>
+            <% include ../shared/banner.ejs %>
+        <% } %>
+
+        <form action="/merchant/create/none" method="post">
+            <h1> Join The Subline </h1>
+
+            <label id="nameLabel">Restaurant Name
+                <input type="text" name="name" required>
+            </label>
+    
+            <label>Email
+                <input type="text" name="email" required>
+            </label>
+    
+            <label>Password
+                <input type="password" name="password" required>
+            </label>
+    
+            <label>Confirm Password
+                <input type="password" name="confirmPassword" required>
+            </label>
+    
+            <label id="agreement">
+                <input type="checkbox" name="agree">
+
+                <p>I agree to the 
+                    <a class="link" href="/privacy">Privacy Policy</a> and the 
+                    <a class="link" href="/terms">Terms and Conditions</a>
+                </p>
+            </label>
+
+            <input class="buttonDisabled" type="submit" value="Sign Up with Email">
+
+            <!-- <h1>OR</h1>
+
+            <a class="button buttonWithBorder" href="/cloverlogin">Sign Up with Clover</a>
+
+            <a class="button buttonWithBorder" href="/squarelogin">Sign Up with Square</a> -->
+
+            <a class="link" href="/login">Already have an account? Please Sign In</a>
+        </form>
+
+        <% include ../shared/footer %>
+
+        <script>
+            let banner = document.getElementById("banner");
+            
+            let timer = setTimeout(()=>{
+                if(banner !== null) banner.style.display = "none";
+            }, 10000);
+
+            document.getElementById("bannerButton").onclick = ()=>{
+                banner.style.display = "none";
+                clearTimeout(timer);
+            };
+        </script>
+    </body>
+</html>

@@ -5,7 +5,8 @@ const TransactionSchema = new mongoose.Schema({
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
-        required: [true, "MERCHANT IS REQUIRED FOR A TRANSACTION"]
+        required: [true, "MERCHANT IS REQUIRED FOR A TRANSACTION"],
+        index: true
     },
     date: {
         type: Date,
@@ -28,5 +29,7 @@ const TransactionSchema = new mongoose.Schema({
     }],
     posId: String
 });
+
+TransactionSchema.index({merchant: 1, date: 1});
 
 module.exports = mongoose.model("Transaction", TransactionSchema);

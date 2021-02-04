@@ -1,8 +1,5 @@
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
-        if(quantity < 0){
-            return false;
-        }
         this._ingredient = ingredient;
         this._quantity = quantity;
         this._pricePerUnit = pricePerUnit;
@@ -34,10 +31,6 @@ class OrderIngredient{
     }
 
     updateQuantity(quantity){
-        if(quantity < 0){
-            return false;
-        }
-
         this._quantity += this.convertToBase(quantity);
     }
 
@@ -118,10 +111,6 @@ class Order{
         this._fees = fees;
         this._ingredients = [];
         this._parent = parent;
-
-        if(date > new Date()){
-            return false;
-        }
 
         for(let i = 0; i < ingredients.length; i++){
             for(let j = 0; j < merchant.ingredients.length; j++){

@@ -1,9 +1,5 @@
 class RecipeIngredient{
     constructor(ingredient, quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
         this._ingredient = ingredient;
         this._quantity = quantity;
     }
@@ -37,11 +33,6 @@ class RecipeIngredient{
     }
 
     set quantity(quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-
         this_quantity = this.convertToBase(quantity);
     }
 
@@ -87,14 +78,6 @@ parent = merchant that it belongs to
 */
 class Recipe{
     constructor(id, name, price, ingredients, parent){
-        if(price < 0){
-            controller.createBanner("PRICE CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-        if(!this.isSanitaryString(name)){
-            controller.createBanner("NAME CONTAINS ILLEGAL CHARACTERS", "error");
-            return false;
-        }
         this._id = id;
         this._name = name;
         this._price = price;
@@ -121,10 +104,6 @@ class Recipe{
     }
 
     set name(name){
-        if(!this.isSanitaryString(name)){
-            return false;
-        }
-
         this._name = name;
     }
 
@@ -133,10 +112,6 @@ class Recipe{
     }
 
     set price(price){
-        if(price < 0){
-            return false;
-        }
-
         this._price = price;
     }
 
@@ -149,11 +124,6 @@ class Recipe{
     }
 
     addIngredient(ingredient, quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-
         let recipeIngredient = new RecipeIngredient(ingredient, quantity);
         this._ingredients.push(recipeIngredient);
 
@@ -163,18 +133,6 @@ class Recipe{
 
     removeIngredients(){
         this._ingredients = [];
-    }
-
-    isSanitaryString(str){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
-
-        for(let i = 0; i < disallowed.length; i++){
-            if(str.includes(disallowed[i])){
-                return false;
-            }
-        }
-
-        return true;
     }
 }
 

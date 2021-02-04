@@ -1,5 +1,4 @@
 const Order = require("../models/order.js");
-const Merchant = require("../models/merchant.js");
 
 const helper = require("./helper.js");
 
@@ -19,17 +18,13 @@ module.exports = {
     }
     */
     getOrders: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
         let from = new Date(req.body.from);
         let to = new Date(req.body.to);
 
         let match = {};
         let objectifiedIngredients = [];
         if(req.body.ingredients.length === 0){
-            match = {$exists: true};
+            match = {$ne: false};
         }else{  
             for(let i = 0; i < req.body.ingredients.length; i++){
                 objectifiedIngredients.push(new ObjectId(req.body.ingredients[i]));
@@ -46,7 +41,7 @@ module.exports = {
 
         Order.aggregate([
             {$match:{
-                merchant: new ObjectId(req.session.user),
+                merchant: new ObjectId(res.locals.merchant._id),
                 date: {
                     $gte: from,
                     $lt: to
@@ -76,13 +71,8 @@ module.exports = {
     } 
     */ 
     createOrder: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         let newOrder = new Order(req.body);
-        newOrder.merchant = req.session.user;
+        newOrder.merchant = res.locals.merchant._id;
         newOrder.save()
             .then((response)=>{
                 res.json(response);
@@ -97,30 +87,19 @@ module.exports = {
                 return res.json("ERROR: UNABLE TO SAVE ORDER");
             });
 
-        Merchant.findOne({_id: req.session.user})
-            .then((merchant)=>{
-                for(let i = 0; i < req.body.ingredients.length; i++){
-                    for(let j = 0; j < merchant.inventory.length; j++){
-                        if(req.body.ingredients[i].ingredient === merchant.inventory[j].ingredient.toString()){
-                            merchant.inventory[j].quantity += parseFloat(req.body.ingredients[i].quantity);
-                        }
+        
+            for(let i = 0; i < req.body.ingredients.length; i++){
+                for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                    if(req.body.ingredients[i].ingredient === res.locals.merchant.inventory[j].ingredient.toString()){
+                        res.locals.merchant.inventory[j].quantity += parseFloat(req.body.ingredients[i].quantity);
                     }
                 }
+            }
 
-                return merchant.save();
-            })
-            .then((merchant)=>{
-                return;
-            })
-            .catch(()=>{});
+            res.locals.merchant.save().catch((err)=>{});
     },
 
     createFromSpreadsheet: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
         //read file, get the correct sheet, create array from sheet
         let workbook = xlsx.readFile(req.file.path);
         fs.unlink(req.file.path, ()=>{});
@@ -170,13 +149,14 @@ module.exports = {
         }
 
         let merchant = {};
-        Merchant.findOne({_id: req.session.user})
+        res.locals.merchant
             .populate("inventory.ingredient")
+            .execPopulate()
             .then((response)=>{
                 merchant = response;
 
                 let order = new Order({
-                    merchant: req.session.user,
+                    merchant: res.locals.merchant._id,
                     name: array[1][locations.name],
                     date: spreadsheetDate,
                     taxes: parseInt(array[1][locations.taxes] * 100),
@@ -231,13 +211,9 @@ module.exports = {
     GET - Creates and sends a template xlsx for uploading orders
     */
     spreadsheetTemplate: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        Merchant.findOne({_id: req.session.user})
+        res.locals.merchant
             .populate("inventory.ingredient")
+            .execPopulate()
             .then((merchant)=>{
                 let workbook = xlsx.utils.book_new();
                 workbook.SheetNames.push("Order");
@@ -272,36 +248,21 @@ module.exports = {
     DELETE - Remove an order from the database
     */
     removeOrder: function(req, res){
-        if(!req.session.user){
-            req.session.error = "MUST BE LOGGED IN TO DO THAT";
-            return res.redirect("/");
-        }
-
-        let merchant = {};
-        let order = {}
-        Merchant.findOne({_id: req.session.user})
-            .then((response)=>{
-                merchant = response;
-                return Order.findOne({_id: req.params.id});
-            })
-            .then((response)=>{
-                order = response;
-
-                return Order.deleteOne({_id: req.params.id})
-            })
-            .then((response)=>{
-                res.json({});
-
+        Order.findOne({_id: req.params.id})
+            .then((order)=>{
                 for(let i = 0; i < order.ingredients.length; i++){
-                    for(let j = 0; j < merchant.inventory.length; j++){
-                        if(order.ingredients[i].ingredient.toString() === merchant.inventory[j].ingredient.toString()){
-                            merchant.inventory[j].quantity -= order.ingredients[i].quantity;
+                    for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                        if(order.ingredients[i].ingredient.toString() === res.locals.merchant.inventory[j].ingredient.toString()){
+                            res.locals.merchant.inventory[j].quantity -= order.ingredients[i].quantity;
                             break;
                         }
                     }
                 }
 
-                return merchant.save();
+                return Promise.all([Order.deleteOne({_id: req.params.id}), res.locals.merchant.save()]);
+            })
+            .then((response)=>{
+                res.json({});
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){

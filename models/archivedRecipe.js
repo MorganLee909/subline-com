@@ -4,7 +4,8 @@ const ArchivedRecipeSchema = new mongoose.Schema({
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
-        required: true
+        required: true,
+        index: true
     },
     name: {
         type: String,

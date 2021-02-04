@@ -21,7 +21,8 @@ const MerchantSchema = new mongoose.Schema({
         validate: {
             validator: emailValid,
             message: "INVALID EMAIL ADDRESS"
-        }
+        },
+        index: true
     },
     password: {
         type: String,
@@ -62,6 +63,13 @@ const MerchantSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Recipe"
     }],
+    session: {
+        sessionId: {
+            type: String,
+            index: true
+        },
+        expiration: Date
+    },
     verifyId: String
 });
 

@@ -22,7 +22,7 @@ module.exports = {
                 merchant.verifyId = helper.generateId(15);
                 
                 const mailgunData = {
-                    from: "The Subline <clientsupport@thesusbline.net>",
+                    from: "The Subline <clientsupport@thesubline.net>",
                     to: merchant.email,
                     subject: "Password Reset",
                     html: passwordReset({
@@ -45,7 +45,7 @@ module.exports = {
     },
 
     enterPassword: function(req, res){
-        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code});
+        return res.render("passwordResetPages/password", {id: req.params.id, code: req.params.code, banner: res.locals.banner});
     },
 
     resetPassword: function(req, res){
@@ -77,7 +77,7 @@ module.exports = {
             .then((merchant)=>{
                 if(merchant !== undefined){
                     req.session.success = "PASSWORD SUCCESSFULLY UPDATED.  PLEASE LOG IN";
-                    return res.redirect("/");
+                    return res.redirect("/login");
                 }
             })
             .catch((err)=>{

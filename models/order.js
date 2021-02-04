@@ -6,7 +6,8 @@ const OrderSchema = new mongoose.Schema({
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
-        required: [true, "MUST PROVIDE THE MERCHANT"]
+        required: [true, "MUST PROVIDE THE MERCHANT"],
+        index: true
     },
     name: {
         type: String,
@@ -43,5 +44,7 @@ const OrderSchema = new mongoose.Schema({
         }
     }]
 });
+
+OrderSchema.index({merchant: 1, date: 1});
 
 module.exports = mongoose.model("Order", OrderSchema);

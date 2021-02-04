@@ -10,7 +10,24 @@
         <link rel="stylesheet" href="/verifyPage/verify.css">
     </head>
     <body>
-        <% include ../shared/header %>
+        <div class="header">
+            <a class="headerStart" href="/" >
+                <img src="/shared/images/logo.png" alt="Subline">
+                <div class='headerLogo'>THE SUBLINE</div>
+            </a>
+        
+            <div class="headerEnd">
+                <a id="helpLink" class="headerHide" href="/help">HELP</a>
+        
+                <a id="privacyPolicyLink" class="headerHide" href="/privacy">PRIVACY POLICY</a>
+        
+                <a id="termsLink" class="headerHide" href="/terms">TERMS AND CONDITIONS</a>        
+            </div>
+        </div>
+
+        <% if(banner !== undefined){ %>
+            <% include ../shared/banner.ejs %>
+        <% } %>
 
         <h1 class="title">An email has been sent to <%=email%>.  Use the link in the email to verify your account.</h1>
 
@@ -24,10 +41,11 @@
             <input class="button" type="submit" value="SUBMIT">
         </form>
     </body>
-
+    
     <script>
-        document.getElementById("helpLink").style.display = "block";
-        document.getElementById("privacyPolicyLink").style.display = "block";
-        document.getElementById("termsLink").style.display = "block";
+        setTimeout(()=>{
+            let banner = document.getElementById("banner");
+            if(banner !== null) banner.style.display = "none";
+        }, 10000);
     </script>
 </html>

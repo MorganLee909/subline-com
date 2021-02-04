@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>The Subline</title>
+        <link rel="icon" type="img/png" href="/shared/images/logo.png">
+        <link rel="stylesheet" href="/otherPages/style.css">
+        <link rel="stylesheet" href="/shared/shared.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
+    </head>
+    <body id="login">
+        <div class="header">
+            <a class="headerStart" href="/" >
+                <img src="/shared/images/logo.png" alt="Subline">
+                <div class='headerLogo'>THE SUBLINE</div>
+            </a>
+        </div>
+
+        <% if(banner !== undefined){ %>
+            <% include ../shared/banner.ejs %>
+        <% } %>
+
+        <form action="/login" method="post">
+            <h1> Welcome Back </h1>
+    
+            <label>Email
+                <input type="text" name="email" type="email" required>
+            </label>
+    
+            <label>Password
+                <input type="password" name="password" required>
+            </label>
+    
+            <input id="signIn" type="submit" value="Sign In with Email">
+    
+            <!-- <h1>OR</h1>
+    
+            <a class="button buttonWithBorder" href="/cloverlogin">Sign In with Clover</a>
+    
+            <a class="button buttonWithBorder" href="/squarelogin">Sign In with Square</a> -->
+            
+            <a href="/reset/email" class="link">Forgot your password?</a>
+    
+            <a class="link" href="/register">Need to register?</a>
+        </form>
+
+        <% include ../shared/footer %>
+
+        <script>
+            let banner = document.getElementById("banner");
+            
+            let timer = setTimeout(()=>{
+                if(banner !== null) banner.style.display = "none";
+            }, 10000);
+
+            document.getElementById("bannerButton").onclick = ()=>{
+                banner.style.display = "none";
+                clearTimeout(timer);
+            };
+        </script>
+    </body>
+</html>

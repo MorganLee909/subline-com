@@ -1,13 +1,5 @@
 class TransactionRecipe{
     constructor(recipe, quantity){
-        if(quantity < 0){
-            controller.createBanner("QUANTITY CANNOT BE A NEGATIVE NUMBER", "error");
-            return false;
-        }
-        if(quantity % 1 !== 0){
-            controller.createBanner("RECIPES WITHIN A TRANSACTION MUST BE WHOLE NUMBERS", "error");
-            return false;
-        }
         this._recipe = recipe;
         this._quantity = quantity;
     }
@@ -24,10 +16,6 @@ class TransactionRecipe{
 class Transaction{
     constructor(id, date, recipes, parent){
         date = new Date(date);
-        if(date > new Date()){
-            controller.createBanner("DATE CANNOT BE SET TO THE FUTURE", "error");
-            return false;
-        }
         this._id = id;
         this._parent = parent;
         this._date = date;
