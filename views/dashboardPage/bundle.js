@@ -1135,6 +1135,7 @@ const recipeBook = require("./strands/recipeBook.js");
 const analytics = require("./strands/analytics.js");
 const orders = require("./strands/orders.js");
 const transactions = require("./strands/transactions.js");
+const account = require("./strands/account.js");
 
 const ingredientDetails = require("./sidebars/ingredientDetails.js");
 const newIngredient = require("./sidebars/newIngredient.js");
@@ -1216,6 +1217,11 @@ controller = {
                 document.getElementById("transactionsStrand").style.display = "flex";
                 transactions.transactions = data;
                 transactions.display(Transaction);
+                break;
+            case "account":
+                activeButton = document.getElementById("accountBtn");
+                document.getElementById("accountStrand").style.display = "flex";
+                account.display();
                 break;
         }
 
@@ -1456,9 +1462,10 @@ document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("r
 document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
 document.getElementById("ordersBtn").onclick = async ()=>{controller.openStrand("orders")};
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
+document.getElementById("accountBtn").onclick = ()=>{controller.openStrand("account")};
 
 controller.openStrand("home");
-},{"./classes/Ingredient.js":1,"./classes/Merchant.js":2,"./classes/Order.js":3,"./classes/Recipe.js":4,"./classes/Transaction.js":5,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderCalculator.js":14,"./sidebars/orderDetails.js":15,"./sidebars/orderFilter.js":16,"./sidebars/recipeDetails.js":17,"./sidebars/transactionDetails.js":18,"./sidebars/transactionFilter.js":19,"./strands/analytics.js":20,"./strands/home.js":21,"./strands/ingredients.js":22,"./strands/orders.js":23,"./strands/recipeBook.js":24,"./strands/transactions.js":25}],7:[function(require,module,exports){
+},{"./classes/Ingredient.js":1,"./classes/Merchant.js":2,"./classes/Order.js":3,"./classes/Recipe.js":4,"./classes/Transaction.js":5,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderCalculator.js":14,"./sidebars/orderDetails.js":15,"./sidebars/orderFilter.js":16,"./sidebars/recipeDetails.js":17,"./sidebars/transactionDetails.js":18,"./sidebars/transactionFilter.js":19,"./strands/account.js":20,"./strands/analytics.js":21,"./strands/home.js":22,"./strands/ingredients.js":23,"./strands/orders.js":24,"./strands/recipeBook.js":25,"./strands/transactions.js":26}],7:[function(require,module,exports){
 let editIngredient = {
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");
@@ -2936,6 +2943,14 @@ let transactionFilter = {
 
 module.exports = transactionFilter;
 },{}],20:[function(require,module,exports){
+let account = {
+    display: function(){
+        console.log("account page");
+    }
+}
+
+module.exports = account;
+},{}],21:[function(require,module,exports){
 let analytics = {
     isPopulated: false,
     ingredient: undefined,
@@ -3253,7 +3268,7 @@ let analytics = {
 }
 
 module.exports = analytics;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 let home = {
     isPopulated: false,
 
@@ -3536,7 +3551,7 @@ let home = {
 }
 
 module.exports = home;
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 let ingredients = {
     isPopulated: false,
     ingredients: [],
@@ -3636,7 +3651,7 @@ let ingredients = {
 }
 
 module.exports = ingredients;
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 let orders = {
     isPopulated: false,
 
@@ -3729,7 +3744,7 @@ let orders = {
 }
 
 module.exports = orders;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
@@ -3844,7 +3859,7 @@ let recipeBook = {
 }
 
 module.exports = recipeBook;
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 let transactions = {
     transactions: [],
 

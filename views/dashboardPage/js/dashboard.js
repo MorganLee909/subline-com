@@ -4,6 +4,7 @@ const recipeBook = require("./strands/recipeBook.js");
 const analytics = require("./strands/analytics.js");
 const orders = require("./strands/orders.js");
 const transactions = require("./strands/transactions.js");
+const account = require("./strands/account.js");
 
 const ingredientDetails = require("./sidebars/ingredientDetails.js");
 const newIngredient = require("./sidebars/newIngredient.js");
@@ -85,6 +86,11 @@ controller = {
                 document.getElementById("transactionsStrand").style.display = "flex";
                 transactions.transactions = data;
                 transactions.display(Transaction);
+                break;
+            case "account":
+                activeButton = document.getElementById("accountBtn");
+                document.getElementById("accountStrand").style.display = "flex";
+                account.display();
                 break;
         }
 
@@ -325,5 +331,6 @@ document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("r
 document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
 document.getElementById("ordersBtn").onclick = async ()=>{controller.openStrand("orders")};
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
+document.getElementById("accountBtn").onclick = ()=>{controller.openStrand("account")};
 
 controller.openStrand("home");
