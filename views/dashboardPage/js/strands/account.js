@@ -25,14 +25,14 @@ let account = {
 
     updateData: function(){
         let data = {
-            email: document.getElementById("accountemail").value
+            email: document.getElementById("accountEmail").value
         }
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
         fetch("/merchant/update", {
-            method: "post",
+            method: "put",
             headers: {
                 "Content-Type": "application/json;charset=utf-8"
             },

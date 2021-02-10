@@ -2,12 +2,14 @@ const Merchant = require("../models/merchant");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 
 const helper = require("./helper.js");
+const verifyEmail = require("../emails/verifyEmail.js");
 
 const bcrypt = require("bcryptjs");
+const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 
 module.exports = {
     /*
-    POST - Create a new merchant with no POS system1
+    POST - Create a new merchant with no POS system
     req.body = {
         name: retaurant name,
         email: registration email,
@@ -164,6 +166,42 @@ module.exports = {
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO UPDATE YOUR PASSWORD");
+            });
+    },
+
+    /*
+    PUT: Update merchant data
+    req.body = {
+        email: String (merchant email address)
+    },
+    response = Merchant
+    */
+    updateData: function(req, res){
+        if(req.body.email !== res.locals.merchant.email){
+            res.locals.merchant.email = req.body.email;
+            res.locals.merchant.status.push("unverified");
+
+            const mailgunData = {
+                from: "The Subline <clientsupport@thesubline.net>",
+                to: res.locals.merchant.email,
+                subject: "Email Verification",
+                html: verifyEmail({
+                    name: res.locals.merchant.name,
+                    link: `${process.env.SITE}/verify/${res.locals.merchant._id}/${res.locals.merchant.verifyId}`
+                })
+            };
+            mailgun.messages().send(mailgunData, (err, body)=>{console.log(err)});
+        }
+
+        res.locals.merchant.save()
+            .then((merchant)=>{
+                return res.json(merchant);
+            })
+            .catch((err)=>{
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
