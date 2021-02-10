@@ -2951,7 +2951,7 @@ module.exports = transactionFilter;
 let account = {
     display: function(){
         document.getElementById("accountStrandTitle").innerText = merchant.name;
-        document.getElementById("accountEmail").placeholder = merchant.email;
+        document.getElementById("accountEmail").value = merchant.email;
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
 
@@ -2974,7 +2974,34 @@ let account = {
     },
 
     updateData: function(){
-        console.log("updating data");
+        let data = {
+            email: document.getElementById("accountemail").value
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/merchant/update", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     },
 
     updatePassword: function(){
