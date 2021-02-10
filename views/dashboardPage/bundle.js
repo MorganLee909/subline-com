@@ -3015,7 +3015,40 @@ let account = {
     },
 
     updatePassword: function(){
-        console.log("updating password");
+        let data = {
+            current: document.getElementById("accountCurrentPassword").value,
+            new: document.getElementById("accountNewPassword").value,
+            confirm: document.getElementById("accountConfirmPassword").value
+        }
+        
+        if(data.new !== data.confirm){
+            return controller.createBanner("PASSWORDS DO NOT MATCH");
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/merchant/password", {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    window.location.href = response.redirect;
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 

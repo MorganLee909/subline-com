@@ -12,6 +12,7 @@ module.exports = {
                 if(merchant === null){
                     throw "no merchant";
                 }
+                
     
                 if(merchant.session.date < new Date()){
                     let newExpiration = new Date();

@@ -210,7 +210,47 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO UPDATE YOUR PASSWORD");
+                return res.json("ERROR: UNABLE TO UPDATE DATA");
             });
+    },
+
+    /*
+    PUT: Update merchant password with current password
+    req.body = {
+        current: String (current merchant password),
+        new: String (new password),
+        confirm: String (new password again for confirmation)
+    }
+    response = {redirect: String (link to redirect to)}
+    */
+    changePassword: function(req, res){
+        if(req.body.new !== req.body.confirm){
+            return res.json("PASSWORDS DO NOT MATCH");
+        }
+
+        bcrypt.compare(req.body.current, res.locals.merchant.password, (err, result)=>{
+            if(result === true){
+                let salt = bcrypt.genSaltSync(10);
+                let hash = bcrypt.hashSync(req.body.new, salt);
+
+                res.locals.merchant.password = hash;
+
+                let newExpiration = new Date();
+                newExpiration.setDate(newExpiration.getDate() + 90);
+                res.locals.merchant.session.sessionId = helper.generateId(25);
+                res.locals.merchant.session.expiration = newExpiration;
+
+                res.locals.merchant.save()
+                    .then((merchant)=>{
+                        req.session.error = "PLEASE LOG IN";
+                        return res.json({redirect: `http://${process.env.SITE}/login`});
+                    })
+                    .catch((err)=>{
+                        return res.json("ERROR: UNABLE TO UPDATE PASSWORD");
+                    });
+            }else{
+                return res.json("INCORRECT PASSWORD");
+            }
+        });
     }
 }
