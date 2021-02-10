@@ -180,8 +180,13 @@ module.exports = {
     },
     response = Merchant
     */
-    updateData: function(req, res){
+    updateData: async function(req, res){
         if(req.body.email !== res.locals.merchant.email){
+            let merchantCheck = await Merchant.findOne({email: req.body.email});
+            if(merchantCheck !== null){
+                return res.json("USER WITH THIS EMAIL ADDRESS ALREADY EXISTS");
+            }
+
             res.locals.merchant.email = req.body.email;
             res.locals.merchant.status.push("unverified");
 
@@ -194,7 +199,7 @@ module.exports = {
                     link: `${process.env.SITE}/verify/${res.locals.merchant._id}/${res.locals.merchant.verifyId}`
                 })
             };
-            mailgun.messages().send(mailgunData, (err, body)=>{console.log(err)});
+            mailgun.messages().send(mailgunData, (err, body)=>{});
         }
 
         res.locals.merchant.save()

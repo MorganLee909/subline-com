@@ -43,7 +43,13 @@ let account = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
+                    controller.createBanner("DATA UPDATED", "success");
+                    if(response.email !== merchant.email){
+                        controller.createBanner("YOU MUST VALIDATE YOUR NEW EMAIL ADDRESS BEFORE YOU CAN LOG IN AGAIN", "alert");
+                    }
 
+                    merchant.email = response.email;
+                    document.getElementById("accountEmail").value = merchant.email;
                 }
             })
             .catch((err)=>{

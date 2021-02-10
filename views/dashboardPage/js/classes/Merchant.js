@@ -148,6 +148,10 @@ class Merchant{
         return this._email;
     }
 
+    set email(email){
+        this._email = email;
+    }
+
     get pos(){
         return this._pos;
     }
