@@ -185,6 +185,7 @@ class Merchant{
     constructor(oldMerchant, transactions, modules){
         this._modules = modules;
         this._name = oldMerchant.name;
+        this._email = oldMerchant.email;
         this._pos = oldMerchant.pos;
         this._ingredients = [];
         this._recipes = [];
@@ -257,6 +258,10 @@ class Merchant{
 
     set name(name){
         this._name = name;
+    }
+
+    get email(){
+        return this._email;
     }
 
     get pos(){
@@ -2946,23 +2951,34 @@ module.exports = transactionFilter;
 let account = {
     display: function(){
         document.getElementById("accountStrandTitle").innerText = merchant.name;
-        document.getElementById("accountShowPassword").onclick = ()=>{this.togglePassword()};
-    },
+        document.getElementById("accountEmail").placeholder = merchant.email;
 
-    togglePassword: function(){
+        document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
+
+        let passButton = document.getElementById("accountShowPassword");
         let passBox = document.getElementById("changePasswordBox");
-        let button = document.getElementById("accountShowPassword");
-
-        if(passBox.style.display === "none"){
+        passButton.onclick = ()=>{
+            passButton.style.display = "none";
             passBox.style.display = "flex";
-            button.innerText = "HIDE PASSWORD";
-        }else{
+        };
+
+        document.getElementById("cancelPasswordChange").onclick = ()=>{
+            passButton.style.display = "block";
             passBox.style.display = "none";
-            button.innerText = "CHANGE PASSWORD";
             document.getElementById("accountCurrentPassword").value = "";
             document.getElementById("accountNewPassword").value = "";
             document.getElementById("accountConfirmPassword").value = "";
-        }
+        };
+
+        document.getElementById("changePasswordButton").onclick = ()=>{this.updatePassword()};
+    },
+
+    updateData: function(){
+        console.log("updating data");
+    },
+
+    updatePassword: function(){
+        console.log("updating password");
     }
 }
 

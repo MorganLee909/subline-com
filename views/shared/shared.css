@@ -194,6 +194,7 @@ button::-moz-focus-inner{
     font-weight: bold;
     min-width: 100px;
     margin: 5px;
+    max-height: 52px;
 } 
 
     .buttonWithBorder {

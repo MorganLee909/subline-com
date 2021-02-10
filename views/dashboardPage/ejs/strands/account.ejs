@@ -3,23 +3,35 @@
         <h1 id="accountStrandTitle" class="strandTitle"></h1>
     </div>
 
-    <label>EMAIL
-        <input id="accountEmail" type="email">
-    </label>
+    <div class="horizontal">
+        <div class="vertical">
+            <label>EMAIL
+                <input id="accountEmail" type="email">
+            </label>
 
-    <button id="accountShowPassword" class="button">CHANGE PASSWORD</button>
+            <button id="accountUpdate" class="button">UPDATE</button>
+        </div>
 
-    <div id="changePasswordBox" style="display:none;">
-        <label>CURRENT PASSWORD
-            <input id="accountCurrentPassword" type="password">
-        </label>
+        <button id="accountShowPassword" class="button">CHANGE PASSWORD</button>
 
-        <label>NEW PASSWORD
-            <input id="accountNewPassword" type="password">
-        </label>
+        <div id="changePasswordBox" style="display:none;">
+            <label>CURRENT PASSWORD
+                <input id="accountCurrentPassword" type="password">
+            </label>
 
-        <label>CONFIRM NEW PASSWORD
-            <input id="accountConfirmPassword" type="password">
-        </label>
+            <label>NEW PASSWORD
+                <input id="accountNewPassword" type="password">
+            </label>
+
+            <label>CONFIRM NEW PASSWORD
+                <input id="accountConfirmPassword" type="password">
+            </label>
+
+            <div id="accountButtonBox" class="buttonBox">
+                <button id="cancelPasswordChange" class="button">CANCEL</button>
+
+                <button id="changePasswordButton" class="button">CHANGE PASSWORD</button>
+            </div>
+        </div>
     </div>
 </div>

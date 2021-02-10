@@ -69,6 +69,7 @@ class Merchant{
     constructor(oldMerchant, transactions, modules){
         this._modules = modules;
         this._name = oldMerchant.name;
+        this._email = oldMerchant.email;
         this._pos = oldMerchant.pos;
         this._ingredients = [];
         this._recipes = [];
@@ -141,6 +142,10 @@ class Merchant{
 
     set name(name){
         this._name = name;
+    }
+
+    get email(){
+        return this._email;
     }
 
     get pos(){
