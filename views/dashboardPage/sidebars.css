@@ -10,7 +10,7 @@
     transition: width 0.3s;
     flex-grow: 0;
     flex-shrink: 0;
-    padding-bottom: 100px;
+    padding-bottom: 25px;
     box-sizing: border-box;
 }
 
@@ -98,19 +98,23 @@
             stroke: black;
         }
 
-.menu > .active{
-    background: rgb(179, 191, 209);
-    cursor: default;
-}
+    .menu a{
+        color: white;
+    }
 
-.menu > .active:hover{
-    background: rgb(179, 191, 209);
-    color: white;
-}
+    .menu > .active{
+        background: rgb(179, 191, 209);
+        cursor: default;
+    }
 
-.menu > .active:hover svg{
-    stroke: white;
-}
+    .menu > .active:hover{
+        background: rgb(179, 191, 209);
+        color: white;
+    }
+
+    .menu > .active:hover svg{
+        stroke: white;
+    }
 
 /* Minimized menu */
 .menuMinimized{
