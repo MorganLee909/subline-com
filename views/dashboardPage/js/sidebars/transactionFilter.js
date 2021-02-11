@@ -1,5 +1,7 @@
+const Transaction = require("../classes/Transaction.js");
+
 let transactionFilter = {
-    display: function(Transaction){
+    display: function(){
         //Set default dates
         let today = new Date();
         let monthAgo = new Date(today);
@@ -25,7 +27,7 @@ let transactionFilter = {
         }
 
         //Submit button
-        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit(Transaction)};
+        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit()};
     },
 
     toggleActive: function(element){
@@ -36,7 +38,7 @@ let transactionFilter = {
         }
     },
 
-    submit: function(Transaction){
+    submit: function(){
         let data = {
             from: document.getElementById("transFilterDateStart").valueAsDate,
             to: document.getElementById("transFilterDateEnd").valueAsDate,

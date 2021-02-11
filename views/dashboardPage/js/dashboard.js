@@ -21,23 +21,8 @@ const transactionDetails = require("./sidebars/transactionDetails.js");
 const transactionFilter = require("./sidebars/transactionFilter.js");
 
 const Merchant = require("./classes/Merchant.js");
-const Ingredient = require("./classes/Ingredient.js");
-const Recipe = require("./classes/Recipe.js");
-const Order = require("./classes/Order.js");
-const Transaction = require("./classes/Transaction.js");
 
-merchant = new Merchant(data.merchant, data.transactions, {
-    home: home,
-    ingredients: ingredients,
-    transactions: transactions,
-    recipeBook: recipeBook,
-    analytics: analytics,
-    orders: orders,
-    Ingredient: Ingredient,
-    Recipe: Recipe,
-    Transaction: Transaction,
-    Order: Order
-});
+merchant = new Merchant(data.merchant, data.transactions);
 
 controller = {
     openStrand: function(strand, data = undefined){
@@ -69,12 +54,12 @@ controller = {
             case "recipeBook":
                 activeButton = document.getElementById("recipeBookBtn");
                 document.getElementById("recipeBookStrand").style.display = "flex";
-                recipeBook.display(Recipe);
+                recipeBook.display();
                 break;
             case "analytics":
                 activeButton = document.getElementById("analyticsBtn");
                 document.getElementById("analyticsStrand").style.display = "flex";
-                analytics.display(Transaction);
+                analytics.display();
                 break;
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
@@ -85,7 +70,7 @@ controller = {
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
                 transactions.transactions = data;
-                transactions.display(Transaction);
+                transactions.display();
                 break;
             case "account":
                 activeButton = document.getElementById("accountBtn");
@@ -115,10 +100,10 @@ controller = {
 
         switch(sidebar){
             case "ingredientDetails":
-                ingredientDetails.display(data, ingredients);
+                ingredientDetails.display(data);
                 break;
             case "newIngredient":
-                newIngredient.display(Ingredient);
+                newIngredient.display();
                 break;
             case "editIngredient":
                 editIngredient.display(data);
@@ -130,13 +115,13 @@ controller = {
                 editRecipe.display(data);
                 break;
             case "addRecipe":
-                newRecipe.display(Recipe);
+                newRecipe.display();
                 break;
             case "orderDetails":
                 orderDetails.display(data);
                 break;
             case "orderFilter":
-                orderFilter.display(Order);
+                orderFilter.display();
                 break;
             case "newOrder":
                 newOrder.display();
@@ -148,10 +133,10 @@ controller = {
                 transactionDetails.display(data);
                 break;
             case "transactionFilter":
-                transactionFilter.display(Transaction);
+                transactionFilter.display();
                 break;
             case "newTransaction":
-                newTransaction.display(Transaction);
+                newTransaction.display();
                 break;
         }
 

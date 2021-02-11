@@ -1,5 +1,5 @@
 let newIngredient = {
-    display: function(Ingredient){
+    display: function(){
         const selector = document.getElementById("unitSelector");
 
         document.getElementById("newIngName").value = "";
@@ -9,7 +9,7 @@ let newIngredient = {
         selector.value = "g";
 
         selector.onchange = ()=>{this.unitChange()};
-        document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
+        document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
         document.getElementById("ingredientFileUpload").addEventListener("click", ()=>{controller.openModal("ingredientSpreadsheet")});
     },
 

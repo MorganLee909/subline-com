@@ -114,6 +114,17 @@ class Ingredient{
 
 module.exports = Ingredient;
 },{}],2:[function(require,module,exports){
+const Ingredient = require("./Ingredient.js");
+const Recipe = require("./Recipe.js");
+const Transaction = require("./Transaction.js");
+const Order = require("./Order.js");
+
+const home = require("../strands/home.js");
+const ingredients = require("../strands/ingredients.js");
+const recipeBook = require("../strands/recipeBook");
+const analytics = require("../strands/analytics.js");
+const orders = require("../strands/orders");
+
 class MerchantIngredient{
     constructor(ingredient, quantity){
         this._quantity = quantity;
@@ -182,8 +193,7 @@ class MerchantIngredient{
 }
 
 class Merchant{
-    constructor(oldMerchant, transactions, modules){
-        this._modules = modules;
+    constructor(oldMerchant, transactions){
         this._name = oldMerchant.name;
         this._email = oldMerchant.email;
         this._pos = oldMerchant.pos;
@@ -194,7 +204,7 @@ class Merchant{
         
         //populate ingredients
         for(let i = 0; i < oldMerchant.inventory.length; i++){
-            const ingredient = new modules.Ingredient(
+            const ingredient = new Ingredient(
                 oldMerchant.inventory[i].ingredient._id,
                 oldMerchant.inventory[i].ingredient.name,
                 oldMerchant.inventory[i].ingredient.category,
@@ -228,7 +238,7 @@ class Merchant{
                 }
             }
 
-            this._recipes.push(new this._modules.Recipe(
+            this._recipes.push(new Recipe(
                 oldMerchant.recipes[i]._id,
                 oldMerchant.recipes[i].name,
                 oldMerchant.recipes[i].price,
@@ -239,17 +249,13 @@ class Merchant{
 
         //populate transactions
         for(let i = 0; i < transactions.length; i++){
-            this._transactions.push(new modules.Transaction(
+            this._transactions.push(new Transaction(
                 transactions[i]._id,
                 transactions[i].date,
                 transactions[i].recipes,
                 this
             ));
         }
-    }
-
-    get modules(){
-        return this._modules;
     }
 
     get name(){
@@ -289,7 +295,7 @@ class Merchant{
     defaultUnit: String
     */
     addIngredient(ingredient, quantity, defaultUnit){
-        const createdIngredient = new this._modules.Ingredient(
+        const createdIngredient = new Ingredient(
             ingredient._id,
             ingredient.name,
             ingredient.category,
@@ -302,8 +308,8 @@ class Merchant{
         const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
     }
 
     removeIngredient(ingredient){
@@ -314,8 +320,8 @@ class Merchant{
 
         this._ingredients.splice(index, 1);
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
     }
 
     getIngredient(id){
@@ -331,11 +337,11 @@ class Merchant{
     }
 
     addRecipe(id, name, price, ingredients){
-        let recipe = new this._modules.Recipe(id, name, price, ingredients, this);
+        let recipe = new Recipe(id, name, price, ingredients, this);
 
         this._recipes.push(recipe);
 
-        this._modules.recipeBook.isPopulated = false;
+        recipeBook.isPopulated = false;
     }
 
     removeRecipe(recipe){
@@ -346,7 +352,7 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        this._modules.recipeBook.isPopulated = false;
+        recipeBook.isPopulated = false;
     }
 
     /*
@@ -383,7 +389,7 @@ class Merchant{
             }
         }
 
-        this._modules.recipeBook.isPopulated = false;
+        recipeBook.isPopulated = false;
     }
 
     get transactions(){
@@ -405,7 +411,7 @@ class Merchant{
     }
 
     addTransaction(transaction){
-        transaction = new this._modules.Transaction(
+        transaction = new Transaction(
             transaction._id,
             transaction.date,
             transaction.recipes,
@@ -442,9 +448,9 @@ class Merchant{
             }
         }
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
-        this._modules.analytics.newData = true;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
+        analytics.newData = true;
     }
 
     removeTransaction(transaction){
@@ -478,9 +484,9 @@ class Merchant{
             }
         }
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
-        this._modules.analytics.newData = true;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
+        analytics.newData = true;
     }
 
     get orders(){
@@ -492,7 +498,7 @@ class Merchant{
     }
 
     addOrder(data, isNew = false){
-        let order = new this._modules.Order(
+        let order = new Order(
             data._id,
             data.name,
             data.date,
@@ -515,8 +521,8 @@ class Merchant{
             }
         }
 
-        this._modules.ingredients.isPopulated = false;
-        this._modules.orders.isPopulated = false;
+        ingredients.isPopulated = false;
+        orders.isPopulated = false;
     }
 
     removeOrder(order){
@@ -536,8 +542,8 @@ class Merchant{
             }
         }
 
-        this._modules.ingredients.isPopulated = false;
-        this._modules.orders.isPopulated = false;
+        ingredients.isPopulated = false;
+        orders.isPopulated = false;
     }
 
     get units(){
@@ -739,7 +745,9 @@ class Merchant{
 }
 
 module.exports = Merchant;
-},{}],3:[function(require,module,exports){
+},{"../strands/analytics.js":21,"../strands/home.js":22,"../strands/ingredients.js":23,"../strands/orders":24,"../strands/recipeBook":25,"./Ingredient.js":1,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5}],3:[function(require,module,exports){
+const ingredients = require("../strands/ingredients.js");
+
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
         this._ingredient = ingredient;
@@ -869,7 +877,7 @@ class Order{
             
         }
 
-        this._parent.modules.ingredients.isPopulated = false;
+        ingredients.isPopulated = false;
     }
 
     get id(){
@@ -914,7 +922,10 @@ class Order{
 }
 
 module.exports = Order;
-},{}],4:[function(require,module,exports){
+},{"../strands/ingredients.js":23}],4:[function(require,module,exports){
+const recipeBook = require("../strands/recipeBook.js");
+const analytics = require("../strands/analytics.js");
+
 class RecipeIngredient{
     constructor(ingredient, quantity){
         this._ingredient = ingredient;
@@ -1044,8 +1055,8 @@ class Recipe{
         let recipeIngredient = new RecipeIngredient(ingredient, quantity);
         this._ingredients.push(recipeIngredient);
 
-        this._parent.modules.recipeBook.isPopulated = false;
-        this._parent.modules.analytics.isPopulated = false;
+        recipeBook.isPopulated = false;
+        analytics.isPopulated = false;
     }
 
     removeIngredients(){
@@ -1054,7 +1065,7 @@ class Recipe{
 }
 
 module.exports = Recipe;
-},{}],5:[function(require,module,exports){
+},{"../strands/analytics.js":21,"../strands/recipeBook.js":25}],5:[function(require,module,exports){
 class TransactionRecipe{
     constructor(recipe, quantity){
         this._recipe = recipe;
@@ -1156,23 +1167,8 @@ const transactionDetails = require("./sidebars/transactionDetails.js");
 const transactionFilter = require("./sidebars/transactionFilter.js");
 
 const Merchant = require("./classes/Merchant.js");
-const Ingredient = require("./classes/Ingredient.js");
-const Recipe = require("./classes/Recipe.js");
-const Order = require("./classes/Order.js");
-const Transaction = require("./classes/Transaction.js");
 
-merchant = new Merchant(data.merchant, data.transactions, {
-    home: home,
-    ingredients: ingredients,
-    transactions: transactions,
-    recipeBook: recipeBook,
-    analytics: analytics,
-    orders: orders,
-    Ingredient: Ingredient,
-    Recipe: Recipe,
-    Transaction: Transaction,
-    Order: Order
-});
+merchant = new Merchant(data.merchant, data.transactions);
 
 controller = {
     openStrand: function(strand, data = undefined){
@@ -1204,12 +1200,12 @@ controller = {
             case "recipeBook":
                 activeButton = document.getElementById("recipeBookBtn");
                 document.getElementById("recipeBookStrand").style.display = "flex";
-                recipeBook.display(Recipe);
+                recipeBook.display();
                 break;
             case "analytics":
                 activeButton = document.getElementById("analyticsBtn");
                 document.getElementById("analyticsStrand").style.display = "flex";
-                analytics.display(Transaction);
+                analytics.display();
                 break;
             case "orders":
                 activeButton = document.getElementById("ordersBtn");
@@ -1220,7 +1216,7 @@ controller = {
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
                 transactions.transactions = data;
-                transactions.display(Transaction);
+                transactions.display();
                 break;
             case "account":
                 activeButton = document.getElementById("accountBtn");
@@ -1250,10 +1246,10 @@ controller = {
 
         switch(sidebar){
             case "ingredientDetails":
-                ingredientDetails.display(data, ingredients);
+                ingredientDetails.display(data);
                 break;
             case "newIngredient":
-                newIngredient.display(Ingredient);
+                newIngredient.display();
                 break;
             case "editIngredient":
                 editIngredient.display(data);
@@ -1265,13 +1261,13 @@ controller = {
                 editRecipe.display(data);
                 break;
             case "addRecipe":
-                newRecipe.display(Recipe);
+                newRecipe.display();
                 break;
             case "orderDetails":
                 orderDetails.display(data);
                 break;
             case "orderFilter":
-                orderFilter.display(Order);
+                orderFilter.display();
                 break;
             case "newOrder":
                 newOrder.display();
@@ -1283,10 +1279,10 @@ controller = {
                 transactionDetails.display(data);
                 break;
             case "transactionFilter":
-                transactionFilter.display(Transaction);
+                transactionFilter.display();
                 break;
             case "newTransaction":
-                newTransaction.display(Transaction);
+                newTransaction.display();
                 break;
         }
 
@@ -1469,7 +1465,7 @@ document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand(
 document.getElementById("accountBtn").onclick = ()=>{controller.openStrand("account")};
 
 controller.openStrand("home");
-},{"./classes/Ingredient.js":1,"./classes/Merchant.js":2,"./classes/Order.js":3,"./classes/Recipe.js":4,"./classes/Transaction.js":5,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderCalculator.js":14,"./sidebars/orderDetails.js":15,"./sidebars/orderFilter.js":16,"./sidebars/recipeDetails.js":17,"./sidebars/transactionDetails.js":18,"./sidebars/transactionFilter.js":19,"./strands/account.js":20,"./strands/analytics.js":21,"./strands/home.js":22,"./strands/ingredients.js":23,"./strands/orders.js":24,"./strands/recipeBook.js":25,"./strands/transactions.js":26}],7:[function(require,module,exports){
+},{"./classes/Merchant.js":2,"./sidebars/editIngredient.js":7,"./sidebars/editRecipe.js":8,"./sidebars/ingredientDetails.js":9,"./sidebars/newIngredient.js":10,"./sidebars/newOrder.js":11,"./sidebars/newRecipe.js":12,"./sidebars/newTransaction.js":13,"./sidebars/orderCalculator.js":14,"./sidebars/orderDetails.js":15,"./sidebars/orderFilter.js":16,"./sidebars/recipeDetails.js":17,"./sidebars/transactionDetails.js":18,"./sidebars/transactionFilter.js":19,"./strands/account.js":20,"./strands/analytics.js":21,"./strands/home.js":22,"./strands/ingredients.js":23,"./strands/orders.js":24,"./strands/recipeBook.js":25,"./strands/transactions.js":26}],7:[function(require,module,exports){
 let editIngredient = {
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");
@@ -1814,7 +1810,7 @@ let ingredientDetails = {
 module.exports = ingredientDetails;
 },{}],10:[function(require,module,exports){
 let newIngredient = {
-    display: function(Ingredient){
+    display: function(){
         const selector = document.getElementById("unitSelector");
 
         document.getElementById("newIngName").value = "";
@@ -1824,7 +1820,7 @@ let newIngredient = {
         selector.value = "g";
 
         selector.onchange = ()=>{this.unitChange()};
-        document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
+        document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
         document.getElementById("ingredientFileUpload").addEventListener("click", ()=>{controller.openModal("ingredientSpreadsheet")});
     },
 
@@ -2099,7 +2095,7 @@ let newOrder = {
 module.exports = newOrder;
 },{}],12:[function(require,module,exports){
 let newRecipe = {
-    display: function(Recipe){
+    display: function(){
         document.getElementById("newRecipeName").value = "";
         document.getElementById("newRecipePrice").value = "";
         document.getElementById("ingredientCount").value = 1;
@@ -2114,7 +2110,7 @@ let newRecipe = {
         this.changeIngredientCount(categories);
 
         document.getElementById("ingredientCount").onchange = ()=>{this.changeIngredientCount(categories)};
-        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit(Recipe)};
+        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
         document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
     },
 
@@ -2162,7 +2158,7 @@ let newRecipe = {
         }
     },
 
-    submit: function(Recipe){
+    submit: function(){
         let newRecipe = {
             name: document.getElementById("newRecipeName").value,
             price: document.getElementById("newRecipePrice").value,
@@ -2614,8 +2610,10 @@ let orderDetails = {
 
 module.exports = orderDetails;
 },{}],16:[function(require,module,exports){
+const Order = require("../classes/Order.js");
+
 let orderFilter = {
-    display: function(Order){
+    display: function(){
         let now = new Date();
         let past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
         let ingredientList = document.getElementById("orderFilterIngredients");
@@ -2639,7 +2637,7 @@ let orderFilter = {
             element.appendChild(text);
         }
 
-        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit(Order)};
+        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit()};
     },
 
     toggleActive: function(element){
@@ -2650,7 +2648,7 @@ let orderFilter = {
         }
     },
 
-    submit: function(Order){
+    submit: function(){
         let data = {
             from: document.getElementById("orderFilterDateFrom").valueAsDate,
             to: document.getElementById("orderFilterDateTo").valueAsDate,
@@ -2710,7 +2708,7 @@ let orderFilter = {
 }
 
 module.exports = orderFilter;
-},{}],17:[function(require,module,exports){
+},{"../classes/Order.js":3}],17:[function(require,module,exports){
 let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
@@ -2847,8 +2845,10 @@ let transactionDetails = {
 
 module.exports = transactionDetails;
 },{}],19:[function(require,module,exports){
+const Transaction = require("../classes/Transaction.js");
+
 let transactionFilter = {
-    display: function(Transaction){
+    display: function(){
         //Set default dates
         let today = new Date();
         let monthAgo = new Date(today);
@@ -2874,7 +2874,7 @@ let transactionFilter = {
         }
 
         //Submit button
-        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit(Transaction)};
+        document.getElementById("transFilterSubmit").onclick = ()=>{this.submit()};
     },
 
     toggleActive: function(element){
@@ -2885,7 +2885,7 @@ let transactionFilter = {
         }
     },
 
-    submit: function(Transaction){
+    submit: function(){
         let data = {
             from: document.getElementById("transFilterDateStart").valueAsDate,
             to: document.getElementById("transFilterDateEnd").valueAsDate,
@@ -2947,7 +2947,7 @@ let transactionFilter = {
 }
 
 module.exports = transactionFilter;
-},{}],20:[function(require,module,exports){
+},{"../classes/Transaction.js":5}],20:[function(require,module,exports){
 let account = {
     display: function(){
         document.getElementById("accountStrandTitle").innerText = merchant.name;
@@ -3050,13 +3050,15 @@ let account = {
 
 module.exports = account;
 },{}],21:[function(require,module,exports){
+const Transaction = require("../classes/Transaction.js");
+
 let analytics = {
     isPopulated: false,
     ingredient: undefined,
     recipe: undefined,
     transactionsByDate: [],
 
-    display: function(Transaction){
+    display: function(){
         if(!this.isPopulated){
             document.getElementById("analRecipeContent").style.display = "none";
 
@@ -3068,7 +3070,7 @@ let analytics = {
             let analSlider = document.getElementById("analSlider");
             analSlider.onclick = ()=>{this.switchDisplay()};
             analSlider.checked = false;
-            document.getElementById("analDateBtn").onclick = ()=>{this.newDates(Transaction)};
+            document.getElementById("analDateBtn").onclick = ()=>{this.newDates()};
 
             this.populateButtons();
 
@@ -3079,7 +3081,7 @@ let analytics = {
                 this.recipe = merchant.recipes[0];
             }
             
-            this.newDates(Transaction);
+            this.newDates();
             
             this.isPopulated = true;
         }
@@ -3120,7 +3122,7 @@ let analytics = {
         }
     },
 
-    getData: function(from, to, Transaction){
+    getData: function(from, to){
         let data = {
             from: from,
             to: to,
@@ -3349,14 +3351,14 @@ let analytics = {
         }
     },
 
-    newDates: async function(Transaction){
+    newDates: async function(){
         const from = document.getElementById("analStartDate").valueAsDate;
         const to = document.getElementById("analEndDate").valueAsDate;
         from.setHours(0, 0, 0, 0);
         to.setDate(to.getDate() + 1);
         to.setHours(0, 0, 0, 0);
 
-        await this.getData(from, to, Transaction);
+        await this.getData(from, to);
 
         if(document.getElementById("analSlider").checked === true){
             this.displayRecipe();
@@ -3367,7 +3369,7 @@ let analytics = {
 }
 
 module.exports = analytics;
-},{}],22:[function(require,module,exports){
+},{"../classes/Transaction.js":5}],22:[function(require,module,exports){
 let home = {
     isPopulated: false,
 
@@ -3844,16 +3846,18 @@ let orders = {
 
 module.exports = orders;
 },{}],25:[function(require,module,exports){
+const Recipe = require("../classes/Recipe.js");
+
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
 
-    display: function(Recipe){
+    display: function(){
         if(!this.isPopulated){
             this.populateRecipes();
 
             if(merchant.pos !== "none"){
-                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate(Recipe)};
+                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
             }
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
 
@@ -3907,7 +3911,7 @@ let recipeBook = {
         }
     },
 
-    posUpdate: function(Recipe){
+    posUpdate: function(){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
         let url = `/recipe/update/${merchant.pos}`;
@@ -3958,7 +3962,7 @@ let recipeBook = {
 }
 
 module.exports = recipeBook;
-},{}],26:[function(require,module,exports){
+},{"../classes/Recipe.js":4}],26:[function(require,module,exports){
 let transactions = {
     transactions: [],
 

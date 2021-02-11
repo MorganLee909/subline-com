@@ -1,13 +1,15 @@
+const Recipe = require("../classes/Recipe.js");
+
 let recipeBook = {
     isPopulated: false,
     recipeDivList: [],
 
-    display: function(Recipe){
+    display: function(){
         if(!this.isPopulated){
             this.populateRecipes();
 
             if(merchant.pos !== "none"){
-                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate(Recipe)};
+                document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
             }
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
 
@@ -61,7 +63,7 @@ let recipeBook = {
         }
     },
 
-    posUpdate: function(Recipe){
+    posUpdate: function(){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
         let url = `/recipe/update/${merchant.pos}`;

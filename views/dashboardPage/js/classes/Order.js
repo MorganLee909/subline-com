@@ -1,3 +1,5 @@
+const ingredients = require("../strands/ingredients.js");
+
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
         this._ingredient = ingredient;
@@ -127,7 +129,7 @@ class Order{
             
         }
 
-        this._parent.modules.ingredients.isPopulated = false;
+        ingredients.isPopulated = false;
     }
 
     get id(){

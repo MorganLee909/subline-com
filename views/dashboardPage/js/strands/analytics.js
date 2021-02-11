@@ -1,10 +1,12 @@
+const Transaction = require("../classes/Transaction.js");
+
 let analytics = {
     isPopulated: false,
     ingredient: undefined,
     recipe: undefined,
     transactionsByDate: [],
 
-    display: function(Transaction){
+    display: function(){
         if(!this.isPopulated){
             document.getElementById("analRecipeContent").style.display = "none";
 
@@ -16,7 +18,7 @@ let analytics = {
             let analSlider = document.getElementById("analSlider");
             analSlider.onclick = ()=>{this.switchDisplay()};
             analSlider.checked = false;
-            document.getElementById("analDateBtn").onclick = ()=>{this.newDates(Transaction)};
+            document.getElementById("analDateBtn").onclick = ()=>{this.newDates()};
 
             this.populateButtons();
 
@@ -27,7 +29,7 @@ let analytics = {
                 this.recipe = merchant.recipes[0];
             }
             
-            this.newDates(Transaction);
+            this.newDates();
             
             this.isPopulated = true;
         }
@@ -68,7 +70,7 @@ let analytics = {
         }
     },
 
-    getData: function(from, to, Transaction){
+    getData: function(from, to){
         let data = {
             from: from,
             to: to,
@@ -297,14 +299,14 @@ let analytics = {
         }
     },
 
-    newDates: async function(Transaction){
+    newDates: async function(){
         const from = document.getElementById("analStartDate").valueAsDate;
         const to = document.getElementById("analEndDate").valueAsDate;
         from.setHours(0, 0, 0, 0);
         to.setDate(to.getDate() + 1);
         to.setHours(0, 0, 0, 0);
 
-        await this.getData(from, to, Transaction);
+        await this.getData(from, to);
 
         if(document.getElementById("analSlider").checked === true){
             this.displayRecipe();
