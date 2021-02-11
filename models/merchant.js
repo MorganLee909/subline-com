@@ -3,7 +3,7 @@ const isSanitary = require("../controllers/helper.js").isSanitary;
 const mongoose = require("mongoose");
 
 let emailValid = (value)=>{
-    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
 }
 
 const MerchantSchema = new mongoose.Schema({
