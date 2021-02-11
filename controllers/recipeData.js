@@ -183,7 +183,7 @@ module.exports = {
 
                     let exists = false;
                     for(let j = 0; j < ingredients.length; j++){
-                        if(ingredients[j].name === array[i][locations.ingredient]){
+                        if(ingredients[j].name.toLowerCase() === array[i][locations.ingredient].toLowerCase()){
                             currentRecipe.ingredients.push({
                                 ingredient: ingredients[j].id,
                                 quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)
