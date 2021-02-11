@@ -29,7 +29,6 @@ module.exports = {
     Renders inventoryPage
     */
     displayDashboard: function(req, res){
-        let merchant2 = {};
         res.locals.merchant
             .populate("inventory.ingredient")
             .populate("recipes")
@@ -75,10 +74,9 @@ module.exports = {
                 return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
-                //TODO: add banners to the necessary pages
                 if(err === "unverified"){
                     req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
-                    return res.redirect(`/verify/email/${merchant2._id}`);
+                    return res.redirect(`/verify/email/${res.locals.merchant._id}`);
                 }
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
