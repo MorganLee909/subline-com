@@ -1579,7 +1579,7 @@ let editIngredient = {
             }
         })
         .catch((err)=>{
-            controller.createBanner("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE", "error");
+            controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
         })
         .finally(()=>{
             loader.style.display = "none";
@@ -1710,7 +1710,7 @@ let editRecipe = {
                 }
             })
             .catch((err)=>{
-                controller.createBanner("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE", "error");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -1916,7 +1916,7 @@ let newIngredient = {
                 
             })
             .catch((err)=>{
-                controller.createBanner("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE", "error");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -2025,7 +2025,7 @@ let newOrder = {
                 }
             })
             .catch((err)=>{
-                controller.createBanner("SOMETHING WENT WRONG, PLEASE REFRESH THE PAGE", "error");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
@@ -3642,7 +3642,7 @@ let home = {
                     }
                 })
                 .catch((err)=>{
-                    controller.createBanner("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE", "error");
+                    controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
                 })
                 .finally(()=>{
                     loader.style.display = "none";
@@ -3953,7 +3953,7 @@ let recipeBook = {
                 }
             })
             .catch((err)=>{
-                controller.createBanner("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE", "error");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

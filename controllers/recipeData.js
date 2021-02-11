@@ -84,7 +84,7 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO UPDATE RECIPE");
+                return res.json("ERROR: UNABLE TO UPDATE DATA");
             });
     },
 
@@ -112,7 +112,7 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });
     },
 

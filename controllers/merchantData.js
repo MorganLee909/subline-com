@@ -153,7 +153,7 @@ module.exports = {
 
                     return merchant.save();
                 }else{
-                    req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
+                    req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                     return res.redirect("/");
                 }
             })

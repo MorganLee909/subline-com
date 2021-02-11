@@ -87,7 +87,7 @@ module.exports = {
                 return Transaction.create(transactions);
             })
             .catch((err)=>{
-                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM CLOVER";
+                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
             });
     },
@@ -179,7 +179,7 @@ module.exports = {
                 return transactions;
             })
             .catch((err)=>{
-                return "ERROR: UNABLE TO UPDATE TRANSACTION DATA";
+                return "ERROR: UNABLE TO UPDATE DATA";
             });
     },
 
