@@ -274,11 +274,6 @@ class Merchant{
         return this._transactions;
     }
 
-    //TODO: remove this, just for testing purposes
-    clearTransactions(){
-        this._transactions = [];
-    }
-
     getTransactions(from = 0, to = new Date()){
         if(merchant._transactions.length <= 0){
             return [];

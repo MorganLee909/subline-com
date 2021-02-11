@@ -14,6 +14,7 @@ let newOrder = {
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
+        merchant.ingredients.sort((a, b) => (a.ingredient.name > b.ingredient.name) ? 1 : -1);
         for(let i = 0; i < merchant.ingredients.length; i++){
             let ingredient = document.createElement("button");
             ingredient.classList = "choosable";

@@ -390,11 +390,6 @@ class Merchant{
         return this._transactions;
     }
 
-    //TODO: remove this, just for testing purposes
-    clearTransactions(){
-        this._transactions = [];
-    }
-
     getTransactions(from = 0, to = new Date()){
         if(merchant._transactions.length <= 0){
             return [];
@@ -1951,6 +1946,7 @@ let newOrder = {
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
+        merchant.ingredients.sort((a, b) => (a.ingredient.name > b.ingredient.name) ? 1 : -1);
         for(let i = 0; i < merchant.ingredients.length; i++){
             let ingredient = document.createElement("button");
             ingredient.classList = "choosable";
