@@ -69,8 +69,7 @@ const MerchantSchema = new mongoose.Schema({
             index: true
         },
         expiration: Date
-    },
-    verifyId: String
+    }
 });
 
 module.exports = mongoose.model("Merchant", MerchantSchema);

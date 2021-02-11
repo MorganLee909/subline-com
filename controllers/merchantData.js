@@ -51,7 +51,6 @@ module.exports = {
             status: ["unverified"],
             inventory: [],
             recipes: [],
-            verifyId: helper.generateId(15),
             session: {
                 sessionId: helper.generateId(25),
                 expiration: expirationDate
@@ -196,7 +195,7 @@ module.exports = {
                 subject: "Email Verification",
                 html: verifyEmail({
                     name: res.locals.merchant.name,
-                    link: `${process.env.SITE}/verify/${res.locals.merchant._id}/${res.locals.merchant.verifyId}`
+                    link: `${process.env.SITE}/verify/${res.locals.merchant._id}/${res.locals.merchant.sessionId}`
                 })
             };
             mailgun.messages().send(mailgunData, (err, body)=>{});
