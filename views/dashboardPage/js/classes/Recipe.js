@@ -1,3 +1,6 @@
+const recipeBook = require("../strands/recipeBook.js");
+const analytics = require("../strands/analytics.js");
+
 class RecipeIngredient{
     constructor(ingredient, quantity){
         this._ingredient = ingredient;
@@ -127,8 +130,8 @@ class Recipe{
         let recipeIngredient = new RecipeIngredient(ingredient, quantity);
         this._ingredients.push(recipeIngredient);
 
-        this._parent.modules.recipeBook.isPopulated = false;
-        this._parent.modules.analytics.isPopulated = false;
+        recipeBook.isPopulated = false;
+        analytics.isPopulated = false;
     }
 
     removeIngredients(){

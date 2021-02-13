@@ -1,5 +1,7 @@
+const Order = require("../classes/Order.js");
+
 let orderFilter = {
-    display: function(Order){
+    display: function(){
         let now = new Date();
         let past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
         let ingredientList = document.getElementById("orderFilterIngredients");
@@ -23,7 +25,7 @@ let orderFilter = {
             element.appendChild(text);
         }
 
-        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit(Order)};
+        document.getElementById("orderFilterSubmit").onclick = ()=>{this.submit()};
     },
 
     toggleActive: function(element){
@@ -34,7 +36,7 @@ let orderFilter = {
         }
     },
 
-    submit: function(Order){
+    submit: function(){
         let data = {
             from: document.getElementById("orderFilterDateFrom").valueAsDate,
             to: document.getElementById("orderFilterDateTo").valueAsDate,

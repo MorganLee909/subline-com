@@ -568,6 +568,55 @@ Transactions Strand
     }
 
 /*
+ACCOUNT STRAND
+*/
+#accountStrand{
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+    .horizontal{
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .vertical{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #accountUpdate{
+        max-width: 500px;
+    }
+
+    #accountShowPassword{
+        max-width: 300px;
+    }
+
+    #changePasswordBox{
+        flex-direction: column;
+        padding: 25px;
+        background: rgb(240, 252, 255);
+        border: 2px solid black;
+        border-radius: 10px;
+    }
+
+        #changePasswordBox label{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px;
+        }
+
+        #changePasswordBox p{
+            color: red;
+        }
+
+        #accountButtonBox{
+            margin: 0;
+        }
+
+/*
 Modal
 */
 .modal{

@@ -26,6 +26,8 @@ module.exports = function(app){
     app.post("/merchant/create/none", merchantData.createMerchantNone);
     app.put("/merchant/ingredients/update", session, merchantData.updateIngredientQuantities); //also updates some data in ingredients
     app.post("/merchant/password", merchantData.updatePassword); //TODO: change to work with session
+    app.put("/merchant/update", session, merchantData.updateData);
+    app.put("/merchant/password", session, merchantData.changePassword);
 
     //Ingredients
     app.post("/ingredients/create", session, ingredientData.createIngredient);  //also adds to merchant

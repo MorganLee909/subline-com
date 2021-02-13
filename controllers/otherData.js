@@ -30,7 +30,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                req.session.error = "ERROR: UNABLE TO RETRIEVE USER DATA";
+                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
 
                 return res.redirect("/");
             });

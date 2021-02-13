@@ -13,7 +13,7 @@ module.exports = {
                     subject: "Email verification",
                     html: verifyEmail({
                         name: merchant.name,
-                        link: `${process.env.SITE}/verify/${merchant._id}/${merchant.verifyId}`,
+                        link: `${process.env.SITE}/verify/${merchant._id}/${merchant.session.sessionId}`,
                     })
                 };
                 mailgun.messages().send(mailgunData, (err, body)=>{});
@@ -59,11 +59,10 @@ module.exports = {
     verify: function(req, res){
         Merchant.findOne({_id: req.params.id})
             .then((merchant)=>{
-                if(req.params.code !== merchant.verifyId){
+                if(req.params.code !== merchant.session.sessionId){
                     throw "UNABLE TO VERIFY EMAIL ADDRESS.  INCORRECT LINK";
                 }
 
-                merchant.verifyId = undefined;
                 merchant.status.splice(merchant.status.indexOf("unverified"), 1);
 
                 const mailgunList = mailgun.lists("clientsupport@mail.thesubline.com");

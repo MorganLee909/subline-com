@@ -54,7 +54,7 @@ module.exports = {
                 return res.json(orders);
             })
             .catch((err)=>{
-                return res.json("ERROR: UNABLE TO RETRIEVE YOUR ORDERS");
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });
     },
 

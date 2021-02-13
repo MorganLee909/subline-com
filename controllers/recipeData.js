@@ -84,7 +84,7 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO UPDATE RECIPE");
+                return res.json("ERROR: UNABLE TO UPDATE DATA");
             });
     },
 
@@ -112,7 +112,7 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
-                return res.json("ERROR: UNABLE TO RETRIEVE USER DATA");
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });
     },
 
@@ -183,7 +183,7 @@ module.exports = {
 
                     let exists = false;
                     for(let j = 0; j < ingredients.length; j++){
-                        if(ingredients[j].name === array[i][locations.ingredient]){
+                        if(ingredients[j].name.toLowerCase() === array[i][locations.ingredient].toLowerCase()){
                             currentRecipe.ingredients.push({
                                 ingredient: ingredients[j].id,
                                 quantity: helper.convertQuantityToBaseUnit(array[i][locations.amount], ingredients[j].unit)

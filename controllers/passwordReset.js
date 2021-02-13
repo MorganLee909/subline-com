@@ -18,8 +18,6 @@ module.exports = {
                     req.session.error = "USER WITH THIS EMAIL DOES NOT EXIST";
                     return res.redirect("/");
                 }
-
-                merchant.verifyId = helper.generateId(15);
                 
                 const mailgunData = {
                     from: "The Subline <clientsupport@thesubline.net>",
@@ -27,14 +25,11 @@ module.exports = {
                     subject: "Password Reset",
                     html: passwordReset({
                         name: merchant.name,
-                        link: `${process.env.SITE}/reset/${merchant._id}/${merchant.verifyId}`
+                        link: `${process.env.SITE}/reset/${merchant._id}/${merchant.session.sessionId}`
                     })
                 };
                 mailgun.messages().send(mailgunData, (err, body)=>{});
 
-                return merchant.save();
-            })
-            .then((merchant)=>{
                 req.session.success = "PASSWORD RESET EMAIL SENT";
                 return res.redirect("/");
             })
@@ -51,26 +46,25 @@ module.exports = {
     resetPassword: function(req, res){
         Merchant.findOne({_id: req.body.id})
             .then((merchant)=>{
-                if(merchant.verifyId !== req.body.code){
+                if(merchant.session.sessionId !== req.body.code){
                     req.session.error = "YOUR ACCOUNT COULD NOT BE VERIFIED.  PLEASE CONTACT US IF THE PROBLEM PERSISTS.";
                     return res.redirect("/");
                 }
 
                 if(req.body.password !== req.body.confirmPassword){
                     req.session.error = "PASSWORDS DO NOT MATCH";
-                    return res.redirect(`/reset/${merchant._id}/${merchant.verifyId}`);
+                    return res.redirect(`/reset/${merchant._id}/${merchant.session.sessionId}`);
                 }
 
                 if(req.body.password.length < 10){
                     req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
-                    return res.redirect(`/reset/${merchant._id}/${merchant.verifyId}`);
+                    return res.redirect(`/reset/${merchant._id}/${merchant.session.sessionId}`);
                 }
 
                 const salt = bcrypt.genSaltSync(10);
                 const hash = bcrypt.hashSync(req.body.password, salt);
 
                 merchant.password = hash;
-                merchant.verifyId = undefined;
 
                 return merchant.save();
             })

@@ -1,5 +1,5 @@
 let newRecipe = {
-    display: function(Recipe){
+    display: function(){
         document.getElementById("newRecipeName").value = "";
         document.getElementById("newRecipePrice").value = "";
         document.getElementById("ingredientCount").value = 1;
@@ -14,7 +14,7 @@ let newRecipe = {
         this.changeIngredientCount(categories);
 
         document.getElementById("ingredientCount").onchange = ()=>{this.changeIngredientCount(categories)};
-        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit(Recipe)};
+        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
         document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
     },
 
@@ -62,7 +62,7 @@ let newRecipe = {
         }
     },
 
-    submit: function(Recipe){
+    submit: function(){
         let newRecipe = {
             name: document.getElementById("newRecipeName").value,
             price: document.getElementById("newRecipePrice").value,

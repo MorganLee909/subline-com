@@ -1,5 +1,5 @@
 let newIngredient = {
-    display: function(Ingredient){
+    display: function(){
         const selector = document.getElementById("unitSelector");
 
         document.getElementById("newIngName").value = "";
@@ -9,7 +9,7 @@ let newIngredient = {
         selector.value = "g";
 
         selector.onchange = ()=>{this.unitChange()};
-        document.getElementById("submitNewIng").onclick = ()=>{this.submit(Ingredient)};
+        document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
         document.getElementById("ingredientFileUpload").addEventListener("click", ()=>{controller.openModal("ingredientSpreadsheet")});
     },
 
@@ -105,7 +105,7 @@ let newIngredient = {
                 
             })
             .catch((err)=>{
-                controller.createBanner("SOMETHING WENT WRONG.  TRY REFRESHING THE PAGE", "error");
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

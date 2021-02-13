@@ -1,3 +1,14 @@
+const Ingredient = require("./Ingredient.js");
+const Recipe = require("./Recipe.js");
+const Transaction = require("./Transaction.js");
+const Order = require("./Order.js");
+
+const home = require("../strands/home.js");
+const ingredients = require("../strands/ingredients.js");
+const recipeBook = require("../strands/recipeBook");
+const analytics = require("../strands/analytics.js");
+const orders = require("../strands/orders");
+
 class MerchantIngredient{
     constructor(ingredient, quantity){
         this._quantity = quantity;
@@ -66,9 +77,9 @@ class MerchantIngredient{
 }
 
 class Merchant{
-    constructor(oldMerchant, transactions, modules){
-        this._modules = modules;
+    constructor(oldMerchant, transactions){
         this._name = oldMerchant.name;
+        this._email = oldMerchant.email;
         this._pos = oldMerchant.pos;
         this._ingredients = [];
         this._recipes = [];
@@ -77,7 +88,7 @@ class Merchant{
         
         //populate ingredients
         for(let i = 0; i < oldMerchant.inventory.length; i++){
-            const ingredient = new modules.Ingredient(
+            const ingredient = new Ingredient(
                 oldMerchant.inventory[i].ingredient._id,
                 oldMerchant.inventory[i].ingredient.name,
                 oldMerchant.inventory[i].ingredient.category,
@@ -111,7 +122,7 @@ class Merchant{
                 }
             }
 
-            this._recipes.push(new this._modules.Recipe(
+            this._recipes.push(new Recipe(
                 oldMerchant.recipes[i]._id,
                 oldMerchant.recipes[i].name,
                 oldMerchant.recipes[i].price,
@@ -122,7 +133,7 @@ class Merchant{
 
         //populate transactions
         for(let i = 0; i < transactions.length; i++){
-            this._transactions.push(new modules.Transaction(
+            this._transactions.push(new Transaction(
                 transactions[i]._id,
                 transactions[i].date,
                 transactions[i].recipes,
@@ -131,16 +142,20 @@ class Merchant{
         }
     }
 
-    get modules(){
-        return this._modules;
-    }
-
     get name(){
         return this._name;
     }
 
     set name(name){
         this._name = name;
+    }
+
+    get email(){
+        return this._email;
+    }
+
+    set email(email){
+        this._email = email;
     }
 
     get pos(){
@@ -164,7 +179,7 @@ class Merchant{
     defaultUnit: String
     */
     addIngredient(ingredient, quantity, defaultUnit){
-        const createdIngredient = new this._modules.Ingredient(
+        const createdIngredient = new Ingredient(
             ingredient._id,
             ingredient.name,
             ingredient.category,
@@ -177,8 +192,8 @@ class Merchant{
         const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
     }
 
     removeIngredient(ingredient){
@@ -189,8 +204,8 @@ class Merchant{
 
         this._ingredients.splice(index, 1);
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
     }
 
     getIngredient(id){
@@ -206,11 +221,11 @@ class Merchant{
     }
 
     addRecipe(id, name, price, ingredients){
-        let recipe = new this._modules.Recipe(id, name, price, ingredients, this);
+        let recipe = new Recipe(id, name, price, ingredients, this);
 
         this._recipes.push(recipe);
 
-        this._modules.recipeBook.isPopulated = false;
+        recipeBook.isPopulated = false;
     }
 
     removeRecipe(recipe){
@@ -221,7 +236,7 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        this._modules.recipeBook.isPopulated = false;
+        recipeBook.isPopulated = false;
     }
 
     /*
@@ -258,16 +273,11 @@ class Merchant{
             }
         }
 
-        this._modules.recipeBook.isPopulated = false;
+        recipeBook.isPopulated = false;
     }
 
     get transactions(){
         return this._transactions;
-    }
-
-    //TODO: remove this, just for testing purposes
-    clearTransactions(){
-        this._transactions = [];
     }
 
     getTransactions(from = 0, to = new Date()){
@@ -285,7 +295,7 @@ class Merchant{
     }
 
     addTransaction(transaction){
-        transaction = new this._modules.Transaction(
+        transaction = new Transaction(
             transaction._id,
             transaction.date,
             transaction.recipes,
@@ -322,9 +332,9 @@ class Merchant{
             }
         }
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
-        this._modules.analytics.newData = true;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
+        analytics.newData = true;
     }
 
     removeTransaction(transaction){
@@ -358,9 +368,9 @@ class Merchant{
             }
         }
 
-        this._modules.home.isPopulated = false;
-        this._modules.ingredients.isPopulated = false;
-        this._modules.analytics.newData = true;
+        home.isPopulated = false;
+        ingredients.isPopulated = false;
+        analytics.newData = true;
     }
 
     get orders(){
@@ -372,7 +382,7 @@ class Merchant{
     }
 
     addOrder(data, isNew = false){
-        let order = new this._modules.Order(
+        let order = new Order(
             data._id,
             data.name,
             data.date,
@@ -395,8 +405,8 @@ class Merchant{
             }
         }
 
-        this._modules.ingredients.isPopulated = false;
-        this._modules.orders.isPopulated = false;
+        ingredients.isPopulated = false;
+        orders.isPopulated = false;
     }
 
     removeOrder(order){
@@ -416,8 +426,8 @@ class Merchant{
             }
         }
 
-        this._modules.ingredients.isPopulated = false;
-        this._modules.orders.isPopulated = false;
+        ingredients.isPopulated = false;
+        orders.isPopulated = false;
     }
 
     get units(){

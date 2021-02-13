@@ -1,0 +1,39 @@
+<div id="accountStrand" class="strand">
+    <div class="strandHead">
+        <h1 id="accountStrandTitle" class="strandTitle"></h1>
+    </div>
+
+    <div class="horizontal">
+        <div class="vertical">
+            <label>EMAIL
+                <input id="accountEmail" type="email">
+            </label>
+
+            <button id="accountUpdate" class="button">UPDATE</button>
+        </div>
+
+        <button id="accountShowPassword" class="button">CHANGE PASSWORD</button>
+
+        <div id="changePasswordBox" style="display:none;">
+            <label>CURRENT PASSWORD
+                <input id="accountCurrentPassword" type="password">
+            </label>
+
+            <label>NEW PASSWORD
+                <input id="accountNewPassword" type="password">
+            </label>
+
+            <label>CONFIRM NEW PASSWORD
+                <input id="accountConfirmPassword" type="password">
+            </label>
+
+            <div id="accountButtonBox" class="buttonBox">
+                <button id="cancelPasswordChange" class="button">CANCEL</button>
+
+                <button id="changePasswordButton" class="button">CHANGE PASSWORD</button>
+            </div>
+
+            <p>* This will log you out of all current sessions</p>
+        </div>
+    </div>
+</div>

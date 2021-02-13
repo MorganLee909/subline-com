@@ -270,7 +270,7 @@ let home = {
                     }
                 })
                 .catch((err)=>{
-                    controller.createBanner("SOMETHING WENT WRONG.  PLEASE REFRESH THE PAGE", "error");
+                    controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
                 })
                 .finally(()=>{
                     loader.style.display = "none";
