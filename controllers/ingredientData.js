@@ -156,7 +156,6 @@ module.exports = {
                 unitType: helper.getUnitType(array[i][locations.unit].toLowerCase())
             });
 
-            console.log(array[i][locations.unit]);
             if(array[i][locations.unit] === "bottle"){
                 ingredient.unitType = array[i][locations.bottleUnit];
                 ingredient.unitSize = helper.convertQuantityToBaseUnit(array[i][locations.bottleSize], array[i][locations.bottleUnit]);

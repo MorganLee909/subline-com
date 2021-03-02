@@ -170,7 +170,7 @@ module.exports = {
                 let recipes = [];
                 let currentRecipe = {};
                 for(let i = 1; i < array.length; i++){
-                    if(array[i].length === 0){
+                    if(array[i][locations.ingredient] === undefined){
                         continue;
                     }
 
