@@ -77,7 +77,7 @@ let editIngredient = {
             category: document.getElementById("editIngCategory").value
         }
 
-        data.quantity = quantity;
+        data.quantity = ingredient.convertToBase(quantity);
 
         //Get the measurement unit
         let units = document.getElementById("unitButtons");
