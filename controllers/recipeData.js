@@ -137,7 +137,11 @@ module.exports = {
         //get property locations
         let locations = {};
         for(let i = 0; i < array[0].length; i++){
-            switch(array[0][i].toLowerCase()){
+            let title = "";
+            try{title = array[0][i].toLowerCase()}
+            catch{title = ""}
+
+            switch(title){
                 case "name": locations.name = i; break;
                 case "price": locations.price = i; break;
                 case "ingredients": locations.ingredient = i; break;
