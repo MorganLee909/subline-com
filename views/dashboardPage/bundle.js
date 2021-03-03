@@ -319,8 +319,8 @@ class Merchant{
 
         this._ingredients.splice(index, 1);
 
-        home.isPopulated = false;
-        ingredients.isPopulated = false;
+        home.drawInventoryCheckCard();
+        ingredients.populateByProperty();
     }
 
     getIngredient(id){
