@@ -11,6 +11,7 @@ let recipeBook = {
             if(merchant.pos !== "none"){
                 document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
             }
+            
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
 
             this.populateRecipes();

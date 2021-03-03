@@ -3,9 +3,9 @@ const Recipe = require("./Recipe.js");
 const Transaction = require("./Transaction.js");
 const Order = require("./Order.js");
 
-const home = require("../strands/home.js");
+const homeStrand = require("../strands/home.js");
 const ingredientsStrand = require("../strands/ingredients.js");
-const recipeBook = require("../strands/recipeBook");
+const recipeBookStrand = require("../strands/recipeBook");
 const analytics = require("../strands/analytics.js");
 const orders = require("../strands/orders");
 
@@ -211,7 +211,7 @@ class Merchant{
 
         this._ingredients.splice(index, 1);
 
-        home.drawInventoryCheckCard();
+        homeStrand.drawInventoryCheckCard();
         ingredientsStrand.populateByProperty();
     }
 
@@ -227,12 +227,29 @@ class Merchant{
         return this._recipes;
     }
 
-    addRecipe(id, name, price, ingredients){
-        let recipe = new Recipe(id, name, price, ingredients, this);
+    /*
+    recipes: [{
+        _id: String
+        name: String
+        price: Number
+        ingredients: [{
+            ingredient: String (id)
+            quantity: Number
+        }]
+    }]
+    */
+    addRecipes(recipes){
+        for(let i = 0; i < recipes.length; i++){
+            this._recipes.push(new Recipe(
+                recipes[i]._id,
+                recipes[i].name,
+                recipes[i].price,
+                recipes[i].ingredients,
+                this
+            ));
+        }
 
-        this._recipes.push(recipe);
-
-        recipeBook.isPopulated = false;
+        recipeBookStrand.populateRecipes();
     }
 
     removeRecipe(recipe){
@@ -243,7 +260,7 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        recipeBook.isPopulated = false;
+        recipeBookStrand.populateRecipes();
     }
 
     /*
@@ -280,7 +297,7 @@ class Merchant{
             }
         }
 
-        recipeBook.isPopulated = false;
+        recipeBookStrand.isPopulated = false;
     }
 
     get transactions(){
@@ -339,7 +356,7 @@ class Merchant{
             }
         }
 
-        home.isPopulated = false;
+        homeStrand.isPopulated = false;
         ingredientsStrand.isPopulated = false;
         analytics.newData = true;
     }
@@ -375,7 +392,7 @@ class Merchant{
             }
         }
 
-        home.isPopulated = false;
+        homeStrand.isPopulated = false;
         ingredientsStrand.isPopulated = false;
         analytics.newData = true;
     }
