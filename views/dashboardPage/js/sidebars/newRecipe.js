@@ -131,14 +131,7 @@ let newRecipe = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    for(let i = 0; i < response.length; i++){
-                        merchant.addRecipe(
-                            response[i]._id,
-                            response[i].name,
-                            response[i].price,
-                            response[i].ingredients
-                        );
-                    }
+                    merchant.addRecipes(response);
 
                     controller.createBanner("ALL INGREDIENTS SUCCESSFULLY CREATED", "success");
                     controller.openStrand("recipeBook");
