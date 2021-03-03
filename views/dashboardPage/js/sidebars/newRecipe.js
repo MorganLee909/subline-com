@@ -133,7 +133,7 @@ let newRecipe = {
                 }else{
                     merchant.addRecipes(response);
 
-                    controller.createBanner("ALL INGREDIENTS SUCCESSFULLY CREATED", "success");
+                    controller.createBanner("ALL RECIPES SUCCESSFULLY CREATED", "success");
                     controller.openStrand("recipeBook");
                 }
             })

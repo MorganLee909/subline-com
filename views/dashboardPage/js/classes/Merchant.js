@@ -6,7 +6,7 @@ const Order = require("./Order.js");
 const homeStrand = require("../strands/home.js");
 const ingredientsStrand = require("../strands/ingredients.js");
 const recipeBookStrand = require("../strands/recipeBook");
-const analytics = require("../strands/analytics.js");
+const analyticsStrand = require("../strands/analytics.js");
 const ordersStrand = require("../strands/orders");
 
 class MerchantIngredient{
@@ -227,6 +227,14 @@ class Merchant{
         return this._recipes;
     }
 
+    getRecipe(id){
+        for(let i = 0; i < this._recipes.length; i++){
+            if(this._recipes[i].id === id){
+                return this._recipes[i];
+            }
+        }
+    }
+
     /*
     recipes: [{
         _id: String
@@ -281,83 +289,65 @@ class Merchant{
         return this._transactions.slice(start, end + 1);
     }
 
-    addTransaction(transaction){
-        transaction = new Transaction(
-            transaction._id,
-            transaction.date,
-            transaction.recipes,
-            this
-        );
+    /*
+    transactions: [{
+        _id: String,
+        date: String (date)
+        recipes: [{
+            recipe: String (id)
+            quantity: Number
+        }]
+    }]
+    */
+    addTransactions(transactions, isNew = false){
+        for(let i = 0; i < transactions.length; i++){
+            let transaction = new Transaction(
+                transactions[i]._id,
+                transactions[i].date,
+                transactions[i].recipes,
+                this
+            );
 
-        this._transactions.push(transaction);
-        this._transactions.sort((a, b)=>{
-            if(a.date > b.date){
-                return -1;
-            }
-            return 1;
-        });
+            this._transactions.push(transaction);
 
-        let ingredients = {};
-        for(let i = 0; i < transaction.recipes.length; i++){
-            const recipe = transaction.recipes[i];
-            for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                const ingredient = recipe.recipe.ingredients[j];
-                if(ingredients[ingredient.ingredient.id]){
-                    ingredients[ingredient.ingredient.id] += recipe.quantity * ingredient.quantity;
-                }else{
-                    ingredients[ingredient.ingredient.id] = recipe.quantity * ingredient.quantity;
+            if(isNew === true){
+                for(let j = 0; j < transaction.recipes.length; j++){
+                    let recipe = transaction.recipes[j].recipe;
+                    for(let k = 0; k < recipe.ingredients.length; k++){
+                        let ingredient = recipe.ingredients[k].ingredient;
+                        let quantity = transaction.recipes[j].quantity * recipe.ingredients[k].quantity;
+
+                        this.getIngredient(ingredient.id).updateQuantity(-quantity);
+                    }
                 }
             }
         }
 
-        const keys = Object.keys(ingredients);
-        for(let i = 0; i < keys.length; i++){
-            for(let j = 0; j < this._ingredients.length; j++){
-                if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients[j].updateQuantity(-ingredients[keys[i]]);
-                }
-            }
-        }
+        this.transactions.sort((a, b) => (a.date > b.date) ? 1 : -1);
 
         homeStrand.isPopulated = false;
-        ingredientsStrand.isPopulated = false;
-        analytics.newData = true;
+        ingredientsStrand.populateByProperty();
+        analyticsStrand.displayIngredient();
+        analyticsStrand.displayRecipe();
     }
 
     removeTransaction(transaction){
-        const index = this._transactions.indexOf(transaction);
-        if(index === undefined){
-            return false;
-        }
+        for(let j = 0; j < transaction.recipes.length; j++){
+            let recipe = transaction.recipes[j].recipe;
+            for(let k = 0; k < recipe.ingredients.length; k++){
+                let ingredient = recipe.ingredients[k].ingredient;
+                let quantity = transaction.recipes[j].quantity * recipe.ingredients[k].quantity;
 
-        this._transactions.splice(index, 1);
-
-        let ingredients = {};
-        for(let i = 0; i < transaction.recipes.length; i++){
-            const recipe = transaction.recipes[i];
-            for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                const ingredient = recipe.recipe.ingredients[j];
-                if(ingredients[ingredient.ingredient.id]){
-                    ingredients[ingredient.ingredient.id] += ingredient.quantity * recipe.quantity;
-                }else{
-                    ingredients[ingredient.ingredient.id] = ingredient.quantity * recipe.quantity;
-                }
+                this.getIngredient(ingredient.id).updateQuantity(quantity);
             }
         }
 
-        const keys = Object.keys(ingredients);
-        for(let i = 0; i < keys.length; i++){
-            for(let j = 0; j < this._ingredients.length; j++){
-                if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients[j].updateQuantity(ingredients[keys[i]]);
-                    break;
-                }
-            }
-        }
+        this._transactions.splice(this._transactions.indexOf(transaction), 1);
 
         homeStrand.isPopulated = false;
-        ingredientsStrand.isPopulated = false;
-        analytics.newData = true;
+        ingredientsStrand.populateByProperty();
+        analyticsStrand.displayIngredient();
+        analyticsStrand.displayRecipe();
     }
 
     get orders(){
