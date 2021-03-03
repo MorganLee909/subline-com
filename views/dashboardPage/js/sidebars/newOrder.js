@@ -62,7 +62,7 @@ let newOrder = {
             taxes: taxes,
             fees: fees,
             ingredients: []
-        }
+        };
 
         for(let i = 0; i < ingredients.length; i++){
             let quantity = ingredients[i].children[1].children[0].value;
@@ -90,7 +90,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addOrder(response, true);
+                    merchant.addOrders([response], true);
                     
                     controller.openStrand("orders", merchant.orders);
                     controller.createBanner("NEW ORDER CREATED", "success");

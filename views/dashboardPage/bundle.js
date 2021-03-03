@@ -123,7 +123,7 @@ const homeStrand = require("../strands/home.js");
 const ingredientsStrand = require("../strands/ingredients.js");
 const recipeBookStrand = require("../strands/recipeBook");
 const analytics = require("../strands/analytics.js");
-const orders = require("../strands/orders");
+const ordersStrand = require("../strands/orders");
 
 class MerchantIngredient{
     constructor(ingredient, quantity){
@@ -484,32 +484,43 @@ class Merchant{
         this._orders = [];
     }
 
-    addOrder(data, isNew = false){
-        let order = new Order(
-            data._id,
-            data.name,
-            data.date,
-            data.taxes,
-            data.fees,
-            data.ingredients,
-            this
-        );
+    /*
+    orders: [{
+        _id: String,
+        name: String,
+        date: String (date)
+        taxes: Number
+        fees: Number
+        ingredients: [{
+            ingredient: String (id),
+            pricePerUnit: Number
+            quantity: Number
+        }]
+    }]
+    */
+    addOrders(orders, isNew = false){
+        for(let i = 0; i < orders.length; i++){
+            let order = new Order(
+                orders[i]._id,
+                orders[i].name,
+                orders[i].date,
+                orders[i].taxes,
+                orders[i].fees,
+                orders[i].ingredients,
+                this
+            );
 
-        this._orders.push(order);
+            this._orders.push(order);
 
-        if(isNew){
-            for(let i = 0; i < order.ingredients.length; i++){
-                for(let j = 0; j < this._ingredients.length; j++){
-                    if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
-                        this._ingredients[j].updateQuantity(order.ingredients[i].quantity);
-                        break;
-                    }
+            if(isNew === true){
+                for(let j = 0; j < order.ingredients.length; j++){
+                    this.getIngredient(order.ingredients[j].ingredient.id).updateQuantity(order.ingredients[j].quantity);
                 }
             }
         }
 
-        ingredientsStrand.isPopulated = false;
-        orders.isPopulated = false;
+        ingredientsStrand.populateByProperty();
+        ordersStrand.displayOrders();
     }
 
     removeOrder(order){
@@ -530,7 +541,7 @@ class Merchant{
         }
 
         ingredientsStrand.isPopulated = false;
-        orders.isPopulated = false;
+        ordersStrand.isPopulated = false;
     }
 
     get units(){
@@ -733,11 +744,9 @@ class Merchant{
 
 module.exports = Merchant;
 },{"../strands/analytics.js":21,"../strands/home.js":22,"../strands/ingredients.js":23,"../strands/orders":24,"../strands/recipeBook":25,"./Ingredient.js":1,"./Order.js":3,"./Recipe.js":4,"./Transaction.js":5}],3:[function(require,module,exports){
-const ingredients = require("../strands/ingredients.js");
-
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
-        this._ingredient = ingredient;
+        this._ingredient = merchant.getIngredient(ingredient).ingredient;
         this._quantity = quantity;
         this._pricePerUnit = pricePerUnit;
     }
@@ -833,7 +842,7 @@ date = Date Object for when the order was created
 taxes = User entered taxes associated with the order
 fees = User entered fees associated with the order
 ingredients = [{
-    ingredient: Ingredient Object,
+    ingredient: Ingredient ID,
     quantity: quantity of ingredient sold,
     pricePerUnit: price of purchase (per base unit)
 }]
@@ -850,21 +859,12 @@ class Order{
         this._parent = parent;
 
         for(let i = 0; i < ingredients.length; i++){
-            for(let j = 0; j < merchant.ingredients.length; j++){
-                if(merchant.ingredients[j].ingredient.id === ingredients[i].ingredient){
-                    let thing = new OrderIngredient(
-                        merchant.ingredients[j].ingredient,
-                        ingredients[i].quantity,
-                        ingredients[i].pricePerUnit
-                    );
-                    this._ingredients.push(thing);
-                    break;
-                }
-            }
-            
+            this._ingredients.push(new OrderIngredient(
+                ingredients[i].ingredient,
+                ingredients[i].quantity,
+                ingredients[i].pricePerUnit
+            ));
         }
-
-        ingredients.isPopulated = false;
     }
 
     get id(){
@@ -909,7 +909,7 @@ class Order{
 }
 
 module.exports = Order;
-},{"../strands/ingredients.js":23}],4:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 const recipeBook = require("../strands/recipeBook.js");
 const analytics = require("../strands/analytics.js");
 
@@ -1976,7 +1976,7 @@ let newOrder = {
             taxes: taxes,
             fees: fees,
             ingredients: []
-        }
+        };
 
         for(let i = 0; i < ingredients.length; i++){
             let quantity = ingredients[i].children[1].children[0].value;
@@ -2004,7 +2004,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addOrder(response, true);
+                    merchant.addOrders([response], true);
                     
                     controller.openStrand("orders", merchant.orders);
                     controller.createBanner("NEW ORDER CREATED", "success");
@@ -3766,10 +3766,7 @@ let orders = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.clearOrders();
-
-                    for(let i = 0; i < response.length; i++){
-                        merchant.addOrder(response[i], true);
-                    }
+                    merchant.addOrders(response);
                 }
             })
             .catch((err)=>{

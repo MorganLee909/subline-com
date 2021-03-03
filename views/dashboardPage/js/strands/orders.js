@@ -51,10 +51,7 @@ let orders = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.clearOrders();
-
-                    for(let i = 0; i < response.length; i++){
-                        merchant.addOrder(response[i], true);
-                    }
+                    merchant.addOrders(response);
                 }
             })
             .catch((err)=>{

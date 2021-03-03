@@ -7,7 +7,7 @@ const homeStrand = require("../strands/home.js");
 const ingredientsStrand = require("../strands/ingredients.js");
 const recipeBookStrand = require("../strands/recipeBook");
 const analytics = require("../strands/analytics.js");
-const orders = require("../strands/orders");
+const ordersStrand = require("../strands/orders");
 
 class MerchantIngredient{
     constructor(ingredient, quantity){
@@ -368,32 +368,43 @@ class Merchant{
         this._orders = [];
     }
 
-    addOrder(data, isNew = false){
-        let order = new Order(
-            data._id,
-            data.name,
-            data.date,
-            data.taxes,
-            data.fees,
-            data.ingredients,
-            this
-        );
+    /*
+    orders: [{
+        _id: String,
+        name: String,
+        date: String (date)
+        taxes: Number
+        fees: Number
+        ingredients: [{
+            ingredient: String (id),
+            pricePerUnit: Number
+            quantity: Number
+        }]
+    }]
+    */
+    addOrders(orders, isNew = false){
+        for(let i = 0; i < orders.length; i++){
+            let order = new Order(
+                orders[i]._id,
+                orders[i].name,
+                orders[i].date,
+                orders[i].taxes,
+                orders[i].fees,
+                orders[i].ingredients,
+                this
+            );
 
-        this._orders.push(order);
+            this._orders.push(order);
 
-        if(isNew){
-            for(let i = 0; i < order.ingredients.length; i++){
-                for(let j = 0; j < this._ingredients.length; j++){
-                    if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
-                        this._ingredients[j].updateQuantity(order.ingredients[i].quantity);
-                        break;
-                    }
+            if(isNew === true){
+                for(let j = 0; j < order.ingredients.length; j++){
+                    this.getIngredient(order.ingredients[j].ingredient.id).updateQuantity(order.ingredients[j].quantity);
                 }
             }
         }
 
-        ingredientsStrand.isPopulated = false;
-        orders.isPopulated = false;
+        ingredientsStrand.populateByProperty();
+        ordersStrand.displayOrders();
     }
 
     removeOrder(order){
@@ -414,7 +425,7 @@ class Merchant{
         }
 
         ingredientsStrand.isPopulated = false;
-        orders.isPopulated = false;
+        ordersStrand.isPopulated = false;
     }
 
     get units(){
