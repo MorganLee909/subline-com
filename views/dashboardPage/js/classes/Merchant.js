@@ -192,8 +192,7 @@ class Merchant{
         const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
         this._ingredients.push(merchantIngredient);
 
-        home.isPopulated = false;
-        ingredients.isPopulated = false;
+        ingredients.populateByProperty();
     }
 
     removeIngredient(ingredient){
