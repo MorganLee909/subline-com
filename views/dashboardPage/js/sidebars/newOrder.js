@@ -110,7 +110,7 @@ let newOrder = {
             case "kg": return price / 1000; 
             case "oz": return price / 28.3495; 
             case "lb": return price / 453.5924; 
-            case "ml": return price * 1000; 
+            case "ml": return price * 1000;
             case "l": return price;
             case "tsp": return price * 202.8842; 
             case "tbsp": return price * 67.6278; 
