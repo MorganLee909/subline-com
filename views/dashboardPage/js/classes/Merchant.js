@@ -263,43 +263,6 @@ class Merchant{
         recipeBookStrand.populateRecipes();
     }
 
-    /*
-    recipe = {
-        name: required,
-        price: required,
-        ingredients: [{
-            ingredient: id of ingredient,
-            quantity: quantity of ingredient
-        }]
-    }
-    */
-    updateRecipe(recipe){
-        for(let i = 0; i < this._recipes.length; i++){
-            if(this._recipes[i].id === recipe._id){
-                this._recipes[i].name = recipe.name;
-                this._recipes[i].price = recipe.price;
-                
-                this._recipes[i].removeIngredients();
-                for(let j = 0; j < recipe.ingredients.length; j++){
-                    for(let k = 0; k < this._ingredients.length; k++){
-                        if(this._ingredients[k].ingredient.id === recipe.ingredients[j].ingredient){
-                            this._recipes[i].addIngredient(
-                                this._ingredients[k].ingredient,
-                                recipe.ingredients[j].quantity
-                            );
-
-                            break;
-                        }
-                    }
-                }
-
-                break;
-            }
-        }
-
-        recipeBookStrand.isPopulated = false;
-    }
-
     get transactions(){
         return this._transactions;
     }
