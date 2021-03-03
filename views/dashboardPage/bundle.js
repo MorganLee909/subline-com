@@ -2040,7 +2040,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addOrder(response, true);
+                    merchant.addOrders([response], true);
 
                     controller.createBanner("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY", "success");
                     controller.openStrand("orders");
