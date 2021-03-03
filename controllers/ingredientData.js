@@ -95,7 +95,7 @@ module.exports = {
                         updatedIngredient = {
                             ingredient: ingredient,
                             quantity: req.body.quantity,
-                            unit: req.body.unit
+                            defaultUnit: req.body.unit
                         }
                         
                         break;
