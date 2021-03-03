@@ -264,7 +264,7 @@ let home = {
                     }else{
                         for(let i = 0; i < response.length; i++){
                             merchant.removeIngredient(merchant.getIngredient(response[i].ingredient._id));
-                            merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
+                            merchant.addIngredients(response);
                         }
                         controller.createBanner("INGREDIENTS UPDATED", "success");
                     }

@@ -61,7 +61,7 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addIngredient(response.ingredient, response.quantity, response.defaultUnit);
+                    merchant.addIngredients([response]);
                     controller.openStrand("ingredients");
 
                     controller.createBanner("INGREDIENT CREATED", "success");
@@ -95,9 +95,7 @@ let newIngredient = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    for(let i = 0; i < response.length; i++){
-                        merchant.addIngredient(response[i].ingredient, response[i].quantity, response[i].defaultUnit);
-                    }
+                    merchant.addIngredients(response);
 
                     controller.createBanner("INGREDIENTS SUCCESSFULLY ADDED", "success");
                     controller.openStrand("ingredients");

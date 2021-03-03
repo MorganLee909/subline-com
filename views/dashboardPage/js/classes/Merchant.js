@@ -4,7 +4,7 @@ const Transaction = require("./Transaction.js");
 const Order = require("./Order.js");
 
 const home = require("../strands/home.js");
-const ingredients = require("../strands/ingredients.js");
+const ingredientsStrand = require("../strands/ingredients.js");
 const recipeBook = require("../strands/recipeBook");
 const analytics = require("../strands/analytics.js");
 const orders = require("../strands/orders");
@@ -167,32 +167,40 @@ class Merchant{
     }
 
     /*
-    ingredient: {
-        _id: String,
-        name: String,
-        category: String,
-        unitType: String,
-        specialUnit: String || undefined,
-        unitSize: Number || undefined
-    }
-    quantity: Number
-    defaultUnit: String
+    ingredient: [{
+        ingredient: {
+            _id: String,
+            name: String,
+            category: String,
+            unitType: String,
+            specialUnit: String || undefined,
+            unitSize: Number || undefined
+        }
+        quantity: Number
+        defaultUnit: String
+    }]
     */
-    addIngredient(ingredient, quantity, defaultUnit){
-        const createdIngredient = new Ingredient(
-            ingredient._id,
-            ingredient.name,
-            ingredient.category,
-            ingredient.unitType,
-            defaultUnit,
-            this,
-            ingredient.unitSize
-        );
+    addIngredients(ingredients){
+        for(let i = 0; i < ingredients.length; i++){
+            let ingredient = ingredients[i].ingredient;
+            let quantity = ingredients[i].quantity;
+            let defaultUnit = ingredients[i].defaultUnit;
 
-        const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
-        this._ingredients.push(merchantIngredient);
+            const createdIngredient = new Ingredient(
+                ingredient._id,
+                ingredient.name,
+                ingredient.category,
+                ingredient.unitType,
+                defaultUnit,
+                this,
+                ingredient.unitSize
+            );
 
-        ingredients.populateByProperty();
+            const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
+            this._ingredients.push(merchantIngredient);
+        }
+
+        ingredientsStrand.populateByProperty();
     }
 
     removeIngredient(ingredient){
@@ -204,7 +212,7 @@ class Merchant{
         this._ingredients.splice(index, 1);
 
         home.drawInventoryCheckCard();
-        ingredients.populateByProperty();
+        ingredientsStrand.populateByProperty();
     }
 
     getIngredient(id){
@@ -332,7 +340,7 @@ class Merchant{
         }
 
         home.isPopulated = false;
-        ingredients.isPopulated = false;
+        ingredientsStrand.isPopulated = false;
         analytics.newData = true;
     }
 
@@ -368,7 +376,7 @@ class Merchant{
         }
 
         home.isPopulated = false;
-        ingredients.isPopulated = false;
+        ingredientsStrand.isPopulated = false;
         analytics.newData = true;
     }
 
@@ -404,7 +412,7 @@ class Merchant{
             }
         }
 
-        ingredients.isPopulated = false;
+        ingredientsStrand.isPopulated = false;
         orders.isPopulated = false;
     }
 
@@ -425,7 +433,7 @@ class Merchant{
             }
         }
 
-        ingredients.isPopulated = false;
+        ingredientsStrand.isPopulated = false;
         orders.isPopulated = false;
     }
 
