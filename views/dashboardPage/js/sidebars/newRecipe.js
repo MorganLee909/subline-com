@@ -115,6 +115,9 @@ let newRecipe = {
         event.preventDefault();
         controller.closeModal();
 
+        let checkbox = document.getElementById("spreadsheetRecipeIsSquare");
+        let route = (checkbox.checked === true) ? "/recipes/create/spreadsheet/square": "/recipes/create/spreadsheet";
+
         const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
         data.append("recipes", file);
@@ -122,7 +125,7 @@ let newRecipe = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/recipes/create/spreadsheet", {
+        fetch(route, {
             method: "post",
             body: data
         })

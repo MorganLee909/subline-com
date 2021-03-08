@@ -228,6 +228,10 @@ module.exports = {
             });
     },
 
+    spreadsheetUpSquare: function(req, res){
+        console.log("butt stuff");
+    },
+
     spreadsheetTemplate: function(req, res){
         res.locals.merchant
             .populate("inventory.ingredient")

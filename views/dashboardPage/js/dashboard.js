@@ -202,6 +202,7 @@ controller = {
                 content.style.display = "flex";
                 document.getElementById("modalSpreadsheetTitle").innerText = "recipes";
                 document.getElementById("spreadsheetDownload").href = "/recipes/download/spreadsheet";
+                document.getElementById("spreadsheetRecipeIsSquare").parentElement.style.display = "flex";
                 content.onsubmit = newRecipe.submitSpreadsheet;
                 break;
             case "orderSpreadsheet":
