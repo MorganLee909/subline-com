@@ -240,7 +240,7 @@ module.exports = {
     },
 
     isSanitary: function(strings){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "(", ")"];
+        let disallowed = ["\\", "<", ">", "$", "{", "}", "."];
 
         for(let i = 0; i < strings.length; i++){
             for(let j = 0; j < disallowed.length; j++){
