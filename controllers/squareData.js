@@ -10,9 +10,11 @@ module.exports = {
         return res.redirect(`${process.env.SQUARE_ADDRESS}/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
     },
 
+    //GET: Used by square. This route is used for the authentication code
+    //Redirects to either dashboard or new merchant creation
     authorize: function(req, res){
         const code = req.url.slice(req.url.indexOf("code=") + 5, req.url.indexOf("&"));
-        const url = `${process.env.SQUARE_ADDRESS}/oauth2/token?`;
+        const url = `${process.env.SQUARE_ADDRESS}/oauth2/token`;
         let data = {
             client_id: process.env.SUBLINE_SQUARE_APPID,
             client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
@@ -31,7 +33,7 @@ module.exports = {
     
                     return merchant.save()
                         .then((merchant)=>{
-                            req.session.user = merchant._id;
+                            req.session.user = merchant.session.sessionId;
                             return res.redirect("/dashboard");
                         })
                         .catch((err)=>{
@@ -51,6 +53,8 @@ module.exports = {
             });
     },
 
+    //GET: Gathers all data from square to create our merchant
+    //Redirects to the dashboard
     createMerchant: function(req, res){
         let merchant = {}
     
