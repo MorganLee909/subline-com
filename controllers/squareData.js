@@ -1,5 +1,6 @@
 const Merchant = require("../models/merchant.js");
 const Recipe = require("../models/recipe.js");
+const Transaction = require("../models/transaction.js");
 
 const axios = require("axios");
 const helper = require("./helper.js");
@@ -140,7 +141,49 @@ module.exports = {
             .then((response)=>{
                 req.session.user = response[1].session.sessionId;
     
-                return res.redirect("/dashboard");
+                res.redirect("/dashboard");
+
+                let body = {
+                    location_ids: [merchant.squareLocation],
+                    limit: 10000,
+                    query: {}
+                };
+                let options = {
+                    headers: {
+                        Authorization: `Bearer ${merchant.posAccessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                };
+                return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
+            })
+            .then((response)=>{
+                let transactions = [];
+
+                for(let i = 0; i < response.data.orders.length; i++){
+                    let transaction = new Transaction({
+                        merchant: merchant._id,
+                        date: new Date(response.data.orders[i].created_at),
+                        posId: response.data.orders[i].id,
+                        recipes: []
+                    });
+
+                    for(let j = 0; j < response.data.orders[i].line_items.length; j++){
+                        let item = response.data.orders[i].line_items[j];
+
+                        for(let k = 0; k < merchant.recipes.length; k++){
+                            if(merchant.recipes[k].posId === item.catalog_object_id){
+                                transaction.recipes.push({
+                                    recipe: merchant.recipes[k]._id,
+                                    quantity: parseInt(item.quantity)
+                                })
+                            }
+                        }
+                    }
+
+                    transactions.push(transaction);
+                }
+
+                return Transaction.create(transactions);
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
@@ -152,5 +195,5 @@ module.exports = {
                 }
                 return res.redirect("/");
             });
-    },
+    }
 }
