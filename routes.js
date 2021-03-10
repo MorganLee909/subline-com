@@ -8,6 +8,7 @@ const orderData = require("./controllers/orderData.js");
 const informationPages = require("./controllers/informationPages.js");
 const emailVerification = require("./controllers/emailVerification.js");
 const passwordReset = require("./controllers/passwordReset.js");
+const squareData = require("./controllers/squareData.js");
 
 const session = require("./middleware.js").verifySession;
 const banner = require("./middleware.js").formatBanner;
@@ -78,4 +79,9 @@ module.exports = function(app){
     app.post("/reset/email", passwordReset.generateCode);
     app.get("/reset/:id/:code", banner, passwordReset.enterPassword);
     app.post("/reset", passwordReset.resetPassword);
+
+    //Square
+    app.get("/squarelogin", squareData.redirect);
+    app.get("/squareauth", squareData.authorize);
+    app.get("/merchant/create/square", squareData.createMerchant);
 }

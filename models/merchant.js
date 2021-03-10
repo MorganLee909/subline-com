@@ -24,10 +24,7 @@ const MerchantSchema = new mongoose.Schema({
         },
         index: true
     },
-    password: {
-        type: String,
-        required: [true, "MUST PROVIDE A PASSWORD"],
-    },
+    password: String,
     pos: {
         type: String,
         required: true
