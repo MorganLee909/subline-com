@@ -156,7 +156,7 @@ module.exports = {
                 };
                 return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
             })
-            .then((response)=>{
+            .then(async (response)=>{
                 let transactions = [];
 
                 for(let i = 0; i < response.data.orders.length; i++){
@@ -181,6 +181,46 @@ module.exports = {
                     }
 
                     transactions.push(transaction);
+                }
+
+                while(response.data.cursor !== undefined){
+                    let body = {
+                        location_ids: [merchant.squareLocation],
+                        limit: 10000,
+                        cursor: response.data.cursor,
+                        query: {}
+                    };
+                    let options = {
+                        headers: {
+                            Authorization: `Bearer ${merchant.posAccessToken}`,
+                            "Content-Type": "application/json"
+                        }
+                    };
+                    let response = await axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
+                    
+                    for(let i = 0; i < response.data.orders.length; i++){
+                        let transaction = new Transaction({
+                            merchant: merchant._id,
+                            date: new Date(response.data.orders[i].created_at),
+                            posId: response.data.orders[i].id,
+                            recipes: []
+                        });
+    
+                        for(let j = 0; j < response.data.orders[i].line_items.length; j++){
+                            let item = response.data.orders[i].line_items[j];
+    
+                            for(let k = 0; k < merchant.recipes.length; k++){
+                                if(merchant.recipes[k].posId === item.catalog_object_id){
+                                    transaction.recipes.push({
+                                        recipe: merchant.recipes[k]._id,
+                                        quantity: parseInt(item.quantity)
+                                    })
+                                }
+                            }
+                        }
+    
+                        transactions.push(transaction);
+                    }
                 }
 
                 return Transaction.create(transactions);
