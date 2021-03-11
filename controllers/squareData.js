@@ -2,13 +2,53 @@ const Merchant = require("../models/merchant.js");
 const Recipe = require("../models/recipe.js");
 const Transaction = require("../models/transaction.js");
 
-const axios = require("axios");
 const helper = require("./helper.js");
 
+const axios = require("axios");
+const bcrypt = require("bcryptjs");
+
 module.exports = {
-    //GET - Redirects user to Square OAuth page
+    /*POST - Redirects user to Square OAuth and saves input data
+    req.body = {
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    }
+    */
     redirect: function(req, res){
-        return res.redirect(`${process.env.SQUARE_ADDRESS}/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
+        if(req.body.password !== req.body.confirmPassword){
+            req.session.error = "YOUR PASSWORDS DO NOT MATCH";
+            return res.redirect("/");
+        }
+
+        let expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 90);
+
+        let salt = bcrypt.genSaltSync(10);
+        let hash = bcrypt.hashSync(req.body.password, salt);
+
+        let merchant = new Merchant({
+            name: req.body.name,
+            email: req.body.email,
+            password: hash,
+            pos: "square",
+            inventory: [],
+            recipes: [],
+            session: {
+                sessionId: helper.generateId(25),
+                expiration: expirationDate
+            }
+        });
+
+        merchant.save()
+            .then((response)=>{
+                return res.redirect(`${process.env.SQUARE_ADDRESS}/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
+            })
+            .catch((err)=>{
+                res.session.error = "ERROR: UNABLE TO CREATE NEW USER";
+                return res.redirect("/");
+            });
     },
 
     //GET: Used by square. This route is used for the authentication code
