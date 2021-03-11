@@ -110,17 +110,16 @@ module.exports = {
                 let recipes = [];
                 
                 for(let i = 0; i < response[0].data.objects.length; i++){
-                    console.log(response[0].data.objects[i].item_data);
                     if(response[0].data.objects[i].item_data.variations.length > 1){
                         for(let j = 0; j < response[0].data.objects[i].item_data.variations.length; j++){
                             let item = response[0].data.objects[i].item_data.variations[j];
                             let price = 0;
-                            if(item.price_money !== undefined) price = item.price_money.amount;
+                            if(item.item_variation_data.price_money !== undefined) price = item.item_variation_data.price_money.amount;
                             let recipe = new Recipe({
                                 posId: item.id,
                                 merchant: merchant._id,
                                 name: `${response[0].data.objects[i].item_data.name} '${item.item_variation_data.name}'`,
-                                price: price
+                                price: item.item_variation_data.price_money.amount
                             });
     
                             recipes.push(recipe);
