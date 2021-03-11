@@ -119,7 +119,7 @@ module.exports = {
                                 posId: item.id,
                                 merchant: merchant._id,
                                 name: `${response[0].data.objects[i].item_data.name} '${item.item_variation_data.name}'`,
-                                price: item.item_variation_data.price_money.amount
+                                price: price
                             });
     
                             recipes.push(recipe);
