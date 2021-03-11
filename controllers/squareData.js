@@ -112,11 +112,14 @@ module.exports = {
                 for(let i = 0; i < response[0].data.objects.length; i++){
                     if(response[0].data.objects[i].item_data.variations.length > 1){
                         for(let j = 0; j < response[0].data.objects[i].item_data.variations.length; j++){
+                            let item = response[0].data.objects[i].item_data.variations[j];
+                            let price = 0;
+                            if(item.price_money !== undefined) price = item.price_money.amount;
                             let recipe = new Recipe({
-                                posId: response[0].data.objects[i].item_data.variations[j].id,
+                                posId: item.id,
                                 merchant: merchant._id,
-                                name: `${response[0].data.objects[i].item_data.name} '${response[0].data.objects[i].item_data.variations[j].item_variation_data.name}'`,
-                                price: response[0].data.objects[i].item_data.variations[j].item_variation_data.price_money.amount
+                                name: `${response[0].data.objects[i].item_data.name} '${item.item_variation_data.name}'`,
+                                price: price
                             });
     
                             recipes.push(recipe);
@@ -167,6 +170,7 @@ module.exports = {
                         recipes: []
                     });
 
+                    if(response.data.orders[i].line_items === undefined) continue;
                     for(let j = 0; j < response.data.orders[i].line_items.length; j++){
                         let item = response.data.orders[i].line_items[j];
 
@@ -183,22 +187,27 @@ module.exports = {
                     transactions.push(transaction);
                 }
 
-                while(response.data.cursor !== undefined){
-                    let body = {
-                        location_ids: [merchant.squareLocation],
-                        limit: 10000,
-                        cursor: response.data.cursor,
-                        query: {}
-                    };
-                    let options = {
-                        headers: {
-                            Authorization: `Bearer ${merchant.posAccessToken}`,
-                            "Content-Type": "application/json"
-                        }
-                    };
+                let body = {
+                    location_ids: [merchant.squareLocation],
+                    limit: 10000,
+                    cursor: cursor,
+                    query: {}
+                };
+                let options = {
+                    headers: {
+                        Authorization: `Bearer ${merchant.posAccessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                };
+
+                let m = 0;
+                while(body.cursor !== undefined){
                     let response = await axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
+                    body.cursor = response.data.cursor;
+                    console.log(m);
                     
                     for(let i = 0; i < response.data.orders.length; i++){
+                        m++;
                         let transaction = new Transaction({
                             merchant: merchant._id,
                             date: new Date(response.data.orders[i].created_at),
@@ -220,6 +229,7 @@ module.exports = {
                         }
     
                         transactions.push(transaction);
+                        if(i === 80) console.log(transaction.date);
                     }
                 }
 
