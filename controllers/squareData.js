@@ -110,6 +110,7 @@ module.exports = {
                 let recipes = [];
                 
                 for(let i = 0; i < response[0].data.objects.length; i++){
+                    console.log(response[0].data.objects[i].item_data);
                     if(response[0].data.objects[i].item_data.variations.length > 1){
                         for(let j = 0; j < response[0].data.objects[i].item_data.variations.length; j++){
                             let item = response[0].data.objects[i].item_data.variations[j];
@@ -145,7 +146,7 @@ module.exports = {
                 req.session.user = response[1].session.sessionId;
     
                 res.redirect("/dashboard");
-
+                return;
                 let body = {
                     location_ids: [merchant.squareLocation],
                     limit: 10000,
@@ -160,6 +161,7 @@ module.exports = {
                 return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
             })
             .then(async (response)=>{
+                return;
                 let transactions = [];
 
                 for(let i = 0; i < response.data.orders.length; i++){
@@ -190,7 +192,7 @@ module.exports = {
                 let body = {
                     location_ids: [merchant.squareLocation],
                     limit: 10000,
-                    cursor: cursor,
+                    cursor: response.data.cursor,
                     query: {}
                 };
                 let options = {
@@ -200,14 +202,11 @@ module.exports = {
                     }
                 };
 
-                let m = 0;
                 while(body.cursor !== undefined){
                     let response = await axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
                     body.cursor = response.data.cursor;
-                    console.log(m);
                     
                     for(let i = 0; i < response.data.orders.length; i++){
-                        m++;
                         let transaction = new Transaction({
                             merchant: merchant._id,
                             date: new Date(response.data.orders[i].created_at),
@@ -215,6 +214,7 @@ module.exports = {
                             recipes: []
                         });
     
+                        if(responose.data.orders[i].line_items === undefined) continue;
                         for(let j = 0; j < response.data.orders[i].line_items.length; j++){
                             let item = response.data.orders[i].line_items[j];
     
@@ -229,7 +229,6 @@ module.exports = {
                         }
     
                         transactions.push(transaction);
-                        if(i === 80) console.log(transaction.date);
                     }
                 }
 
