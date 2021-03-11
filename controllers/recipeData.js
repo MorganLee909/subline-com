@@ -93,6 +93,9 @@ module.exports = {
         if(res.locals.merchant.pos === "clover"){
             return res.json("YOU MUST EDIT YOUR RECIPES INSIDE CLOVER");
         }
+        if(res.locals.merchant.pos === "square"){
+            return res.json("YOU MUST EDIT YOUR RECIPES INSIDE SQUARE");
+        }
         
         for(let i = 0; i < res.locals.merchant.recipes.length; i++){
             if(res.locals.merchant.recipes[i].toString() === req.params.id){
