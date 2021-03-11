@@ -183,6 +183,13 @@ RegisterPage
         margin: 20px auto 0 auto;
     }
 
+    #noneButton{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+    }
+
 /*
 Footer Partial
 */
