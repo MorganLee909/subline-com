@@ -55,49 +55,6 @@ module.exports = {
             });
     },
 
-    //GET: Used by square. This route is used for the authentication code
-    //Redirects to either dashboard or new merchant creation
-    // authorize: function(req, res){
-    //     const code = req.url.slice(req.url.indexOf("code=") + 5, req.url.indexOf("&"));
-    //     const url = `${process.env.SQUARE_ADDRESS}/oauth2/token`;
-    //     let data = {
-    //         client_id: process.env.SUBLINE_SQUARE_APPID,
-    //         client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
-    //         grant_type: "authorization_code",
-    //         code: code
-    //     };
-    
-    //     axios.post(url, data)
-    //         .then((response)=>{
-    //             data = response.data;
-    //             return Merchant.findOne({posId: data.merchant_id});
-    //         })
-    //         .then((merchant)=>{
-    //             if(merchant){
-    //                 merchant.posAccessToken = data.access_token;
-    
-    //                 return merchant.save()
-    //                     .then((merchant)=>{
-    //                         req.session.user = merchant.session.sessionId;
-    //                         return res.redirect("/dashboard");
-    //                     })
-    //                     .catch((err)=>{
-    //                         req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
-    //                         return res.redirect("/");
-    //                     })
-    //             }else{
-    //                 req.session.merchantId = data.merchant_id;
-    //                 req.session.accessToken = data.access_token;
-    
-    //                 return res.redirect("/merchant/create/square");
-    //             }
-    //         })
-    //         .catch((err)=>{
-    //             req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM SQUARE";
-    //             return res.redirect("/");
-    //         });
-    // },
-
     //GET: Gathers all data from square to create our merchant
     //Redirects to the dashboard
     createMerchant: function(req, res){
@@ -304,7 +261,7 @@ module.exports = {
                     object_types: ["ITEM"]
                 }, {
                     headers: {
-                        Authorization: `Bearer ${merchant.posAccessToken}`
+                        Authorization: `Bearer ${merchant.square.accessToken}`
                     }
                 });
             })

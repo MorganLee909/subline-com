@@ -25,10 +25,6 @@ const MerchantSchema = new mongoose.Schema({
         index: true
     },
     password: String,
-    pos: {
-        type: String,
-        required: true
-    },
     square: {
         id: String,
         accessToken: String,
@@ -36,18 +32,11 @@ const MerchantSchema = new mongoose.Schema({
         refreshToken: String,
         location: String
     },
-    posId: String,
-    posAccessToken: String,
-    lastUpdatedTime: {
-        type: String,
-        default: Date.now()
-    },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: new Date()
     },
     status: [],
-    squareLocation: String,
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,

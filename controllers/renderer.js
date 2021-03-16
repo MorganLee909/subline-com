@@ -34,17 +34,11 @@ module.exports = {
             .populate("recipes")
             .execPopulate()
             .then(async (merchant)=>{
-                if(res.locals.merchant.status.includes("unverified")){
-                    throw "unverified";
-                }
+                if(res.locals.merchant.status.includes("unverified")) throw "unverified";
 
-                if(res.locals.merchant.pos === "clover"){
-                    await helper.getCloverData(res.locals.merchant);
-                }else if(res.locals.merchant.pos === "square"){
-                    await helper.getSquareData(res.locals.merchant);
-                }else{
-                    return;
-                }
+                // if(res.locals.merchant.square !== undefined){
+                //     await helper.getSquareData(res.locals.merchant);
+                // }
 
                 return res.locals.merchant.save();
             })
@@ -66,14 +60,15 @@ module.exports = {
             })
             .then((transactions)=>{
                 res.locals.merchant._id = undefined;
-                res.locals.merchant.posAccessToken = undefined;
-                res.locals.merchant.lastUpdatedTime = undefined;
-                res.locals.merchant.accountStatus = undefined;
+                res.locals.password = undefined;
                 res.locals.merchant.status = undefined;
+                res.locals.square = undefined;
+                res.locals.session = undefined;
 
                 return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
+                console.log(err);
                 if(err === "unverified"){
                     req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
                     return res.redirect(`/verify/email/${res.locals.merchant._id}`);
