@@ -12,7 +12,7 @@ module.exports = {
         let ingredients = {};
 
         return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, {
-            location_ids: [merchant.squareLocation],
+            location_ids: [merchant.square.location],
             query: {
                 filter: {
                     date_time_filter: {

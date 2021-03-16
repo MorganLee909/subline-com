@@ -90,7 +90,7 @@ module.exports = {
 
     //DELETE - removes a single recipe from the merchant and the database
     removeRecipe: function(req, res){
-        if(res.locals.merchant.square !== undefined){
+        if(res.locals.merchant.pos === "square"){
             return res.json("YOU MUST EDIT YOUR RECIPES INSIDE SQUARE");
         }
         
