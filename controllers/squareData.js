@@ -33,8 +33,11 @@ module.exports = {
             email: req.body.email,
             password: hash,
             pos: "square",
+            status: ["unverified"],
             inventory: [],
             recipes: [],
+            square: {},
+            createdAt: new Date(),
             session: {
                 sessionId: helper.generateId(25),
                 expiration: expirationDate
@@ -43,6 +46,7 @@ module.exports = {
 
         merchant.save()
             .then((response)=>{
+                req.session.user = merchant.session.sessionId;
                 return res.redirect(`${process.env.SQUARE_ADDRESS}/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
             })
             .catch((err)=>{
@@ -53,100 +57,102 @@ module.exports = {
 
     //GET: Used by square. This route is used for the authentication code
     //Redirects to either dashboard or new merchant creation
-    authorize: function(req, res){
-        const code = req.url.slice(req.url.indexOf("code=") + 5, req.url.indexOf("&"));
-        const url = `${process.env.SQUARE_ADDRESS}/oauth2/token`;
-        let data = {
-            client_id: process.env.SUBLINE_SQUARE_APPID,
-            client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
-            grant_type: "authorization_code",
-            code: code
-        };
+    // authorize: function(req, res){
+    //     const code = req.url.slice(req.url.indexOf("code=") + 5, req.url.indexOf("&"));
+    //     const url = `${process.env.SQUARE_ADDRESS}/oauth2/token`;
+    //     let data = {
+    //         client_id: process.env.SUBLINE_SQUARE_APPID,
+    //         client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
+    //         grant_type: "authorization_code",
+    //         code: code
+    //     };
     
-        axios.post(url, data)
-            .then((response)=>{
-                data = response.data;
-                return Merchant.findOne({posId: data.merchant_id});
-            })
-            .then((merchant)=>{
-                if(merchant){
-                    merchant.posAccessToken = data.access_token;
+    //     axios.post(url, data)
+    //         .then((response)=>{
+    //             data = response.data;
+    //             return Merchant.findOne({posId: data.merchant_id});
+    //         })
+    //         .then((merchant)=>{
+    //             if(merchant){
+    //                 merchant.posAccessToken = data.access_token;
     
-                    return merchant.save()
-                        .then((merchant)=>{
-                            req.session.user = merchant.session.sessionId;
-                            return res.redirect("/dashboard");
-                        })
-                        .catch((err)=>{
-                            req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
-                            return res.redirect("/");
-                        })
-                }else{
-                    req.session.merchantId = data.merchant_id;
-                    req.session.accessToken = data.access_token;
+    //                 return merchant.save()
+    //                     .then((merchant)=>{
+    //                         req.session.user = merchant.session.sessionId;
+    //                         return res.redirect("/dashboard");
+    //                     })
+    //                     .catch((err)=>{
+    //                         req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
+    //                         return res.redirect("/");
+    //                     })
+    //             }else{
+    //                 req.session.merchantId = data.merchant_id;
+    //                 req.session.accessToken = data.access_token;
     
-                    return res.redirect("/merchant/create/square");
-                }
-            })
-            .catch((err)=>{
-                req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM SQUARE";
-                return res.redirect("/");
-            });
-    },
+    //                 return res.redirect("/merchant/create/square");
+    //             }
+    //         })
+    //         .catch((err)=>{
+    //             req.session.error = "ERROR: UNABLE TO RETRIEVE DATA FROM SQUARE";
+    //             return res.redirect("/");
+    //         });
+    // },
 
     //GET: Gathers all data from square to create our merchant
     //Redirects to the dashboard
     createMerchant: function(req, res){
-        let merchant = {}
-    
-        axios.get(`${process.env.SQUARE_ADDRESS}/v2/merchants/${req.session.merchantId}`, {
-            headers: {
-                Authorization: `Bearer ${req.session.accessToken}`
-            }
-        })
+        let code = req.url.slice(req.url.indexOf("code=") + 5, req.url.indexOf("&"));
+        let url = `${process.env.SQUARE_ADDRESS}/oauth2/token`;
+
+        let data = {
+            client_id: process.env.SUBLINE_SQUARE_APPID,
+            client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
+            grant_type: "authorization_code",
+            code: code,
+        }
+
+        let merchant = {};
+
+        let localMerchant = Merchant.findOne({"session.sessionId": req.session.user});
+        let squareMerchant = axios.post(url, data);
+        Promise.all([localMerchant, squareMerchant])
             .then((response)=>{
-                req.session.merchantId = undefined;
+                if(response[0] === null) throw "ERROR: UNABLE TO CREATE ACCOUNT";
 
-                let expirationDate = new Date();
-                expirationDate.setDate(expirationDate.getDate() + 90);
-    
-                merchant = new Merchant({
-                    name: response.data.merchant.business_name,
-                    pos: "square",
-                    posId: response.data.merchant.id,
-                    posAccessToken: req.session.accessToken,
-                    lastUpdatedTime: new Date(),
-                    createdAt: new Date(),
-                    squareLocation: response.data.merchant.main_location_id,
-                    status: [],
-                    inventory: [],
-                    recipes: [],
-                    session: {
-                        sessionId: helper.generateId(25),
-                        expiration: expirationDate
-                    }
+                merchant = response[0];
+
+                merchant.square = {
+                    id: response[1].data.merchant_id,
+                    expires: new Date(response[1].data.expires_at),
+                    refreshToken: response[1].data.refresh_token,
+                    accessToken: response[1].data.access_token
+                };
+
+                return axios.get(`${process.env.SQUARE_ADDRESS}/v2/merchants/${merchant.square.id}`, {
+                    headers: {Authorization: `Bearer ${merchant.square.accessToken}`}
                 });
-
-                req.session.accessToken = undefined;
+            })    
+            .then((response)=>{
+                merchant.square.location = response.data.merchant.main_location_id;
 
                 let items = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
                     object_types: ["ITEM"]
                 }, {
                     headers: {
-                        Authorization: `Bearer ${merchant.posAccessToken}`
+                        Authorization: `Bearer ${merchant.square.accessToken}`
                     }
                 });
 
-                let location = axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations/${response.data.merchant.main_location_id}`, {
+                let location = axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations/${merchant.square.location}`, {
                     headers: {
-                        Authorization: `Bearer ${merchant.posAccessToken}`
+                        Authorization: `Bearer ${merchant.square.accessToken}`
                     }
                 });
 
                 return Promise.all([items, location]);
             })
             .then((response)=>{
-                merchant.email = response[1].data.location.business_email;
+                if(merchant.email === response[1].data.location.business_email) merchant.status = [];
                 let recipes = [];
                 
                 for(let i = 0; i < response[0].data.objects.length; i++){
@@ -187,13 +193,13 @@ module.exports = {
                 res.redirect("/dashboard");
 
                 let body = {
-                    location_ids: [merchant.squareLocation],
+                    location_ids: [merchant.square.location],
                     limit: 10000,
                     query: {}
                 };
                 let options = {
                     headers: {
-                        Authorization: `Bearer ${merchant.posAccessToken}`,
+                        Authorization: `Bearer ${merchant.square.accessToken}`,
                         "Content-Type": "application/json"
                     }
                 };
@@ -219,7 +225,7 @@ module.exports = {
                                 transaction.recipes.push({
                                     recipe: merchant.recipes[k]._id,
                                     quantity: parseInt(item.quantity)
-                                })
+                                });
                             }
                         }
                     }
@@ -228,14 +234,14 @@ module.exports = {
                 }
 
                 let body = {
-                    location_ids: [merchant.squareLocation],
+                    location_ids: [merchant.square.location],
                     limit: 10000,
                     cursor: response.data.cursor,
                     query: {}
                 };
                 let options = {
                     headers: {
-                        Authorization: `Bearer ${merchant.posAccessToken}`,
+                        Authorization: `Bearer ${merchant.square.accessToken}`,
                         "Content-Type": "application/json"
                     }
                 };
@@ -261,7 +267,7 @@ module.exports = {
                                     transaction.recipes.push({
                                         recipe: merchant.recipes[k]._id,
                                         quantity: parseInt(item.quantity)
-                                    })
+                                    });
                                 }
                             }
                         }

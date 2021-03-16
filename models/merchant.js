@@ -29,6 +29,13 @@ const MerchantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    square: {
+        id: String,
+        accessToken: String,
+        expires: Date,
+        refreshToken: String,
+        location: String
+    },
     posId: String,
     posAccessToken: String,
     lastUpdatedTime: {

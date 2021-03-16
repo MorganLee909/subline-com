@@ -82,7 +82,7 @@ module.exports = function(app){
 
     //Square
     app.post("/squarelogin", squareData.redirect);
-    app.get("/squareauth", squareData.authorize);
-    app.get("/merchant/create/square", squareData.createMerchant);
+    app.get("/squareauth", squareData.createMerchant);
+    // app.get("/merchant/create/square", squareData.createMerchant);
     app.get("/recipes/update/square", session, squareData.updateRecipes);
 }
