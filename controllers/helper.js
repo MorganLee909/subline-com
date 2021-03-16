@@ -3,11 +3,9 @@ const axios = require("axios");
 const Transaction = require("../models/transaction.js");
 
 module.exports = {
-    getSquareData: function(merchant){
-        let now = new Date().toISOString();
-        now = `${now.substring(0, now.length - 1)}+00:00`;
-        let before = new Date(merchant.lastUpdatedTime).toISOString();
-        before = `${before.substring(0, before.length - 1)}+00:00`;
+    getSquareData: function(merchant, time){
+        time.setMilliseconds(time.getMilliseconds() + 1000);
+        let now = new Date();
 
         let ingredients = {};
 
@@ -17,7 +15,7 @@ module.exports = {
                 filter: {
                     date_time_filter: {
                         closed_at: {
-                            start_at: before,
+                            start_at: time,
                             end_at: now
                         }
                     },
@@ -41,7 +39,7 @@ module.exports = {
                 if(response.data.orders){
                     for(let i = 0; i < response.data.orders.length; i++){
                         let transaction = new Transaction({
-                            merchant: merchant,
+                            merchant: merchant._id,
                             date: response.data.orders[i].created_at,
                             posId: response.data.orders[i].id,
                             recipes: []
@@ -70,9 +68,11 @@ module.exports = {
 
                         transactions.push(transaction);
                     }
+
+                    return Transaction.create(transactions);
                 }
 
-                return Transaction.create(transactions);
+                return [];
             })
             .then((transactions)=>{
                 const keys = Object.keys(ingredients);

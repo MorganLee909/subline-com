@@ -34,9 +34,6 @@ module.exports = {
             return res.redirect(`/verify/email/${res.locals.merchant._id}`);
         }
 
-        // if(res.locals.merchant.square !== undefined){
-        //     await helper.getSquareData(res.locals.merchant);
-        // }
         res.locals.merchant
             .populate("inventory.ingredient")
             .populate("recipes")
@@ -58,16 +55,22 @@ module.exports = {
                 ]);      
             })
             .then(async (transactions)=>{
-                let latest = {};
-                if(transactions.length === 0){
-                    latest = await Transaction.find({merchant: res.locals.merchant._id}).sort({date: -1}).limit(1)[0].date;
-                    latest = new Date(latest);
-                }else{
-                    latest = new Date(transactions[0].date);
-                }
+                if(res.locals.pos !== "none"){
+                    let latest = null;
+                    if(transactions.length === 0){
+                        let latestTransaction = await Transaction.find({merchant: res.locals.merchant._id}).sort({date: -1}).limit(1);
+                        if(latestTransaction.length > 0) latest = new Date(latest[0].date);
+                    }else{
+                        latest = new Date(transactions[0].date);
+                    }
 
-                let newRecipes = await helper.getSquareData(res.locals.merchant, latest);
-                newRecipes.push(transactions);
+                    let newRecipes = {};
+                    if(latest !== null){
+                        newRecipes = await helper.getSquareData(res.locals.merchant, latest);
+                        newRecipes = newRecipes.concat(transactions);                        
+                        transactions = newRecipes;
+                    }
+                }
 
                 res.locals.merchant._id = undefined;
                 res.locals.password = undefined;
@@ -75,10 +78,9 @@ module.exports = {
                 res.locals.square = undefined;
                 res.locals.session = undefined;
 
-                return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: newRecipes});
+                return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
             });
