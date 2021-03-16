@@ -32,7 +32,7 @@ module.exports = {
             }
         }, {
             headers: {
-                Authorization: `Bearer ${merchant.posAccessToken}`
+                Authorization: `Bearer ${merchant.square.accessToken}`
             }
         })
             .then((response)=>{
