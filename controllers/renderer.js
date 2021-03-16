@@ -29,19 +29,18 @@ module.exports = {
     Renders inventoryPage
     */
     displayDashboard: function(req, res){
+        if(res.locals.merchant.status.includes("unverified")) {
+            req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
+            return res.redirect(`/verify/email/${res.locals.merchant._id}`);
+        }
+
+        // if(res.locals.merchant.square !== undefined){
+        //     await helper.getSquareData(res.locals.merchant);
+        // }
         res.locals.merchant
             .populate("inventory.ingredient")
             .populate("recipes")
             .execPopulate()
-            .then(async (merchant)=>{
-                if(res.locals.merchant.status.includes("unverified")) throw "unverified";
-
-                // if(res.locals.merchant.square !== undefined){
-                //     await helper.getSquareData(res.locals.merchant);
-                // }
-
-                return res.locals.merchant.save();
-            })
             .then((merchant)=>{
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
@@ -58,21 +57,28 @@ module.exports = {
                     }}
                 ]);      
             })
-            .then((transactions)=>{
+            .then(async (transactions)=>{
+                let latest = {};
+                if(transactions.length === 0){
+                    latest = await Transaction.find({merchant: res.locals.merchant._id}).sort({date: -1}).limit(1)[0].date;
+                    latest = new Date(latest);
+                }else{
+                    latest = new Date(transactions[0].date);
+                }
+
+                let newRecipes = await helper.getSquareData(res.locals.merchant, latest);
+                newRecipes.push(transactions);
+
                 res.locals.merchant._id = undefined;
                 res.locals.password = undefined;
                 res.locals.merchant.status = undefined;
                 res.locals.square = undefined;
                 res.locals.session = undefined;
 
-                return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
+                return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: newRecipes});
             })
             .catch((err)=>{
                 console.log(err);
-                if(err === "unverified"){
-                    req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
-                    return res.redirect(`/verify/email/${res.locals.merchant._id}`);
-                }
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
             });
