@@ -112,7 +112,6 @@ module.exports = {
                 if(merchant.email === response[1].data.location.business_email) merchant.status = [];
                 let recipes = [];
                 
-                console.log(response[0].data);
                 for(let i = 0; i < response[0].data.objects.length; i++){
                     if(response[0].data.objects[i].item_data.variations.length > 1){
                         for(let j = 0; j < response[0].data.objects[i].item_data.variations.length; j++){
