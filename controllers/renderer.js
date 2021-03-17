@@ -112,7 +112,6 @@ module.exports = {
                 return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
             });

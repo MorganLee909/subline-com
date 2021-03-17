@@ -552,7 +552,7 @@ class Merchant{
             }
         }
 
-        return total / 100;
+        return total;
     }
 
     /*
