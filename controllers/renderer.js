@@ -65,13 +65,41 @@ module.exports = {
                     }
 
                     if(latest !== null){
-                        let newOrders = await helper.getSquareData(res.locals.merchant, latest);
-                        for(let i = 0; i < newOrders.length; i++){
-                           for(let j = 0; j < newOrders[i].recipes.length; j++){
-                               newOrders[i].recipes[j].recipe = newOrders[i].recipes[j].recipe._id;
-                           }
-                        }
-                        transactions = newOrders.concat(transactions);
+                        latest.setMilliseconds(latest.getMilliseconds() + 1000);
+                        let now = new Date();
+
+                        let postData = {
+                            location_ids: [res.locals.merchant.square.location],
+                            query: {
+                                filter: {
+                                    date_time_filter: {
+                                        closed_at: {
+                                            start_at: latest,
+                                            end_at: now
+                                        }
+                                    },
+                                    state_filter: {
+                                        states: ["COMPLETED"]
+                                    }
+                                },
+                                sort: {
+                                    sort_field: "CLOSED_AT",
+                                    sort_order: "DESC"
+                                }
+                            },
+                            limit: 10000
+                        };
+
+                        do{
+                            let newOrders = await helper.getSquareData(res.locals.merchant, postData);
+                            postData.cursor = newOrders.cursor;
+                            for(let i = 0; i < newOrders.length; i++){
+                                for(let j = 0; j < newOrders[i].recipes.length; j++){
+                                    newOrders[i].recipes[j].recipe = newOrders[i].recipes[j].recipe._id;
+                                }
+                            }
+                            transactions = newOrders.concat(transactions);
+                        }while(postData.cursor !== undefined);
                     }
                 }
 
@@ -84,6 +112,7 @@ module.exports = {
                 return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
+                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
             });

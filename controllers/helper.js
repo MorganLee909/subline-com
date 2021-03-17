@@ -3,35 +3,11 @@ const axios = require("axios");
 const Transaction = require("../models/transaction.js");
 
 module.exports = {
-    getSquareData: function(merchant, time){
-        time.setMilliseconds(time.getMilliseconds() + 1000);
-        let now = new Date();
-
+    getSquareData: function(merchant, data){
         let ingredients = {};
 
-        return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, {
-            location_ids: [merchant.square.location],
-            query: {
-                filter: {
-                    date_time_filter: {
-                        closed_at: {
-                            start_at: time,
-                            end_at: now
-                        }
-                    },
-                    state_filter: {
-                        states: ["COMPLETED"]
-                    }
-                },
-                sort: {
-                    sort_field: "CLOSED_AT",
-                    sort_order: "DESC"
-                }
-            }
-        }, {
-            headers: {
-                Authorization: `Bearer ${merchant.square.accessToken}`
-            }
+        return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, data, {
+            headers: {Authorization: `Bearer ${merchant.square.accessToken}`}
         })
             .then((response)=>{
                 let transactions = [];
