@@ -61,7 +61,7 @@ module.exports = {
                 return next();
             })
             .catch((err)=>{
-                if(err === "no merchant"){
+                if(err === "login"){
                     req.session.user = undefined;
                     req.session.error = "PLEASE LOG IN";
                     return res.redirect("/login");
