@@ -201,6 +201,7 @@ class Merchant{
         }
 
         ingredientsStrand.populateByProperty();
+        analyticsStrand.populateButtons();
     }
 
     removeIngredient(ingredient){
