@@ -8,6 +8,7 @@ const orderData = require("./controllers/orderData.js");
 const informationPages = require("./controllers/informationPages.js");
 const emailVerification = require("./controllers/emailVerification.js");
 const passwordReset = require("./controllers/passwordReset.js");
+const squareData = require("./controllers/squareData.js");
 
 const session = require("./middleware.js").verifySession;
 const banner = require("./middleware.js").formatBanner;
@@ -41,6 +42,7 @@ module.exports = function(app){
     app.put("/recipe/update", session, recipeData.updateRecipe);
     app.delete("/recipe/remove/:id", session, recipeData.removeRecipe);
     app.post("/recipes/create/spreadsheet", session, upload.single("recipes"), recipeData.createFromSpreadsheet);
+    app.post("/recipes/create/spreadsheet/square", session, upload.single("recipes"), recipeData.spreadsheetUpSquare);
     app.get("/recipes/download/spreadsheet", session, recipeData.spreadsheetTemplate);
 
     //Orders
@@ -77,4 +79,10 @@ module.exports = function(app){
     app.post("/reset/email", passwordReset.generateCode);
     app.get("/reset/:id/:code", banner, passwordReset.enterPassword);
     app.post("/reset", passwordReset.resetPassword);
+
+    //Square
+    app.post("/squarelogin", squareData.redirect);
+    app.get("/squareauth", squareData.createMerchant);
+    // app.get("/merchant/create/square", squareData.createMerchant);
+    app.get("/recipes/update/square", session, squareData.updateRecipes);
 }

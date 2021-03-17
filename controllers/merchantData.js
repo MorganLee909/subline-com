@@ -46,7 +46,6 @@ module.exports = {
             email: req.body.email.toLowerCase(),
             password: hash,
             pos: "none",
-            lastUpdatedTime: Date.now(),
             createdAt: Date.now(),
             status: ["unverified"],
             inventory: [],

@@ -62,7 +62,7 @@ let newOrder = {
             taxes: taxes,
             fees: fees,
             ingredients: []
-        }
+        };
 
         for(let i = 0; i < ingredients.length; i++){
             let quantity = ingredients[i].children[1].children[0].value;
@@ -90,7 +90,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addOrder(response, true);
+                    merchant.addOrders([response], true);
                     
                     controller.openStrand("orders", merchant.orders);
                     controller.createBanner("NEW ORDER CREATED", "success");
@@ -110,7 +110,7 @@ let newOrder = {
             case "kg": return price / 1000; 
             case "oz": return price / 28.3495; 
             case "lb": return price / 453.5924; 
-            case "ml": return price * 1000; 
+            case "ml": return price * 1000;
             case "l": return price;
             case "tsp": return price * 202.8842; 
             case "tbsp": return price * 67.6278; 
@@ -149,7 +149,7 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addOrder(response, true);
+                    merchant.addOrders([response], true);
 
                     controller.createBanner("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY", "success");
                     controller.openStrand("orders");

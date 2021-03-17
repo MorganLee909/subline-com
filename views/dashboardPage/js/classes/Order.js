@@ -1,8 +1,6 @@
-const ingredients = require("../strands/ingredients.js");
-
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
-        this._ingredient = ingredient;
+        this._ingredient = merchant.getIngredient(ingredient).ingredient;
         this._quantity = quantity;
         this._pricePerUnit = pricePerUnit;
     }
@@ -98,7 +96,7 @@ date = Date Object for when the order was created
 taxes = User entered taxes associated with the order
 fees = User entered fees associated with the order
 ingredients = [{
-    ingredient: Ingredient Object,
+    ingredient: Ingredient ID,
     quantity: quantity of ingredient sold,
     pricePerUnit: price of purchase (per base unit)
 }]
@@ -115,21 +113,12 @@ class Order{
         this._parent = parent;
 
         for(let i = 0; i < ingredients.length; i++){
-            for(let j = 0; j < merchant.ingredients.length; j++){
-                if(merchant.ingredients[j].ingredient.id === ingredients[i].ingredient){
-                    let thing = new OrderIngredient(
-                        merchant.ingredients[j].ingredient,
-                        ingredients[i].quantity,
-                        ingredients[i].pricePerUnit
-                    );
-                    this._ingredients.push(thing);
-                    break;
-                }
-            }
-            
+            this._ingredients.push(new OrderIngredient(
+                ingredients[i].ingredient,
+                ingredients[i].quantity,
+                ingredients[i].pricePerUnit
+            ));
         }
-
-        ingredients.isPopulated = false;
     }
 
     get id(){

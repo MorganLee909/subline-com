@@ -75,7 +75,7 @@ let newTransaction = {
                     if(typeof(response) === "string"){
                         controller.createBanner(response, "error");
                     }else{
-                        merchant.addTransaction(response);
+                        merchant.addTransactions([response], true);
 
                         controller.updateAnalytics();
                         controller.openStrand("transactions", merchant.getTransactions());
@@ -115,7 +115,7 @@ let newTransaction = {
                     for(let i = 0; i < response.recipes.length; i++){
                         response.recipes[i].recipe = response.recipes[i].recipe._id;
                     }
-                    merchant.addTransaction(response);
+                    merchant.addTransactions([response], true);
                     controller.updateAnalytics();
 
                     controller.openStrand("transactions", merchant.transactions);

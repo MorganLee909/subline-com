@@ -90,8 +90,8 @@ module.exports = {
 
     //DELETE - removes a single recipe from the merchant and the database
     removeRecipe: function(req, res){
-        if(res.locals.merchant.pos === "clover"){
-            return res.json("YOU MUST EDIT YOUR RECIPES INSIDE CLOVER");
+        if(res.locals.merchant.pos === "square"){
+            return res.json("YOU MUST EDIT YOUR RECIPES INSIDE SQUARE");
         }
         
         for(let i = 0; i < res.locals.merchant.recipes.length; i++){
@@ -224,6 +224,39 @@ module.exports = {
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
+                return res.json("ERROR: UNABLE TO CREATE YOUR RECIPES");
+            });
+    },
+
+    spreadsheetUpSquare: function(req, res){
+        let workbook = xlsx.readFile(req.file.path);
+        fs.unlink(req.file.path, ()=>{});
+        let array = xlsx.utils.sheet_to_json(workbook.Sheets.Items, {header: 1});
+
+        let recipes = [];
+        for(let i = 1; i < array.length; i++){
+            let name = array[i][1];
+            if(array[i][6] !== "") name = `${name} (${array[i][6]})`;
+
+            let recipe = new Recipe({
+                posId: array[i][0],
+                merchant: res.locals.merchant._id,
+                name: name,
+                price: parseInt(array[i][7] * 100) || 0,
+                ingredients: []
+            });
+
+            recipes.push(recipe);
+            res.locals.merchant.recipes.push(recipe);
+        }
+
+
+        Promise.all([Recipe.create(recipes), res.locals.merchant.save()])
+            .then((response)=>{
+                return res.json(response[0]);
+            })
+            .catch((err)=>{
+                if(err.name === "ValidationError") return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 return res.json("ERROR: UNABLE TO CREATE YOUR RECIPES");
             });
     },

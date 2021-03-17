@@ -24,26 +24,23 @@ const MerchantSchema = new mongoose.Schema({
         },
         index: true
     },
-    password: {
-        type: String,
-        required: [true, "MUST PROVIDE A PASSWORD"],
-    },
+    password: String,
     pos: {
         type: String,
         required: true
     },
-    posId: String,
-    posAccessToken: String,
-    lastUpdatedTime: {
-        type: String,
-        default: Date.now()
+    square: {
+        id: String,
+        accessToken: String,
+        expires: Date,
+        refreshToken: String,
+        location: String
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: new Date()
     },
     status: [],
-    squareLocation: String,
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,

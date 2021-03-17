@@ -94,8 +94,8 @@ module.exports = {
 
                         updatedIngredient = {
                             ingredient: ingredient,
-                            quantity: helper.convertQuantityToBaseUnit(req.body.quantity, req.body.unit),
-                            unit: req.body.unit
+                            quantity: req.body.quantity,
+                            defaultUnit: req.body.unit
                         }
                         
                         break;

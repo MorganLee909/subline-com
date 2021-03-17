@@ -11,6 +11,7 @@ let recipeBook = {
             if(merchant.pos !== "none"){
                 document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
             }
+            
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
 
             this.populateRecipes();
@@ -66,7 +67,7 @@ let recipeBook = {
     posUpdate: function(){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
-        let url = `/recipe/update/${merchant.pos}`;
+        let url = `/recipes/update/${merchant.pos}`;
 
         fetch(url, {
             method: "GET",
@@ -79,17 +80,18 @@ let recipeBook = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
+                    let newRecipes = [];
                     for(let i = 0; i < response.new.length; i++){
-                        const recipe = new Recipe(
+                        newRecipes.push(new Recipe(
                             response.new[i]._id,
                             response.new[i].name,
                             response.new[i].price,
                             merchant,
                             []
-                        );
-
-                        merchant.addRecipe(recipe);
+                        ));
                     }
+
+                    merchant.addRecipes(newRecipes);
 
                     for(let i = 0; i < response.removed.length; i++){
                         for(let j = 0; j < merchant.recipes.length; j++){

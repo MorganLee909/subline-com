@@ -3,11 +3,11 @@ const Recipe = require("./Recipe.js");
 const Transaction = require("./Transaction.js");
 const Order = require("./Order.js");
 
-const home = require("../strands/home.js");
-const ingredients = require("../strands/ingredients.js");
-const recipeBook = require("../strands/recipeBook");
-const analytics = require("../strands/analytics.js");
-const orders = require("../strands/orders");
+const homeStrand = require("../strands/home.js");
+const ingredientsStrand = require("../strands/ingredients.js");
+const recipeBookStrand = require("../strands/recipeBook");
+const analyticsStrand = require("../strands/analytics.js");
+const ordersStrand = require("../strands/orders");
 
 class MerchantIngredient{
     constructor(ingredient, quantity){
@@ -167,33 +167,41 @@ class Merchant{
     }
 
     /*
-    ingredient: {
-        _id: String,
-        name: String,
-        category: String,
-        unitType: String,
-        specialUnit: String || undefined,
-        unitSize: Number || undefined
-    }
-    quantity: Number
-    defaultUnit: String
+    ingredient: [{
+        ingredient: {
+            _id: String,
+            name: String,
+            category: String,
+            unitType: String,
+            specialUnit: String || undefined,
+            unitSize: Number || undefined
+        }
+        quantity: Number
+        defaultUnit: String
+    }]
     */
-    addIngredient(ingredient, quantity, defaultUnit){
-        const createdIngredient = new Ingredient(
-            ingredient._id,
-            ingredient.name,
-            ingredient.category,
-            ingredient.unitType,
-            defaultUnit,
-            this,
-            ingredient.unitSize
-        );
+    addIngredients(ingredients){
+        for(let i = 0; i < ingredients.length; i++){
+            let ingredient = ingredients[i].ingredient;
+            let quantity = ingredients[i].quantity;
+            let defaultUnit = ingredients[i].defaultUnit;
 
-        const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
-        this._ingredients.push(merchantIngredient);
+            const createdIngredient = new Ingredient(
+                ingredient._id,
+                ingredient.name,
+                ingredient.category,
+                ingredient.unitType,
+                defaultUnit,
+                this,
+                ingredient.unitSize
+            );
 
-        home.isPopulated = false;
-        ingredients.isPopulated = false;
+            const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
+            this._ingredients.push(merchantIngredient);
+        }
+
+        ingredientsStrand.populateByProperty();
+        analyticsStrand.populateButtons();
     }
 
     removeIngredient(ingredient){
@@ -204,8 +212,8 @@ class Merchant{
 
         this._ingredients.splice(index, 1);
 
-        home.isPopulated = false;
-        ingredients.isPopulated = false;
+        homeStrand.drawInventoryCheckCard();
+        ingredientsStrand.populateByProperty();
     }
 
     getIngredient(id){
@@ -220,12 +228,37 @@ class Merchant{
         return this._recipes;
     }
 
-    addRecipe(id, name, price, ingredients){
-        let recipe = new Recipe(id, name, price, ingredients, this);
+    getRecipe(id){
+        for(let i = 0; i < this._recipes.length; i++){
+            if(this._recipes[i].id === id){
+                return this._recipes[i];
+            }
+        }
+    }
 
-        this._recipes.push(recipe);
+    /*
+    recipes: [{
+        _id: String
+        name: String
+        price: Number
+        ingredients: [{
+            ingredient: String (id)
+            quantity: Number
+        }]
+    }]
+    */
+    addRecipes(recipes){
+        for(let i = 0; i < recipes.length; i++){
+            this._recipes.push(new Recipe(
+                recipes[i]._id,
+                recipes[i].name,
+                recipes[i].price,
+                recipes[i].ingredients,
+                this
+            ));
+        }
 
-        recipeBook.isPopulated = false;
+        recipeBookStrand.populateRecipes();
     }
 
     removeRecipe(recipe){
@@ -236,44 +269,7 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        recipeBook.isPopulated = false;
-    }
-
-    /*
-    recipe = {
-        name: required,
-        price: required,
-        ingredients: [{
-            ingredient: id of ingredient,
-            quantity: quantity of ingredient
-        }]
-    }
-    */
-    updateRecipe(recipe){
-        for(let i = 0; i < this._recipes.length; i++){
-            if(this._recipes[i].id === recipe._id){
-                this._recipes[i].name = recipe.name;
-                this._recipes[i].price = recipe.price;
-                
-                this._recipes[i].removeIngredients();
-                for(let j = 0; j < recipe.ingredients.length; j++){
-                    for(let k = 0; k < this._ingredients.length; k++){
-                        if(this._ingredients[k].ingredient.id === recipe.ingredients[j].ingredient){
-                            this._recipes[i].addIngredient(
-                                this._ingredients[k].ingredient,
-                                recipe.ingredients[j].quantity
-                            );
-
-                            break;
-                        }
-                    }
-                }
-
-                break;
-            }
-        }
-
-        recipeBook.isPopulated = false;
+        recipeBookStrand.populateRecipes();
     }
 
     get transactions(){
@@ -294,83 +290,65 @@ class Merchant{
         return this._transactions.slice(start, end + 1);
     }
 
-    addTransaction(transaction){
-        transaction = new Transaction(
-            transaction._id,
-            transaction.date,
-            transaction.recipes,
-            this
-        );
+    /*
+    transactions: [{
+        _id: String,
+        date: String (date)
+        recipes: [{
+            recipe: String (id)
+            quantity: Number
+        }]
+    }]
+    */
+    addTransactions(transactions, isNew = false){
+        for(let i = 0; i < transactions.length; i++){
+            let transaction = new Transaction(
+                transactions[i]._id,
+                transactions[i].date,
+                transactions[i].recipes,
+                this
+            );
 
-        this._transactions.push(transaction);
-        this._transactions.sort((a, b)=>{
-            if(a.date > b.date){
-                return -1;
-            }
-            return 1;
-        });
+            this._transactions.push(transaction);
 
-        let ingredients = {};
-        for(let i = 0; i < transaction.recipes.length; i++){
-            const recipe = transaction.recipes[i];
-            for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                const ingredient = recipe.recipe.ingredients[j];
-                if(ingredients[ingredient.ingredient.id]){
-                    ingredients[ingredient.ingredient.id] += recipe.quantity * ingredient.quantity;
-                }else{
-                    ingredients[ingredient.ingredient.id] = recipe.quantity * ingredient.quantity;
+            if(isNew === true){
+                for(let j = 0; j < transaction.recipes.length; j++){
+                    let recipe = transaction.recipes[j].recipe;
+                    for(let k = 0; k < recipe.ingredients.length; k++){
+                        let ingredient = recipe.ingredients[k].ingredient;
+                        let quantity = transaction.recipes[j].quantity * recipe.ingredients[k].quantity;
+
+                        this.getIngredient(ingredient.id).updateQuantity(-quantity);
+                    }
                 }
             }
         }
 
-        const keys = Object.keys(ingredients);
-        for(let i = 0; i < keys.length; i++){
-            for(let j = 0; j < this._ingredients.length; j++){
-                if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients[j].updateQuantity(-ingredients[keys[i]]);
-                }
-            }
-        }
+        this.transactions.sort((a, b) => (a.date > b.date) ? 1 : -1);
 
-        home.isPopulated = false;
-        ingredients.isPopulated = false;
-        analytics.newData = true;
+        homeStrand.isPopulated = false;
+        ingredientsStrand.populateByProperty();
+        analyticsStrand.displayIngredient();
+        analyticsStrand.displayRecipe();
     }
 
     removeTransaction(transaction){
-        const index = this._transactions.indexOf(transaction);
-        if(index === undefined){
-            return false;
-        }
+        for(let j = 0; j < transaction.recipes.length; j++){
+            let recipe = transaction.recipes[j].recipe;
+            for(let k = 0; k < recipe.ingredients.length; k++){
+                let ingredient = recipe.ingredients[k].ingredient;
+                let quantity = transaction.recipes[j].quantity * recipe.ingredients[k].quantity;
 
-        this._transactions.splice(index, 1);
-
-        let ingredients = {};
-        for(let i = 0; i < transaction.recipes.length; i++){
-            const recipe = transaction.recipes[i];
-            for(let j = 0; j < recipe.recipe.ingredients.length; j++){
-                const ingredient = recipe.recipe.ingredients[j];
-                if(ingredients[ingredient.ingredient.id]){
-                    ingredients[ingredient.ingredient.id] += ingredient.quantity * recipe.quantity;
-                }else{
-                    ingredients[ingredient.ingredient.id] = ingredient.quantity * recipe.quantity;
-                }
+                this.getIngredient(ingredient.id).updateQuantity(quantity);
             }
         }
 
-        const keys = Object.keys(ingredients);
-        for(let i = 0; i < keys.length; i++){
-            for(let j = 0; j < this._ingredients.length; j++){
-                if(keys[i] === this._ingredients[j].ingredient.id){
-                    this._ingredients[j].updateQuantity(ingredients[keys[i]]);
-                    break;
-                }
-            }
-        }
+        this._transactions.splice(this._transactions.indexOf(transaction), 1);
 
-        home.isPopulated = false;
-        ingredients.isPopulated = false;
-        analytics.newData = true;
+        homeStrand.isPopulated = false;
+        ingredientsStrand.populateByProperty();
+        analyticsStrand.displayIngredient();
+        analyticsStrand.displayRecipe();
     }
 
     get orders(){
@@ -381,32 +359,43 @@ class Merchant{
         this._orders = [];
     }
 
-    addOrder(data, isNew = false){
-        let order = new Order(
-            data._id,
-            data.name,
-            data.date,
-            data.taxes,
-            data.fees,
-            data.ingredients,
-            this
-        );
+    /*
+    orders: [{
+        _id: String,
+        name: String,
+        date: String (date)
+        taxes: Number
+        fees: Number
+        ingredients: [{
+            ingredient: String (id),
+            pricePerUnit: Number
+            quantity: Number
+        }]
+    }]
+    */
+    addOrders(orders, isNew = false){
+        for(let i = 0; i < orders.length; i++){
+            let order = new Order(
+                orders[i]._id,
+                orders[i].name,
+                orders[i].date,
+                orders[i].taxes,
+                orders[i].fees,
+                orders[i].ingredients,
+                this
+            );
 
-        this._orders.push(order);
+            this._orders.push(order);
 
-        if(isNew){
-            for(let i = 0; i < order.ingredients.length; i++){
-                for(let j = 0; j < this._ingredients.length; j++){
-                    if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
-                        this._ingredients[j].updateQuantity(order.ingredients[i].quantity);
-                        break;
-                    }
+            if(isNew === true){
+                for(let j = 0; j < order.ingredients.length; j++){
+                    this.getIngredient(order.ingredients[j].ingredient.id).updateQuantity(order.ingredients[j].quantity);
                 }
             }
         }
 
-        ingredients.isPopulated = false;
-        orders.isPopulated = false;
+        ingredientsStrand.populateByProperty();
+        ordersStrand.displayOrders();
     }
 
     removeOrder(order){
@@ -426,8 +415,8 @@ class Merchant{
             }
         }
 
-        ingredients.isPopulated = false;
-        orders.isPopulated = false;
+        ingredientsStrand.isPopulated = false;
+        ordersStrand.isPopulated = false;
     }
 
     get units(){
@@ -448,7 +437,7 @@ class Merchant{
             }
         }
 
-        return total / 100;
+        return total;
     }
 
     /*

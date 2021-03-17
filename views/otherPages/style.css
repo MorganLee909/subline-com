@@ -50,6 +50,20 @@ form{
     color: white;
 }
 
+#squareButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    background: white;
+    color: black;
+}
+
+    #squareButton:hover{
+        color: white;
+        background: black;
+    }
+
 /* Public Strand */
 #publicStrand{
     display: flex;
@@ -164,6 +178,17 @@ RegisterPage
         #agreement input{
             margin-right: 15px;
         }
+
+    .customText{
+        margin: 20px auto 0 auto;
+    }
+
+    #noneButton{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+    }
 
 /*
 Footer Partial

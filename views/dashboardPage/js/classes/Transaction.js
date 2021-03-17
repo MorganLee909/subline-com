@@ -1,6 +1,6 @@
 class TransactionRecipe{
-    constructor(recipe, quantity){
-        this._recipe = recipe;
+    constructor(recipe, quantity, merchant){
+        this._recipe = merchant.getRecipe(recipe);
         this._quantity = quantity;
     }
 
@@ -15,34 +15,21 @@ class TransactionRecipe{
 
 class Transaction{
     constructor(id, date, recipes, parent){
-        date = new Date(date);
         this._id = id;
-        this._parent = parent;
-        this._date = date;
+        this._date = new Date(date);
         this._recipes = [];
 
         for(let i = 0; i < recipes.length; i++){
-            for(let j = 0; j < parent.recipes.length; j++){
-                if(recipes[i].recipe === parent.recipes[j].id){
-                    const transactionRecipe = new TransactionRecipe(
-                        parent.recipes[j],
-                        recipes[i].quantity
-                    )
-        
-                    this._recipes.push(transactionRecipe);
-
-                    break;
-                }
-            }
+            this._recipes.push(new TransactionRecipe(
+                recipes[i].recipe,
+                recipes[i].quantity,
+                parent
+            ));
         }
     }
 
     get id(){
         return this._id;
-    }
-
-    get parent(){
-        return this._parent;
     }
 
     get date(){

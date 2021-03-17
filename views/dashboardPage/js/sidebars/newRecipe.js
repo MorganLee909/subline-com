@@ -97,26 +97,7 @@ let newRecipe = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    let ingredients = [];
-                    for(let i = 0; i < response.ingredients.length; i++){
-                        for(let j = 0; j < merchant.ingredients.length; j++){
-                            if(merchant.ingredients[j].ingredient.id === response.ingredients[i].ingredient){
-                                ingredients.push({
-                                    ingredient: merchant.ingredients[j].ingredient.id,
-                                    quantity: response.ingredients[i].quantity
-                                });
-
-                                break;
-                            }
-                        }
-                    }
-
-                    merchant.addRecipe(
-                        response._id,
-                        response.name,
-                        response.price,
-                        ingredients
-                    );
+                    merchant.addRecipes([response]);
 
                     controller.createBanner("RECIPE CREATED", "success");
                     controller.openStrand("recipeBook");
@@ -134,6 +115,9 @@ let newRecipe = {
         event.preventDefault();
         controller.closeModal();
 
+        let checkbox = document.getElementById("spreadsheetRecipeIsSquare");
+        let route = (checkbox.checked === true) ? "/recipes/create/spreadsheet/square": "/recipes/create/spreadsheet";
+
         const file = document.getElementById("spreadsheetInput").files[0];
         let data = new FormData();
         data.append("recipes", file);
@@ -141,7 +125,7 @@ let newRecipe = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/recipes/create/spreadsheet", {
+        fetch(route, {
             method: "post",
             body: data
         })
@@ -150,16 +134,9 @@ let newRecipe = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    for(let i = 0; i < response.length; i++){
-                        merchant.addRecipe(
-                            response[i]._id,
-                            response[i].name,
-                            response[i].price,
-                            response[i].ingredients
-                        );
-                    }
+                    merchant.addRecipes(response);
 
-                    controller.createBanner("ALL INGREDIENTS SUCCESSFULLY CREATED", "success");
+                    controller.createBanner("ALL RECIPES SUCCESSFULLY CREATED", "success");
                     controller.openStrand("recipeBook");
                 }
             })

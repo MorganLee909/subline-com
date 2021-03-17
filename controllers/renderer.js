@@ -29,25 +29,15 @@ module.exports = {
     Renders inventoryPage
     */
     displayDashboard: function(req, res){
+        if(res.locals.merchant.status.includes("unverified")) {
+            req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
+            return res.redirect(`/verify/email/${res.locals.merchant._id}`);
+        }
+
         res.locals.merchant
             .populate("inventory.ingredient")
             .populate("recipes")
             .execPopulate()
-            .then(async (merchant)=>{
-                if(res.locals.merchant.status.includes("unverified")){
-                    throw "unverified";
-                }
-
-                if(res.locals.merchant.pos === "clover"){
-                    await helper.getCloverData(res.locals.merchant);
-                }else if(res.locals.merchant.pos === "square"){
-                    await helper.getSquareData(res.locals.merchant);
-                }else{
-                    return;
-                }
-
-                return res.locals.merchant.save();
-            })
             .then((merchant)=>{
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
@@ -64,20 +54,64 @@ module.exports = {
                     }}
                 ]);      
             })
-            .then((transactions)=>{
+            .then(async (transactions)=>{
+                if(res.locals.pos !== "none"){
+                    let latest = null;
+                    if(transactions.length === 0){
+                        let latestTransaction = await Transaction.find({merchant: res.locals.merchant._id}).sort({date: -1}).limit(1);
+                        if(latestTransaction.length > 0) latest = new Date(latest[0].date);
+                    }else{
+                        latest = new Date(transactions[0].date);
+                    }
+
+                    if(latest !== null){
+                        latest.setMilliseconds(latest.getMilliseconds() + 1000);
+                        let now = new Date();
+
+                        let postData = {
+                            location_ids: [res.locals.merchant.square.location],
+                            query: {
+                                filter: {
+                                    date_time_filter: {
+                                        closed_at: {
+                                            start_at: latest,
+                                            end_at: now
+                                        }
+                                    },
+                                    state_filter: {
+                                        states: ["COMPLETED"]
+                                    }
+                                },
+                                sort: {
+                                    sort_field: "CLOSED_AT",
+                                    sort_order: "DESC"
+                                }
+                            },
+                            limit: 10000
+                        };
+
+                        do{
+                            let newOrders = await helper.getSquareData(res.locals.merchant, postData);
+                            postData.cursor = newOrders.cursor;
+                            for(let i = 0; i < newOrders.length; i++){
+                                for(let j = 0; j < newOrders[i].recipes.length; j++){
+                                    newOrders[i].recipes[j].recipe = newOrders[i].recipes[j].recipe._id;
+                                }
+                            }
+                            transactions = newOrders.concat(transactions);
+                        }while(postData.cursor !== undefined);
+                    }
+                }
+
                 res.locals.merchant._id = undefined;
-                res.locals.merchant.posAccessToken = undefined;
-                res.locals.merchant.lastUpdatedTime = undefined;
-                res.locals.merchant.accountStatus = undefined;
+                res.locals.password = undefined;
                 res.locals.merchant.status = undefined;
+                res.locals.square = undefined;
+                res.locals.session = undefined;
 
                 return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
-                if(err === "unverified"){
-                    req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
-                    return res.redirect(`/verify/email/${res.locals.merchant._id}`);
-                }
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
             });
