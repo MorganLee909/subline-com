@@ -64,11 +64,14 @@ module.exports = {
                         latest = new Date(transactions[0].date);
                     }
 
-                    let newRecipes = {};
                     if(latest !== null){
-                        newRecipes = await helper.getSquareData(res.locals.merchant, latest);
-                        newRecipes = newRecipes.concat(transactions);                        
-                        transactions = newRecipes;
+                        let newOrders = await helper.getSquareData(res.locals.merchant, latest);
+                        for(let i = 0; i < newOrders.length; i++){
+                           for(let j = 0; j < newOrders[i].recipes.length; j++){
+                               newOrders[i].recipes[j].recipe = newOrders[i].recipes[j].recipe._id;
+                           }
+                        }
+                        transactions = newOrders.concat(transactions);
                     }
                 }
 

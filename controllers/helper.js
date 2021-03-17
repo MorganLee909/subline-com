@@ -85,8 +85,6 @@ module.exports = {
                     }
                 }
 
-                merchant.lastUpdatedTime = new Date();
-
                 return transactions;
             })
             .catch((err)=>{
