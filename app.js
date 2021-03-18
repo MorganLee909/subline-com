@@ -38,7 +38,8 @@ app.use(session({
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superb.",
     cookie: {secure: true},
     saveUninitialized: true,
-    resave: false
+    resave: false,
+    domain: process.env.COOKIE_DOMAIN
 }));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
