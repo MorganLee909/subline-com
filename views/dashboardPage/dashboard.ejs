@@ -43,7 +43,6 @@
             <% include ./ejs/sidebars/newRecipe %>
             <% include ./ejs/sidebars/orderDetails %>
             <% include ./ejs/sidebars/newOrder %>
-            <% include ./ejs/sidebars/orderCalculator %>
             <% include ./ejs/sidebars/transactionDetails %>
             <% include ./ejs/sidebars/newTransaction %>
             <% include ./ejs/sidebars/editRecipe %>
@@ -54,7 +53,6 @@
         <% include ../shared/loader %>
         <% include ./modal %>
 
-        <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
         <script>
             let data = {
                 merchant: <%- JSON.stringify(merchant) %>,

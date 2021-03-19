@@ -4,7 +4,6 @@ let orders = {
     display: function(){
         document.getElementById("orderFilterBtn").addEventListener("click", ()=>{controller.openSidebar("orderFilter")});
         document.getElementById("newOrderBtn").addEventListener("click", ()=>{controller.openSidebar("newOrder")});
-        document.getElementById("orderCalcBtn").addEventListener("click", ()=>{controller.openSidebar("orderCalculator")});
 
         if(this.isPopulated === false){
             this.getOrders()

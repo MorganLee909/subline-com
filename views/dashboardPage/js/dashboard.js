@@ -15,7 +15,6 @@ const editRecipe = require("./sidebars/editRecipe.js");
 const newTransaction = require("./sidebars/newTransaction.js");
 const orderDetails = require("./sidebars/orderDetails.js");
 const orderFilter = require("./sidebars/orderFilter.js");
-const orderCalculator = require("./sidebars/orderCalculator.js");
 const recipeDetails = require("./sidebars/recipeDetails.js");
 const transactionDetails = require("./sidebars/transactionDetails.js");
 const transactionFilter = require("./sidebars/transactionFilter.js");
@@ -125,9 +124,6 @@ controller = {
                 break;
             case "newOrder":
                 newOrder.display();
-                break;
-            case "orderCalculator":
-                orderCalculator.display();
                 break;
             case "transactionDetails":
                 transactionDetails.display(data);
