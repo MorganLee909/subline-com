@@ -101,19 +101,7 @@ module.exports = {
             }
         }
 
-        Promise.all([Recipe.deleteOne({_id: req.params.id}), res.locals.merchant.save()])
-            .then((response)=>{
-                return res.json({});
-            })
-            .catch((err)=>{
-                if(typeof(err) === "string"){
-                    return res.json(err);
-                }
-                if(err.name === "ValidationError"){
-                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
-                }
-                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
-            });
+        return res.json({});
     },
 
     createFromSpreadsheet: function(req, res){
