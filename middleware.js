@@ -12,7 +12,7 @@ module.exports = {
         }
     
         Merchant.findOne({"session.sessionId": req.session.user})
-            .then(async (merchant)=>{
+            .then((merchant)=>{
                 if(merchant === null){
                     throw "login";
                 }
@@ -27,7 +27,7 @@ module.exports = {
                     merchant.save();
                     throw "login";
                 }
-                
+
                 res.locals.merchant = merchant;
                 return next();
             })

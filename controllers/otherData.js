@@ -15,7 +15,7 @@ module.exports = {
         Merchant.findOne({email: req.body.email.toLowerCase()})
             .then((merchant)=>{
                 if(merchant !== null){
-                    bcrypt.compare(req.body.password, merchant.password, (err, result)=>{
+                    bcrypt.compare(req.body.password, merchant.password, async (err, result)=>{
                         if(result === true){
                             //Check if email has not been verified
                             if(merchant.status.includes("unverified")){
