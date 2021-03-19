@@ -16,6 +16,13 @@ mongoose.connect(`${process.env.DB}/inventory-management`, {
 
 app.set("view engine", "ejs");
 
+let sessionOptions = {
+    secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superb.",
+    cookie: {secure: true},
+    saveUninitialized: true,
+    resave: false,
+}
+
 app.use(express.static(__dirname + "/views"));
 let httpsServer = {};
 if(process.env.NODE_ENV === "production"){
@@ -31,19 +38,14 @@ if(process.env.NODE_ENV === "production"){
             res.redirect(`https://${req.headers.host}${req.url}`);
         }
     });
+
+    sessionOptions.domain = process.env.COOKIE_DOMAIN;
 }
 
 app.use(compression());
-app.use(session({
-    secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superb.",
-    cookie: {secure: true},
-    saveUninitialized: true,
-    resave: false,
-    domain: process.env.COOKIE_DOMAIN
-}));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-
+app.use(session(sessionOptions));
 require("./routes")(app);
 
 if(process.env.NODE_ENV === "production"){
