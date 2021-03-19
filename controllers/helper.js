@@ -16,7 +16,7 @@ module.exports = {
                     for(let i = 0; i < response.data.orders.length; i++){
                         let transaction = new Transaction({
                             merchant: merchant._id,
-                            date: response.data.orders[i].created_at,
+                            date: response.data.orders[i].closed_at,
                             posId: response.data.orders[i].id,
                             recipes: []
                         });

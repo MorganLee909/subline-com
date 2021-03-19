@@ -65,7 +65,7 @@ module.exports = {
                     }
 
                     if(latest !== null){
-                        latest.setMilliseconds(latest.getMilliseconds() + 1000);
+                        latest.setMilliseconds(latest.getMilliseconds() + 1);
                         let now = new Date();
 
                         let postData = {
