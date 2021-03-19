@@ -214,6 +214,7 @@ class Merchant{
 
         homeStrand.drawInventoryCheckCard();
         ingredientsStrand.populateByProperty();
+        analyticsStrand.populateButtons();
     }
 
     getIngredient(id){
@@ -259,6 +260,7 @@ class Merchant{
         }
 
         recipeBookStrand.populateRecipes();
+        analyticsStrand.populateButtons();
     }
 
     removeRecipe(recipe){
@@ -270,6 +272,7 @@ class Merchant{
         this._recipes.splice(index, 1);
 
         recipeBookStrand.populateRecipes();
+        analyticsStrand.populateButtons();
     }
 
     get transactions(){
