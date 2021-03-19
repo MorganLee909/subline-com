@@ -16,10 +16,17 @@ module.exports = {
         confirmPassword: String
     }
     */
-    redirect: function(req, res){
+    redirect: async function(req, res){
         if(req.body.password !== req.body.confirmPassword){
             req.session.error = "YOUR PASSWORDS DO NOT MATCH";
             return res.redirect("/");
+        }
+        let email = req.body.email.toLowerCase();
+
+        let potentialMerchant = await Merchant.findOne({email: email})
+        if(potentialMerchant !== null){
+            req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
+            return res.redirect("/login");
         }
 
         let expirationDate = new Date();
@@ -30,7 +37,7 @@ module.exports = {
 
         let merchant = new Merchant({
             name: req.body.name,
-            email: req.body.email,
+            email: email,
             password: hash,
             pos: "square",
             status: ["unverified"],

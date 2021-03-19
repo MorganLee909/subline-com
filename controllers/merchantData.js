@@ -32,7 +32,7 @@ module.exports = {
         const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
         if(merchantFind !== null){
             req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
-            return res.redirect("/register");
+            return res.redirect("/login");
         }
 
         let salt = bcrypt.genSaltSync(10);
