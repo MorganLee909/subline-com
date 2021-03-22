@@ -197,6 +197,21 @@
     margin: 25px;
 }
 
+.menuLinks{
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+}
+
+    .menuLinks > *{
+        background: none;
+        border: none;
+        color: white;
+        text-decoration: underline;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
 /* 
 Ingredient Details 
 */

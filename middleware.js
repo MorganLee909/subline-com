@@ -2,8 +2,6 @@ const Merchant = require("./models/merchant.js")
 
 const helper = require("./controllers/helper.js");
 
-const axios = require("axios");
-
 module.exports = {
     verifySession: function(req, res, next){
         if(req.session.user === undefined) {

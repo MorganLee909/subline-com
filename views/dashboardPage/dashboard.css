@@ -655,6 +655,23 @@ Modal
                 margin-top: 15px;
             }
 
+    #modalFeedback{
+        display: flex;
+        flex-direction: column;
+        background: white;
+        padding: 50px;
+    }
+
+        #modalFeedback > *{
+            margin: 15px;
+        }
+
+        #modalFeedback label{
+            display: flex;
+            flex-direction: column;
+
+        }
+
 @media screen and (orientation: portrait){
     @media screen and (max-width: 1400px){
         body{

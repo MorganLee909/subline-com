@@ -214,6 +214,10 @@ controller = {
                 document.getElementById("modalSpreadsheetTitle").innerText = "transactions";
                 document.getElementById("spreadsheetDownload").href = "/transactions/download/spreadsheet";
                 content.onsubmit = newTransaction.submitSpreadsheet;
+                break;
+            case "feedback":
+                document.getElementById("modalFeedback").style.display = "flex";
+                break;
         }
     },
 
@@ -314,5 +318,6 @@ document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("an
 document.getElementById("ordersBtn").onclick = async ()=>{controller.openStrand("orders")};
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 document.getElementById("accountBtn").onclick = ()=>{controller.openStrand("account")};
+document.getElementById("feedbackButton").onclick = ()=>{controller.openModal("feedback")};
 
 controller.openStrand("home");
