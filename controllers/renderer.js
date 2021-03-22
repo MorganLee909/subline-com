@@ -73,7 +73,7 @@ module.exports = {
                             query: {
                                 filter: {
                                     date_time_filter: {
-                                        closed_at: {
+                                        created_at: {
                                             start_at: latest,
                                             end_at: now
                                         }
@@ -83,7 +83,7 @@ module.exports = {
                                     }
                                 },
                                 sort: {
-                                    sort_field: "CLOSED_AT",
+                                    sort_field: "CREATED_AT",
                                     sort_order: "DESC"
                                 }
                             },
