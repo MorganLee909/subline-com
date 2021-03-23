@@ -1,4 +1,5 @@
 const Merchant = require("../models/merchant");
+const Feedback = require("../models/feedback.js");
 
 const bcrypt = require("bcryptjs");
 
@@ -73,5 +74,31 @@ module.exports = {
         req.session.user = undefined;
 
         return res.redirect("/");
+    },
+
+    /*
+    POST: create user feedback
+    req.body = {
+        title: String,
+        content: String,
+        date: String (Number, unix time)
+    }
+    response = {}
+    */
+    feedback: function(req, res){
+        let feedback = new Feedback({
+            merchant: res.locals.merchant._id,
+            title: req.body.title,
+            content: req.body.content,
+            date: new Date(req.body.date)
+        });
+
+        feedback.save()
+            .then((feedback)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO SAVE DATA");
+            });
     }
 }

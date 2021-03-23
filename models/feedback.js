@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const feedbackSchema = new mongoose.Schema({
+const FeedbackSchema = new mongoose.Schema({
     merchant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Merchant",
@@ -10,9 +10,10 @@ const feedbackSchema = new mongoose.Schema({
         type: String,
         required: [true, "FEEDBACK MUST CONTAIN A TITLE"]
     },
-    contents: {
+    content: {
         type: String,
-        require: [true, "MESSAGE TOO SHORT"]
+        required: [true, "MESSAGE TOO SHORT"],
+        minLength: [10, "MESSAGE TOO SHORT"]
     },
     date: {
         type: Date,

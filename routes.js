@@ -63,6 +63,7 @@ module.exports = function(app){
     //Other
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
+    app.post("/feedback", session, otherData.feedback);
     
     //Information Pages
     app.get("/privacy", informationPages.privacy);
@@ -83,6 +84,5 @@ module.exports = function(app){
     //Square
     app.post("/squarelogin", squareData.redirect);
     app.get("/squareauth", squareData.createMerchant);
-    // app.get("/merchant/create/square", squareData.createMerchant);
     app.get("/recipes/update/square", session, squareData.updateRecipes);
 }
