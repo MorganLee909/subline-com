@@ -19,6 +19,8 @@ const recipeDetails = require("./sidebars/recipeDetails.js");
 const transactionDetails = require("./sidebars/transactionDetails.js");
 const transactionFilter = require("./sidebars/transactionFilter.js");
 
+const modalScript = require("./modal.js");
+
 const Merchant = require("./classes/Merchant.js");
 
 merchant = new Merchant(data.merchant, data.transactions);
@@ -216,7 +218,7 @@ controller = {
                 content.onsubmit = newTransaction.submitSpreadsheet;
                 break;
             case "feedback":
-                document.getElementById("modalFeedback").style.display = "flex";
+                modalScript.feedback();
                 break;
         }
     },
