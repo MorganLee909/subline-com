@@ -39,9 +39,9 @@ module.exports = {
 
                 newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
 
-                res.locals.owner.inventory.push(newIngredient);
+                res.locals.merchant.inventory.push(newIngredient);
 
-                return res.locals.owner.save();
+                return res.locals.merchant.save();
             })
             .then((response)=>{
                 return res.json(newIngredient);
@@ -77,19 +77,19 @@ module.exports = {
             })
             .then((ingredient)=>{
                 let updatedIngredient = {};
-                for(let i = 0; i < res.locals.owner.inventory.length; i++){
-                    if(res.locals.owner.inventory[i].ingredient.toString() === req.body.id){
-                        res.locals.owner.inventory[i].defaultUnit = req.body.unit;
+                for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+                    if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
+                        res.locals.merchant.inventory[i].defaultUnit = req.body.unit;
 
-                        if(res.locals.owner.inventory[i].quantity !== req.body.quantity){
+                        if(res.locals.merchant.inventory[i].quantity !== req.body.quantity){
                             new InventoryAdjustment({
                                 date: new Date(),
                                 merchant: req.session.owner,
                                 ingredient: req.body.id,
-                                quantity: req.body.quantity - res.locals.owner.inventory[i].quantity
+                                quantity: req.body.quantity - res.locals.merchant.inventory[i].quantity
                             }).save().catch(()=>{});
 
-                            res.locals.owner.inventory[i].quantity = req.body.quantity;
+                            res.locals.merchant.inventory[i].quantity = req.body.quantity;
                         }
 
                         updatedIngredient = {
@@ -102,7 +102,7 @@ module.exports = {
                     }
                 }
 
-                res.locals.owner.save().catch((err)=>{throw err});
+                res.locals.merchant.save().catch((err)=>{throw err});
                 return res.json(updatedIngredient);
             })
             .catch((err)=>{
@@ -172,11 +172,11 @@ module.exports = {
         }
 
         for(let i = 0; i < merchantData.length; i++){
-            res.locals.owner.inventory.push(merchantData[i]);
+            res.locals.merchant.inventory.push(merchantData[i]);
         }
 
         //Update the database
-        Promise.all([Ingredient.create(ingredients), res.locals.owner.save()])
+        Promise.all([Ingredient.create(ingredients), res.locals.merchant.save()])
             .then((response)=>{
                 return res.json(merchantData);
             })
@@ -210,14 +210,14 @@ module.exports = {
 
     //DELETE - Removes an ingredient from the merchant's inventory
     removeIngredient: function(req, res){
-        for(let i = 0; i < res.locals.owner.inventory.length; i++){
-            if(req.params.id === res.locals.owner.inventory[i].ingredient._id.toString()){
-                res.locals.owner.inventory.splice(i, 1);
+        for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+            if(req.params.id === res.locals.merchant.inventory[i].ingredient._id.toString()){
+                res.locals.merchant.inventory.splice(i, 1);
                 break;
             }
         }
 
-        Promise.all([res.locals.owner.save(), Ingredient.deleteOne({_id: req.params.id})])
+        Promise.all([res.locals.merchant.save(), Ingredient.deleteOne({_id: req.params.id})])
             .then((response)=>{
                 return res.json({});
             })

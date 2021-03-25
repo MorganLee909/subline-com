@@ -21,7 +21,7 @@ module.exports = {
     */
     createRecipe: function(req, res){
         let recipe = new Recipe({
-            merchant: res.locals.owner._id,
+            merchant: res.locals.merchant._id,
             name: req.body.name,
             price: Math.round(req.body.price * 100),
             ingredients: req.body.ingredients
@@ -29,8 +29,8 @@ module.exports = {
 
         recipe.save()
             .then((newRecipe)=>{
-                res.locals.owner.recipes.push(recipe);
-                res.locals.owner.save().catch((err)=>{throw err});
+                res.locals.merchant.recipes.push(recipe);
+                res.locals.merchant.save().catch((err)=>{throw err});
 
                 return res.json(newRecipe);
             })
@@ -61,7 +61,7 @@ module.exports = {
         Recipe.findOne({_id: req.body.id})
             .then((recipe)=>{
                 new ArchivedRecipe({
-                    merchant: res.locals.owner._id,
+                    merchant: res.locals.merchant._id,
                     name: recipe.name,
                     price: recipe.price,
                     date: new Date(),
@@ -90,13 +90,13 @@ module.exports = {
 
     //DELETE - removes a single recipe from the merchant and the database
     removeRecipe: function(req, res){
-        if(res.locals.owner.pos === "square"){
+        if(res.locals.merchant.pos === "square"){
             return res.json("YOU MUST EDIT YOUR RECIPES INSIDE SQUARE");
         }
         
-        for(let i = 0; i < res.locals.owner.recipes.length; i++){
-            if(res.locals.owner.recipes[i].toString() === req.params.id){
-                res.locals.owner.recipes.splice(i, 1);
+        for(let i = 0; i < res.locals.merchant.recipes.length; i++){
+            if(res.locals.merchant.recipes[i].toString() === req.params.id){
+                res.locals.merchant.recipes.splice(i, 1);
                 break;
             }
         }
@@ -139,7 +139,7 @@ module.exports = {
 
         let merchant = {};
         let ingredients = [];
-        res.locals.owner
+        res.locals.merchant
             .populate("inventory.ingredient")
             .execPopulate()
             .then((response)=>{
@@ -164,7 +164,7 @@ module.exports = {
 
                     if(array[i][locations.name] !== undefined){
                         currentRecipe = {
-                            merchant: res.locals.owner._id,
+                            merchant: res.locals.merchant._id,
                             name: array[i][locations.name],
                             price: parseInt(array[i][locations.price] * 100),
                             ingredients: []
@@ -228,18 +228,18 @@ module.exports = {
 
             let recipe = new Recipe({
                 posId: array[i][0],
-                merchant: res.locals.owner._id,
+                merchant: res.locals.merchant._id,
                 name: name,
                 price: parseInt(array[i][7] * 100) || 0,
                 ingredients: []
             });
 
             recipes.push(recipe);
-            res.locals.owner.recipes.push(recipe);
+            res.locals.merchant.recipes.push(recipe);
         }
 
 
-        Promise.all([Recipe.create(recipes), res.locals.owner.save()])
+        Promise.all([Recipe.create(recipes), res.locals.merchant.save()])
             .then((response)=>{
                 return res.json(response[0]);
             })
@@ -250,7 +250,7 @@ module.exports = {
     },
 
     spreadsheetTemplate: function(req, res){
-        res.locals.owner
+        res.locals.merchant
             .populate("inventory.ingredient")
             .execPopulate()
             .then((merchant)=>{

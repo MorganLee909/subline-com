@@ -9,22 +9,26 @@ module.exports = {
             return res.redirect("/login");
         }
     
-        Owner.findOne({"session.sessionId": req.session.owner})
-            .then((owner)=>{
-                if(owner === null) throw "login";
+        let owner = Owner.findOne({"session.sessionId": req.session.owner});
+        let merchant = Merchant.findOne({_id: req.session.merchant});
+        Promise.all([owner, merchant])
+            .then((response)=>{
+                if(response[0] === null || response[1] === null) throw "login";
+                if(response[0]._id !== response[1].owner) throw "login";
     
                 //Check if session is out of date
-                if(owner.session.expiration < new Date()){
+                if(response[0].session.expiration < new Date()){
                     let newExpiration = new Date();
                     newExpiration.setDate(newExpiration.getDate() + 90);
     
-                    owner.session.sessionId = helper.generateId(25);
-                    owner.session.expiration = newExpiration;
-                    owner.save();
+                    response[0].session.sessionId = helper.generateId(25);
+                    response[0].session.expiration = newExpiration;
+                    response[0].save();
                     throw "login";
                 }
 
-                res.locals.owner = owner;
+                res.locals.owner = response[0];
+                res.locals.merchant = response[1];
                 return next();
             })
             .catch((err)=>{

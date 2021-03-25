@@ -37,7 +37,7 @@ module.exports = {
 
         Transaction.aggregate([
             {$match: {
-                merchant: ObjectId(res.locals.owner._id),
+                merchant: ObjectId(res.locals.merchant._id),
                 date: {
                     $gte: from,
                     $lt: to
@@ -72,23 +72,23 @@ module.exports = {
         let keys = Object.keys(req.body.ingredientUpdates);
 
         for(let i = 0; i < keys.length; i++){
-            for(let j = 0; j < res.locals.owner.inventory.length; j++){
-                if(res.locals.owner.inventory[j].ingredient._id.toString() === keys[i]){
-                    res.locals.owner.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
+            for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                if(res.locals.merchant.inventory[j].ingredient._id.toString() === keys[i]){
+                    res.locals.merchant.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
 
                     break;
                 }
             }
         }
 
-        res.locals.owner.save()
+        res.locals.merchant.save()
             .then((merchant)=>{
                 if(req.body.date === null){
                     throw "NEW TRANSACTIONS MUST CONTAIN A DATE";
                 }
 
                 return new Transaction({
-                    merchant: res.locals.owner._id,
+                    merchant: res.locals.merchant._id,
                     date: new Date(req.body.date),
                     device: "none",
                     recipes: req.body.recipes
@@ -156,13 +156,13 @@ module.exports = {
             }
         }
 
-        res.locals.owner
+        res.locals.merchant
             .populate("recipes")
             .populate("inventory.ingredient")
             .execPopulate()
             .then((merchant)=>{
                 let transaction = new Transaction({
-                    merchant: res.locals.owner._id,
+                    merchant: res.locals.merchant._id,
                     date: spreadsheetDate,
                     recipes: []
                 });
@@ -230,7 +230,7 @@ module.exports = {
     },
 
     spreadsheetTemplate: function(req, res){
-        res.locals.owner
+        res.locals.merchant
             .populate("recipes")
             .execPopulate()
             .then((merchant)=>{
@@ -266,16 +266,16 @@ module.exports = {
                     const recipe = transaction.recipes[i].recipe;
                     for(let j = 0; j < recipe.ingredients.length; j++){
                         const ingredient = recipe.ingredients[j].ingredient;
-                        for(let k = 0; k < res.locals.owner.inventory.length; k++){
-                            if(ingredient.toString() === res.locals.owner.inventory[k].ingredient.toString()){
-                                res.locals.owner.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
+                        for(let k = 0; k < res.locals.merchant.inventory.length; k++){
+                            if(ingredient.toString() === res.locals.merchant.inventory[k].ingredient.toString()){
+                                res.locals.merchant.inventory[k].quantity += recipe.ingredients[j].quantity * transaction.recipes[i].quantity;
                                 break;
                             }
                         }
                     }
                 }
                 
-                return Promise.all([Transaction.deleteOne({_id: req.params.id}), res.locals.owner.save()]);
+                return Promise.all([Transaction.deleteOne({_id: req.params.id}), res.locals.merchant.save()]);
             })
             .then((response)=>{
                 res.json({});
@@ -305,7 +305,7 @@ module.exports = {
         let newTransactions = [];
         for(let i = 0; i < 5000; i++){
             let newTransaction = new Transaction({
-                merchant: res.locals.owner._id,
+                merchant: res.locals.merchant._id,
                 date: randomDate(),
                 recipes: []
             });
@@ -313,11 +313,11 @@ module.exports = {
             let numberOfRecipes = Math.floor((Math.random() * 5) + 1);
 
             for(let j = 0; j < numberOfRecipes; j++){
-                let recipeNumber = Math.floor(Math.random() * res.locals.owner.recipes.length);
+                let recipeNumber = Math.floor(Math.random() * res.locals.merchant.recipes.length);
                 let randQuantity = Math.floor((Math.random() * 3) + 1);
 
                 newTransaction.recipes.push({
-                    recipe: res.locals.owner.recipes[recipeNumber],
+                    recipe: res.locals.merchant.recipes[recipeNumber],
                     quantity: randQuantity
                 });
             }

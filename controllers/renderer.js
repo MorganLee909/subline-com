@@ -29,12 +29,12 @@ module.exports = {
     Renders inventoryPage
     */
     displayDashboard: function(req, res){
-        if(res.locals.owner.status.includes("unverified")) {
+        if(res.locals.merchant.status.includes("unverified")) {
             req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
-            return res.redirect(`/verify/email/${res.locals.owner._id}`);
+            return res.redirect(`/verify/email/${res.locals.merchant._id}`);
         }
 
-        res.locals.owner
+        res.locals.merchant
             .populate("inventory.ingredient")
             .populate("recipes")
             .execPopulate()
@@ -44,7 +44,7 @@ module.exports = {
 
                 return Transaction.aggregate([
                     {$match: {
-                        merchant: new ObjectId(res.locals.owner._id),
+                        merchant: new ObjectId(res.locals.merchant._id),
                         date: {$gte: firstDay},
                     }},
                     {$sort: {date: -1}},
@@ -58,7 +58,7 @@ module.exports = {
                 if(res.locals.pos !== "none"){
                     let latest = null;
                     if(transactions.length === 0){
-                        let latestTransaction = await Transaction.find({merchant: res.locals.owner._id}).sort({date: -1}).limit(1);
+                        let latestTransaction = await Transaction.find({merchant: res.locals.merchant._id}).sort({date: -1}).limit(1);
                         if(latestTransaction.length > 0) latest = new Date(latest[0].date);
                     }else{
                         latest = new Date(transactions[0].date);
@@ -69,7 +69,7 @@ module.exports = {
                         let now = new Date();
 
                         let postData = {
-                            location_ids: [res.locals.owner.square.location],
+                            location_ids: [res.locals.merchant.square.location],
                             query: {
                                 filter: {
                                     date_time_filter: {
@@ -91,7 +91,7 @@ module.exports = {
                         };
 
                         do{
-                            let newOrders = await helper.getSquareData(res.locals.owner, postData);
+                            let newOrders = await helper.getSquareData(res.locals.merchant, postData);
                             postData.cursor = newOrders.cursor;
                             for(let i = 0; i < newOrders.length; i++){
                                 for(let j = 0; j < newOrders[i].recipes.length; j++){
@@ -103,13 +103,13 @@ module.exports = {
                     }
                 }
 
-                res.locals.owner._id = undefined;
+                res.locals.merchant._id = undefined;
                 res.locals.password = undefined;
-                res.locals.owner.status = undefined;
+                res.locals.merchant.status = undefined;
                 res.locals.square = undefined;
                 res.locals.session = undefined;
 
-                return res.render("dashboardPage/dashboard", {merchant: res.locals.owner, transactions: transactions});
+                return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";

@@ -93,7 +93,7 @@ module.exports = {
     updateIngredientQuantities: function(req, res){
         let adjustments = [];
         let changedIngredients = [];
-        res.locals.owner
+        res.locals.merchant
             .populate("inventory.ingredient")
             .execPopulate()
             .then((merchant)=>{
@@ -189,28 +189,28 @@ module.exports = {
     response = Merchant
     */
     updateData: async function(req, res){
-        if(req.body.email !== res.locals.owner.email){
+        if(req.body.email !== res.locals.merchant.email){
             let merchantCheck = await Merchant.findOne({email: req.body.email});
             if(merchantCheck !== null){
                 return res.json("USER WITH THIS EMAIL ADDRESS ALREADY EXISTS");
             }
 
-            res.locals.owner.email = req.body.email;
-            res.locals.owner.status.push("unverified");
+            res.locals.merchant.email = req.body.email;
+            res.locals.merchant.status.push("unverified");
 
             const mailgunData = {
                 from: "The Subline <clientsupport@thesubline.net>",
-                to: res.locals.owner.email,
+                to: res.locals.merchant.email,
                 subject: "Email Verification",
                 html: verifyEmail({
-                    name: res.locals.owner.name,
-                    link: `${process.env.SITE}/verify/${res.locals.owner._id}/${res.locals.owner.sessionId}`
+                    name: res.locals.merchant.name,
+                    link: `${process.env.SITE}/verify/${res.locals.merchant._id}/${res.locals.merchant.sessionId}`
                 })
             };
             mailgun.messages().send(mailgunData, (err, body)=>{});
         }
 
-        res.locals.owner.save()
+        res.locals.merchant.save()
             .then((merchant)=>{
                 return res.json(merchant);
             })
@@ -236,19 +236,19 @@ module.exports = {
             return res.json("PASSWORDS DO NOT MATCH");
         }
 
-        bcrypt.compare(req.body.current, res.locals.owner.password, (err, result)=>{
+        bcrypt.compare(req.body.current, res.locals.merchant.password, (err, result)=>{
             if(result === true){
                 let salt = bcrypt.genSaltSync(10);
                 let hash = bcrypt.hashSync(req.body.new, salt);
 
-                res.locals.owner.password = hash;
+                res.locals.merchant.password = hash;
 
                 let newExpiration = new Date();
                 newExpiration.setDate(newExpiration.getDate() + 90);
-                res.locals.owner.session.sessionId = helper.generateId(25);
-                res.locals.owner.session.expiration = newExpiration;
+                res.locals.merchant.session.sessionId = helper.generateId(25);
+                res.locals.merchant.session.expiration = newExpiration;
 
-                res.locals.owner.save()
+                res.locals.merchant.save()
                     .then((merchant)=>{
                         req.session.error = "PLEASE LOG IN";
                         return res.json({redirect: `http://${process.env.SITE}/login`});
