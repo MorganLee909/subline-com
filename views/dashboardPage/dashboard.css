@@ -573,17 +573,28 @@ ACCOUNT STRAND
 #accountStrand{
     padding: 15px;
     box-sizing: border-box;
+    align-items: center;
 }
 
-    .horizontal{
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .vertical{
+    .settings{
         display: flex;
         flex-direction: column;
+        width: 75%;
     }
+
+        .settingsSection{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            background: rgb(201, 201, 201);
+            padding: 35px;
+        }
+
+            .settingsSection h2{
+                margin-bottom: 25px;
+            }
 
     #accountUpdate{
         max-width: 500px;
@@ -596,8 +607,8 @@ ACCOUNT STRAND
     #changePasswordBox{
         flex-direction: column;
         padding: 25px;
-        background: rgb(240, 252, 255);
-        border: 2px solid black;
+        background: rgb(201, 201, 201);
+        /* border: 2px solid black; */
         border-radius: 10px;
     }
 

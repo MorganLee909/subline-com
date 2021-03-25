@@ -3,8 +3,9 @@
         <h1 id="accountStrandTitle" class="strandTitle"></h1>
     </div>
 
-    <div class="horizontal">
-        <div class="vertical">
+    <div class="settings">
+        <div class="settingsSection">
+            <h2>ACCOUNT INFORMATION</h2>
             <label>EMAIL
                 <input id="accountEmail" type="email">
             </label>
@@ -12,28 +13,32 @@
             <button id="accountUpdate" class="button">UPDATE</button>
         </div>
 
-        <button id="accountShowPassword" class="button">CHANGE PASSWORD</button>
+        <div class="settingsSection">
+            <h2>SECURITY</h2>
+            
+            <button id="accountShowPassword" class="button">CHANGE PASSWORD</button>
 
-        <div id="changePasswordBox" style="display:none;">
-            <label>CURRENT PASSWORD
-                <input id="accountCurrentPassword" type="password">
-            </label>
+            <div id="changePasswordBox"style="display:none;">
+                <label>CURRENT PASSWORD
+                    <input id="accountCurrentPassword" type="password">
+                </label>
 
-            <label>NEW PASSWORD
-                <input id="accountNewPassword" type="password">
-            </label>
+                <label>NEW PASSWORD
+                    <input id="accountNewPassword" type="password">
+                </label>
 
-            <label>CONFIRM NEW PASSWORD
-                <input id="accountConfirmPassword" type="password">
-            </label>
+                <label>CONFIRM NEW PASSWORD
+                    <input id="accountConfirmPassword" type="password">
+                </label>
 
-            <div id="accountButtonBox" class="buttonBox">
-                <button id="cancelPasswordChange" class="button">CANCEL</button>
+                <div id="accountButtonBox" class="buttonBox">
+                    <button id="cancelPasswordChange" class="button">CANCEL</button>
 
-                <button id="changePasswordButton" class="button">CHANGE PASSWORD</button>
+                    <button id="changePasswordButton" class="button">CHANGE PASSWORD</button>
+                </div>
+
+                <p>* This will log you out of all current sessions</p>
             </div>
-
-            <p>* This will log you out of all current sessions</p>
         </div>
     </div>
 </div>
