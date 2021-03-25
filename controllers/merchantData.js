@@ -1,3 +1,4 @@
+const Owner = require("../models/owner.js");
 const Merchant = require("../models/merchant");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
 
@@ -29,7 +30,8 @@ module.exports = {
             return res.redirect("/register");
         }
 
-        const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
+        let email = req.body.email.toLowerCase();
+        const merchantFind = await Merchant.findOne({email: email});
         if(merchantFind !== null){
             req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
             return res.redirect("/login");
@@ -41,24 +43,32 @@ module.exports = {
         let expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 90);
 
-        let merchant = new Merchant({
-            name: req.body.name,
-            email: req.body.email.toLowerCase(),
+        let owner = new Owner({
+            email: email,
             password: hash,
-            pos: "none",
-            createdAt: Date.now(),
+            createdAt: new Date(),
             status: ["unverified"],
-            inventory: [],
-            recipes: [],
             session: {
                 sessionId: helper.generateId(25),
                 expiration: expirationDate
-            }
+            },
+            merchants: []
         });
 
-        merchant.save()
-            .then((merchant)=>{
-                return res.redirect(`/verify/email/${merchant._id}`);
+        let merchant = new Merchant({
+            owner: owner._id,
+            name: req.body.name,
+            pos: "none",
+            createdAt: Date.now(),
+            inventory: [],
+            recipes: []
+        });
+
+        owner.merchants.push(merchant._id);
+
+        Promise.all([owner.save(), merchant.save()])
+            .then((response)=>{
+                return res.redirect(`/verify/email/${response[0]._id}`);
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){

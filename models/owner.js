@@ -18,10 +18,6 @@ const OwnerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    pos: {
-        type: String,
-        required: true
-    },
     square: {
         id: String,
         accessToken: String,
@@ -40,7 +36,11 @@ const OwnerSchema = new mongoose.Schema({
             index: true
         },
         expiration: Date
-    }
+    },
+    merchants: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Merchant"
+    }]
 });
 
 module.exports = mongoose.model("Owner", OwnerSchema);

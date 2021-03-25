@@ -1,3 +1,4 @@
+const Owner = require("../models/owner.js");
 const Merchant = require("../models/merchant.js");
 
 const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
@@ -5,21 +6,21 @@ const verifyEmail = require("../emails/verifyEmail.js");
 
 module.exports = {
     sendVerifyEmail: function(req, res){
-        Merchant.findOne({_id: req.params.id})
-            .then((merchant)=>{
+        Owner.findOne({_id: req.params.id})
+            .then((owner)=>{
                 const mailgunData = {
                     from: "The Subline <clientsupport@thesubline.net>",
-                    to: merchant.email,
+                    to: owner.email,
                     subject: "Email verification",
                     html: verifyEmail({
-                        name: merchant.name,
-                        link: `${process.env.SITE}/verify/${merchant._id}/${merchant.session.sessionId}`,
+                        name: owner.email,
+                        link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`,
                     })
                 };
                 mailgun.messages().send(mailgunData, (err, body)=>{});
 
 
-                return res.render(`verifyPage/verify`, {id: merchant._id, email: merchant.email, banner: res.locals.merchant});
+                return res.render(`verifyPage/verify`, {id: owner._id, email: owner.email, banner: res.locals.merchant});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO SEND VERIFICATION EMAIL";

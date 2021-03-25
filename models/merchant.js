@@ -3,6 +3,11 @@ const isSanitary = require("../controllers/helper.js").isSanitary;
 const mongoose = require("mongoose");
 
 const MerchantSchema = new mongoose.Schema({
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Owner",
+        required: true
+    },
     name: {
         type: String,
         required: [true, "MERCHANT NAME IS REQUIRED"],
@@ -10,6 +15,10 @@ const MerchantSchema = new mongoose.Schema({
             validator: isSanitary,
             message: "NAME CONTAINS ILLEGAL CHARACTERS"
         }
+    },
+    pos: {
+        type: String,
+        required: true
     },
     createdAt: {
         type: Date,
