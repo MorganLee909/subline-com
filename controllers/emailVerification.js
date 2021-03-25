@@ -58,27 +58,27 @@ module.exports = {
     },
 
     verify: function(req, res){
-        Merchant.findOne({_id: req.params.id})
-            .then((merchant)=>{
-                if(req.params.code !== merchant.session.sessionId){
+        Owner.findOne({_id: req.params.id})
+            .then((owner)=>{
+                if(req.params.code !== owner.session.sessionId){
                     throw "UNABLE TO VERIFY EMAIL ADDRESS.  INCORRECT LINK";
                 }
 
-                merchant.status.splice(merchant.status.indexOf("unverified"), 1);
+                owner.status.splice(owner.status.indexOf("unverified"), 1);
 
                 const mailgunList = mailgun.lists("clientsupport@mail.thesubline.com");
                 const memberData = {
                     subscribed: true,
-                    address: merchant.email,
-                    name: merchant.name,
+                    address: owner.email,
+                    name: owner.email,
                     vars: {}
                 }
                 mailgunList.members().create(memberData, (err, data)=>{});
 
-                return merchant.save();
+                return owner.save();
             })
-            .then((merchant)=>{
-                req.session.success = "EMAIL VERIFIED.  PLEASE LOG IN";
+            .then((owner)=>{
+                req.session.success = "EMAIL VERIFIED. PLEASE LOG IN";
 
                 return res.redirect("/login");
             })

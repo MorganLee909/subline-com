@@ -15,7 +15,6 @@ module.exports = {
     login: function(req, res){
         Owner.findOne({email: req.body.email.toLowerCase()})
             .then((owner)=>{
-                console.log(owner);
                 if(owner !== null){
                     bcrypt.compare(req.body.password, owner.password, async (err, result)=>{
                         if(result === true){
