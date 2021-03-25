@@ -5,7 +5,9 @@
 
     <div class="settings">
         <div class="settingsSection">
-            <h2>ACCOUNT INFORMATION</h2>
+            <div class="settingsSectionHeader">
+                <h2>ACCOUNT INFORMATION</h2>
+            </div>
             <label>EMAIL
                 <input id="accountEmail" type="email">
             </label>
@@ -14,8 +16,20 @@
         </div>
 
         <div class="settingsSection">
-            <h2>SECURITY</h2>
-            
+            <div class="settingsSectionHeader">
+                <h2>YOUR LOCATIONS</h2>
+
+                <button id="settingsAddMerchant" class="button">NEW LOCATION</button>
+            </div>
+
+            <div id="settingsMerchants"></div>
+        </div>
+
+        <div class="settingsSection">
+            <div class="settingsSectionHeader">
+                <h2>SECURITY</h2>
+            </div>
+
             <button id="accountShowPassword" class="button">CHANGE PASSWORD</button>
 
             <div id="changePasswordBox"style="display:none;">

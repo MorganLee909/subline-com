@@ -580,6 +580,8 @@ ACCOUNT STRAND
         display: flex;
         flex-direction: column;
         width: 75%;
+        max-height: 100%;
+        overflow-y: auto;
     }
 
         .settingsSection{
@@ -592,8 +594,13 @@ ACCOUNT STRAND
             padding: 35px;
         }
 
-            .settingsSection h2{
+            .settingsSectionHeader{
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 margin-bottom: 25px;
+                border-bottom: 1px solid black;
             }
 
     #accountUpdate{
