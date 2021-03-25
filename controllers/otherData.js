@@ -87,7 +87,7 @@ module.exports = {
     */
     feedback: function(req, res){
         let feedback = new Feedback({
-            merchant: res.locals.merchant._id,
+            merchant: res.locals.owner._id,
             title: req.body.title,
             content: req.body.content,
             date: new Date(req.body.date)

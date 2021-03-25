@@ -269,7 +269,7 @@ module.exports = {
         let merchantRecipes = [];
         let newRecipes = [];
     
-        res.locals.merchant
+        res.locals.owner
             .populate("recipes")
             .execPopulate()
             .then((fetchedMerchant)=>{

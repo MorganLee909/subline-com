@@ -1,4 +1,4 @@
-const Merchant = require("./models/merchant.js")
+const Owner = require("./models/owner.js");
 
 const helper = require("./controllers/helper.js");
 
@@ -9,24 +9,22 @@ module.exports = {
             return res.redirect("/login");
         }
     
-        Merchant.findOne({"session.sessionId": req.session.owner})
-            .then((merchant)=>{
-                if(merchant === null){
-                    throw "login";
-                }
+        Owner.findOne({"session.sessionId": req.session.owner})
+            .then((owner)=>{
+                if(owner === null) throw "login";
     
                 //Check if session is out of date
-                if(merchant.session.date < new Date()){
+                if(owner.session.expiration < new Date()){
                     let newExpiration = new Date();
                     newExpiration.setDate(newExpiration.getDate() + 90);
     
-                    merchant.session.sessionId = helper.generateId(25);
-                    merchant.session.date = newExpiration;
-                    merchant.save();
+                    owner.session.sessionId = helper.generateId(25);
+                    owner.session.expiration = newExpiration;
+                    owner.save();
                     throw "login";
                 }
 
-                res.locals.merchant = merchant;
+                res.locals.owner = owner;
                 return next();
             })
             .catch((err)=>{

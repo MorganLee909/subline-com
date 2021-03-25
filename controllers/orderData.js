@@ -41,7 +41,7 @@ module.exports = {
 
         Order.aggregate([
             {$match:{
-                merchant: new ObjectId(res.locals.merchant._id),
+                merchant: new ObjectId(res.locals.owner._id),
                 date: {
                     $gte: from,
                     $lt: to
@@ -72,7 +72,7 @@ module.exports = {
     */ 
     createOrder: function(req, res){
         let newOrder = new Order(req.body);
-        newOrder.merchant = res.locals.merchant._id;
+        newOrder.merchant = res.locals.owner._id;
         newOrder.save()
             .then((response)=>{
                 res.json(response);
@@ -89,14 +89,14 @@ module.exports = {
 
         
             for(let i = 0; i < req.body.ingredients.length; i++){
-                for(let j = 0; j < res.locals.merchant.inventory.length; j++){
-                    if(req.body.ingredients[i].ingredient === res.locals.merchant.inventory[j].ingredient.toString()){
-                        res.locals.merchant.inventory[j].quantity += parseFloat(req.body.ingredients[i].quantity);
+                for(let j = 0; j < res.locals.owner.inventory.length; j++){
+                    if(req.body.ingredients[i].ingredient === res.locals.owner.inventory[j].ingredient.toString()){
+                        res.locals.owner.inventory[j].quantity += parseFloat(req.body.ingredients[i].quantity);
                     }
                 }
             }
 
-            res.locals.merchant.save().catch((err)=>{});
+            res.locals.owner.save().catch((err)=>{});
     },
 
     createFromSpreadsheet: function(req, res){
@@ -149,14 +149,14 @@ module.exports = {
         }
 
         let merchant = {};
-        res.locals.merchant
+        res.locals.owner
             .populate("inventory.ingredient")
             .execPopulate()
             .then((response)=>{
                 merchant = response;
 
                 let order = new Order({
-                    merchant: res.locals.merchant._id,
+                    merchant: res.locals.owner._id,
                     name: array[1][locations.name],
                     date: spreadsheetDate,
                     taxes: parseInt(array[1][locations.taxes] * 100),
@@ -211,7 +211,7 @@ module.exports = {
     GET - Creates and sends a template xlsx for uploading orders
     */
     spreadsheetTemplate: function(req, res){
-        res.locals.merchant
+        res.locals.owner
             .populate("inventory.ingredient")
             .execPopulate()
             .then((merchant)=>{
@@ -251,15 +251,15 @@ module.exports = {
         Order.findOne({_id: req.params.id})
             .then((order)=>{
                 for(let i = 0; i < order.ingredients.length; i++){
-                    for(let j = 0; j < res.locals.merchant.inventory.length; j++){
-                        if(order.ingredients[i].ingredient.toString() === res.locals.merchant.inventory[j].ingredient.toString()){
-                            res.locals.merchant.inventory[j].quantity -= order.ingredients[i].quantity;
+                    for(let j = 0; j < res.locals.owner.inventory.length; j++){
+                        if(order.ingredients[i].ingredient.toString() === res.locals.owner.inventory[j].ingredient.toString()){
+                            res.locals.owner.inventory[j].quantity -= order.ingredients[i].quantity;
                             break;
                         }
                     }
                 }
 
-                return Promise.all([Order.deleteOne({_id: req.params.id}), res.locals.merchant.save()]);
+                return Promise.all([Order.deleteOne({_id: req.params.id}), res.locals.owner.save()]);
             })
             .then((response)=>{
                 res.json({});
