@@ -123,9 +123,10 @@ module.exports = {
                     }
                 });
 
-                return Promise.all([items, location, merchant.save()]);
+                return Promise.all([items, location]);
             })
             .then((response)=>{
+                console.log(response[0].data);
                 if(owner.email === response[1].data.location.business_email) merchant.status = [];
                 let recipes = [];
                 
@@ -159,7 +160,7 @@ module.exports = {
                     }
                 }
     
-                return Promise.all([Recipe.create(recipes), owner.save()]);
+                return Promise.all([Recipe.create(recipes), owner.save(), merchant.save()]);
             })
             .then((response)=>{
                 req.session.owner = response[1].session.sessionId;
