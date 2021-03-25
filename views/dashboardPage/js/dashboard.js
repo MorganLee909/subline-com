@@ -25,7 +25,7 @@ const Merchant = require("./classes/Merchant.js");
 
 window.merchant = new Merchant(
     data.merchant.name,
-    date.owner.email,
+    data.owner.email,
     data.merchant.pos,
     data.merchant.inventory,
     data.merchant.recipes,
