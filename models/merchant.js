@@ -20,6 +20,7 @@ const MerchantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    locationId: String,
     createdAt: {
         type: Date,
         default: new Date()

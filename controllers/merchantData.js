@@ -108,7 +108,7 @@ module.exports = {
 
                     adjustments.push(new InventoryAdjustment({
                         date: Date.now(),
-                        merchant: req.session.user,
+                        merchant: req.session.owner,
                         ingredient: req.body[i].id,
                         quantity: req.body[i].quantity - updateIngredient.quantity,
                     }));

@@ -47,7 +47,7 @@ module.exports = {
                                 await merchant.save();
                             }
 
-                            req.session.user = merchant.session.sessionId;
+                            req.session.owner = merchant.session.sessionId;
                             return res.redirect("/dashboard");
                         }else{
                             req.session.error = "INVALID EMAIL OR PASSWORD";
@@ -71,7 +71,7 @@ module.exports = {
     Redirects to /
     */
     logout: function(req, res){
-        req.session.user = undefined;
+        req.session.owner = undefined;
 
         return res.redirect("/");
     },

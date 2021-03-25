@@ -1,3 +1,4 @@
+const Owner = require("../models/owner.js");
 const Merchant = require("../models/merchant.js");
 const Recipe = require("../models/recipe.js");
 const Transaction = require("../models/transaction.js");
@@ -23,8 +24,8 @@ module.exports = {
         }
         let email = req.body.email.toLowerCase();
 
-        let potentialMerchant = await Merchant.findOne({email: email})
-        if(potentialMerchant !== null){
+        let potentialOwner = await Owner.findOne({email: email})
+        if(potentialOwner !== null){
             req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
             return res.redirect("/login");
         }
@@ -35,25 +36,34 @@ module.exports = {
         let salt = bcrypt.genSaltSync(10);
         let hash = bcrypt.hashSync(req.body.password, salt);
 
-        let merchant = new Merchant({
-            name: req.body.name,
+        let owner = new Owner({
             email: email,
             password: hash,
-            pos: "square",
-            status: ["unverified"],
-            inventory: [],
-            recipes: [],
             square: {},
             createdAt: new Date(),
+            status: ["unverified"],
             session: {
                 sessionId: helper.generateId(25),
                 expiration: expirationDate
-            }
+            },
+            merchants: []
         });
 
-        merchant.save()
+        let merchant = new Merchant({
+            owner: owner._id,
+            name: req.body.name,
+            pos: "square",
+            inventory: [],
+            recipes: [],
+            square: {},
+            createdAt: new Date()
+        });
+
+        owner.merchants.push(merchant._id);
+
+        Promise.all([owner.save(), merchant.save()])
             .then((response)=>{
-                req.session.user = merchant.session.sessionId;
+                req.session.owner = response[0].session.sessionId;
                 return res.redirect(`${process.env.SQUARE_ADDRESS}/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
             })
             .catch((err)=>{
@@ -76,47 +86,47 @@ module.exports = {
         }
 
         let merchant = {};
-
-        let localMerchant = Merchant.findOne({"session.sessionId": req.session.user});
+        let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants");
         let squareMerchant = axios.post(url, data);
-        Promise.all([localMerchant, squareMerchant])
+        Promise.all([owner, squareMerchant])
             .then((response)=>{
                 if(response[0] === null) throw "ERROR: UNABLE TO CREATE ACCOUNT";
 
-                merchant = response[0];
+                owner = response[0];
+                merchant = response[0].merchants[0];
 
-                merchant.square = {
+                owner.square = {
                     id: response[1].data.merchant_id,
                     expires: new Date(response[1].data.expires_at),
                     refreshToken: response[1].data.refresh_token,
                     accessToken: response[1].data.access_token
                 };
 
-                return axios.get(`${process.env.SQUARE_ADDRESS}/v2/merchants/${merchant.square.id}`, {
-                    headers: {Authorization: `Bearer ${merchant.square.accessToken}`}
+                return axios.get(`${process.env.SQUARE_ADDRESS}/v2/merchants/${owner.square.id}`, {
+                    headers: {Authorization: `Bearer ${owner.square.accessToken}`}
                 });
             })    
             .then((response)=>{
-                merchant.square.location = response.data.merchant.main_location_id;
+                merchant.locationId = response.data.merchant.main_location_id;
 
                 let items = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
                     object_types: ["ITEM"]
                 }, {
                     headers: {
-                        Authorization: `Bearer ${merchant.square.accessToken}`
+                        Authorization: `Bearer ${owner.square.accessToken}`
                     }
                 });
 
-                let location = axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations/${merchant.square.location}`, {
+                let location = axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations/${merchant.locationId}`, {
                     headers: {
-                        Authorization: `Bearer ${merchant.square.accessToken}`
+                        Authorization: `Bearer ${owner.square.accessToken}`
                     }
                 });
 
                 return Promise.all([items, location]);
             })
             .then((response)=>{
-                if(merchant.email === response[1].data.location.business_email) merchant.status = [];
+                if(owner.email === response[1].data.location.business_email) merchant.status = [];
                 let recipes = [];
                 
                 for(let i = 0; i < response[0].data.objects.length; i++){
@@ -149,21 +159,21 @@ module.exports = {
                     }
                 }
     
-                return Promise.all([Recipe.create(recipes), merchant.save()]);
+                return Promise.all([Recipe.create(recipes), owner.save()]);
             })
             .then((response)=>{
-                req.session.user = response[1].session.sessionId;
+                req.session.owner = response[1].session.sessionId;
     
                 res.redirect("/dashboard");
 
                 let body = {
-                    location_ids: [merchant.square.location],
+                    location_ids: [merchant.locationId],
                     limit: 10000,
                     query: {}
                 };
                 let options = {
                     headers: {
-                        Authorization: `Bearer ${merchant.square.accessToken}`,
+                        Authorization: `Bearer ${owner.square.accessToken}`,
                         "Content-Type": "application/json"
                     }
                 };
@@ -198,14 +208,14 @@ module.exports = {
                 }
 
                 let body = {
-                    location_ids: [merchant.square.location],
+                    location_ids: [merchant.locationId],
                     limit: 10000,
                     cursor: response.data.cursor,
                     query: {}
                 };
                 let options = {
                     headers: {
-                        Authorization: `Bearer ${merchant.square.accessToken}`,
+                        Authorization: `Bearer ${owner.square.accessToken}`,
                         "Content-Type": "application/json"
                     }
                 };

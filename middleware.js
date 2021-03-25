@@ -4,12 +4,12 @@ const helper = require("./controllers/helper.js");
 
 module.exports = {
     verifySession: function(req, res, next){
-        if(req.session.user === undefined) {
+        if(req.session.owner === undefined) {
             req.session.error = "PLEASE LOG IN";
             return res.redirect("/login");
         }
     
-        Merchant.findOne({"session.sessionId": req.session.user})
+        Merchant.findOne({"session.sessionId": req.session.owner})
             .then((merchant)=>{
                 if(merchant === null){
                     throw "login";
@@ -31,7 +31,7 @@ module.exports = {
             })
             .catch((err)=>{
                 if(err === "login"){
-                    req.session.user = undefined;
+                    req.session.owner = undefined;
                     req.session.error = "PLEASE LOG IN";
                     return res.redirect("/login");
                 }
