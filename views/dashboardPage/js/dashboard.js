@@ -228,6 +228,9 @@ controller = {
             case "feedback":
                 modalScript.feedback();
                 break;
+            case "newMerchant":
+                modalScript.newMerchant();
+                break;
         }
     },
 

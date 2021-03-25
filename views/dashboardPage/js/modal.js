@@ -38,6 +38,12 @@ let modal = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    newMerchant: function(){
+        let form = document.getElementById("modalNewMerchant");
+        form.style.display = "flex";
+        console.log("new merchant");
     }
 };
 

@@ -5,6 +5,10 @@ let account = {
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
 
+        //Display alternate locations
+        document.getElementById("settingsAddMerchant").onclick = ()=>{controller.openModal("newMerchant")};
+
+        //Handle the password changey stuffs
         let passButton = document.getElementById("accountShowPassword");
         let passBox = document.getElementById("changePasswordBox");
         passButton.onclick = ()=>{
