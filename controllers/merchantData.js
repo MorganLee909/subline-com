@@ -16,6 +16,7 @@ module.exports = {
         email: registration email,
         password: password,
         confirmPassword: confirmation password
+        owner: String (id of the owner, new owner of undefined)
     }
     Redirects to /dashboard
     */
@@ -43,17 +44,22 @@ module.exports = {
         let expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 90);
 
-        let owner = new Owner({
-            email: email,
-            password: hash,
-            createdAt: new Date(),
-            status: ["unverified"],
-            session: {
-                sessionId: helper.generateId(25),
-                expiration: expirationDate
-            },
-            merchants: []
-        });
+        let owner = {};
+        if(req.body.owner === undefined){
+            owner = new Owner({
+                email: email,
+                password: hash,
+                createdAt: new Date(),
+                status: ["unverified"],
+                session: {
+                    sessionId: helper.generateId(25),
+                    expiration: expirationDate
+                },
+                merchants: []
+            });
+        }else{
+            owner = await Owner.findOne({_id: req.body.owner})
+        }
 
         let merchant = new Merchant({
             owner: owner._id,
