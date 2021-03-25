@@ -126,7 +126,6 @@ module.exports = {
                 return Promise.all([items, location]);
             })
             .then((response)=>{
-                console.log(response[0].data);
                 if(owner.email === response[1].data.location.business_email) merchant.status = [];
                 let recipes = [];
                 

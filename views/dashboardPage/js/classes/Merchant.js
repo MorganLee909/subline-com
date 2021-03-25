@@ -83,7 +83,8 @@ class Merchant{
             pos,
             ingredients,
             recipes,
-            transactions
+            transactions,
+            merchants
         ){
         this._name = name;
         this._email = email;
@@ -92,6 +93,7 @@ class Merchant{
         this._recipes = [];
         this._transactions = [];
         this._orders = [];
+        this._merchants = merchants;
         
         //populate ingredients
         for(let i = 0; i < ingredients.length; i++){

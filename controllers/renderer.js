@@ -42,7 +42,7 @@ module.exports = {
                 let date = new Date();
                 let firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
-                return Transaction.aggregate([
+                let transactions = Transaction.aggregate([
                     {$match: {
                         merchant: new ObjectId(merchant._id),
                         date: {$gte: firstDay},
@@ -52,9 +52,15 @@ module.exports = {
                         date: 1,
                         recipes: 1
                     }}
-                ]);      
+                ]);
+                
+                let merchants = res.locals.owner.populate("merchants", "name");
+
+                return Promise.all([transactions, merchants]);
             })
-            .then(async (transactions)=>{
+            .then(async (response)=>{
+                let transactions = response[0];
+
                 if(res.locals.merchant.pos !== "none"){
                     let latest = null;
                     if(transactions.length === 0){
@@ -111,6 +117,10 @@ module.exports = {
                 res.locals.owner.square = undefined;
                 res.locals.owner.createdAt = undefined;
                 res.locals.owner.session = undefined;
+
+                for(let i = 0; i < res.locals.owner.merchants.length; i++){
+                    if(res.locals.owner.merchants[i]._id.toString() === res.locals.merchant._id.toString()) res.locals.owner.merchants.splice(i, 1);
+                }
 
                 return res.render("dashboardPage/dashboard", {owner: res.locals.owner, merchant: res.locals.merchant, transactions: transactions});
             })

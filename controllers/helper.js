@@ -64,7 +64,6 @@ module.exports = {
                 return transactions;
             })
             .catch((err)=>{
-                console.log(err.response.data);
                 return "ERROR: UNABLE TO UPDATE DATA";
             });
     },

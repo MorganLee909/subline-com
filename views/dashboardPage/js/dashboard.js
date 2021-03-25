@@ -29,7 +29,8 @@ window.merchant = new Merchant(
     data.merchant.pos,
     data.merchant.inventory,
     data.merchant.recipes,
-    data.transactions
+    data.transactions,
+    data.owner.merchants
 );
 
 controller = {
