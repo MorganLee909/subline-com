@@ -23,7 +23,14 @@ const modalScript = require("./modal.js");
 
 const Merchant = require("./classes/Merchant.js");
 
-merchant = new Merchant(data.merchant, data.transactions);
+window.merchant = new Merchant(
+    data.merchant.name,
+    date.owner.email,
+    data.merchant.pos,
+    data.merchant.inventory,
+    data.merchant.recipes,
+    data.transactions
+);
 
 controller = {
     openStrand: function(strand, data = undefined){

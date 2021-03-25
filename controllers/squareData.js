@@ -123,7 +123,7 @@ module.exports = {
                     }
                 });
 
-                return Promise.all([items, location]);
+                return Promise.all([items, location, merchant.save()]);
             })
             .then((response)=>{
                 if(owner.email === response[1].data.location.business_email) merchant.status = [];

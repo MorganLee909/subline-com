@@ -29,9 +29,9 @@ module.exports = {
     Renders inventoryPage
     */
     displayDashboard: function(req, res){
-        if(res.locals.merchant.status.includes("unverified")) {
+        if(res.locals.owner.status.includes("unverified")) {
             req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
-            return res.redirect(`/verify/email/${res.locals.merchant._id}`);
+            return res.redirect(`/verify/email/${res.locals.owner._id}`);
         }
 
         res.locals.merchant
@@ -44,7 +44,7 @@ module.exports = {
 
                 return Transaction.aggregate([
                     {$match: {
-                        merchant: new ObjectId(res.locals.merchant._id),
+                        merchant: new ObjectId(merchant._id),
                         date: {$gte: firstDay},
                     }},
                     {$sort: {date: -1}},
@@ -55,7 +55,7 @@ module.exports = {
                 ]);      
             })
             .then(async (transactions)=>{
-                if(res.locals.pos !== "none"){
+                if(res.locals.merchant.pos !== "none"){
                     let latest = null;
                     if(transactions.length === 0){
                         let latestTransaction = await Transaction.find({merchant: res.locals.merchant._id}).sort({date: -1}).limit(1);
@@ -69,7 +69,7 @@ module.exports = {
                         let now = new Date();
 
                         let postData = {
-                            location_ids: [res.locals.merchant.square.location],
+                            location_ids: [res.locals.merchant.locationId],
                             query: {
                                 filter: {
                                     date_time_filter: {
@@ -91,7 +91,7 @@ module.exports = {
                         };
 
                         do{
-                            let newOrders = await helper.getSquareData(res.locals.merchant, postData);
+                            let newOrders = await helper.getSquareData(res.locals.owner, res.locals.merchant, postData);
                             postData.cursor = newOrders.cursor;
                             for(let i = 0; i < newOrders.length; i++){
                                 for(let j = 0; j < newOrders[i].recipes.length; j++){
@@ -103,13 +103,16 @@ module.exports = {
                     }
                 }
 
-                res.locals.merchant._id = undefined;
-                res.locals.password = undefined;
-                res.locals.merchant.status = undefined;
-                res.locals.square = undefined;
-                res.locals.session = undefined;
+                res.locals.merchant.owner = undefined;
+                res.locals.createdAt = undefined;
+                
+                res.locals.owner.password = undefined;
+                res.locals.owner.status = undefined;
+                res.locals.owner.square = undefined;
+                res.locals.owner.createdAt = undefined;
+                res.locals.owner.session = undefined;
 
-                return res.render("dashboardPage/dashboard", {merchant: res.locals.merchant, transactions: transactions});
+                return res.render("dashboardPage/dashboard", {owner: res.locals.owner, merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";

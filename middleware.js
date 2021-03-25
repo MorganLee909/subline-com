@@ -1,4 +1,5 @@
 const Owner = require("./models/owner.js");
+const Merchant = require("./models/merchant.js");
 
 const helper = require("./controllers/helper.js");
 
@@ -14,7 +15,7 @@ module.exports = {
         Promise.all([owner, merchant])
             .then((response)=>{
                 if(response[0] === null || response[1] === null) throw "login";
-                if(response[0]._id !== response[1].owner) throw "login";
+                if(response[0]._id.toString() !== response[1].owner.toString()) throw "login";
     
                 //Check if session is out of date
                 if(response[0].session.expiration < new Date()){

@@ -77,40 +77,47 @@ class MerchantIngredient{
 }
 
 class Merchant{
-    constructor(oldMerchant, transactions){
-        this._name = oldMerchant.name;
-        this._email = oldMerchant.email;
-        this._pos = oldMerchant.pos;
+        constructor(
+            name,
+            email,
+            pos,
+            ingredients,
+            recipes,
+            transactions
+        ){
+        this._name = name;
+        this._email = email;
+        this._pos = pos;
         this._ingredients = [];
         this._recipes = [];
         this._transactions = [];
         this._orders = [];
         
         //populate ingredients
-        for(let i = 0; i < oldMerchant.inventory.length; i++){
+        for(let i = 0; i < ingredients.length; i++){
             const ingredient = new Ingredient(
-                oldMerchant.inventory[i].ingredient._id,
-                oldMerchant.inventory[i].ingredient.name,
-                oldMerchant.inventory[i].ingredient.category,
-                oldMerchant.inventory[i].ingredient.unitType,
-                oldMerchant.inventory[i].defaultUnit,
+                ingredients[i].ingredient._id,
+                ingredients[i].ingredient.name,
+                ingredients[i].ingredient.category,
+                ingredients[i].ingredient.unitType,
+                ingredients[i].defaultUnit,
                 this,
-                oldMerchant.inventory[i].ingredient.unitSize
+                ingredients[i].ingredient.unitSize
             );
 
             const merchantIngredient = new MerchantIngredient(
                 ingredient,
-                oldMerchant.inventory[i].quantity,
+                ingredients[i].quantity,
             );
 
             this._ingredients.push(merchantIngredient);
         }
 
         //populate recipes
-        for(let i = 0; i < oldMerchant.recipes.length; i++){
+        for(let i = 0; i < recipes.length; i++){
             let ingredients = [];
-            for(let j = 0; j < oldMerchant.recipes[i].ingredients.length; j++){
-                const ingredient = oldMerchant.recipes[i].ingredients[j];
+            for(let j = 0; j < recipes[i].ingredients.length; j++){
+                const ingredient = recipes[i].ingredients[j];
                 for(let k = 0; k < this._ingredients.length; k++){
                     if(ingredient.ingredient === this._ingredients[k].ingredient.id){
                         ingredients.push({
@@ -123,9 +130,9 @@ class Merchant{
             }
 
             this._recipes.push(new Recipe(
-                oldMerchant.recipes[i]._id,
-                oldMerchant.recipes[i].name,
-                oldMerchant.recipes[i].price,
+                recipes[i]._id,
+                recipes[i].name,
+                recipes[i].price,
                 ingredients,
                 this
             ));

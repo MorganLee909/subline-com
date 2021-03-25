@@ -23,7 +23,6 @@ const OwnerSchema = new mongoose.Schema({
         accessToken: String,
         expires: Date,
         refreshToken: String,
-        location: String
     },
     createdAt: {
         type: Date,
