@@ -690,6 +690,27 @@ Modal
 
         }
 
+    #modalNewMerchant{
+        display: flex;
+        flex-direction: column;
+        background: white;
+        padding: 50px;
+        min-width: 350px;
+    }
+
+        #modalNewMerchant h2{
+            text-align: center;
+        }
+
+        #modalNewMerchant > *{
+            margin: 15px;
+        }
+
+        #modalNewMerchant label{
+            display: flex;
+            flex-direction: column;
+        }
+
 @media screen and (orientation: portrait){
     @media screen and (max-width: 1400px){
         body{

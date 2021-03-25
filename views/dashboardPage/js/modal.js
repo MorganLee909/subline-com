@@ -1,3 +1,5 @@
+const merchant = require("../../../models/merchant");
+
 let modal = {
     feedback: function(){
         let form = document.getElementById("modalFeedback");
@@ -43,7 +45,39 @@ let modal = {
     newMerchant: function(){
         let form = document.getElementById("modalNewMerchant");
         form.style.display = "flex";
-        console.log("new merchant");
+        form.onsubmit = ()=>{this.submitNewMerchantNone()};
+    },
+
+    submitNewMerchantNone(){
+        event.preventDefault();
+
+        let data = {
+            name: document.getElementById("addMerchantName").value,
+        };
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/merchant/add/none", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    console.log(response);
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 };
 

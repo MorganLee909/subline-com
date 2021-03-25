@@ -44,22 +44,17 @@ module.exports = {
         let expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 90);
 
-        let owner = {};
-        if(req.body.owner === undefined){
-            owner = new Owner({
-                email: email,
-                password: hash,
-                createdAt: new Date(),
-                status: ["unverified"],
-                session: {
-                    sessionId: helper.generateId(25),
-                    expiration: expirationDate
-                },
-                merchants: []
-            });
-        }else{
-            owner = await Owner.findOne({_id: req.body.owner})
-        }
+        let owner = new Owner({
+            email: email,
+            password: hash,
+            createdAt: new Date(),
+            status: ["unverified"],
+            session: {
+                sessionId: helper.generateId(25),
+                expiration: expirationDate
+            },
+            merchants: []
+        });
 
         let merchant = new Merchant({
             owner: owner._id,
@@ -77,6 +72,7 @@ module.exports = {
                 return res.redirect(`/verify/email/${response[0]._id}`);
             })
             .catch((err)=>{
+                console.log(err);
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){
@@ -86,6 +82,36 @@ module.exports = {
                 }
                 
                 return res.redirect("/");
+            });
+    },
+
+    /*
+    POST: create new merchant for existing owner
+    req.body = {
+        name: String
+    }
+    */
+    addMerchantNone: function(req, res){
+        let merchant = new Merchant({
+            owner: res.locals.owner._id,
+            name: req.body.name,
+            pos: "none",
+            createdAt: new Date(),
+            inventory: [],
+            recipes: []
+        });
+
+        res.locals.owner.push(merchant._id);
+
+        Promise.all([owner.save(), merchant.save()])
+            .then((response)=>{
+                return res.json(response);
+            })
+            .catch((err)=>{
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO CREATE NEW MERCHANT");
             });
     },
 
