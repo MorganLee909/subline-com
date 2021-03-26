@@ -59,8 +59,6 @@ let home = {
             }
         }
 
-        console.log(dates);
-        console.log(revenue);
         const trace = {
             x: dates,
             y: revenue,

@@ -189,7 +189,7 @@ controller = {
         }
     },
 
-    openModal: function(str){
+    openModal: function(str, data){
         let modal = document.getElementById("modal");
         modal.style.display = "flex";
         document.getElementById("modalClose").addEventListener("click", this.closeModal);
@@ -230,6 +230,13 @@ controller = {
                 break;
             case "newMerchant":
                 modalScript.newMerchant();
+                break;
+            case "confirmDeleteMerchant":
+                let div = document.getElementById("modalConfirm");
+                div.style.display = "flex";
+                div.children[1].innerText = "Are you sure you want to delete this merchant?";
+                div.children[2].children[1].onclick = ()=>{account.deleteMerchant(data)};
+                div.children[2].children[0].onclick = ()=>{controller.closeModal()};
                 break;
         }
     },

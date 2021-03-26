@@ -21,6 +21,7 @@ let account = {
             div.children[0].innerText = merchant.owner.merchants[i].name;
             div.children[1].children[0].onclick = ()=>{this.switchMerchant(merchant.owner.merchants[i]._id)};
             div.children[1].children[1].onclick = ()=>{this.deleteMerchant(merchant.owner.merchants[i]._id)};
+            div.children[1].children[1].onclick = ()=>{controller.openModal("confirmDeleteMerchant", merchant.owner.merchants[i]._id)};
             container.appendChild(div);
         }
 
