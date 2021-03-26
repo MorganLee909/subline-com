@@ -336,6 +336,7 @@ window.state = {
         ingredients.populateByProperty();
         analytics.displayIngredient();
         analytics.displayRecipe();
+        home.drawRevenueGraph();
     },
 
     updateOrders: function(){

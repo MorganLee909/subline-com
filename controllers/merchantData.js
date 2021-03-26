@@ -17,7 +17,7 @@ module.exports = {
     */
     getMerchant: function(req, res){
         let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants", "name");
-        let merchant = Merchant.findOne({_id: req.params.id});
+        let merchant = Merchant.findOne({_id: req.params.id}).populate("inventory.ingredient").populate("recipes");
         let transactions = Transaction.find({merchant: req.params.id});
 
         Promise.all([owner, merchant, transactions])
@@ -44,7 +44,6 @@ module.exports = {
                 return res.json([responseOwner, response[1], response[2]]);
             })
             .catch((err)=>{
-                console.log(err);
                 if(err === "unfound") return res.json("UNABLE TO FIND THAT MERCHANT");
                 if(err === "permissions") return res.json("YOU DO NOT HAVE PERMISSION TO DO THAT");
                 return res.json("ERROR: UNABLE TO RETRIEVE DATA");
