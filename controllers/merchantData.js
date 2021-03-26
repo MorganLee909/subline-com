@@ -350,7 +350,11 @@ module.exports = {
     deleteMerchant: function(req, res){
         if(res.locals.owner.merchants.length === 1) throw "one";
         for(let i = 0; i < res.locals.owner.merchants.length; i++){
-            if(res.locals.owner.merchants[i]._id.toString() === res.locals.merchant._id.toString()){
+            console.log(res.locals.owner.merchants[i]._id);
+            console.log(res.locals.merchant._id);
+            console.log();
+            if(res.locals.owner.merchants[i].toString() === res.locals.merchant._id.toString()){
+                console.log("iffed");
                 res.locals.owner.merchants.splice(i, 1);
                 break;
             }
@@ -358,17 +362,14 @@ module.exports = {
 
         res.locals.merchant.removed = true;
 
-        let merchant = Merchant.findOne({_id: res.locals.owner.merchants[0]._id});
-
         Promise.all([
-            merchant,
+            Merchant.findOne({_id: res.locals.owner.merchants[0]._id}),
             res.locals.owner.save(),
             res.locals.merchant.save(),
-            res.locals.owner.populate("merchants", "name"),
+            res.locals.owner.populate("merchants", "name").execPopulate(),
             Transaction.find({merchant: res.locals.owner.merchants[0]._id})
         ])
             .then((response)=>{
-                console.log(res.locals.owner);
                 let responseOwner = {
                     _id: res.locals.owner._id,
                     email: res.locals.owner.email,

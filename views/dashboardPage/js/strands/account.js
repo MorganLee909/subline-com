@@ -6,6 +6,7 @@ let account = {
         document.getElementById("accountEmail").value = merchant.email;
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
+        document.getElementById("deleteMerchant").onclick = ()=>{controller.openModal("confirmDeleteMerchant")};
 
         //Display alternate locations
         document.getElementById("settingsAddMerchant").onclick = ()=>{controller.openModal("newMerchant")};
@@ -148,7 +149,7 @@ let account = {
             });
     },
 
-    deleteMerchant: function(id){
+    deleteMerchant: function(){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
