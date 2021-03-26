@@ -62,6 +62,7 @@ let newIngredient = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.addIngredients([response]);
+                    state.updateIngredients();
                     controller.openStrand("ingredients");
 
                     controller.createBanner("INGREDIENT CREATED", "success");
@@ -96,6 +97,7 @@ let newIngredient = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.addIngredients(response);
+                    state.updateIngredients();
 
                     controller.createBanner("INGREDIENTS SUCCESSFULLY ADDED", "success");
                     controller.openStrand("ingredients");

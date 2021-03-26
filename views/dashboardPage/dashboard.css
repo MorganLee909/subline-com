@@ -573,21 +573,59 @@ ACCOUNT STRAND
 #accountStrand{
     padding: 15px;
     box-sizing: border-box;
+    align-items: center;
 }
 
-    .horizontal{
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .vertical{
+    .settings{
         display: flex;
         flex-direction: column;
+        width: 75%;
+        max-height: 100%;
+        overflow-y: auto;
     }
+
+        .settingsSection{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            background: rgb(201, 201, 201);
+            padding: 35px;
+        }
+
+            .settingsSectionHeader{
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 25px;
+                border-bottom: 1px solid black;
+            }
 
     #accountUpdate{
         max-width: 500px;
     }
+
+    #settingsMerchants{
+        width: 85%;
+    }
+
+        .locationDiv{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            background: rgb(240, 252, 255);
+            box-shadow: 0 0 10px black;
+            margin: 10px 0;
+        }
+
+            .locationDiv p{
+                font-size: 25px;
+                font-weight: bold;
+            }
 
     #accountShowPassword{
         max-width: 300px;
@@ -596,8 +634,8 @@ ACCOUNT STRAND
     #changePasswordBox{
         flex-direction: column;
         padding: 25px;
-        background: rgb(240, 252, 255);
-        border: 2px solid black;
+        background: rgb(201, 201, 201);
+        /* border: 2px solid black; */
         border-radius: 10px;
     }
 
@@ -635,7 +673,7 @@ Modal
         align-items: flex-end;
     }
 
-        .modalBox svg{
+        .modalBox > svg{
             color: rgb(255, 99, 107);
             cursor: pointer;
         }
@@ -670,6 +708,46 @@ Modal
             display: flex;
             flex-direction: column;
 
+        }
+
+    #modalNewMerchant{
+        display: flex;
+        flex-direction: column;
+        background: white;
+        padding: 50px;
+        min-width: 350px;
+    }
+
+        #modalNewMerchant h2{
+            text-align: center;
+        }
+
+        #modalNewMerchant > *{
+            margin: 15px;
+        }
+
+        #modalNewMerchant label{
+            display: flex;
+            flex-direction: column;
+        }
+
+    #modalConfirm{
+        display: flex;
+        flex-direction:column;
+        align-items: center;
+        background: white;
+        padding: 50px;
+    }
+
+        #modalConfirm svg{
+            font-size: 50px;
+            margin: 15px;
+            font-weight: bold;
+        }
+
+        #modalConfirm p{
+            font-size: 25px;
+            font-weight: bold;
         }
 
 @media screen and (orientation: portrait){

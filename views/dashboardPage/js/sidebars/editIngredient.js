@@ -105,7 +105,7 @@ let editIngredient = {
             }else{
                 merchant.removeIngredient(merchant.getIngredient(response.ingredient._id));
                 merchant.addIngredients([response]);
-
+                state.updateIngredients();
                 controller.openStrand("ingredients");
                 controller.createBanner("INGREDIENT UPDATED", "success");
             }

@@ -3,12 +3,6 @@ const Recipe = require("./Recipe.js");
 const Transaction = require("./Transaction.js");
 const Order = require("./Order.js");
 
-const homeStrand = require("../strands/home.js");
-const ingredientsStrand = require("../strands/ingredients.js");
-const recipeBookStrand = require("../strands/recipeBook");
-const analyticsStrand = require("../strands/analytics.js");
-const ordersStrand = require("../strands/orders");
-
 class MerchantIngredient{
     constructor(ingredient, quantity){
         this._quantity = quantity;
@@ -77,40 +71,53 @@ class MerchantIngredient{
 }
 
 class Merchant{
-    constructor(oldMerchant, transactions){
-        this._name = oldMerchant.name;
-        this._email = oldMerchant.email;
-        this._pos = oldMerchant.pos;
+        constructor(
+            name,
+            email,
+            pos,
+            ingredients,
+            recipes,
+            transactions,
+            owner
+        ){
+        this._name = name;
+        this._email = email;
+        this._pos = pos;
         this._ingredients = [];
         this._recipes = [];
         this._transactions = [];
         this._orders = [];
+        this._owner = {
+            id: owner._id,
+            email: owner.email,
+            merchants: owner.merchants
+        };
         
         //populate ingredients
-        for(let i = 0; i < oldMerchant.inventory.length; i++){
+        for(let i = 0; i < ingredients.length; i++){
             const ingredient = new Ingredient(
-                oldMerchant.inventory[i].ingredient._id,
-                oldMerchant.inventory[i].ingredient.name,
-                oldMerchant.inventory[i].ingredient.category,
-                oldMerchant.inventory[i].ingredient.unitType,
-                oldMerchant.inventory[i].defaultUnit,
+                ingredients[i].ingredient._id,
+                ingredients[i].ingredient.name,
+                ingredients[i].ingredient.category,
+                ingredients[i].ingredient.unitType,
+                ingredients[i].defaultUnit,
                 this,
-                oldMerchant.inventory[i].ingredient.unitSize
+                ingredients[i].ingredient.unitSize
             );
 
             const merchantIngredient = new MerchantIngredient(
                 ingredient,
-                oldMerchant.inventory[i].quantity,
+                ingredients[i].quantity,
             );
 
             this._ingredients.push(merchantIngredient);
         }
 
         //populate recipes
-        for(let i = 0; i < oldMerchant.recipes.length; i++){
+        for(let i = 0; i < recipes.length; i++){
             let ingredients = [];
-            for(let j = 0; j < oldMerchant.recipes[i].ingredients.length; j++){
-                const ingredient = oldMerchant.recipes[i].ingredients[j];
+            for(let j = 0; j < recipes[i].ingredients.length; j++){
+                const ingredient = recipes[i].ingredients[j];
                 for(let k = 0; k < this._ingredients.length; k++){
                     if(ingredient.ingredient === this._ingredients[k].ingredient.id){
                         ingredients.push({
@@ -123,9 +130,9 @@ class Merchant{
             }
 
             this._recipes.push(new Recipe(
-                oldMerchant.recipes[i]._id,
-                oldMerchant.recipes[i].name,
-                oldMerchant.recipes[i].price,
+                recipes[i]._id,
+                recipes[i].name,
+                recipes[i].price,
                 ingredients,
                 this
             ));
@@ -199,9 +206,6 @@ class Merchant{
             const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
             this._ingredients.push(merchantIngredient);
         }
-
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.populateButtons();
     }
 
     removeIngredient(ingredient){
@@ -211,10 +215,6 @@ class Merchant{
         }
 
         this._ingredients.splice(index, 1);
-
-        homeStrand.drawInventoryCheckCard();
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.populateButtons();
     }
 
     getIngredient(id){
@@ -258,9 +258,6 @@ class Merchant{
                 this
             ));
         }
-
-        recipeBookStrand.populateRecipes();
-        analyticsStrand.populateButtons();
     }
 
     removeRecipe(recipe){
@@ -271,8 +268,7 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        recipeBookStrand.populateRecipes();
-        analyticsStrand.populateButtons();
+        state.updateRecipes();
     }
 
     get transactions(){
@@ -328,11 +324,6 @@ class Merchant{
         }
 
         this.transactions.sort((a, b) => (a.date > b.date) ? 1 : -1);
-
-        homeStrand.isPopulated = false;
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.displayIngredient();
-        analyticsStrand.displayRecipe();
     }
 
     removeTransaction(transaction){
@@ -348,10 +339,7 @@ class Merchant{
 
         this._transactions.splice(this._transactions.indexOf(transaction), 1);
 
-        homeStrand.isPopulated = false;
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.displayIngredient();
-        analyticsStrand.displayRecipe();
+        state.updateTransactions();
     }
 
     get orders(){
@@ -396,9 +384,6 @@ class Merchant{
                 }
             }
         }
-
-        ingredientsStrand.populateByProperty();
-        ordersStrand.displayOrders();
     }
 
     removeOrder(order){
@@ -417,13 +402,14 @@ class Merchant{
                 }
             }
         }
-
-        ingredientsStrand.isPopulated = false;
-        ordersStrand.isPopulated = false;
     }
 
     get units(){
         return this._units;
+    }
+
+    get owner(){
+        return this._owner;
     }
 
     getRevenue(from, to = new Date()){

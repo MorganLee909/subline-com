@@ -51,6 +51,7 @@ let orders = {
                 }else{
                     merchant.clearOrders();
                     merchant.addOrders(response);
+                    state.updateOrders();
                 }
             })
             .catch((err)=>{

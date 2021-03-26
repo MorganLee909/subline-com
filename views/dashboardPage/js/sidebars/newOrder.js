@@ -91,6 +91,7 @@ let newOrder = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.addOrders([response], true);
+                    state.updateOrders();
                     
                     controller.openStrand("orders", merchant.orders);
                     controller.createBanner("NEW ORDER CREATED", "success");
@@ -150,6 +151,7 @@ let newOrder = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.addOrders([response], true);
+                    state.updateOrders();
 
                     controller.createBanner("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY", "success");
                     controller.openStrand("orders");

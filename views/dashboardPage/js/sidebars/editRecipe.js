@@ -115,6 +115,7 @@ let editRecipe = {
                 }else{
                     merchant.removeRecipe(recipe)
                     merchant.addRecipes([response]);
+                    state.updateRecipes();
                     controller.openStrand("recipeBook");
                     controller.createBanner("RECIPE UPDATED", "success");
                 }

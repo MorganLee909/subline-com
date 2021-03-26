@@ -1,10 +1,30 @@
+const Merchant = require("../classes/Merchant");
+
 let account = {
     display: function(){
         document.getElementById("accountStrandTitle").innerText = merchant.name;
         document.getElementById("accountEmail").value = merchant.email;
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
+        document.getElementById("deleteMerchant").onclick = ()=>{controller.openModal("confirmDeleteMerchant")};
 
+        //Display alternate locations
+        document.getElementById("settingsAddMerchant").onclick = ()=>{controller.openModal("newMerchant")};
+        let container = document.getElementById("settingsMerchants");
+        let template = document.getElementById("locationDiv").content.children[0];
+
+        while(container.children.length > 0){
+            container.removeChild(container.firstChild);
+        }
+
+        for(let i = 0; i < merchant.owner.merchants.length; i++){
+            let div = template.cloneNode(true);
+            div.children[0].innerText = merchant.owner.merchants[i].name;
+            div.children[1].onclick = ()=>{this.switchMerchant(merchant.owner.merchants[i]._id)};
+            container.appendChild(div);
+        }
+
+        //Handle the password changey stuffs
         let passButton = document.getElementById("accountShowPassword");
         let passBox = document.getElementById("changePasswordBox");
         passButton.onclick = ()=>{
@@ -87,6 +107,71 @@ let account = {
                     controller.createBanner(response, "error");
                 }else{
                     window.location.href = response.redirect;
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    },
+
+    switchMerchant: function(id){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "none";
+
+        fetch(`/merchant/${id}`)
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    window.merchant = new Merchant(
+                        response[1].name,
+                        response[0].email,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        response[2],
+                        response[0]
+                    );
+
+                    state.updateMerchant();
+                    controller.openStrand("home");
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    },
+
+    deleteMerchant: function(){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/merchant", {method: "delete"})
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    window.merchant = new Merchant(
+                        response[1].name,
+                        response[0].email,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        response[2],
+                        response[0]
+                    );
+                    state.updateMerchant();
+
+                    controller.closeModal();
+                    controller.openStrand("home");
                 }
             })
             .catch((err)=>{

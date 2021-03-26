@@ -1,5 +1,7 @@
-const Merchant = require("../models/merchant");
+const Owner = require("../models/owner.js");
+const Merchant = require("../models/merchant.js");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
+const Transaction = require("../models/transaction.js");
 
 const helper = require("./helper.js");
 const verifyEmail = require("../emails/verifyEmail.js");
@@ -9,12 +11,55 @@ const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, do
 
 module.exports = {
     /*
+    GET: gets a merchant to send back to its owner
+    req.params.id = String (merchant id)
+    response = [Owner, Merchant];
+    */
+    getMerchant: function(req, res){
+        let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants", "name");
+        let merchant = Merchant.findOne({_id: req.params.id}).populate("inventory.ingredient").populate("recipes");
+        let transactions = Transaction.find({merchant: req.params.id});
+
+        Promise.all([owner, merchant, transactions])
+            .then((response)=>{
+                if(response[0] === null || response[1] === null) throw "unfound";
+                if(response[1].owner.toString() !== response[0]._id.toString()) throw "permissions";
+
+                let responseOwner = {
+                    _id: response[0]._id,
+                    email: response[0].email,
+                    merchants: response[0].merchants
+                };
+
+                for(let i = 0; i < responseOwner.merchants.length; i++){
+                    if(response[1]._id.toString() === responseOwner.merchants[i]._id.toString()){
+                        responseOwner.merchants.splice(i, 1);
+                        break;
+                    }
+                }
+
+                response[1].owner = undefined;
+                response[1].createdAt = undefined;
+
+                req.session.merchant = response[1]._id;
+
+                return res.json([responseOwner, response[1], response[2]]);
+            })
+            .catch((err)=>{
+                if(err === "unfound") return res.json("UNABLE TO FIND THAT MERCHANT");
+                if(err === "permissions") return res.json("YOU DO NOT HAVE PERMISSION TO DO THAT");
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
+            });
+    },
+
+    /*
     POST - Create a new merchant with no POS system
     req.body = {
         name: retaurant name,
         email: registration email,
         password: password,
         confirmPassword: confirmation password
+        owner: String (id of the owner, new owner of undefined)
     }
     Redirects to /dashboard
     */
@@ -29,7 +74,8 @@ module.exports = {
             return res.redirect("/register");
         }
 
-        const merchantFind = await Merchant.findOne({email: req.body.email.toLowerCase()});
+        let email = req.body.email.toLowerCase();
+        const merchantFind = await Merchant.findOne({email: email});
         if(merchantFind !== null){
             req.session.error = "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
             return res.redirect("/login");
@@ -41,24 +87,32 @@ module.exports = {
         let expirationDate = new Date();
         expirationDate.setDate(expirationDate.getDate() + 90);
 
-        let merchant = new Merchant({
-            name: req.body.name,
-            email: req.body.email.toLowerCase(),
+        let owner = new Owner({
+            email: email,
             password: hash,
-            pos: "none",
-            createdAt: Date.now(),
+            createdAt: new Date(),
             status: ["unverified"],
-            inventory: [],
-            recipes: [],
             session: {
                 sessionId: helper.generateId(25),
                 expiration: expirationDate
-            }
+            },
+            merchants: []
         });
 
-        merchant.save()
-            .then((merchant)=>{
-                return res.redirect(`/verify/email/${merchant._id}`);
+        let merchant = new Merchant({
+            owner: owner._id,
+            name: req.body.name,
+            pos: "none",
+            createdAt: Date.now(),
+            inventory: [],
+            recipes: []
+        });
+
+        owner.merchants.push(merchant._id);
+
+        Promise.all([owner.save(), merchant.save()])
+            .then((response)=>{
+                return res.redirect(`/verify/email/${response[0]._id}`);
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
@@ -70,6 +124,47 @@ module.exports = {
                 }
                 
                 return res.redirect("/");
+            });
+    },
+
+    /*
+    POST: create new merchant for existing owner
+    req.body = {
+        name: String
+    }
+    response = [Owner, Merchant]
+    */
+    addMerchantNone: function(req, res){
+        let merchant = new Merchant({
+            owner: res.locals.owner._id,
+            name: req.body.name,
+            pos: "none",
+            createdAt: new Date(),
+            inventory: [],
+            recipes: []
+        });
+
+        res.locals.owner.merchants.push(merchant._id);
+
+        let populate = res.locals.owner.populate("merchants", "name").execPopulate();
+
+        Promise.all([res.locals.owner.save(), merchant.save(), populate])
+            .then((response)=>{
+                let owner = {
+                    _id: response[0]._id,
+                    email: response[0].email,
+                    merchants: response[0].merchants
+                }
+
+                req.session.merchant = response[1]._id;
+                
+                return res.json([owner, response[1]]);
+            })
+            .catch((err)=>{
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO CREATE NEW MERCHANT");
             });
     },
 
@@ -98,7 +193,7 @@ module.exports = {
 
                     adjustments.push(new InventoryAdjustment({
                         date: Date.now(),
-                        merchant: req.session.user,
+                        merchant: req.session.owner,
                         ingredient: req.body[i].id,
                         quantity: req.body[i].quantity - updateIngredient.quantity,
                     }));
@@ -250,5 +345,48 @@ module.exports = {
                 return res.json("INCORRECT PASSWORD");
             }
         });
+    },
+
+    /*
+    DELETE: remove a merchant from its owner
+    response = [Owner, Merchant (the next), [Transaction]]
+    */
+    deleteMerchant: function(req, res){
+        if(res.locals.owner.merchants.length === 1) throw "one";
+        for(let i = 0; i < res.locals.owner.merchants.length; i++){
+            if(res.locals.owner.merchants[i].toString() === res.locals.merchant._id.toString()){
+                res.locals.owner.merchants.splice(i, 1);
+                break;
+            }
+        }
+
+        res.locals.merchant.removed = true;
+
+        Promise.all([
+            Merchant.findOne({_id: res.locals.owner.merchants[0]._id}).populate("inventory.ingredient").populate("recipes"),
+            res.locals.owner.save(),
+            res.locals.merchant.save(),
+            res.locals.owner.populate("merchants", "name").execPopulate(),
+            Transaction.find({merchant: res.locals.owner.merchants[0]._id})
+        ])
+            .then((response)=>{
+                let responseOwner = {
+                    _id: res.locals.owner._id,
+                    email: res.locals.owner.email,
+                    merchants: res.locals.owner.merchants.slice(1)
+                };
+
+                response[0].owner = undefined;
+                response[0].createdAt = undefined;
+                response[0].locationId = undefined;
+
+                req.session.merchant = response[0]._id;
+
+                return res.json([responseOwner, response[0], response[4]]);
+            })
+            .catch((err)=>{
+                if(err === "one") return res.json("YOU CANNOT DELETE YOUR ONLY MERCHANT");
+                return res.json("ERROR: UNABLE TO DELETE THE MERCHANT");
+            });
     }
 }

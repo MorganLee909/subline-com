@@ -84,7 +84,7 @@ module.exports = {
                         if(res.locals.merchant.inventory[i].quantity !== req.body.quantity){
                             new InventoryAdjustment({
                                 date: new Date(),
-                                merchant: req.session.user,
+                                merchant: req.session.owner,
                                 ingredient: req.body.id,
                                 quantity: req.body.quantity - res.locals.merchant.inventory[i].quantity
                             }).save().catch(()=>{});

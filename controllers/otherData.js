@@ -1,4 +1,5 @@
-const Merchant = require("../models/merchant");
+const Owner = require("../models/owner.js");
+const Merchant = require("../models/merchant.js");
 const Feedback = require("../models/feedback.js");
 
 const bcrypt = require("bcryptjs");
@@ -13,19 +14,22 @@ module.exports = {
     Redirects to /dashboard
     */
     login: function(req, res){
-        Merchant.findOne({email: req.body.email.toLowerCase()})
-            .then((merchant)=>{
-                if(merchant !== null){
-                    bcrypt.compare(req.body.password, merchant.password, async (err, result)=>{
+        let owner = Owner.findOne({email: req.body.email.toLowerCase()});
+        let merchant = Merchant.findOne({_id: req.session.merchant});
+
+        Promise.all([owner, merchant])
+            .then((response)=>{
+                if(response[0] !== null){
+                    bcrypt.compare(req.body.password, response[0].password, async (err, result)=>{
                         if(result === true){
                             //Check if email has not been verified
-                            if(merchant.status.includes("unverified")){
+                            if(response[0].status.includes("unverified")){
                                 req.session.error = "PLEASE VERIFY YOUR EMAIL ADDRESS";
-                                return res.redirect(`/verify/email/${merchant._id}`);
+                                return res.redirect(`/verify/email/${response[0]._id}`);
                             }
 
                             //Check for suspended account
-                            if(merchant.status.includes("suspended")){
+                            if(response[0].status.includes("suspended")){
                                 req.session.error = "ACCOUNT SUSPENDED. PLEASE CONTACT SUPPORT IF THIS IS IN ERROR";
                                 return res.redirect("/");
                             }
@@ -33,7 +37,7 @@ module.exports = {
                             //Check for out of date access token
                             let cutoff = new Date();
                             cutoff.setDate(cutoff.getDate() + 1);
-                            if(merchant.pos === "square" && merchant.square.expires < cutoff){
+                            if(response[0].square !== undefined && response[0].square.expires < cutoff){
                                 let data = await axios.post(`${process.env.SQUARE_ADDRESS}/oauth2/token`, {
                                     client_id: process.env.SUBLINE_SQUARE_APPID,
                                     client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
@@ -41,13 +45,14 @@ module.exports = {
                                     refresh_token: merchant.square.refreshToken
                                 });
 
-                                merchant.square.accessToken = data.data.access_token;
-                                merchant.square.expires = new Date(data.data.expires_at);
+                                response[0].square.accessToken = data.data.access_token;
+                                response[0].square.expires = new Date(data.data.expires_at);
 
-                                await merchant.save();
+                                await response[0].save();
                             }
 
-                            req.session.user = merchant.session.sessionId;
+                            req.session.merchant = (response[1] === null) ? await Merchant.findOne({_id: response[0].merchants[0]}) : response[1];
+                            req.session.owner = response[0].session.sessionId;
                             return res.redirect("/dashboard");
                         }else{
                             req.session.error = "INVALID EMAIL OR PASSWORD";
@@ -71,7 +76,7 @@ module.exports = {
     Redirects to /
     */
     logout: function(req, res){
-        req.session.user = undefined;
+        req.session.owner = undefined;
 
         return res.redirect("/");
     },

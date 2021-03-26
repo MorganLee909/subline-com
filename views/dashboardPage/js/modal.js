@@ -1,3 +1,6 @@
+const merchant = require("../../../models/merchant.js");
+const Merchant = require("./classes/Merchant.js");
+
 let modal = {
     feedback: function(){
         let form = document.getElementById("modalFeedback");
@@ -34,6 +37,59 @@ let modal = {
             })
             .catch((err)=>{
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error")
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    },
+
+    newMerchant: function(){
+        let form = document.getElementById("modalNewMerchant");
+        form.style.display = "flex";
+        form.onsubmit = ()=>{this.submitNewMerchantNone()};
+    },
+
+    submitNewMerchantNone(){
+        event.preventDefault();
+
+        let data = {
+            name: document.getElementById("addMerchantName").value,
+        };
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/merchant/add/none", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    let newMerchant = new Merchant(
+                        response[1].name,
+                        response[0].email,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        [],
+                        response[0]
+                    );
+
+                    window.merchant = newMerchant;
+
+                    state.updateMerchant();
+                    controller.openStrand("home");
+                    controller.closeModal();
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

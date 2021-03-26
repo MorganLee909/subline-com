@@ -71,6 +71,7 @@ let ingredientDetails = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.removeIngredient(ingredient);
+                    state.updateIngredients();
                     
                     controller.openStrand("ingredients");
                     controller.createBanner("INGREDIENT REMOVED", "success");

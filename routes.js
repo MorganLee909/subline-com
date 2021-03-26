@@ -24,11 +24,14 @@ module.exports = function(app){
     app.get("/resetpassword/*", renderer.displayPassReset);
     
     //Merchant
+    app.get("/merchant/:id", merchantData.getMerchant);
     app.post("/merchant/create/none", merchantData.createMerchantNone);
+    app.post("/merchant/add/none", session, merchantData.addMerchantNone);
     app.put("/merchant/ingredients/update", session, merchantData.updateIngredientQuantities); //also updates some data in ingredients
     app.post("/merchant/password", merchantData.updatePassword); //TODO: change to work with session
     app.put("/merchant/update", session, merchantData.updateData);
     app.put("/merchant/password", session, merchantData.changePassword);
+    app.delete("/merchant", session, merchantData.deleteMerchant);
 
     //Ingredients
     app.post("/ingredients/create", session, ingredientData.createIngredient);  //also adds to merchant

@@ -3,11 +3,11 @@ const axios = require("axios");
 const Transaction = require("../models/transaction.js");
 
 module.exports = {
-    getSquareData: function(merchant, data){
+    getSquareData: function(owner, merchant, data){
         let ingredients = {};
 
         return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, data, {
-            headers: {Authorization: `Bearer ${merchant.square.accessToken}`}
+            headers: {Authorization: `Bearer ${owner.square.accessToken}`}
         })
             .then((response)=>{
                 let transactions = [];

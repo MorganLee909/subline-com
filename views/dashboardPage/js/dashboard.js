@@ -23,7 +23,15 @@ const modalScript = require("./modal.js");
 
 const Merchant = require("./classes/Merchant.js");
 
-merchant = new Merchant(data.merchant, data.transactions);
+window.merchant = new Merchant(
+    data.merchant.name,
+    data.owner.email,
+    data.merchant.pos,
+    data.merchant.inventory,
+    data.merchant.recipes,
+    data.transactions,
+    data.owner
+);
 
 controller = {
     openStrand: function(strand, data = undefined){
@@ -220,6 +228,16 @@ controller = {
             case "feedback":
                 modalScript.feedback();
                 break;
+            case "newMerchant":
+                modalScript.newMerchant();
+                break;
+            case "confirmDeleteMerchant":
+                let div = document.getElementById("modalConfirm");
+                div.style.display = "flex";
+                div.children[1].innerText = "Are you sure you want to delete this merchant?";
+                div.children[2].children[1].onclick = ()=>{account.deleteMerchant()};
+                div.children[2].children[0].onclick = ()=>{controller.closeModal()};
+                break;
         }
     },
 
@@ -305,10 +323,39 @@ controller = {
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
+    }
+}
+
+window.state = {
+    updateIngredients: function(){
+        ingredients.populateByProperty();
+        analytics.populateButtons();
+        home.drawInventoryCheckCard();
     },
 
-    updateAnalytics: function(){
-        analytics.isPopulated = false;
+    updateRecipes: function(){
+        recipeBook.populateRecipes();
+        analytics.populateButtons();
+    },
+
+    updateTransactions: function(){
+        home.isPopulated = false;
+        ingredients.populateByProperty();
+        analytics.displayIngredient();
+        analytics.displayRecipe();
+        home.drawRevenueGraph();
+    },
+
+    updateOrders: function(){
+        ingredients.isPopulated = false;
+        ordersStrand.isPopulated = false;
+    },
+
+    updateMerchant(){
+        this.updateIngredients();
+        this.updateRecipes();
+        this.updateTransactions();
+        this.updateOrders();
     }
 }
 
