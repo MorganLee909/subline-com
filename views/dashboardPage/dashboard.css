@@ -20,6 +20,7 @@ body{
     box-sizing: border-box;
     position: relative;
     padding-bottom: 25px;
+    background: rgb(201, 201, 201);
 }
 
 .mobileMenuSelector{
@@ -194,11 +195,9 @@ Home Strand
 
     .card{
         margin: 0 15px;
-        border: 1px solid rgba(183, 183, 183, 0.9);
-        border-radius: 7px;
-        box-shadow: 1px 2px gray;
         flex-grow: 1;
         height: 100%;
+        background: white;
     }
 
     .card > *{

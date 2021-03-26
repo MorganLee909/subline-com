@@ -195,22 +195,12 @@ button::-moz-focus-inner{
     min-width: 100px;
     margin: 5px;
     max-height: 52px;
-} 
-
-    .buttonWithBorder {
-        background: white;
-        border: rgb(255, 99, 107) solid 2px;
-        color: rgb(255, 99, 107);
-        margin: 0;
-        margin-bottom: 12px;
-        padding-top: 14px;
-        padding-bottom: 14px;
-    }
-
-.button:hover{
-    background: rgb(243, 77, 86);
-    color: white;
 }
+
+    .button:hover{
+        background: rgb(243, 77, 86);
+        color: white;
+    }
 
 .button-small{
     background: rgb(255, 99, 107);

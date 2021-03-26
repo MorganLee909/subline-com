@@ -89,7 +89,7 @@
         }  
 
         .menuButton:hover{
-            background: rgb(201, 201, 201);
+            background: rgb(179, 191, 209);
             color: black;
             fill: black;
         }
@@ -103,17 +103,18 @@
     }
 
     .menu > .active{
-        background: rgb(179, 191, 209);
+        background: rgb(240, 252, 255);
+        color: black;
         cursor: default;
     }
 
     .menu > .active:hover{
-        background: rgb(179, 191, 209);
-        color: white;
+        background: rgb(240, 252, 255);
+        color: black;
     }
 
     .menu > .active:hover svg{
-        stroke: white;
+        stroke: black;
     }
 
 /* Minimized menu */
