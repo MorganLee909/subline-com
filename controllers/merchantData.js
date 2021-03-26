@@ -72,7 +72,6 @@ module.exports = {
                 return res.redirect(`/verify/email/${response[0]._id}`);
             })
             .catch((err)=>{
-                console.log(err);
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){
@@ -90,6 +89,7 @@ module.exports = {
     req.body = {
         name: String
     }
+    response = [Owner, Merchant]
     */
     addMerchantNone: function(req, res){
         let merchant = new Merchant({
@@ -101,11 +101,19 @@ module.exports = {
             recipes: []
         });
 
-        res.locals.owner.push(merchant._id);
+        res.locals.owner.merchants.push(merchant._id);
 
-        Promise.all([owner.save(), merchant.save()])
+        let populate = res.locals.owner.populate("merchants", "name").execPopulate();
+
+        Promise.all([res.locals.owner.save(), merchant.save(), populate])
             .then((response)=>{
-                return res.json(response);
+                let owner = {
+                    _id: response[0]._id,
+                    email: response[0].email,
+                    merchants: response[0].merchants
+                }
+                
+                return res.json([owner, response[1]]);
             })
             .catch((err)=>{
                 if(err.name === "ValidationError"){

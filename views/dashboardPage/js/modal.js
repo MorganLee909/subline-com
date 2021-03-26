@@ -1,4 +1,5 @@
-const merchant = require("../../../models/merchant");
+const merchant = require("../../../models/merchant.js");
+const Merchant = require("./classes/Merchant.js");
 
 let modal = {
     feedback: function(){
@@ -65,11 +66,25 @@ let modal = {
             },
             body: JSON.stringify(data)
         })
+            .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    console.log(response);
+                    let newMerchant = new Merchant(
+                        response[1].name,
+                        response[0].email,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        [],
+                        response[0]
+                    );
+
+                    window.merchant = newMerchant;
+
+                    state.updateMerchant();
+                    controller.openStrand("home");
                 }
             })
             .catch((err)=>{

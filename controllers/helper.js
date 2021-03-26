@@ -21,6 +21,7 @@ module.exports = {
                             recipes: []
                         });
 
+                        if(response.data.orders[i].line_items === undefined) continue;
                         for(let j = 0; j < response.data.orders[i].line_items.length; j++){
                             for(let k = 0; k < merchant.recipes.length; k++){
                                 if(response.data.orders[i].line_items[j].catalog_object_id === merchant.recipes[k].posId){

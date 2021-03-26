@@ -54,7 +54,7 @@ module.exports = {
                     }}
                 ]);
                 
-                let merchants = res.locals.owner.populate("merchants", "name");
+                let merchants = res.locals.owner.populate("merchants", "name").execPopulate();
 
                 return Promise.all([transactions, merchants]);
             })
@@ -119,7 +119,10 @@ module.exports = {
                 res.locals.owner.session = undefined;
 
                 for(let i = 0; i < res.locals.owner.merchants.length; i++){
-                    if(res.locals.owner.merchants[i]._id.toString() === res.locals.merchant._id.toString()) res.locals.owner.merchants.splice(i, 1);
+                    if(res.locals.owner.merchants[i]._id.toString() === res.locals.merchant._id.toString()){
+                        res.locals.owner.merchants.splice(i, 1);
+                        break;
+                    } 
                 }
 
                 return res.render("dashboardPage/dashboard", {owner: res.locals.owner, merchant: res.locals.merchant, transactions: transactions});
