@@ -1,6 +1,7 @@
 const Owner = require("../models/owner.js");
-const Merchant = require("../models/merchant");
+const Merchant = require("../models/merchant.js");
 const InventoryAdjustment = require("../models/inventoryAdjustment");
+const Transaction = require("../models/transaction.js");
 
 const helper = require("./helper.js");
 const verifyEmail = require("../emails/verifyEmail.js");
@@ -17,29 +18,30 @@ module.exports = {
     getMerchant: function(req, res){
         let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants", "name");
         let merchant = Merchant.findOne({_id: req.params.id});
+        let transactions = Transaction.find({merchant: req.params.id});
 
-        Promise.all([owner, merchant])
+        Promise.all([owner, merchant, transactions])
             .then((response)=>{
                 if(response[0] === null || response[1] === null) throw "unfound";
-                if(merchant.owner.toString() !== owner._id.toString()) throw "permissions";
+                if(response[1].owner.toString() !== response[0]._id.toString()) throw "permissions";
 
                 let responseOwner = {
-                    _id: owner._id,
-                    email: owner.email,
-                    merchants: owner.merchants
+                    _id: response[0]._id,
+                    email: response[0].email,
+                    merchants: response[0].merchants
                 };
 
                 for(let i = 0; i < responseOwner.merchants.length; i++){
-                    if(merchant._id.toString() === responseOwner.merchants[i]._id.toString()){
+                    if(response[1]._id.toString() === responseOwner.merchants[i]._id.toString()){
                         responseOwner.merchants.splice(i, 1);
                         break;
                     }
                 }
 
-                merchant.owner = undefined;
-                merchant.createdAt = undefined;
+                response[1].owner = undefined;
+                response[1].createdAt = undefined;
 
-                return res.json([responseOwner, merchant]);
+                return res.json([responseOwner, response[1], response[2]]);
             })
             .catch((err)=>{
                 console.log(err);

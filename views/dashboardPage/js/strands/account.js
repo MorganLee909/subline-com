@@ -1,3 +1,5 @@
+const Merchant = require("../classes/Merchant");
+
 let account = {
     display: function(){
         document.getElementById("accountStrandTitle").innerText = merchant.name;
@@ -13,7 +15,7 @@ let account = {
         for(let i = 0; i < merchant.owner.merchants.length; i++){
             let div = template.cloneNode(true);
             div.children[0].innerText = merchant.owner.merchants[i].name;
-            div.children[1].children[0].onclick = ()=>{this.switchMerchant(merchant.owner.merchants[i].name)};
+            div.children[1].children[0].onclick = ()=>{this.switchMerchant(merchant.owner.merchants[i]._id)};
             div.children[1].children[1].onclick = ()=>{this.deleteMerchant(merchant.owner.merchants[i]._id)};
             container.appendChild(div);
         }
@@ -112,7 +114,36 @@ let account = {
     },
 
     switchMerchant: function(id){
-        
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "none";
+
+        fetch(`/merchant/${id}`)
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    window.merchant = new Merchant(
+                        response[1].name,
+                        response[0].email,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        response[2],
+                        response[0]
+                    );
+
+                    state.updateMerchant();
+                    controller.openStrand("home");
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     },
 
     deleteMerchant: function(id){
