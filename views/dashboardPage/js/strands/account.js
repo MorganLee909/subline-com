@@ -149,7 +149,37 @@ let account = {
     },
 
     deleteMerchant: function(id){
-        console.log("deleting");
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/merchant", {method: "delete"})
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    window.merchant = new Merchant(
+                        response[1].name,
+                        response[0].email,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        response[2],
+                        response[0]
+                    );
+                    state.updateMerchant();
+
+                    controller.closeModal();
+                    controller.openStrand("home");
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }
 

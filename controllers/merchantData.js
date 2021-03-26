@@ -345,7 +345,7 @@ module.exports = {
 
     /*
     DELETE: remove a merchant from its owner
-    response = Merchant (the next)
+    response = [Owner, Merchant (the next), [Transaction]]
     */
     deleteMerchant: function(req, res){
         if(res.locals.owner.merchants.length === 1) throw "one";
@@ -360,9 +360,25 @@ module.exports = {
 
         let merchant = Merchant.findOne({_id: res.locals.owner.merchants[0]._id});
 
-        Promise.all([merchant, res.locals.owner.save(), res.locals.merchant.save()])
+        Promise.all([
+            merchant,
+            res.locals.owner.save(),
+            res.locals.merchant.save(),
+            res.locals.owner.populate("merchants", "name"),
+            Transaction.find({merchant: res.locals.owner.merchants[0]._id})
+        ])
             .then((response)=>{
-                return res.json(response[0]);
+                console.log(res.locals.owner);
+                let responseOwner = {
+                    _id: res.locals.owner._id,
+                    email: res.locals.owner.email,
+                    merchants: res.locals.owner.merchants.slice(1)
+                };
+
+                response[1].owner = undefined;
+                response[1].createdAt = undefined;
+
+                return res.json([responseOwner, response[0], response[4]]);
             })
             .catch((err)=>{
                 console.log(err);
