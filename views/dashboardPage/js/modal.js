@@ -85,6 +85,7 @@ let modal = {
 
                     state.updateMerchant();
                     controller.openStrand("home");
+                    controller.closeModal();
                 }
             })
             .catch((err)=>{

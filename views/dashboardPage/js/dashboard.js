@@ -323,6 +323,38 @@ controller = {
     }
 }
 
+window.state = {
+    updateIngredients: function(){
+        ingredients.populateByProperty();
+        analytics.populateButtons();
+        home.drawInventoryCheckCard();
+    },
+
+    updateRecipes: function(){
+        recipeBook.populateRecipes();
+        analytics.populateButtons();
+    },
+
+    updateTransactions: function(){
+        home.isPopulated = false;
+        ingredients.populateByProperty();
+        analytics.displayIngredient();
+        analytics.displayRecipe();
+    },
+
+    updateOrders: function(){
+        ingredients.isPopulated = false;
+        ordersStrand.isPopulated = false;
+    },
+
+    updateMerchant(){
+        this.updateIngredients();
+        this.updateRecipes();
+        this.updateTransactions();
+        this.updateOrders();
+    }
+}
+
 //Add click listeners for menu buttons
 document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")};
 document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
