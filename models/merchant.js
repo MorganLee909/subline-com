@@ -44,7 +44,10 @@ const MerchantSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Recipe"
     }],
-    
+    removed: {
+        type: Boolean,
+        default: false
+    }
 });
 
 module.exports = mongoose.model("Merchant", MerchantSchema);

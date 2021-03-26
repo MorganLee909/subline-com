@@ -341,5 +341,33 @@ module.exports = {
                 return res.json("INCORRECT PASSWORD");
             }
         });
+    },
+
+    /*
+    DELETE: remove a merchant from its owner
+    response = Merchant (the next)
+    */
+    deleteMerchant: function(req, res){
+        if(res.locals.owner.merchants.length === 1) throw "one";
+        for(let i = 0; i < res.locals.owner.merchants.length; i++){
+            if(res.locals.owner.merchants[i]._id.toString() === res.locals.merchant._id.toString()){
+                res.locals.owner.merchants.splice(i, 1);
+                break;
+            }
+        }
+
+        res.locals.merchant.removed = true;
+
+        let merchant = Merchant.findOne({_id: res.locals.owner.merchants[0]._id});
+
+        Promise.all([merchant, res.locals.owner.save(), res.locals.merchant.save()])
+            .then((response)=>{
+                return res.json(response[0]);
+            })
+            .catch((err)=>{
+                console.log(err);
+                if(err === "one") return res.json("YOU CANNOT DELETE YOUR ONLY MERCHANT");
+                return res.json("ERROR: UNABLE TO DELETE THE MERCHANT");
+            });
     }
 }
