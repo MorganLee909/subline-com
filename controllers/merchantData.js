@@ -41,6 +41,8 @@ module.exports = {
                 response[1].owner = undefined;
                 response[1].createdAt = undefined;
 
+                req.session.merchant = response[1]._id;
+
                 return res.json([responseOwner, response[1], response[2]]);
             })
             .catch((err)=>{
@@ -153,6 +155,8 @@ module.exports = {
                     email: response[0].email,
                     merchants: response[0].merchants
                 }
+
+                req.session.merchant = response[1]._id;
                 
                 return res.json([owner, response[1]]);
             })
@@ -350,11 +354,7 @@ module.exports = {
     deleteMerchant: function(req, res){
         if(res.locals.owner.merchants.length === 1) throw "one";
         for(let i = 0; i < res.locals.owner.merchants.length; i++){
-            console.log(res.locals.owner.merchants[i]._id);
-            console.log(res.locals.merchant._id);
-            console.log();
             if(res.locals.owner.merchants[i].toString() === res.locals.merchant._id.toString()){
-                console.log("iffed");
                 res.locals.owner.merchants.splice(i, 1);
                 break;
             }
@@ -363,7 +363,7 @@ module.exports = {
         res.locals.merchant.removed = true;
 
         Promise.all([
-            Merchant.findOne({_id: res.locals.owner.merchants[0]._id}),
+            Merchant.findOne({_id: res.locals.owner.merchants[0]._id}).populate("inventory.ingredient").populate("recipes"),
             res.locals.owner.save(),
             res.locals.merchant.save(),
             res.locals.owner.populate("merchants", "name").execPopulate(),
@@ -376,13 +376,15 @@ module.exports = {
                     merchants: res.locals.owner.merchants.slice(1)
                 };
 
-                response[1].owner = undefined;
-                response[1].createdAt = undefined;
+                response[0].owner = undefined;
+                response[0].createdAt = undefined;
+                response[0].locationId = undefined;
+
+                req.session.merchant = response[0]._id;
 
                 return res.json([responseOwner, response[0], response[4]]);
             })
             .catch((err)=>{
-                console.log(err);
                 if(err === "one") return res.json("YOU CANNOT DELETE YOUR ONLY MERCHANT");
                 return res.json("ERROR: UNABLE TO DELETE THE MERCHANT");
             });

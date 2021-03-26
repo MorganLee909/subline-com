@@ -163,6 +163,7 @@ module.exports = {
             })
             .then((response)=>{
                 req.session.owner = response[1].session.sessionId;
+                req.session.merchant = merchant._id;
     
                 res.redirect("/dashboard");
 
