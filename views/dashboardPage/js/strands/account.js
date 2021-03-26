@@ -112,10 +112,10 @@ let account = {
     },
 
     switchMerchant: function(id){
-        console.log("switching");
+        
     },
 
-    deleteMerchant: function(){
+    deleteMerchant: function(id){
         console.log("deleting");
     }
 }

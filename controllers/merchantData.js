@@ -10,6 +10,46 @@ const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, do
 
 module.exports = {
     /*
+    GET: gets a merchant to send back to its owner
+    req.params.id = String (merchant id)
+    response = [Owner, Merchant];
+    */
+    getMerchant: function(req, res){
+        let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants", "name");
+        let merchant = Merchant.findOne({_id: req.params.id});
+
+        Promise.all([owner, merchant])
+            .then((response)=>{
+                if(response[0] === null || response[1] === null) throw "unfound";
+                if(merchant.owner.toString() !== owner._id.toString()) throw "permissions";
+
+                let responseOwner = {
+                    _id: owner._id,
+                    email: owner.email,
+                    merchants: owner.merchants
+                };
+
+                for(let i = 0; i < responseOwner.merchants.length; i++){
+                    if(merchant._id.toString() === responseOwner.merchants[i]._id.toString()){
+                        responseOwner.merchants.splice(i, 1);
+                        break;
+                    }
+                }
+
+                merchant.owner = undefined;
+                merchant.createdAt = undefined;
+
+                return res.json([responseOwner, merchant]);
+            })
+            .catch((err)=>{
+                console.log(err);
+                if(err === "unfound") return res.json("UNABLE TO FIND THAT MERCHANT");
+                if(err === "permissions") return res.json("YOU DO NOT HAVE PERMISSION TO DO THAT");
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
+            });
+    },
+
+    /*
     POST - Create a new merchant with no POS system
     req.body = {
         name: retaurant name,
