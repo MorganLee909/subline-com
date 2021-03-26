@@ -35,7 +35,7 @@
     .menuHead a{
         display: flex;
         align-items: center;
-        color: white;
+        color: rgb(255, 99, 107);
         text-decoration: none;
         width: 80%;
     }
@@ -66,7 +66,7 @@
         align-items: center;
         background: none;
         border-style: none;
-        color: white;
+        color: rgb(255, 99, 107);
         font-size: 18px;
         margin: 15px 0;
         padding-left: 15px;
@@ -90,31 +90,27 @@
 
         .menuButton:hover{
             background: rgb(179, 191, 209);
-            color: black;
-            fill: black;
+            /* color: black; */
+            /* fill: black; */
         }
 
         .menuButton:hover svg{
-            stroke: black;
+            /* stroke: black; */
         }
-
-    .menu a{
-        color: white;
-    }
 
     .menu > .active{
         background: rgb(240, 252, 255);
-        color: black;
+        /* color: black; */
         cursor: default;
     }
 
     .menu > .active:hover{
         background: rgb(240, 252, 255);
-        color: black;
+        /* color: black; */
     }
 
     .menu > .active:hover svg{
-        stroke: black;
+        /* stroke: black; */
     }
 
 /* Minimized menu */
