@@ -3,12 +3,6 @@ const Recipe = require("./Recipe.js");
 const Transaction = require("./Transaction.js");
 const Order = require("./Order.js");
 
-const homeStrand = require("../strands/home.js");
-const ingredientsStrand = require("../strands/ingredients.js");
-const recipeBookStrand = require("../strands/recipeBook");
-const analyticsStrand = require("../strands/analytics.js");
-const ordersStrand = require("../strands/orders");
-
 class MerchantIngredient{
     constructor(ingredient, quantity){
         this._quantity = quantity;
@@ -412,6 +406,10 @@ class Merchant{
 
     get units(){
         return this._units;
+    }
+
+    get owner(){
+        return this._owner;
     }
 
     getRevenue(from, to = new Date()){

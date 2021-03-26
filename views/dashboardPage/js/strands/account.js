@@ -7,6 +7,16 @@ let account = {
 
         //Display alternate locations
         document.getElementById("settingsAddMerchant").onclick = ()=>{controller.openModal("newMerchant")};
+        let container = document.getElementById("settingsMerchants");
+        let template = document.getElementById("locationDiv").content.children[0];
+
+        for(let i = 0; i < merchant.owner.merchants.length; i++){
+            let div = template.cloneNode(true);
+            div.children[0].innerText = merchant.owner.merchants[i].name;
+            div.children[1].children[0].onclick = ()=>{this.switchMerchant(merchant.owner.merchants[i].name)};
+            div.children[1].children[1].onclick = ()=>{this.deleteMerchant(merchant.owner.merchants[i]._id)};
+            container.appendChild(div);
+        }
 
         //Handle the password changey stuffs
         let passButton = document.getElementById("accountShowPassword");
@@ -99,6 +109,14 @@ let account = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    switchMerchant: function(id){
+        console.log("switching");
+    },
+
+    deleteMerchant: function(){
+        console.log("deleting");
     }
 }
 
