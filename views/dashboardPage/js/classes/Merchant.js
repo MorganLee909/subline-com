@@ -212,9 +212,6 @@ class Merchant{
             const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
             this._ingredients.push(merchantIngredient);
         }
-
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.populateButtons();
     }
 
     removeIngredient(ingredient){
@@ -224,10 +221,6 @@ class Merchant{
         }
 
         this._ingredients.splice(index, 1);
-
-        homeStrand.drawInventoryCheckCard();
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.populateButtons();
     }
 
     getIngredient(id){
@@ -271,9 +264,6 @@ class Merchant{
                 this
             ));
         }
-
-        recipeBookStrand.populateRecipes();
-        analyticsStrand.populateButtons();
     }
 
     removeRecipe(recipe){
@@ -284,8 +274,7 @@ class Merchant{
 
         this._recipes.splice(index, 1);
 
-        recipeBookStrand.populateRecipes();
-        analyticsStrand.populateButtons();
+        state.updateRecipes();
     }
 
     get transactions(){
@@ -341,11 +330,6 @@ class Merchant{
         }
 
         this.transactions.sort((a, b) => (a.date > b.date) ? 1 : -1);
-
-        homeStrand.isPopulated = false;
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.displayIngredient();
-        analyticsStrand.displayRecipe();
     }
 
     removeTransaction(transaction){
@@ -361,10 +345,7 @@ class Merchant{
 
         this._transactions.splice(this._transactions.indexOf(transaction), 1);
 
-        homeStrand.isPopulated = false;
-        ingredientsStrand.populateByProperty();
-        analyticsStrand.displayIngredient();
-        analyticsStrand.displayRecipe();
+        state.updateTransactions();
     }
 
     get orders(){
@@ -409,9 +390,6 @@ class Merchant{
                 }
             }
         }
-
-        ingredientsStrand.populateByProperty();
-        ordersStrand.displayOrders();
     }
 
     removeOrder(order){
@@ -430,9 +408,6 @@ class Merchant{
                 }
             }
         }
-
-        ingredientsStrand.isPopulated = false;
-        ordersStrand.isPopulated = false;
     }
 
     get units(){

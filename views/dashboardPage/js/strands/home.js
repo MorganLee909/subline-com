@@ -266,6 +266,7 @@ let home = {
                             merchant.removeIngredient(merchant.getIngredient(response[i].ingredient._id));
                             merchant.addIngredients(response);
                         }
+                        state.updateIngredients();
                         controller.createBanner("INGREDIENTS UPDATED", "success");
                     }
                 })

@@ -316,10 +316,6 @@ controller = {
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
-    },
-
-    updateAnalytics: function(){
-        analytics.isPopulated = false;
     }
 }
 

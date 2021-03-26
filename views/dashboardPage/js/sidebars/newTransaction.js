@@ -76,8 +76,8 @@ let newTransaction = {
                         controller.createBanner(response, "error");
                     }else{
                         merchant.addTransactions([response], true);
+                        state.updateTransactions();
 
-                        controller.updateAnalytics();
                         controller.openStrand("transactions", merchant.getTransactions());
                         controller.createBanner("TRANSACTION CREATED", "success");
                     }
@@ -116,7 +116,7 @@ let newTransaction = {
                         response.recipes[i].recipe = response.recipes[i].recipe._id;
                     }
                     merchant.addTransactions([response], true);
-                    controller.updateAnalytics();
+                    state.updateTransactions();
 
                     controller.openStrand("transactions", merchant.transactions);
                     controller.createBanner("TRANSACTION SUCCESSFULLY CREATED.  INGREDIENTS UPDATED", "success");

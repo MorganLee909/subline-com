@@ -98,6 +98,7 @@ let newRecipe = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.addRecipes([response]);
+                    state.updateRecipes();
 
                     controller.createBanner("RECIPE CREATED", "success");
                     controller.openStrand("recipeBook");
@@ -135,6 +136,7 @@ let newRecipe = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.addRecipes(response);
+                    state.updateRecipes();
 
                     controller.createBanner("ALL RECIPES SUCCESSFULLY CREATED", "success");
                     controller.openStrand("recipeBook");

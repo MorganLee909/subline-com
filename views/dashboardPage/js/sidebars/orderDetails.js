@@ -50,6 +50,7 @@ let orderDetails = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.removeOrder(order);
+                    state.updateOrders();
 
                     controller.openStrand("orders", merchant.orders);
                     controller.createBanner("ORDER REMOVED", "success");

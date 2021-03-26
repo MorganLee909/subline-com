@@ -41,6 +41,7 @@ let recipeDetails = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.removeRecipe(recipe);
+                    state.updateRecipes();
 
                     controller.createBanner("RECIPE REMOVED", "success");
                     controller.openStrand("recipeBook");
