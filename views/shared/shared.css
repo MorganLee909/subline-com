@@ -203,22 +203,6 @@ button::-moz-focus-inner{
         background: rgb(240, 252, 255);
     }
 
-.button-small{
-    background: rgb(255, 99, 107);
-    border: none;
-    text-decoration: none;
-    border-radius: 4px;
-    margin: 5px;
-    padding: 3px;
-    color: white;
-    transition: 0.3s;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    min-width: 100px;
-    cursor: pointer;
-}
-
 .linkButton{
     background: none;
     border: none;
@@ -234,11 +218,6 @@ button::-moz-focus-inner{
     align-self: center;
     margin-right: 39px;
 }
-
-    .button-small:hover{
-        background: rgb(0, 27, 45);
-        color: rgb(240, 252, 255);
-    }
 
 .buttonDisabled{
     background: gray;
