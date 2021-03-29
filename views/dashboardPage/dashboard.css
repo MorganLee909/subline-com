@@ -162,13 +162,11 @@ Multi-strand use classes
 .fileUpload{
     background: rgb(240, 252, 255);
     padding: 5px;
-    border-radius: 5px;
     font-size: 16px;
 }
 
     .fileUpload::file-selector-button{
         background: rgb(0, 27, 45);
-        border-radius: 5px;
         color: white;
         border: none;
         cursor: pointer;
@@ -582,7 +580,7 @@ ACCOUNT STRAND
             justify-content: center;
             align-items: center;
             margin: 15px 0;
-            background: rgb(201, 201, 201);
+            background: white;
             padding: 35px;
         }
 
@@ -609,8 +607,8 @@ ACCOUNT STRAND
             justify-content: space-between;
             align-items: center;
             padding: 0 25px;
-            background: rgb(240, 252, 255);
-            box-shadow: 0 0 10px black;
+            background: rgb(179, 191, 209);
+            box-shadow: 1px 1px 1px black;
             margin: 10px 0;
         }
 
@@ -626,9 +624,7 @@ ACCOUNT STRAND
     #changePasswordBox{
         flex-direction: column;
         padding: 25px;
-        background: rgb(201, 201, 201);
-        /* border: 2px solid black; */
-        border-radius: 10px;
+        background: rgb(179, 191, 209);
     }
 
         #changePasswordBox label{
@@ -678,7 +674,6 @@ Modal
             padding: 25px 100px;
             background: rgb(240, 252, 255);
             border: 2px solid black;
-            border-radius: 10px;
         }
 
             .modalSpreadsheetUpload > *{
@@ -766,10 +761,6 @@ Modal
             margin: 0;
             text-align: center;
             font-size: 20px;
-        }
-
-        .searchInput{
-            border-radius: 10px;
         }
 
         .choosable{
@@ -964,10 +955,6 @@ Modal
             .strandTitle{
                 margin: 0;
             }
-
-        .searchInput{
-            border-radius: 10px;
-        }
 
         .choosable{
             background: rgb(201, 201, 201);
