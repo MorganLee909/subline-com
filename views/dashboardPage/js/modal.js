@@ -47,6 +47,7 @@ let modal = {
         let form = document.getElementById("modalNewMerchant");
         form.style.display = "flex";
         form.onsubmit = ()=>{this.submitNewMerchantNone()};
+        document.getElementById("newMerchantSquareButton").onclick = ()=>{this.submitNewMerchantSquare()};
     },
 
     submitNewMerchantNone(){
@@ -89,6 +90,38 @@ let modal = {
                 }
             })
             .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    },
+
+    submitNewMerchantSquare: function(){
+        let data = {
+            name: document.getElementById("addMerchantName").value
+        }
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/merchant/add/square", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    console.log(response);
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
