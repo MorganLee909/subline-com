@@ -508,7 +508,6 @@ EDIT RECIPE
             flex-direction: column;
             background: rgb(0, 27, 45);
             color: white;
-            border-radius: 5px;
             margin: 5px 0;
             width: 95%;
         }
@@ -529,7 +528,6 @@ EDIT RECIPE
                     background: rgb(0, 27, 45);
                     border: 1px solid white;
                     color: white;
-                    border-radius: 5px;
                     font-size: 13px;
                     font-weight: bold;
                     padding: 5px;
@@ -770,7 +768,6 @@ NEW TRANSACTION
                 color: black;
                 width: 90%;
                 margin: 15px auto;
-                border-radius: 5px;
                 box-shadow: 0 0 5px white;
             }
 
@@ -838,7 +835,6 @@ NEW TRANSACTION
                     color: black;
                     margin: 15px;
                     padding-left: 0;
-                    border-radius: 5px;
                     box-shadow: 0 0 5px white;
                     height: 10vh;
                 }
