@@ -88,5 +88,6 @@ module.exports = function(app){
     app.post("/squarelogin", squareData.redirect);
     app.get("/squareauth", squareData.createMerchant);
     app.get("/recipes/update/square", session, squareData.updateRecipes);
-    app.get("/merchant/add/square", session, squareData.addMerchant);
+    app.get("/square/locations", session, squareData.getLocations);
+    app.get("/square/add/:location", session, squareData.addMerchant);
 }

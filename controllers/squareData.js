@@ -356,10 +356,11 @@ module.exports = {
     /*
     GET: add another merchant to an owner with another square location
     response = [{
-
+        name: String,
+        id: String
     }]
     */
-    addMerchant: function(req, res){
+    getLocations: function(req, res){
         axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations`, {
             headers: {
                 "Authorization": `Bearer ${res.locals.owner.square.accessToken}`,
@@ -380,5 +381,14 @@ module.exports = {
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO RETRIEVE LOCATION DATA FROM SQUARE");
             })
+    },
+
+    /*
+    GET: create new merchant from square location and add to owner
+    response = [Owner, Merchant]
+    */
+    addMerchant: function(req, res){
+        console.log("adding merchant");
+        console.log(req.params);
     }
 }

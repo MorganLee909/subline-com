@@ -100,7 +100,7 @@ let modal = {
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/merchant/add/square")
+        fetch("/square/locations")
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
@@ -137,7 +137,25 @@ let modal = {
     },
 
     createSquareLocation: function(id){
-        console.log(id);
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch(`/square/add/${id}`)
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    console.log(response);
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 };
 
