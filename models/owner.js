@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-let emailValid = (value)=>{
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
-}
+let emailValid = require("../validator.js").emailValid;
 
 const OwnerSchema = new mongoose.Schema({
     email: {

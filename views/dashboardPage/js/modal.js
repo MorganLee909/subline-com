@@ -146,7 +146,20 @@ let modal = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    console.log(response);
+                    window.merchant = new Merchant(
+                        response[1].name,
+                        response[0].email,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        [],
+                        response[0]
+                    );
+
+                    state.updateMerchant();
+                    controller.closeModal();
+                    controller.openStrand("home");
+                    controller.createBanner(`NEW MERCHANT, "${response[1].name}", CREATED`, "success");
                 }
             })
             .catch((err)=>{

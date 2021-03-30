@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 const Transaction = require("../models/transaction.js");
+const Recipe = require("../models/recipe.js");
 
 module.exports = {
     getSquareData: function(owner, merchant, data){
@@ -125,20 +126,6 @@ module.exports = {
         return result;
     },
 
-    isSanitary: function(strings){
-        let disallowed = ["\\", "<", ">", "$", "{", "}", "."];
-
-        for(let i = 0; i < strings.length; i++){
-            for(let j = 0; j < disallowed.length; j++){
-                if(strings[i].includes(disallowed[j])){
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    },
-
     getUnitType: function(unit){
         let unitType = "";
 
@@ -165,5 +152,88 @@ module.exports = {
         }
 
         return unitType;
+    },
+
+    createRecipesFromSquare: function(squareItems, merchantId){
+        let recipes = [];
+
+        for(let i = 0; i < squareItems.length; i++){
+            if(squareItems[i].item_data.variations.length > 1){
+                for(let j = 0; j < squareItems[i].item_data.variations.length; j++){
+                    let item = squareItems[i].item_data.variations[j];
+                    let price = 0;
+                    if(item.item_variation_data.price_money !== undefined) price = item.item_variation_data.price_money.amount;
+                    let recipe = new Recipe({
+                        posId: item.id,
+                        merchant: merchantId,
+                        name: `${squareItems[i].item_data.name} '${item.item_variation_data.name}'`,
+                        price: price
+                    });
+
+                    recipes.push(recipe);
+                }
+            }else{
+                let recipe = new Recipe({
+                    posId: squareItems[i].item_data.variations[0].id,
+                    merchant: merchantId,
+                    name: squareItems[i].item_data.name,
+                    price: squareItems[i].item_data.variations[0].item_variation_data.price_money.amount,
+                    ingredients: []
+                });
+
+                recipes.push(recipe);
+            }
+        }
+
+        return recipes;
+    },
+
+    getAllMerchantTransactions: async function(merchant, token){
+        let body = {
+            location_ids: [merchant.locationId],
+            limit: 10000,
+            query: {}
+        };
+
+        let options = {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        };
+
+        do{
+            let response = await axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
+            body.cursor = response.data.cursor;
+
+            let transactions = [];
+
+            for(let i = 0; i < response.data.orders.length; i++){
+                let transaction = new Transaction({
+                    merchant: merchant._id,
+                    date: new Date(response.data.orders[i].created_at),
+                    posId: response.data.orders[i].id,
+                    recipes: []
+                });
+
+                if(response.data.orders[i].line_items === undefined) continue;
+                for(let j = 0; j < response.data.orders[i].line_items.length; j++){
+                    let item = response.data.orders[i].line_items[j];
+
+                    for(let k = 0; k < merchant.recipes.length; k++){
+                        if(merchant.recipes[k].posId === item.catalog_object_id){
+                            transaction.recipes.push({
+                                recipe: merchant.recipes[k]._id,
+                                quantity: parseInt(item.quantity)
+                            });
+                        }
+                    }
+                }
+
+                transactions.push(transaction);
+            }
+
+            Transaction.create(transactions);
+        }while(body.cursor !== undefined);
     }
 }

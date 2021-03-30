@@ -127,37 +127,9 @@ module.exports = {
             })
             .then((response)=>{
                 if(owner.email === response[1].data.location.business_email) merchant.status = [];
-                let recipes = [];
                 
-                for(let i = 0; i < response[0].data.objects.length; i++){
-                    if(response[0].data.objects[i].item_data.variations.length > 1){
-                        for(let j = 0; j < response[0].data.objects[i].item_data.variations.length; j++){
-                            let item = response[0].data.objects[i].item_data.variations[j];
-                            let price = 0;
-                            if(item.item_variation_data.price_money !== undefined) price = item.item_variation_data.price_money.amount;
-                            let recipe = new Recipe({
-                                posId: item.id,
-                                merchant: merchant._id,
-                                name: `${response[0].data.objects[i].item_data.name} '${item.item_variation_data.name}'`,
-                                price: price
-                            });
-    
-                            recipes.push(recipe);
-                            merchant.recipes.push(recipe);
-                        }
-                    }else{
-                        let recipe = new Recipe({
-                            posId: response[0].data.objects[i].item_data.variations[0].id,
-                            merchant: merchant._id,
-                            name: response[0].data.objects[i].item_data.name,
-                            price: response[0].data.objects[i].item_data.variations[0].item_variation_data.price_money.amount,
-                            ingredients: []
-                        });
-    
-                        recipes.push(recipe);
-                        merchant.recipes.push(recipe);
-                    }
-                }
+                let recipes = helper.createRecipesFromSquare(response[0].data.objects, merchant._id);
+                merchant.recipes = recipes;
     
                 return Promise.all([Recipe.create(recipes), owner.save(), merchant.save()]);
             })
@@ -167,91 +139,7 @@ module.exports = {
     
                 res.redirect("/dashboard");
 
-                let body = {
-                    location_ids: [merchant.locationId],
-                    limit: 10000,
-                    query: {}
-                };
-                let options = {
-                    headers: {
-                        Authorization: `Bearer ${owner.square.accessToken}`,
-                        "Content-Type": "application/json"
-                    }
-                };
-                return axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
-            })
-            .then(async (response)=>{
-                let transactions = [];
-
-                for(let i = 0; i < response.data.orders.length; i++){
-                    let transaction = new Transaction({
-                        merchant: merchant._id,
-                        date: new Date(response.data.orders[i].created_at),
-                        posId: response.data.orders[i].id,
-                        recipes: []
-                    });
-
-                    if(response.data.orders[i].line_items === undefined) continue;
-                    for(let j = 0; j < response.data.orders[i].line_items.length; j++){
-                        let item = response.data.orders[i].line_items[j];
-
-                        for(let k = 0; k < merchant.recipes.length; k++){
-                            if(merchant.recipes[k].posId === item.catalog_object_id){
-                                transaction.recipes.push({
-                                    recipe: merchant.recipes[k]._id,
-                                    quantity: parseInt(item.quantity)
-                                });
-                            }
-                        }
-                    }
-
-                    transactions.push(transaction);
-                }
-
-                let body = {
-                    location_ids: [merchant.locationId],
-                    limit: 10000,
-                    cursor: response.data.cursor,
-                    query: {}
-                };
-                let options = {
-                    headers: {
-                        Authorization: `Bearer ${owner.square.accessToken}`,
-                        "Content-Type": "application/json"
-                    }
-                };
-
-                while(body.cursor !== undefined){
-                    let response = await axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
-                    body.cursor = response.data.cursor;
-                    
-                    for(let i = 0; i < response.data.orders.length; i++){
-                        let transaction = new Transaction({
-                            merchant: merchant._id,
-                            date: new Date(response.data.orders[i].created_at),
-                            posId: response.data.orders[i].id,
-                            recipes: []
-                        });
-    
-                        if(response.data.orders[i].line_items === undefined) continue;
-                        for(let j = 0; j < response.data.orders[i].line_items.length; j++){
-                            let item = response.data.orders[i].line_items[j];
-    
-                            for(let k = 0; k < merchant.recipes.length; k++){
-                                if(merchant.recipes[k].posId === item.catalog_object_id){
-                                    transaction.recipes.push({
-                                        recipe: merchant.recipes[k]._id,
-                                        quantity: parseInt(item.quantity)
-                                    });
-                                }
-                            }
-                        }
-    
-                        transactions.push(transaction);
-                    }
-                }
-
-                return Transaction.create(transactions);
+                helper.getAllMerchantTransactions(merchant, owner.square.accessToken);
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
@@ -388,7 +276,58 @@ module.exports = {
     response = [Owner, Merchant]
     */
     addMerchant: function(req, res){
-        console.log("adding merchant");
-        console.log(req.params);
+        let merchant = new Merchant({
+            owner: res.locals.owner._id,
+            pos: "square",
+            locationId: req.params.location,
+            createdAt: new Date(),
+            inventory: [],
+            recipes: []
+        });
+
+        res.locals.owner.merchants.push(merchant._id);
+
+        let location = axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations/${req.params.location}`, {
+            headers: {
+                "Authorization": `Bearer ${res.locals.owner.square.accessToken}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        let recipes = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
+            object_types: ["ITEM"]
+        }, {
+            headers: {
+                "Authorization": `Bearer ${res.locals.owner.square.accessToken}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        Promise.all([location, recipes])
+            .then((response)=>{
+                merchant.name = response[0].data.location.name;
+
+                let recipes = helper.createRecipesFromSquare(response[1].data.objects, merchant._id);
+                merchant.recipes = recipes;
+
+                let populateOwner = res.locals.owner.populate("merchants", "name");
+
+                return Promise.all([Recipe.create(recipes), res.locals.owner.save(), merchant.save(), populateOwner]);
+            })
+            .then((response)=>{
+                req.session.merchant = merchant._id;
+
+                res.json([{
+                    _id: res.locals.owner._id,
+                    email: res.locals.owner.email,
+                    merchants: res.locals.owner.merchants
+                }, merchant]);
+
+                helper.getAllMerchantTransactions(merchant, res.locals.owner.square.accessToken);
+            })
+            .catch((err)=>{
+                if(err.name === "ValidationError") return req.session.err = err.errors[Object.keys(err.errors)[0]].properties.message;
+                return res.json("ERROR: UNABLE TO CREATE NEW MERCHANT");
+            });
     }
 }
