@@ -1,7 +1,6 @@
 const Owner = require("../models/owner.js");
 const Merchant = require("../models/merchant.js");
 const Recipe = require("../models/recipe.js");
-const Transaction = require("../models/transaction.js");
 
 const helper = require("./helper.js");
 
@@ -149,6 +148,8 @@ module.exports = {
                 }else{
                     req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
                 }
+                Merchant.deleteOne({_id: merchant._id});
+                Owner.deleteOne({_id: owner._id});
                 return res.redirect("/");
             });
     },
