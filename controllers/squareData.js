@@ -351,5 +351,34 @@ module.exports = {
                 }
                 return res.json("ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE");
             });
+    },
+
+    /*
+    GET: add another merchant to an owner with another square location
+    response = [{
+
+    }]
+    */
+    addMerchant: function(req, res){
+        axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations`, {
+            headers: {
+                "Authorization": `Bearer ${res.locals.owner.square.accessToken}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then((response)=>{
+                let locations = [];
+                for(let i = 0; i < response.data.locations.length; i++){
+                    locations.push({
+                        name: response.data.locations[i].name,
+                        id: response.data.locations[i].id
+                    });
+                }
+
+                return res.json(locations);
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO RETRIEVE LOCATION DATA FROM SQUARE");
+            })
     }
 }

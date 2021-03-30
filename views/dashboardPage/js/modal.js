@@ -1,4 +1,3 @@
-const merchant = require("../../../models/merchant.js");
 const Merchant = require("./classes/Merchant.js");
 
 let modal = {
@@ -98,35 +97,47 @@ let modal = {
     },
 
     submitNewMerchantSquare: function(){
-        let data = {
-            name: document.getElementById("addMerchantName").value
-        }
-
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
-        fetch("/merchant/add/square", {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-            body: JSON.stringify(data)
-        })
+        fetch("/merchant/add/square")
             .then(response => response.json())
             .then((response)=>{
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    console.log(response);
+                    controller.closeModal();
+                    controller.openModal("squareLocations", response);
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    squareLocations: function(locations){
+        document.getElementById("modalSquareLocations").style.display = "flex";
+        document.getElementById("squareLocationsCancel").onclick = ()=>{controller.closeModal()};
+        let container = document.getElementById("squareLocationsButtons");
+
+        while(container.children.length > 0){
+            container.removeChild(container.firstChild);
+        }
+
+        for(let i = 0; i < locations.length; i++){
+            let button = document.createElement("button");
+            button.innerText = locations[i].name;
+            button.classList.add("button");
+            button.onclick = ()=>{this.createSquareLocation(locations[i].id)};
+            container.appendChild(button);
+        }
+    },
+
+    createSquareLocation: function(id){
+        console.log(id);
     }
 };
 
