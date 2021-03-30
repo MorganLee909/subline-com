@@ -249,26 +249,38 @@ module.exports = {
     }]
     */
     getLocations: function(req, res){
-        axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations`, {
+        let ownerLocation = res.locals.owner.populate("merchants", "locationId").execPopulate();
+
+        let locations = axios.get(`${process.env.SQUARE_ADDRESS}/v2/locations`, {
             headers: {
                 "Authorization": `Bearer ${res.locals.owner.square.accessToken}`,
                 "Content-Type": "application/json"
             }
-        })
+        });
+
+        Promise.all([ownerLocation, locations])
             .then((response)=>{
+                let checkLocations = [];
                 let locations = [];
-                for(let i = 0; i < response.data.locations.length; i++){
-                    locations.push({
-                        name: response.data.locations[i].name,
-                        id: response.data.locations[i].id
-                    });
+
+                for(let i = 0; i < res.locals.owner.merchants.length; i++){
+                    checkLocations.push(res.locals.owner.merchants[i].locationId);
+                }
+                
+                for(let i = 0; i < response[1].data.locations.length; i++){
+                    if(checkLocations.includes(response[1].data.locations[i].id) === false){
+                        locations.push({
+                            name: response[1].data.locations[i].name,
+                            id: response[1].data.locations[i].id
+                        });
+                    }
                 }
 
                 return res.json(locations);
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO RETRIEVE LOCATION DATA FROM SQUARE");
-            })
+            });
     },
 
     /*
