@@ -107,6 +107,7 @@ module.exports = {
             })    
             .then((response)=>{
                 merchant.locationId = response.data.merchant.main_location_id;
+                owner.name = response.data.merchant.business_name;
 
                 let items = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
                     object_types: ["ITEM"]
@@ -126,6 +127,7 @@ module.exports = {
             })
             .then((response)=>{
                 if(owner.email === response[1].data.location.business_email) merchant.status = [];
+                merchant.name = response[1].data.location.name;
                 
                 let recipes = helper.createRecipesFromSquare(response[0].data.objects, merchant._id);
                 merchant.recipes = recipes;

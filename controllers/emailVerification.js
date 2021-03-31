@@ -12,7 +12,7 @@ module.exports = {
                     to: owner.email,
                     subject: "Email verification",
                     html: verifyEmail({
-                        name: owner.email,
+                        name: owner.name,
                         link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`,
                     })
                 };
@@ -67,7 +67,7 @@ module.exports = {
                 const memberData = {
                     subscribed: true,
                     address: owner.email,
-                    name: owner.email,
+                    name: owner.name,
                     vars: {}
                 }
                 mailgunList.members().create(memberData, (err, data)=>{});
