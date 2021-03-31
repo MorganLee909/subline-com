@@ -11,17 +11,17 @@ let account = {
         //Display alternate locations
         document.getElementById("settingsAddMerchant").onclick = ()=>{controller.openModal("newMerchant")};
         let container = document.getElementById("settingsMerchants");
-        let template = document.getElementById("locationDiv").content.children[0];
 
         while(container.children.length > 0){
             container.removeChild(container.firstChild);
         }
 
         for(let i = 0; i < merchant.owner.merchants.length; i++){
-            let div = template.cloneNode(true);
-            div.children[0].innerText = merchant.owner.merchants[i].name;
-            div.children[1].onclick = ()=>{this.switchMerchant(merchant.owner.merchants[i]._id)};
-            container.appendChild(div);
+            let button = document.createElement("button");
+            button.innerText = merchant.owner.merchants[i].name;
+            button.classList.add("button");
+            button.onclick = ()=>{this.switchMerchant(merchant.owner.merchants[i]._id)};
+            container.appendChild(button);
         }
 
         //Handle the password changey stuffs

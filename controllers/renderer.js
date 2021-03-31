@@ -45,7 +45,7 @@ module.exports = {
                 let transactions = Transaction.aggregate([
                     {$match: {
                         merchant: new ObjectId(merchant._id),
-                        date: {$gte: firstDay},
+                        date: {$gte: firstDay}
                     }},
                     {$sort: {date: -1}},
                     {$project: {
