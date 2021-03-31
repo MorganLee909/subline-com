@@ -271,38 +271,36 @@ module.exports = {
     req.body = {
         email: String (merchant email address)
     },
-    response = Merchant
+    response = {
+        email: String (merchant)
+    }
     */
     updateData: async function(req, res){
-        if(req.body.email !== res.locals.merchant.email){
-            let merchantCheck = await Merchant.findOne({email: req.body.email});
-            if(merchantCheck !== null){
-                return res.json("USER WITH THIS EMAIL ADDRESS ALREADY EXISTS");
-            }
+        if(req.body.email !== res.locals.owner.email){
+            let ownerCheck = await Owner.findOne({email: req.body.email});
+            if(ownerCheck !== null) return res.json("USER WITH THIS EMAIL ADDRESS ALREADY EXISTS");
 
-            res.locals.merchant.email = req.body.email;
-            res.locals.merchant.status.push("unverified");
+            res.locals.owner.email = req.body.email.toLowerCase();
+            res.locals.owner.status.push("unverified");
 
             const mailgunData = {
                 from: "The Subline <clientsupport@thesubline.net>",
-                to: res.locals.merchant.email,
+                to: res.locals.owner.email,
                 subject: "Email Verification",
                 html: verifyEmail({
-                    name: res.locals.merchant.name,
-                    link: `${process.env.SITE}/verify/${res.locals.merchant._id}/${res.locals.merchant.sessionId}`
+                    name: res.locals.owner.name,
+                    link: `${process.env.SITE}/verify/${res.locals.owner._id}/${res.locals.owner.session.sessionId}`
                 })
             };
             mailgun.messages().send(mailgunData, (err, body)=>{});
         }
 
-        res.locals.merchant.save()
-            .then((merchant)=>{
-                return res.json(merchant);
+        res.locals.owner.save()
+            .then((owner)=>{
+                return res.json({email: res.locals.owner.email});
             })
             .catch((err)=>{
-                if(err.name === "ValidationError"){
-                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
-                }
+                if(err.name === "ValidationError") return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 return res.json("ERROR: UNABLE TO UPDATE DATA");
             });
     },

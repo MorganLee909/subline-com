@@ -64,12 +64,11 @@ let account = {
                     controller.createBanner(response, "error");
                 }else{
                     controller.createBanner("DATA UPDATED", "success");
-                    if(response.email !== merchant.email){
-                        controller.createBanner("YOU MUST VALIDATE YOUR NEW EMAIL ADDRESS BEFORE YOU CAN LOG IN AGAIN", "alert");
-                    }
+                    if(response.email !== merchant.email) controller.createBanner("YOU MUST VALIDATE YOUR NEW EMAIL ADDRESS BEFORE YOU CAN LOG IN AGAIN", "alert");
 
                     merchant.email = response.email;
-                    document.getElementById("accountEmail").value = merchant.email;
+                    merchant.owner.email = response.email;
+                    document.getElementById("accountEmail").value = merchant.owner.email;
                 }
             })
             .catch((err)=>{
