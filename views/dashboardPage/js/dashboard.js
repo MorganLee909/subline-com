@@ -290,7 +290,11 @@ controller = {
     changeMenu: function(){
         let menu = document.querySelector(".menu");
         let buttons = document.querySelectorAll(".menuButton");
+        let links = document.getElementById("menuLinks");
+        let merchantName = document.getElementById("menuLocationName");
+
         if(!menu.classList.contains("menuMinimized")){
+            merchantName.style.display = "none";
             menu.classList = "menu menuMinimized";
 
             for(let i = 0; i < buttons.length; i++){
@@ -299,14 +303,23 @@ controller = {
 
             document.getElementById("max").style.display = "none";
             document.getElementById("min").style.display = "flex";
-
+            
+            links.children[0].style.fontSize = "12px";
+            links.children[1].style.display = "none";
             
         }else if(menu.classList.contains("menuMinimized")){
+            merchantName.style.display = "block";
             menu.classList = "menu";
 
             for(let i = 0; i < buttons.length; i++){
                 buttons[i].children[1].style.display = "block";
             }
+
+            document.getElementById("max").style.display = "flex";
+            document.getElementById("min").style.display = "none";
+
+            links.childre[0].style.fontSize = "16px";
+            links.children[1].style.display = "block";
 
             setTimeout(()=>{
                 document.getElementById("max").style.display = "flex";
@@ -363,6 +376,8 @@ window.state = {
 }
 
 //Add click listeners for menu buttons
+document.getElementById("menuShifter").onclick = ()=>{controller.changeMenu()}
+document.getElementById("menuShifter2").onclick = ()=>{controller.changeMenu()}
 document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")};
 document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
 document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
