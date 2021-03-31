@@ -373,7 +373,8 @@ module.exports = {
                 let responseOwner = {
                     _id: res.locals.owner._id,
                     email: res.locals.owner.email,
-                    merchants: res.locals.owner.merchants.slice(1)
+                    merchants: res.locals.owner.merchants.slice(1),
+                    name: res.locals.owner.name
                 };
 
                 response[0].owner = undefined;

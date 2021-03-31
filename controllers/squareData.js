@@ -321,7 +321,7 @@ module.exports = {
                 let recipes = helper.createRecipesFromSquare(response[1].data.objects, merchant._id);
                 merchant.recipes = recipes;
 
-                let populateOwner = res.locals.owner.populate("merchants", "name");
+                let populateOwner = res.locals.owner.populate("merchants", "name").execPopulate();
 
                 return Promise.all([Recipe.create(recipes), res.locals.owner.save(), merchant.save(), populateOwner]);
             })

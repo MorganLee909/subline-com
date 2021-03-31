@@ -122,7 +122,7 @@ module.exports = {
                     if(res.locals.owner.merchants[i]._id.toString() === res.locals.merchant._id.toString()){
                         res.locals.owner.merchants.splice(i, 1);
                         break;
-                    } 
+                    }
                 }
 
                 return res.render("dashboardPage/dashboard", {owner: res.locals.owner, merchant: res.locals.merchant, transactions: transactions});
