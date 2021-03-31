@@ -98,7 +98,16 @@ let modal = {
     squareLocations: function(locations){
         document.getElementById("modalSquareLocations").style.display = "flex";
         document.getElementById("squareLocationsCancel").onclick = ()=>{controller.closeModal()};
+        if(locations.length === 0){
+            document.getElementById("squareLocationsTitle").innerText = "ALL OF YOUR LOCATIONS HAVE ALREADY BEEN ADDED TO THE SUBLINE";
+            return;
+        }
+
         let container = document.getElementById("squareLocationsButtons");
+
+        while(container.children.length > 0){
+            container.removeChild(container.firstChild);
+        }
         
         for(let i = 0; i < locations.length; i++){
             let button = document.createElement("button");
