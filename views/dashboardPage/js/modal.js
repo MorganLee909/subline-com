@@ -93,6 +93,54 @@ let modal = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    squareLocations: function(locations){
+        document.getElementById("modalSquareLocations").style.display = "flex";
+        document.getElementById("squareLocationsCancel").onclick = ()=>{controller.closeModal()};
+        let container = document.getElementById("squareLocationsButtons");
+        
+        for(let i = 0; i < locations.length; i++){
+            let button = document.createElement("button");
+            button.innerText = locations[i].name;
+            button.classList.add("button");
+            button.onclick = ()=>{this.addSquareMerchant(locations[i].id)};
+            container.appendChild(button);
+        }
+    },
+
+    addSquareMerchant: function(id){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "none";
+
+        fetch(`/square/add/${id}`)
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    window.merchant = new Merchant(
+                        response[1].name,
+                        response[1].pos,
+                        response[1].inventory,
+                        response[1].recipes,
+                        [],
+                        response[0]
+                    );
+
+                    state.updateMerchant();
+                    controller.closeModal();
+                    controller.openStrand("home");
+                    controller.createBanner(`NEW MERCHANT, "${response[1].name}", CREATED`, "success");
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 };
 

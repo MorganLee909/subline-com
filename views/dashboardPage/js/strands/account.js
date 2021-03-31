@@ -41,6 +41,7 @@ let account = {
         };
 
         document.getElementById("changePasswordButton").onclick = ()=>{this.updatePassword()};
+        document.getElementById("newMerchantSquareButton").onclick = ()=>{this.getSquareLocations()};
     },
 
     updateData: function(){
@@ -171,6 +172,28 @@ let account = {
                 }
             })
             .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    },
+
+    getSquareLocations: function(){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/square/locations")
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    controller.openModal("squareLocations", response);
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{

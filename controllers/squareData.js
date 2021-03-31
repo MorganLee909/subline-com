@@ -155,29 +155,25 @@ module.exports = {
     },
 
     updateRecipes: function(req, res){
-        let merchant = {};
         let merchantRecipes = [];
         let newRecipes = [];
+
+        let populate = res.locals.merchant.populate("recipes").execPopulate();
+
+        let squareRecipes = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
+                object_types: ["ITEM"]
+            }, {
+                headers: {
+                    Authorization: `Bearer ${res.locals.owner.square.accessToken}`
+                }
+            });
     
-        res.locals.merchant
-            .populate("recipes")
-            .execPopulate()
-            .then((fetchedMerchant)=>{
-                merchant = fetchedMerchant;
-                return axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
-                    object_types: ["ITEM"]
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${merchant.square.accessToken}`
-                    }
-                });
-            })
+        Promise.all([populate, squareRecipes])
             .then((response)=>{
-                merchantRecipes = merchant.recipes.slice();
+                merchantRecipes = res.locals.merchant.recipes.slice();
     
-                
-                for(let i = 0; i < response.data.objects.length; i++){
-                    let itemData = response.data.objects[i].item_data;
+                for(let i = 0; i < response[1].data.objects.length; i++){
+                    let itemData = response[1].data.objects[i].item_data;
                     for(let j = 0; j < itemData.variations.length; j++){
                         let isFound = false;
     
@@ -193,7 +189,7 @@ module.exports = {
                         if(!isFound){
                             let newRecipe = new Recipe({
                                 posId: itemData.variations[j].id,
-                                merchant: merchant._id,
+                                merchant: res.locals.merchant._id,
                                 name: "",
                                 price: itemData.variations[j].item_variation_data.price_money.amount,
                                 ingredients: []
@@ -206,7 +202,7 @@ module.exports = {
                             }
     
                             newRecipes.push(newRecipe);
-                            merchant.recipes.push(newRecipe);
+                            res.locals.merchant.recipes.push(newRecipe);
                         }
                     }
                 }
@@ -214,9 +210,9 @@ module.exports = {
                 let ids = [];
                 for(let i = 0; i < merchantRecipes.length; i++){
                     ids.push(merchantRecipes[i]._id);
-                    for(let j = 0; j < merchant.recipes.length; j++){
-                        if(merchantRecipes[i]._id.toString() === merchant.recipes[j]._id.toString()){
-                            merchant.recipes.splice(j, 1);
+                    for(let j = 0; j < res.locals.merchant.recipes.length; j++){
+                        if(merchantRecipes[i]._id.toString() === res.locals.merchant.recipes[j]._id.toString()){
+                            res.locals.merchant.recipes.splice(j, 1);
                             j--;
                             break;
                         }
@@ -226,18 +222,14 @@ module.exports = {
                 if(newRecipes.length > 0) Recipe.create(newRecipes);
                 if(merchantRecipes.length > 0) Recipe.deleteMany({_id: {$in: ids}});    
 
-                return merchant.save();
+                return res.locals.merchant.save();
             })
             .then((merchant)=>{
                 return res.json({new: newRecipes, removed: merchantRecipes});
             })
             .catch((err)=>{
-                if(typeof(err) === "string"){
-                    return res.json(err);
-                }
-                if(err.name === "ValidationError"){
-                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
-                }
+                if(typeof(err) === "string") return res.json(err);
+                if(err.name === "ValidationError") return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 return res.json("ERROR: UNABLE TO RETRIEVE RECIPE DATA FROM SQUARE");
             });
     },
@@ -286,9 +278,11 @@ module.exports = {
 
     /*
     GET: create new merchant from square location and add to owner
+    req.params.location = location.id
     response = [Owner, Merchant]
     */
     addMerchant: function(req, res){
+        console.log(req.params.location);
         let merchant = new Merchant({
             owner: res.locals.owner._id,
             pos: "square",
@@ -339,6 +333,7 @@ module.exports = {
                 helper.getAllMerchantTransactions(merchant, res.locals.owner.square.accessToken);
             })
             .catch((err)=>{
+                console.log(err.response.data);
                 if(err.name === "ValidationError") return req.session.err = err.errors[Object.keys(err.errors)[0]].properties.message;
                 return res.json("ERROR: UNABLE TO CREATE NEW MERCHANT");
             });
