@@ -8,17 +8,32 @@ const verifyEmail = require("../emails/verifyEmail.js");
 
 const bcrypt = require("bcryptjs");
 const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
+const ObjectId = require("mongoose").Types.ObjectId;
 
 module.exports = {
     /*
     GET: gets a merchant to send back to its owner
     req.params.id = String (merchant id)
-    response = [Owner, Merchant];
+    response = [Owner, Merchant, [Transaction]];
     */
     getMerchant: function(req, res){
         let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants", "name");
         let merchant = Merchant.findOne({_id: req.params.id}).populate("inventory.ingredient").populate("recipes");
-        let transactions = Transaction.find({merchant: req.params.id});
+
+        let now = new Date();
+        let then = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+        let transactions = Transaction.aggregate([
+            {$match: {
+                merchant: ObjectId(req.params.id),
+                date: {$gte: then}
+            }},
+            {$sort: {date: -1}},
+            {$project: {
+                date: 1,
+                recipes: 1
+            }}
+        ]);
 
         Promise.all([owner, merchant, transactions])
             .then((response)=>{

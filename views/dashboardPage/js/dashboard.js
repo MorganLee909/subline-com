@@ -238,7 +238,6 @@ controller = {
                 content.children[2].children[1].onclick = ()=>{account.deleteMerchant()};
                 break;
             case "confirmDeleteIngredient":
-                console.log(data);
                 content = document.getElementById("modalConfirm");
                 content.style.display = "flex";
                 content.children[1].innerText = `Are you sure you want to delete ingredient: ${data.ingredient.name}?`;
