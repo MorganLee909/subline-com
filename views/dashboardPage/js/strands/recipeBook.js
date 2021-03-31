@@ -100,8 +100,8 @@ let recipeBook = {
                         }
                     }
 
+                    state.updateRecipes();
                     controller.createBanner("RECIPES SUCCESSFULLY UPDATED", "success");
-                    this.display();
                 }
             })
             .catch((err)=>{

@@ -173,11 +173,14 @@ module.exports = {
                     recipes.push(recipe);
                 }
             }else{
+                let priceMoney = squareItems[i].item_data.variations[0].item_variation_data.price_money;
+                let price = (priceMoney === undefined) ? 0 : priceMoney.amount;
+
                 let recipe = new Recipe({
                     posId: squareItems[i].item_data.variations[0].id,
                     merchant: merchantId,
                     name: squareItems[i].item_data.name,
-                    price: squareItems[i].item_data.variations[0].item_variation_data.price_money.amount,
+                    price: price,
                     ingredients: []
                 });
 

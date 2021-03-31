@@ -160,8 +160,8 @@ module.exports = {
 
         let populate = res.locals.merchant.populate("recipes").execPopulate();
 
-        let squareRecipes = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
-                object_types: ["ITEM"]
+        let squareRecipes = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search-catalog-items`, {
+                enabled_location_ids: [res.locals.merchant.locationId]
             }, {
                 headers: {
                     Authorization: `Bearer ${res.locals.owner.square.accessToken}`
@@ -172,8 +172,8 @@ module.exports = {
             .then((response)=>{
                 merchantRecipes = res.locals.merchant.recipes.slice();
     
-                for(let i = 0; i < response[1].data.objects.length; i++){
-                    let itemData = response[1].data.objects[i].item_data;
+                for(let i = 0; i < response[1].data.items.length; i++){
+                    let itemData = response[1].data.items[i].item_data;
                     for(let j = 0; j < itemData.variations.length; j++){
                         let isFound = false;
     
@@ -187,11 +187,14 @@ module.exports = {
                         }
     
                         if(!isFound){
+                            let priceMoney = itemData.variations[j].item_variation_data.price_money;
+                            let price = (priceMoney === undefined) ? 0 : priceMoney.amount;
+
                             let newRecipe = new Recipe({
                                 posId: itemData.variations[j].id,
                                 merchant: res.locals.merchant._id,
                                 name: "",
-                                price: itemData.variations[j].item_variation_data.price_money.amount,
+                                price: price,
                                 ingredients: []
                             });
     
@@ -282,7 +285,6 @@ module.exports = {
     response = [Owner, Merchant]
     */
     addMerchant: function(req, res){
-        console.log(req.params.location);
         let merchant = new Merchant({
             owner: res.locals.owner._id,
             pos: "square",
@@ -333,7 +335,6 @@ module.exports = {
                 helper.getAllMerchantTransactions(merchant, res.locals.owner.square.accessToken);
             })
             .catch((err)=>{
-                console.log(err.response.data);
                 if(err.name === "ValidationError") return req.session.err = err.errors[Object.keys(err.errors)[0]].properties.message;
                 return res.json("ERROR: UNABLE TO CREATE NEW MERCHANT");
             });
