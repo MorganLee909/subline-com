@@ -90,6 +90,7 @@ module.exports = {
 
         let owner = new Owner({
             email: email,
+            name: req.body.name,
             password: hash,
             createdAt: new Date(),
             status: ["unverified"],
