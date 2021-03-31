@@ -11,20 +11,20 @@ module.exports = {
     },
 
     generateCode: function(req, res){
-        Merchant.findOne({email: req.body.email.toLowerCase()})
-            .then((merchant)=>{
-                if(merchant === null){
+        Owner.findOne({email: req.body.email.toLowerCase()})
+            .then((owner)=>{
+                if(owner === null){
                     req.session.error = "USER WITH THIS EMAIL DOES NOT EXIST";
                     return res.redirect("/");
                 }
                 
                 const mailgunData = {
                     from: "The Subline <clientsupport@thesubline.net>",
-                    to: merchant.email,
+                    to: owner.email,
                     subject: "Password Reset",
                     html: passwordReset({
-                        name: merchant.name,
-                        link: `${process.env.SITE}/reset/${merchant._id}/${merchant.session.sessionId}`
+                        name: owner.email,
+                        link: `${process.env.SITE}/reset/${owner._id}/${owner.session.sessionId}`
                     })
                 };
                 mailgun.messages().send(mailgunData, (err, body)=>{});
