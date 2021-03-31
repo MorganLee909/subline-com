@@ -3,11 +3,10 @@ let ingredientDetails = {
 
     display: function(ingredient){
         document.getElementById("editIngBtn").onclick = ()=>{controller.openSidebar("editIngredient", ingredient)};
-        document.getElementById("removeIngBtn").onclick = ()=>{this.remove(ingredient)};
+        document.getElementById("removeIngBtn").onclick = ()=>{controller.openModal("confirmDeleteIngredient", ingredient)};
         document.getElementById("ingredientDetailsCategory").innerText = ingredient.ingredient.category;
         document.getElementById("ingredientDetailsName").innerText = ingredient.ingredient.name;
         document.getElementById("ingredientStock").innerText = ingredient.getQuantityDisplay();
-
 
         //Calculate and display average daily use
         let quantities = [];
@@ -74,6 +73,7 @@ let ingredientDetails = {
                     state.updateIngredients();
                     
                     controller.openStrand("ingredients");
+                    controller.closeModal();
                     controller.createBanner("INGREDIENT REMOVED", "success");
                 }
             })

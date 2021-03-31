@@ -231,11 +231,19 @@ controller = {
                 modalScript.newMerchant();
                 break;
             case "confirmDeleteMerchant":
-                let div = document.getElementById("modalConfirm");
-                div.style.display = "flex";
-                div.children[1].innerText = "Are you sure you want to delete this merchant?";
-                div.children[2].children[1].onclick = ()=>{account.deleteMerchant()};
-                div.children[2].children[0].onclick = ()=>{controller.closeModal()};
+                content = document.getElementById("modalConfirm");
+                content.style.display = "flex";
+                content.children[1].innerText = "Are you sure you want to delete this merchant?";
+                content.children[2].children[0].onclick = ()=>{controller.closeModal()};
+                content.children[2].children[1].onclick = ()=>{account.deleteMerchant()};
+                break;
+            case "confirmDeleteIngredient":
+                console.log(data);
+                content = document.getElementById("modalConfirm");
+                content.style.display = "flex";
+                content.children[1].innerText = `Are you sure you want to delete ingredient: ${data.ingredient.name}?`;
+                content.children[2].children[0].onclick = ()=>{controller.closeModal()};
+                content.children[2].children[1].onclick = ()=>{ingredientDetails.remove(data)};
                 break;
             case "squareLocations":
                 modalScript.squareLocations(data);
