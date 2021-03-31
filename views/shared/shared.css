@@ -202,6 +202,30 @@ button::-moz-focus-inner{
         background: rgb(240, 252, 255);
     }
 
+.dangerButton{
+    display: initial;
+    background: rgb(255, 99, 107);
+    border: none;
+    text-decoration: none;
+    padding: 2px 10px;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    min-width: 100px;
+    margin: 5px;
+    max-height: 52px;
+}
+
+    .dangerButton:hover{
+        background: rgb(255, 129, 137);
+    }
+
+    .dangerButton:active{
+        background: rgb(240, 252, 255);
+    }
+
 .linkButton{
     background: none;
     border: none;
