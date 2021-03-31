@@ -358,6 +358,7 @@ window.state = {
         this.updateRecipes();
         this.updateTransactions();
         this.updateOrders();
+        document.getElementById("menuLocationName").innerText = merchant.name;
     }
 }
 
@@ -370,5 +371,7 @@ document.getElementById("ordersBtn").onclick = async ()=>{controller.openStrand(
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 document.getElementById("accountBtn").onclick = ()=>{controller.openStrand("account")};
 document.getElementById("feedbackButton").onclick = ()=>{controller.openModal("feedback")};
+
+document.getElementById("menuLocationName").innerText = merchant.name;
 
 controller.openStrand("home");

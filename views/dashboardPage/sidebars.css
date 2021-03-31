@@ -23,7 +23,6 @@
         margin-top: 10px;
         font-size: 22px;
         font-weight: bold;
-        margin-bottom: 50px;
         text-decoration: none;
     }
 
@@ -61,6 +60,12 @@
         border: 0;
     }
 
+    #menuLocationName{
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
     .menuButton{
         display: flex;
         align-items: center;
@@ -90,27 +95,15 @@
 
         .menuButton:hover{
             background: rgb(179, 191, 209);
-            /* color: black; */
-            /* fill: black; */
-        }
-
-        .menuButton:hover svg{
-            /* stroke: black; */
         }
 
     .menu > .active{
         background: rgb(240, 252, 255);
-        /* color: black; */
         cursor: default;
     }
 
     .menu > .active:hover{
         background: rgb(240, 252, 255);
-        /* color: black; */
-    }
-
-    .menu > .active:hover svg{
-        /* stroke: black; */
     }
 
 /* Minimized menu */

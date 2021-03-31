@@ -331,7 +331,8 @@ module.exports = {
                 res.json([{
                     _id: res.locals.owner._id,
                     email: res.locals.owner.email,
-                    merchants: res.locals.owner.merchants
+                    merchants: res.locals.owner.merchants,
+                    name: res.locals.owner.name
                 }, merchant]);
 
                 helper.getAllMerchantTransactions(merchant, res.locals.owner.square.accessToken);

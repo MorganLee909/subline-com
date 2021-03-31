@@ -2,7 +2,7 @@ const Merchant = require("../classes/Merchant");
 
 let account = {
     display: function(){
-        document.getElementById("accountStrandTitle").innerText = merchant.name;
+        document.getElementById("accountStrandTitle").innerText = merchant.owner.name;
         document.getElementById("accountEmail").value = merchant.owner.email;
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};

@@ -28,7 +28,8 @@ module.exports = {
                 let responseOwner = {
                     _id: response[0]._id,
                     email: response[0].email,
-                    merchants: response[0].merchants
+                    merchants: response[0].merchants,
+                    name: response[0].name
                 };
 
                 for(let i = 0; i < responseOwner.merchants.length; i++){
@@ -153,7 +154,8 @@ module.exports = {
                 let owner = {
                     _id: response[0]._id,
                     email: response[0].email,
-                    merchants: response[0].merchants
+                    merchants: response[0].merchants,
+                    name: response[0].name
                 }
 
                 req.session.merchant = response[1]._id;

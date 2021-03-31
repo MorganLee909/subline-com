@@ -88,7 +88,8 @@ class Merchant{
         this._owner = {
             id: owner._id,
             email: owner.email,
-            merchants: owner.merchants
+            merchants: owner.merchants,
+            name: owner.name
         };
         
         //populate ingredients
