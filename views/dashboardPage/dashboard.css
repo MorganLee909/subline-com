@@ -197,7 +197,7 @@ Home Strand
         margin: 10px;
     }
 
-    .card p:first-of-type{
+    .card > p:first-of-type{
         font-size: 14px;
         font-weight: bold;
         text-align: center;
@@ -265,16 +265,21 @@ Home Strand
         display: flex;
         align-items: center;
         margin: 5px 0;
+        max-height: 50px;
     }
 
-        .ingredientCheck p:first-of-type{
+        .inventoryCheckIngredient{
             width: 40%;
             font-weight: 300;
             font-size: 15px;
             margin-right: 25px;
+            text-overflow: ellipsis;
+            white-space: wrap;
+            overflow: hidden;
+            text-align: left;
         }
 
-        .ingredientCheck p:last-of-type{
+        .inventoryCheckUnit{
             width: 20%
         }
 

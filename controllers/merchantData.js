@@ -331,7 +331,6 @@ module.exports = {
 
                 res.locals.owner.save()
                     .then((owner)=>{
-                        console.log("thing");
                         req.session.owner = undefined;
                         req.session.merchant = undefined;
                         req.session.success = "PASSWORD RESET. PLEASE LOG IN AGAIN.";
