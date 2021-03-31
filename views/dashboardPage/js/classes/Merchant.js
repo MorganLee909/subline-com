@@ -73,7 +73,6 @@ class MerchantIngredient{
 class Merchant{
         constructor(
             name,
-            email,
             pos,
             ingredients,
             recipes,
@@ -81,7 +80,6 @@ class Merchant{
             owner
         ){
         this._name = name;
-        this._email = email;
         this._pos = pos;
         this._ingredients = [];
         this._recipes = [];

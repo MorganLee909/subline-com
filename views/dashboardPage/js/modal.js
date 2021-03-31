@@ -73,7 +73,6 @@ let modal = {
                 }else{
                     let newMerchant = new Merchant(
                         response[1].name,
-                        response[0].email,
                         response[1].pos,
                         response[1].inventory,
                         response[1].recipes,

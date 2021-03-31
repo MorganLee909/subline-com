@@ -3,7 +3,7 @@ const Merchant = require("../classes/Merchant");
 let account = {
     display: function(){
         document.getElementById("accountStrandTitle").innerText = merchant.name;
-        document.getElementById("accountEmail").value = merchant.email;
+        document.getElementById("accountEmail").value = merchant.owner.email;
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
         document.getElementById("deleteMerchant").onclick = ()=>{controller.openModal("confirmDeleteMerchant")};
@@ -64,9 +64,8 @@ let account = {
                     controller.createBanner(response, "error");
                 }else{
                     controller.createBanner("DATA UPDATED", "success");
-                    if(response.email !== merchant.email) controller.createBanner("YOU MUST VALIDATE YOUR NEW EMAIL ADDRESS BEFORE YOU CAN LOG IN AGAIN", "alert");
+                    controller.createBanner("YOU MUST VALIDATE YOUR NEW EMAIL ADDRESS BEFORE YOU CAN LOG IN AGAIN", "alert");
 
-                    merchant.email = response.email;
                     merchant.owner.email = response.email;
                     document.getElementById("accountEmail").value = merchant.owner.email;
                 }
@@ -128,7 +127,6 @@ let account = {
                 }else{
                     window.merchant = new Merchant(
                         response[1].name,
-                        response[0].email,
                         response[1].pos,
                         response[1].inventory,
                         response[1].recipes,
@@ -160,7 +158,6 @@ let account = {
                 }else{
                     window.merchant = new Merchant(
                         response[1].name,
-                        response[0].email,
                         response[1].pos,
                         response[1].inventory,
                         response[1].recipes,

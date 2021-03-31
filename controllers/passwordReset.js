@@ -1,3 +1,4 @@
+const Owner = require("../models/owner.js");
 const Merchant = require("../models/merchant.js");
 
 const passwordReset = require("../emails/passwordReset.js");
