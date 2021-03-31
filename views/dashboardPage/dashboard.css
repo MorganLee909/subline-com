@@ -598,6 +598,17 @@ ACCOUNT STRAND
                 border-bottom: 1px solid black;
             }
 
+                .newLocationButtons{
+                    display: flex;
+                    align-items: center;
+                }
+
+                    .newLocationButtons h1{
+                        padding: 0;
+                        margin-right: 15px;
+                    }
+
+
     #accountUpdate{
         max-width: 500px;
     }
