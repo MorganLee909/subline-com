@@ -105,7 +105,7 @@ let account = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    window.location.href = response.redirect;
+                    window.location.replace(response.redirect);
                 }
             })
             .catch((err)=>{

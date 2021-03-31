@@ -315,25 +315,26 @@ module.exports = {
     response = {redirect: String (link to redirect to)}
     */
     changePassword: function(req, res){
-        if(req.body.new !== req.body.confirm){
-            return res.json("PASSWORDS DO NOT MATCH");
-        }
+        if(req.body.new !== req.body.confirm) return res.json("PASSWORDS DO NOT MATCH");
 
-        bcrypt.compare(req.body.current, res.locals.merchant.password, (err, result)=>{
+        bcrypt.compare(req.body.current, res.locals.owner.password, (err, result)=>{
             if(result === true){
                 let salt = bcrypt.genSaltSync(10);
                 let hash = bcrypt.hashSync(req.body.new, salt);
 
-                res.locals.merchant.password = hash;
+                res.locals.owner.password = hash;
 
                 let newExpiration = new Date();
                 newExpiration.setDate(newExpiration.getDate() + 90);
-                res.locals.merchant.session.sessionId = helper.generateId(25);
-                res.locals.merchant.session.expiration = newExpiration;
+                res.locals.owner.session.sessionId = helper.generateId(25);
+                res.locals.owner.session.expiration = newExpiration;
 
-                res.locals.merchant.save()
-                    .then((merchant)=>{
-                        req.session.error = "PLEASE LOG IN";
+                res.locals.owner.save()
+                    .then((owner)=>{
+                        console.log("thing");
+                        req.session.owner = undefined;
+                        req.session.merchant = undefined;
+                        req.session.success = "PASSWORD RESET. PLEASE LOG IN AGAIN.";
                         return res.json({redirect: `http://${process.env.SITE}/login`});
                     })
                     .catch((err)=>{
