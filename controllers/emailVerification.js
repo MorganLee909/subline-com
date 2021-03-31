@@ -29,21 +29,19 @@ module.exports = {
     },
 
     resendEmail: function(req, res){
-        Merchant.findOne({email: req.body.email.toLowerCase()})
-            .then((merchant)=>{
-                if(merchant){
-                    throw "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
-                }
+        Owner.findOne({email: req.body.email.toLowerCase()})
+            .then((owner)=>{
+                if(owner) throw "USER WITH THIS EMAIL ADDRESS ALREADY EXISTS";
 
-                return Merchant.findOne({_id: req.body.id});
+                return owner.findOne({_id: req.body.id});
             })
-            .then((merchant)=>{
-                merchant.email = req.body.email.toLowerCase();
+            .then((owner)=>{
+                owner.email = req.body.email.toLowerCase();
 
-                return merchant.save();
+                return owner.save();
             })
-            .then((merchant)=>{
-                return res.redirect(`/verify/email/${merchant._id}`);
+            .then((owner)=>{
+                return res.redirect(`/verify/email/${owner._id}`);
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
