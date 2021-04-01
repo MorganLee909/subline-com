@@ -346,7 +346,7 @@ controller = {
             document.getElementById("max").style.display = "flex";
             document.getElementById("min").style.display = "none";
 
-            links.childre[0].style.fontSize = "16px";
+            links.children[0].style.fontSize = "16px";
             links.children[1].style.display = "block";
 
             setTimeout(()=>{
