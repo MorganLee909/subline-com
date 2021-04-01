@@ -2,11 +2,7 @@
     <div class="strandHead">
         <h1 class="strandTitle">RECIPE BOOK</h1>
 
-        <% if(merchant.pos === "none"){ %>
-            <button class="button mobileHide" onclick="controller.openSidebar('addRecipe')">NEW</button>
-        <% }else{ %>
-            <button id="posUpdateRecipe" class="button mobileHide">UPDATE</button>
-        <% } %>
+        <button id="recipeUpdate" class="button mobileHide"></button>
     </div>
 
     <div class="searchBar">

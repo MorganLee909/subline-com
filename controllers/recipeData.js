@@ -87,21 +87,29 @@ module.exports = {
                 return res.json("ERROR: UNABLE TO UPDATE DATA");
             });
     },
-
-    //DELETE - removes a single recipe from the merchant and the database
+    /*
+    DELETE: removes a single recipe from the merchant and the database
+    req.params.id = String (recipe id)
+    response = {}
+    */
     removeRecipe: function(req, res){
-        if(res.locals.merchant.pos === "square"){
-            return res.json("YOU MUST EDIT YOUR RECIPES INSIDE SQUARE");
-        }
+        if(res.locals.merchant.pos === "square") return res.json("YOU MUST EDIT YOUR RECIPES INSIDE SQUARE");
         
+        console.log(res.locals.merchant.recipes);
+        console.log();
         for(let i = 0; i < res.locals.merchant.recipes.length; i++){
             if(res.locals.merchant.recipes[i].toString() === req.params.id){
                 res.locals.merchant.recipes.splice(i, 1);
                 break;
             }
         }
-
-        return res.json({});
+        res.locals.merchant.save()
+            .then(()=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO DELETE RECIPE");
+            });
     },
 
     createFromSpreadsheet: function(req, res){

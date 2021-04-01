@@ -2,8 +2,16 @@ let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
         document.getElementById("recipeName").innerText = recipe.name;
-        if(merchant.pos === "none"){
-            document.getElementById("removeRecipeBtn").onclick = ()=>{this.remove(recipe)};
+
+        let button = document.getElementById("removeRecipeBtn");
+        switch(merchant.pos){
+            case "square":
+                button.style.display = "none";
+                break;
+            case "none":
+                button.style.display = "block";
+                button.onclick = ()=>{controller.openModal("confirmDeleteRecipe", recipe)};
+                break;
         }
 
         //ingredient list
@@ -44,6 +52,7 @@ let recipeDetails = {
                     state.updateRecipes();
 
                     controller.createBanner("RECIPE REMOVED", "success");
+                    controller.closeModal();
                     controller.openStrand("recipeBook");
                 }
             })

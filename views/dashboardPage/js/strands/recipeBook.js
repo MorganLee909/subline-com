@@ -8,8 +8,18 @@ let recipeBook = {
         if(!this.isPopulated){
             this.populateRecipes();
 
-            if(merchant.pos === "square") document.getElementById("posUpdateRecipe").onclick = ()=>{this.posUpdate()};
-            
+            let button = document.getElementById("recipeUpdate");
+            switch(merchant.pos){
+                case "square":
+                    button.innerText = "UPDATE";
+                    button.onclick = ()=>{this.posUpdate()};
+                    break;
+                case "none":
+                    button.innerText = "NEW";
+                    button.onclick = ()=>{controller.openSidebar("addRecipe")};
+                    break;
+            }
+                            
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
 
             this.populateRecipes();
