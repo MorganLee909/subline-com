@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 let emailValid = require("../validator.js").emailValid;
+let isSanitary = require("../validator.js").isSanitary;
 
 const OwnerSchema = new mongoose.Schema({
     email: {
@@ -12,7 +13,14 @@ const OwnerSchema = new mongoose.Schema({
         },
         index: true
     },
-    name: String,
+    name: {
+        type: String,
+        required: [true, "MUST PROVIDE AN OWNER NAME"],
+        validate: {
+            validator: isSanitary,
+            message: "OWNER NAME CONTAINS ILLEGAL CHARACTERS"
+        }
+    },
     password: {
         type: String,
         required: true

@@ -609,6 +609,11 @@ ACCOUNT STRAND
                         margin-right: 15px;
                     }
 
+            .settingsSection label{
+                margin-bottom: 10px;
+                display: flex;
+            }
+
 
     #accountUpdate{
         max-width: 500px;

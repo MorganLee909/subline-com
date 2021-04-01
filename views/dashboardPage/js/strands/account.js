@@ -4,6 +4,7 @@ let account = {
     display: function(){
         document.getElementById("accountStrandTitle").innerText = merchant.owner.name;
         document.getElementById("accountEmail").value = merchant.owner.email;
+        document.getElementById("accountOwnerName").value = merchant.owner.name;
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
         document.getElementById("deleteMerchant").onclick = ()=>{controller.openModal("confirmDeleteMerchant")};
@@ -46,7 +47,8 @@ let account = {
 
     updateData: function(){
         let data = {
-            email: document.getElementById("accountEmail").value
+            email: document.getElementById("accountEmail").value,
+            name: document.getElementById("accountOwnerName").value
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -65,9 +67,15 @@ let account = {
                     controller.createBanner(response, "error");
                 }else{
                     controller.createBanner("DATA UPDATED", "success");
-                    controller.createBanner("YOU MUST VALIDATE YOUR NEW EMAIL ADDRESS BEFORE YOU CAN LOG IN AGAIN", "alert");
+                    if(merchant.owner.email !== response.email){
+                        controller.createBanner("YOU MUST VALIDATE YOUR NEW EMAIL ADDRESS BEFORE YOU CAN LOG IN AGAIN", "alert");
+                        merchant.owner.email = response.email;
+                    }
 
-                    merchant.owner.email = response.email;
+                    merchant.owner.name = response.name;
+
+                    document.getElementById("accountOwnerName").value = merchant.owner.name;
+                    document.getElementById("accountStrandTitle").innerText = merchant.owner.name;
                     document.getElementById("accountEmail").value = merchant.owner.email;
                 }
             })

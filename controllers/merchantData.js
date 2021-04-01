@@ -287,10 +287,12 @@ module.exports = {
     /*
     PUT: Update merchant data
     req.body = {
-        email: String (merchant email address)
+        email: String
+        name: String
     },
     response = {
-        email: String (merchant)
+        email: String
+        name: String
     }
     */
     updateData: async function(req, res){
@@ -313,9 +315,14 @@ module.exports = {
             mailgun.messages().send(mailgunData, (err, body)=>{});
         }
 
+        res.locals.owner.name = req.body.name;
+
         res.locals.owner.save()
             .then((owner)=>{
-                return res.json({email: res.locals.owner.email});
+                return res.json({
+                    email: res.locals.owner.email,
+                    name: res.locals.owner.name
+                });
             })
             .catch((err)=>{
                 if(err.name === "ValidationError") return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
