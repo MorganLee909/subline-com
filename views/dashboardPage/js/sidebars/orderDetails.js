@@ -1,6 +1,6 @@
 let orderDetails = {
     display: function(order){
-        document.getElementById("removeOrderBtn").onclick = ()=>{this.remove(order)};
+        document.getElementById("removeOrderBtn").onclick = ()=>{controller.openModal("confirmDeleteOrder", order)};
 
         document.getElementById("orderDetailName").innerText = order.name;
         document.getElementById("orderDetailDate").innerText = order.date.toLocaleDateString("en-US");
@@ -53,6 +53,7 @@ let orderDetails = {
                     state.updateOrders();
 
                     controller.openStrand("orders", merchant.orders);
+                    controller.closeModal();
                     controller.createBanner("ORDER REMOVED", "success");
                 }
             })
