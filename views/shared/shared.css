@@ -176,8 +176,6 @@ button::-moz-focus-inner{
         cursor: pointer;
     }
 
-
-
 .button{
     display: initial;
     background: rgb(0, 27, 45);

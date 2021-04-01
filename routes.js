@@ -67,6 +67,7 @@ module.exports = function(app){
     app.post("/login", otherData.login);
     app.get("/logout", otherData.logout);
     app.post("/feedback", session, otherData.feedback);
+    app.get("/session/end", session, otherData.endSession);
     
     //Information Pages
     app.get("/privacy", informationPages.privacy);

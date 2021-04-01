@@ -2,6 +2,8 @@ const Owner = require("../models/owner.js");
 const Merchant = require("../models/merchant.js");
 const Feedback = require("../models/feedback.js");
 
+const helper = require("./helper.js");
+
 const bcrypt = require("bcryptjs");
 
 module.exports = {
@@ -104,6 +106,29 @@ module.exports = {
             })
             .catch((err)=>{
                 return res.json("ERROR: UNABLE TO SAVE DATA");
+            });
+    },
+
+    /*
+    GET: changes the session id and logs user out
+    redirect = "/"
+    */
+    endSession: function(req, res){
+        let newExpiration = new Date();
+        newExpiration.setDate(newExpiration.getDate() + 90);
+
+        res.locals.owner.session.sessionId = helper.generateId(25);
+        res.locals.owner.session.expiration = newExpiration;
+
+        req.session.owner = undefined;
+        req.session.merchant = undefined;
+
+        res.locals.owner.save()
+            .then(()=>{
+                return res.redirect("/");
+            })
+            .catch((err)=>{
+                return res.json("ERROR: SOMETHING WENT WRONG. PLEASE CONTACT SUPPORT.");
             });
     }
 }
