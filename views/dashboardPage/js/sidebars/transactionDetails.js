@@ -38,8 +38,14 @@ let transactionDetails = {
         document.getElementById("totalRecipes").innerText = `${totalRecipes} recipes`;
         document.getElementById("totalPrice").innerText = `$${totalPrice.toFixed(2)}`;
 
-        if(merchant.pos === "none"){
-            document.getElementById("removeTransBtn").onclick = ()=>{this.remove()};
+        let button = document.getElementById("removeTransBtn");
+        switch(merchant.pos){
+            case "square":
+                button.style.display = "none";
+                break;
+            case "none":
+                button.style.display = "block";
+                button.onclick = ()=>{controller.openModal("confirmDeleteTransaction", transaction)};
         }
     },
 
@@ -61,6 +67,7 @@ let transactionDetails = {
                     state.updateTransactions();
 
                     controller.openStrand("transactions", merchant.getTransactions());
+                    controller.closeModal();
                     controller.createBanner("TRANSACTION REMOVED", "success");
                 }
             })

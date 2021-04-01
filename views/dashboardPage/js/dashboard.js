@@ -258,6 +258,13 @@ controller = {
                 content.children[2].children[0].onclick = ()=>{controller.closeModal()};
                 content.children[2].children[1].onclick = ()=>{orderDetails.remove(data)};
                 break;
+            case "confirmDeleteTransaction":
+                content = document.getElementById("modalConfirm");
+                content.style.display = "flex";
+                content.children[1].innerText = `Are you sure you want to delete this transaction?`;
+                content.children[2].children[0].onclick = ()=>{controller.closeModal()};
+                content.children[2].children[1].onclick = ()=>{transactionDetails.remove(data)};
+                break;
             case "squareLocations":
                 modalScript.squareLocations(data);
                 break;

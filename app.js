@@ -18,8 +18,7 @@ app.set("view engine", "ejs");
 
 let sessionOptions = {
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superb.",
-    secure: true,
-    sameSite: "strict",
+    sameSite: "lax",
     saveUninitialized: true,
     resave: false,
 }
@@ -41,6 +40,7 @@ if(process.env.NODE_ENV === "production"){
     });
 
     sessionOptions.domain = process.env.COOKIE_DOMAIN;
+    sessionOptions.secure = true;
 }
 
 app.use(compression());

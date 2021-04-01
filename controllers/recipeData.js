@@ -95,8 +95,6 @@ module.exports = {
     removeRecipe: function(req, res){
         if(res.locals.merchant.pos === "square") return res.json("YOU MUST EDIT YOUR RECIPES INSIDE SQUARE");
         
-        console.log(res.locals.merchant.recipes);
-        console.log();
         for(let i = 0; i < res.locals.merchant.recipes.length; i++){
             if(res.locals.merchant.recipes[i].toString() === req.params.id){
                 res.locals.merchant.recipes.splice(i, 1);
