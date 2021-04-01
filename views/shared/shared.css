@@ -183,7 +183,7 @@ button::-moz-focus-inner{
     background: rgb(0, 27, 45);
     border: none;
     text-decoration: none;
-    padding: 3px 10px;
+    padding: 10px 25px;
     color: rgb(255, 99, 107);
     cursor: pointer;
     text-align: center;
@@ -206,12 +206,11 @@ button::-moz-focus-inner{
     background: rgb(255, 99, 107);
     border: none;
     text-decoration: none;
-    padding: 2px 10px;
+    padding: 10px 25px;
     color: black;
     cursor: pointer;
     text-align: center;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 15px;
     min-width: 100px;
     margin: 5px;
     max-height: 52px;
