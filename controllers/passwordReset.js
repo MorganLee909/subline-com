@@ -24,7 +24,7 @@ module.exports = {
                     to: owner.email,
                     subject: "Password Reset",
                     html: passwordReset({
-                        name: owner.email,
+                        name: owner.name,
                         link: `${process.env.SITE}/reset/${owner._id}/${owner.session.sessionId}`
                     })
                 };
