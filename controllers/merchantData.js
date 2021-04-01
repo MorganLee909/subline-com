@@ -369,7 +369,7 @@ module.exports = {
     */
     deleteMerchant: function(req, res){
         if(res.locals.owner.merchants.length === 1) throw "one";
-        console.log(res.locals.owner.merchants.id(res.locals.merchant._id));
+        
         for(let i = 0; i < res.locals.owner.merchants.length; i++){
             if(res.locals.owner.merchants[i].toString() === res.locals.merchant._id.toString()){
                 res.locals.owner.merchants.splice(i, 1);
@@ -384,7 +384,7 @@ module.exports = {
 
         let transactions = Transaction.aggregate([
             {$match: {
-                merchant: ObjectId(res.locals.merchant._id),
+                merchant: ObjectId(res.locals.owner.merchants[0]._id),
                 date: {$gte: then}
             }},
             {$sort: {date: -1}},
@@ -402,7 +402,6 @@ module.exports = {
             transactions
         ])
             .then((response)=>{
-                console.log(response[4]);
                 let responseOwner = {
                     _id: res.locals.owner._id,
                     email: res.locals.owner.email,
