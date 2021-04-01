@@ -207,10 +207,11 @@ module.exports = {
 
         do{
             let response = await axios.post(`${process.env.SQUARE_ADDRESS}/v2/orders/search`, body, options);
+            if(response.data.orders === undefined) break;
             body.cursor = response.data.cursor;
 
             let transactions = [];
-
+            
             for(let i = 0; i < response.data.orders.length; i++){
                 let transaction = new Transaction({
                     merchant: merchant._id,

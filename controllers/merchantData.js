@@ -369,6 +369,7 @@ module.exports = {
     */
     deleteMerchant: function(req, res){
         if(res.locals.owner.merchants.length === 1) throw "one";
+        console.log(res.locals.owner.merchants.id(res.locals.merchant._id));
         for(let i = 0; i < res.locals.owner.merchants.length; i++){
             if(res.locals.owner.merchants[i].toString() === res.locals.merchant._id.toString()){
                 res.locals.owner.merchants.splice(i, 1);
@@ -378,14 +379,30 @@ module.exports = {
 
         res.locals.merchant.removed = true;
 
+        let now = new Date();
+        let then = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+        let transactions = Transaction.aggregate([
+            {$match: {
+                merchant: ObjectId(res.locals.merchant._id),
+                date: {$gte: then}
+            }},
+            {$sort: {date: -1}},
+            {$project: {
+                date: 1,
+                recipes: 1
+            }}
+        ]);
+
         Promise.all([
             Merchant.findOne({_id: res.locals.owner.merchants[0]._id}).populate("inventory.ingredient").populate("recipes"),
             res.locals.owner.save(),
             res.locals.merchant.save(),
             res.locals.owner.populate("merchants", "name").execPopulate(),
-            Transaction.find({merchant: res.locals.owner.merchants[0]._id})
+            transactions
         ])
             .then((response)=>{
+                console.log(response[4]);
                 let responseOwner = {
                     _id: res.locals.owner._id,
                     email: res.locals.owner.email,

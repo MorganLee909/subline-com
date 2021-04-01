@@ -210,6 +210,7 @@ Home Strand
         flex-basis: 100px;
         flex-grow: 1;
         margin: 15px 0;
+        max-height: 43%;
     }
 
 #revenueCard{

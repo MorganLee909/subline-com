@@ -169,6 +169,7 @@ let account = {
 
                     controller.closeModal();
                     controller.openStrand("home");
+                    controller.createBanner("MERCHANT DELETED", "success");
                 }
             })
             .catch((err)=>{
