@@ -584,7 +584,7 @@ ACCOUNT STRAND
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             margin: 15px 0;
             background: white;
             padding: 35px;
@@ -609,11 +609,22 @@ ACCOUNT STRAND
                         margin-right: 15px;
                     }
 
-            .settingsSection label{
-                margin-bottom: 10px;
-                display: flex;
-            }
+        #accountInformation{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
 
+        #accountInformationData{
+            width: 50%;
+        }
+
+            #accountInformation label{
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                margin-bottom: 10px;
+            }
 
     #accountUpdate{
         max-width: 500px;
@@ -622,8 +633,24 @@ ACCOUNT STRAND
     #settingsMerchants{
         display: flex;
         flex-direction: column;
-        width: 50%;
+        align-items: flex-start;
+        width: 100%;
     }
+
+        #settingsMerchants button{
+            width: 50%;
+        }
+
+    #securityData{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        #securityData button, #securityData a{
+            width: 240px;
+            box-sizing: border-box;
+        }
 
     #accountShowPassword{
         max-width: 300px;
@@ -752,10 +779,11 @@ Modal
         justify-content: center;
         align-items: center;
         border: 1px solid black;
-        padding: 5px;
+        padding: 9px;
         cursor: pointer;
         margin-top: 0;
         margin-bottom: 0;
+        height: 44px;
     }
 
         #newMerchantSquareButton:hover{

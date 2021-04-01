@@ -177,7 +177,6 @@ button::-moz-focus-inner{
     }
 
 .button{
-    display: initial;
     background: rgb(0, 27, 45);
     border: none;
     text-decoration: none;
