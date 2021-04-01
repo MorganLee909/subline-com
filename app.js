@@ -18,7 +18,8 @@ app.set("view engine", "ejs");
 
 let sessionOptions = {
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superb.",
-    cookie: {secure: true},
+    secure: true,
+    sameSite: "strict",
     saveUninitialized: true,
     resave: false,
 }
