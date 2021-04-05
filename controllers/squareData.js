@@ -37,6 +37,7 @@ module.exports = {
 
         let owner = new Owner({
             email: email,
+            name: req.body.name,
             password: hash,
             square: {},
             createdAt: new Date(),
@@ -66,7 +67,8 @@ module.exports = {
                 return res.redirect(`${process.env.SQUARE_ADDRESS}/oauth2/authorize?client_id=${process.env.SUBLINE_SQUARE_APPID}&scope=INVENTORY_READ+ITEMS_READ+MERCHANT_PROFILE_READ+ORDERS_READ+PAYMENTS_READ`);
             })
             .catch((err)=>{
-                res.session.error = "ERROR: UNABLE TO CREATE NEW USER";
+                console.log(err);
+                req.session.error = "ERROR: UNABLE TO CREATE NEW USER";
                 return res.redirect("/");
             });
     },
