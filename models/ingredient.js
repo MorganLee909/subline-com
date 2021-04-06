@@ -29,7 +29,19 @@ const IngredientSchema = new mongoose.Schema({
         type: Number,
         min: [0, "SIZE CANNOT BE A NEGATIVE NUMBER"],
         required: false
-    }
+    },
+    ingredients: [{
+        ingredient: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Ingredient",
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            min: 0
+        }
+    }]
 });
 
 module.exports = mongoose.model("Ingredient", IngredientSchema);
