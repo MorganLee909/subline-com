@@ -1,5 +1,5 @@
 class Ingredient{
-    constructor(id, name, category, unitType, unit, parent, unitSize = undefined){
+    constructor(id, name, category, unitType, unit, parent, unitSize = undefined, ingredients){
         this._id = id;
         this._name = name;
         this._category = category;
@@ -7,6 +7,11 @@ class Ingredient{
         this._unit = unit;
         this._parent = parent;
         this._unitSize = unitSize;
+        this._ingredients = [];
+
+        for(let i = 0; i < ingredients.length; i++){
+            ingredients.push(this._parent.getIngredient(ingredinets[i]));
+        }
     }
 
     get id(){
