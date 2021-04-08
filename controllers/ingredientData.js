@@ -27,8 +27,8 @@ module.exports = {
             newIngredient.ingredient.unitSize = helper.convertQuantityToBaseUnit(newIngredient.ingredient.unitSize, newIngredient.ingredient.unitType);
         }
 
-        
         newIngredient = new Ingredient(newIngredient.ingredient);
+        newIngredient.ingredients = [];
         
         newIngredient.save()
             .then((ingredient)=>{
@@ -58,25 +58,60 @@ module.exports = {
     },
 
     /*
-    POST - Updates data for a single ingredient
+    POST: Updates data for a single ingredient
     req.body = {
         id: id of the ingredient,
         name: new name of the ingredient,
         quantity: new quantity of the unit (in grams),
         category: new category of the unit,
         unit: new default unit of the ingredient,
+        ingredients: [{
+            ingredient: String (Id),
+            quantity: Number
+        }]
     }
+    response = Ingredient
     */
     updateIngredient: function(req, res){
-        Ingredient.findOne({_id: req.body.id})
-            .then((ingredient)=>{
-                ingredient.name = req.body.name,
-                ingredient.category = req.body.category
+        let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
 
-                return ingredient.save();
-            })
-            .then((ingredient)=>{
-                let updatedIngredient = {};
+        Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
+            .then((response)=>{
+                response[0].name = req.body.name;
+                response[0].category = req.body.category;
+
+                // Check ingredients for circular references
+                let isCircular = (ingredient, original)=>{
+                    if(ingredient.ingredients.length === 0) return false;
+                    
+                    for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+                        if(res.locals.merchant.inventory[i].ingredient._id.toString() === req.body.ingredients[i].ingredient){
+                            let next = res.locals.merchant.inventory[i].ingredient;
+                            if(next._id.toString() === original._id.toString()) return true;
+                            return isCircular(next, original);
+                        }
+                    }
+                }
+                
+                for(let i = 0; i < req.body.ingredients.length; i++){
+                    for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                        if(res.locals.merchant.inventory[j].ingredient._id.toString() === req.body.ingredients[i].ingredient){
+                            let ingredient = res.locals.merchant.inventory[j].ingredient;
+                            if(ingredient._id.toString() === req.body.id) throw "YOU HAVE CIRCULAR REFERENCES IN YOUR INGREDIENTS";
+                            if(isCircular(ingredient, ingredient) === false){
+                                response[0].ingredients.push({
+                                    ingredient: req.body.ingredients[i].ingredient,
+                                    quantity: req.body.ingredients[i].quantity
+                                });
+                            }else{
+                                throw "YOU HAVE CIRCULAR REFERENCES IN YOUR INGREDIENTS";
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){
                     if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
                         res.locals.merchant.inventory[i].defaultUnit = req.body.unit;
@@ -91,19 +126,15 @@ module.exports = {
 
                             res.locals.merchant.inventory[i].quantity = req.body.quantity;
                         }
-
-                        updatedIngredient = {
-                            ingredient: ingredient,
-                            quantity: req.body.quantity,
-                            defaultUnit: req.body.unit
-                        }
                         
                         break;
                     }
                 }
-
-                res.locals.merchant.save().catch((err)=>{throw err});
-                return res.json(updatedIngredient);
+                
+                return Promise.all([response[0].save(), res.locals.merchant.save()])
+            })
+            .then((response)=>{
+                return res.json(response[0]);
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){

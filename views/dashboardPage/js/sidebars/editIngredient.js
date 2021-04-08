@@ -18,8 +18,6 @@ let editIngredient = {
 
         //Make any changes for special ingredients
         if(ingredient.ingredient.unit === "bottle"){
-            // quantLabel.innerText = "CURRENT STOCK (BOTTLES):";
-
             specialLabel.style.display = "flex";
             specialLabel.innerText = `BOTTLE SIZE (${ingredient.ingredient.unitType.toUpperCase()}):`;
             
@@ -34,6 +32,13 @@ let editIngredient = {
             specialLabel.style.display = "none";
         }
 
+        //Populate sub ingredients
+        let list = document.getElementById("subIngredientList");
+
+        while(list.children.length > 0){
+            list.removeChild(list.firstChild);
+        }
+
         //Populate the unit buttons
         const units = ingredient.ingredient.getPotentialUnits();
 
@@ -44,9 +49,7 @@ let editIngredient = {
             button.onclick = ()=>{this.changeUnit(button)};
             buttonList.appendChild(button);
             
-            if(units[i] === ingredient.ingredient.unit){
-                button.classList.add("unitActive");
-            }
+            if(units[i] === ingredient.ingredient.unit) button.classList.add("unitActive");
         }
 
         let quantInput = document.createElement("input");
