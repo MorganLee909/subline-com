@@ -88,11 +88,17 @@ class Ingredient{
 
     addIngredients(ingredients){
         for(let i = 0; i < ingredients.length; i++){
-            this.subIngredients.push({
+            this._subIngredients.push({
                 ingredient: this._parent.getIngredient(ingredients[i].ingredient).ingredient,
                 quantity: ingredients[i].quantity
             });
         }
+    }
+
+    replaceIngredients(ingredients){
+        this._subIngredients = [];
+
+        this.addIngredients(ingredients);
     }
 
     getBaseUnitSize(){

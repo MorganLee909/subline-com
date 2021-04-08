@@ -154,6 +154,8 @@ let modal = {
     editSubIngredients: function(ingredient){
         document.getElementById("modalEditSubIngredients").style.display = "flex";
 
+        document.getElementById("cancelEditSubIngredients").onclick = ()=>{controller.closeModal()};
+
         let left = document.getElementById("editSubAllIng");
         let right = document.getElementById("editSubCurrentIng");
         let template = document.getElementById("selectedSubIngredient").content.children[0];
@@ -174,13 +176,36 @@ let modal = {
         rightHeader.innerText = "SUB INGREDIENTS";
         right.appendChild(rightHeader);
 
+        let addIngredient = (button, ingredient)=>{
+            button.parentElement.removeChild(button);
+
+            let div = template.cloneNode(true);
+            div.children[0].innerText = ingredient.name;
+            div.children[1].children[0].value = 0;
+            div.children[1].children[1].onclick = ()=>{removeIngredient(div, ingredient)};
+            div.ingredient = ingredient;
+            right.appendChild(div);
+        }
+
+        let removeIngredient = (div, ingredient)=>{
+            div.parentElement.removeChild(div);
+
+            let button = document.createElement("button");
+            button.innerText = ingredient.name;
+            button.classList.add("choosable");
+            button.onclick = ()=>{addIngredient(button, ingredient)};
+            left.appendChild(button);
+        }
+
         for(let i = 0; i < merchant.ingredients.length; i++){
             let skip = false;
             for(let j = 0; j < ingredient.subIngredients.length; j++){
                 if(merchant.ingredients[i].ingredient === ingredient.subIngredients[j].ingredient){
                     let div = template.cloneNode(true);
-                    div.children[0].children[0].innerText = merchant.ingredients[i].ingredient.name;
-                    div.children[1].value = ingredient.subIngredients[j].quantity;
+                    div.children[0].innerText = merchant.ingredients[i].ingredient.name;
+                    div.children[1].children[0].value = ingredient.subIngredients[j].quantity;
+                    div.children[1].children[1].onclick = ()=>{removeIngredient(div, ingredient.subIngredients[j].ingredient)};
+                    div.ingredient = merchant.ingredients[i].ingredient;
                     right.appendChild(div);
                     skip = true;
                     break;
@@ -191,7 +216,20 @@ let modal = {
             let button = document.createElement("button");
             button.innerText = merchant.ingredients[i].ingredient.name;
             button.classList.add("choosable");
+            button.onclick = ()=>{addIngredient(button, merchant.ingredients[i].ingredient)};
             left.appendChild(button);
+        }
+
+        //SUBMIT SUB INGREDIENTS
+        document.getElementById("submitEditSubIngredients").onclick = ()=>{
+            let subIngredients = [];
+
+            for(let i = 0; i < right.children.length; i++){
+                subIngredients.push(right.children[i].ingredient);
+            }
+
+            controller.closeModal();
+            controller.createBanner("YOUR SUB-INGREDIENTS WILL NOT BE SAVED UNTIL YOU SUBMIT CHANGES", "alert");
         }
     }
 };

@@ -66,17 +66,21 @@
                     <div id="editSubCurrentIng"></div>
                 </div>
 
-                <button id="submitEditSubIngredients" class="button">CONFIRM</button>
+                <div class="buttonBox">
+                    <button id="cancelEditSubIngredients" class="dangerButton">CANCEL</button>
+
+                    <button id="submitEditSubIngredients" class="button">CONFIRM</button>
+                </div>
 
                 <template id="selectedSubIngredient">
                     <div class="selectedIngredient">
+                        <p></p>
+                        
                         <div>
-                            <p></p>
-            
+                            <input type="number" min="0" step="0.01" placeholder="QUANTITY">
+
                             <button class="newOrderRemove">REMOVE</button>
                         </div>
-                        
-                        <input type="number" min="0" step="0.01" placeholder="QUANTITY">
                     </div>
                 </template>
             </div>
