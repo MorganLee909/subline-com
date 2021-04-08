@@ -226,6 +226,11 @@
         cursor: pointer;
     }
 
+.verticalBorder{
+    border-left: 2px solid black;
+    height: 100%;
+}
+
 /* 
 Ingredient Details 
 */

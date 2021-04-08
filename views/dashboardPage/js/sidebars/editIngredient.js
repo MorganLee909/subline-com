@@ -4,6 +4,8 @@ let editIngredient = {
         let quantLabel = document.getElementById("editIngQuantityLabel");
         let specialLabel = document.getElementById("editSpecialLabel");
 
+        document.getElementById("editSubIngredients").onclick = ()=>{controller.openModal("editSubIngredients", ingredient.ingredient)};
+
         //Clear any existing data
         while(buttonList.children.length > 0){
             buttonList.removeChild(buttonList.firstChild);
@@ -30,13 +32,6 @@ let editIngredient = {
             specialLabel.appendChild(sizeInput);
         }else{
             specialLabel.style.display = "none";
-        }
-
-        //Populate sub ingredients
-        let list = document.getElementById("subIngredientList");
-
-        while(list.children.length > 0){
-            list.removeChild(list.firstChild);
         }
 
         //Populate the unit buttons

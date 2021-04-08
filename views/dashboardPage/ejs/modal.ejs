@@ -57,6 +57,30 @@
 
                 <button id="squareLocationsCancel" class="dangerButton">CANCEL</button>
             </div>
+
+            <div id="modalEditSubIngredients" style="display:none">
+                <h2>Edit Sub Ingredients</h2>
+
+                <div id="editSubIngredientsContainer">
+                    <div id="editSubAllIng"></div>
+                    <div id="verticalBorder"></div>
+                    <div id="editSubCurrentIng"></div>
+                </div>
+
+                <button id="submitEditSubIngredients" class="button">CONFIRM</button>
+
+                <template id="selectedSubIngredient">
+                    <div class="selectedIngredient">
+                        <div>
+                            <p></p>
+            
+                            <button class="newOrderRemove">REMOVE</button>
+                        </div>
+                        
+                        <input type="number" min="0" step="0.01" placeholder="QUANTITY">
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
 </div>

@@ -149,6 +149,33 @@ let modal = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    editSubIngredients: function(ingredient){
+        document.getElementById("modalEditSubIngredients").style.display = "flex";
+
+        let left = document.getElementById("editSubAllIng");
+        let right = document.getElementById("editSubCurrentIng");
+        let template = document.getElementById("selectedSubIngredient").content.children[0];
+
+        for(let i = 0; i < merchant.ingredients.length; i++){
+            let skip = false;
+            for(let j = 0; j < ingredient.subIngredients.length; j++){
+                if(merchant.ingredients[i].ingredient === ingredient.subIngredients[j].ingredient){
+                    let div = template.cloneNode(true);
+                    div.children[0].children[0].innerText = merchant.ingredients[i].ingredient.name;
+                    right.appendChild(div);
+                    skip = true;
+                    break;
+                }
+            }
+            if(skip === true) continue;
+
+            let button = document.createElement("button");
+            button.innerText = merchant.ingredients[i].ingredient.name;
+            button.classList.add("choosable");
+            left.appendChild(button);
+        }
     }
 };
 

@@ -267,6 +267,9 @@ controller = {
             case "squareLocations":
                 modalScript.squareLocations(data);
                 break;
+            case "editSubIngredients":
+                modalScript.editSubIngredients(data);
+                break;
         }
     },
 

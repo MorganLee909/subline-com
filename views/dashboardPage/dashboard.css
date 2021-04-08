@@ -807,6 +807,13 @@ Modal
             width: 100%;
         }
 
+    
+    #modalEditSubIngredients{
+        flex-direction: column;
+        align-items: center;
+        background: white;
+    }
+
 @media screen and (orientation: portrait){
     @media screen and (max-width: 1400px){
         body{

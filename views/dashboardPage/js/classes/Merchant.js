@@ -215,18 +215,14 @@ class Merchant{
 
     removeIngredient(ingredient){
         const index = this._ingredients.indexOf(ingredient);
-        if(index === undefined){
-            return false;
-        }
+        if(index === undefined) return false;
 
         this._ingredients.splice(index, 1);
     }
 
     getIngredient(id){
         for(let i = 0; i < this._ingredients.length; i++){
-            if(this._ingredients[i].ingredient.id === id){
-                return this._ingredients[i];
-            }
+            if(this._ingredients[i].ingredient.id === id) return this._ingredients[i];
         }
     }
 
@@ -236,9 +232,7 @@ class Merchant{
 
     getRecipe(id){
         for(let i = 0; i < this._recipes.length; i++){
-            if(this._recipes[i].id === id){
-                return this._recipes[i];
-            }
+            if(this._recipes[i].id === id) return this._recipes[i];
         }
     }
 

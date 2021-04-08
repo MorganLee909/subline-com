@@ -7,7 +7,7 @@ class Ingredient{
         this._unit = unit;
         this._parent = parent;
         this._unitSize = unitSize;
-        this._ingredients = [];
+        this._subIngredients = [];
     }
 
     get id(){
@@ -82,6 +82,19 @@ class Ingredient{
         this._unitSize = unitSize;
     }
 
+    get subIngredients(){
+        return this._subIngredients;
+    }
+
+    addIngredients(ingredients){
+        for(let i = 0; i < ingredients.length; i++){
+            this.subIngredients.push({
+                ingredient: this._parent.getIngredient(ingredients[i].ingredient).ingredient,
+                quantity: ingredients[i].quantity
+            });
+        }
+    }
+
     getBaseUnitSize(){
         return this._unitSize;
     }
@@ -100,19 +113,7 @@ class Ingredient{
         if(length.includes(this._unit)) return length;
         if(this._unit === "bottle") return volume;
         return [];
-    }
-
-    addIngredients(ingredients){
-        for(let i = 0; i < ingredients.length; i++){
-            // console.log(typeof(ingredients[i].ingredient));
-            // console.log(this._parent.getIngredient(ingredients[i].ingredient));
-            // console.log();
-            this._ingredients.push({
-                ingredient: this._parent.getIngredient(ingredients[i].ingredient),
-                quantity: ingredients[i].quantity
-            });
-        }
-    }
+    }    
 }
 
 module.exports = Ingredient;
