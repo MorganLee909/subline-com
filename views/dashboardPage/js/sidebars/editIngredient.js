@@ -72,7 +72,8 @@ let editIngredient = {
         let data = {
             id: ingredient.ingredient.id,
             name: document.getElementById("editIngName").value,
-            category: document.getElementById("editIngCategory").value
+            category: document.getElementById("editIngCategory").value,
+            ingredients: []
         }
 
         data.quantity = ingredient.convertToBase(quantity);
@@ -86,6 +87,16 @@ let editIngredient = {
             }
         }
 
+        //Add the sub-ingredients
+        for(let i = 0; i < ingredient.ingredient.subIngredients.length; i++){
+            let subIngredient = ingredient.ingredient.subIngredients[i];
+            data.ingredients.push({
+                ingredient: subIngredient.ingredient.id,
+                quantity: subIngredient.quantity 
+            });
+        }
+
+        console.log(data);
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 

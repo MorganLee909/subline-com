@@ -161,7 +161,7 @@ let modal = {
         let template = document.getElementById("selectedSubIngredient").content.children[0];
 
         while(left.children.length > 0){
-            left.removeChild(left.firstChid);
+            left.removeChild(left.firstChild);
         }
 
         while(right.children.length > 0){
@@ -224,9 +224,14 @@ let modal = {
         document.getElementById("submitEditSubIngredients").onclick = ()=>{
             let subIngredients = [];
 
-            for(let i = 0; i < right.children.length; i++){
-                subIngredients.push(right.children[i].ingredient);
+            for(let i = 1; i < right.children.length; i++){
+                subIngredients.push({
+                    ingredient: right.children[i].ingredient.id,
+                    quantity: parseFloat(right.children[i].children[1].children[0].value)
+                });
             }
+
+            ingredient.replaceIngredients(subIngredients);
 
             controller.closeModal();
             controller.createBanner("YOUR SUB-INGREDIENTS WILL NOT BE SAVED UNTIL YOU SUBMIT CHANGES", "alert");
