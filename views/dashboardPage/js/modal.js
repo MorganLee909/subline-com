@@ -158,12 +158,29 @@ let modal = {
         let right = document.getElementById("editSubCurrentIng");
         let template = document.getElementById("selectedSubIngredient").content.children[0];
 
+        while(left.children.length > 0){
+            left.removeChild(left.firstChid);
+        }
+
+        while(right.children.length > 0){
+            right.removeChild(right.firstChild);
+        }
+
+        let leftHeader = document.createElement("h3");
+        leftHeader.innerText = "AVAILABLE";
+        left.appendChild(leftHeader);
+
+        let rightHeader = document.createElement("h3");
+        rightHeader.innerText = "SUB INGREDIENTS";
+        right.appendChild(rightHeader);
+
         for(let i = 0; i < merchant.ingredients.length; i++){
             let skip = false;
             for(let j = 0; j < ingredient.subIngredients.length; j++){
                 if(merchant.ingredients[i].ingredient === ingredient.subIngredients[j].ingredient){
                     let div = template.cloneNode(true);
                     div.children[0].children[0].innerText = merchant.ingredients[i].ingredient.name;
+                    div.children[1].value = ingredient.subIngredients[j].quantity;
                     right.appendChild(div);
                     skip = true;
                     break;

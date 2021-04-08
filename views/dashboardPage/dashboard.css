@@ -812,7 +812,27 @@ Modal
         flex-direction: column;
         align-items: center;
         background: white;
+        min-width: 500px;
     }
+
+        #editSubIngredientsContainer{
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+            #editSubAllIng, #editSubCurrentIng{
+                padding: 25px;
+                width: 100%;
+            }
+
+                #editSubAllIng > *{
+                    width: 100%;
+                }
+
+                #editSubCurrentIng > * {
+                    width: 100%;
+                }
 
 @media screen and (orientation: portrait){
     @media screen and (max-width: 1400px){
