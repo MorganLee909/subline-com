@@ -102,7 +102,6 @@ class Merchant{
                 ingredients[i].defaultUnit,
                 this,
                 ingredients[i].ingredient.unitSize,
-                ingredients[i].ingredient.ingredients
             );
 
             const merchantIngredient = new MerchantIngredient(
@@ -111,6 +110,11 @@ class Merchant{
             );
 
             this._ingredients.push(merchantIngredient);
+        }
+
+        for(let i = 0; i < ingredients.length; i++){
+            let thisIngredient = this.getIngredient(ingredients[i].ingredient._id);
+            thisIngredient.ingredient.addIngredients(ingredients[i].ingredient.ingredients);
         }
 
         //populate recipes

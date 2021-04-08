@@ -1,5 +1,5 @@
 class Ingredient{
-    constructor(id, name, category, unitType, unit, parent, unitSize = undefined, ingredients){
+    constructor(id, name, category, unitType, unit, parent, unitSize = undefined){
         this._id = id;
         this._name = name;
         this._category = category;
@@ -8,10 +8,6 @@ class Ingredient{
         this._parent = parent;
         this._unitSize = unitSize;
         this._ingredients = [];
-
-        for(let i = 0; i < ingredients.length; i++){
-            ingredients.push(this._parent.getIngredient(ingredinets[i]));
-        }
     }
 
     get id(){
@@ -99,20 +95,23 @@ class Ingredient{
         let volume = ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
         let length = ["mm", "cm", "m", "in", "ft"];
 
-        if(mass.includes(this._unit)){
-            return mass;
-        }
-        if(volume.includes(this._unit)){
-            return volume;
-        }
-        if(length.includes(this._unit)){
-            return length;
-        }
-        if(this._unit === "bottle"){
-            return volume;
-        }
+        if(mass.includes(this._unit)) return mass;
+        if(volume.includes(this._unit)) return volume;
+        if(length.includes(this._unit)) return length;
+        if(this._unit === "bottle") return volume;
         return [];
+    }
 
+    addIngredients(ingredients){
+        for(let i = 0; i < ingredients.length; i++){
+            // console.log(typeof(ingredients[i].ingredient));
+            // console.log(this._parent.getIngredient(ingredients[i].ingredient));
+            // console.log();
+            this._ingredients.push({
+                ingredient: this._parent.getIngredient(ingredients[i].ingredient),
+                quantity: ingredients[i].quantity
+            });
+        }
     }
 }
 
