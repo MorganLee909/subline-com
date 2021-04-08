@@ -79,16 +79,19 @@ module.exports = {
             .then((response)=>{
                 response[0].name = req.body.name;
                 response[0].category = req.body.category;
+                response[0].ingredients = [];
 
                 // Check ingredients for circular references
                 let isCircular = (ingredient, original)=>{
                     if(ingredient.ingredients.length === 0) return false;
-                    
-                    for(let i = 0; i < res.locals.merchant.inventory.length; i++){
-                        if(res.locals.merchant.inventory[i].ingredient._id.toString() === req.body.ingredients[i].ingredient){
-                            let next = res.locals.merchant.inventory[i].ingredient;
-                            if(next._id.toString() === original._id.toString()) return true;
-                            return isCircular(next, original);
+
+                    for(let i = 0; i < ingredient.ingredients.length; i++){
+                        for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                            if(res.locals.merchant.inventory[j].ingredient._id.toString() === ingredient.ingredients[i].ingredient.toString()){
+                                let next = res.locals.merchant.inventory[j].ingredient;
+                                if(next._id.toString() === original._id.toString()) return true;
+                                return isCircular(next, original);
+                            }
                         }
                     }
                 }
@@ -97,8 +100,8 @@ module.exports = {
                     for(let j = 0; j < res.locals.merchant.inventory.length; j++){
                         if(res.locals.merchant.inventory[j].ingredient._id.toString() === req.body.ingredients[i].ingredient){
                             let ingredient = res.locals.merchant.inventory[j].ingredient;
-                            if(ingredient._id.toString() === req.body.id) throw "YOU HAVE CIRCULAR REFERENCES IN YOUR INGREDIENTS";
-                            if(isCircular(ingredient, ingredient) === false){
+                            if(ingredient._id.toString() === req.body.id) throw "YOU HAVE CIRCULAR REFERENCES IN YOUR INGREDIENTS1";
+                            if(isCircular(response[0], response[0]) === false){
                                 response[0].ingredients.push({
                                     ingredient: req.body.ingredients[i].ingredient,
                                     quantity: req.body.ingredients[i].quantity
@@ -130,14 +133,16 @@ module.exports = {
                         break;
                     }
                 }
-                
                 return Promise.all([response[0].save(), res.locals.merchant.save()])
             })
             .then((response)=>{
-                return res.json(response[0]);
+                return res.json({
+                    ingredient: response[0],
+                    quantity: req.body.quantity,
+                    defaultUnit: req.body.unit
+                });
             })
             .catch((err)=>{
-                console.log(err);
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }

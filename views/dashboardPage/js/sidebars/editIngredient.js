@@ -96,7 +96,6 @@ let editIngredient = {
             });
         }
 
-        console.log(data);
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
