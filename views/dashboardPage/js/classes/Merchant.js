@@ -477,14 +477,26 @@ class Merchant{
     getSingleIngredientSold(ingredient, from, to = new Date()){
         const {start, end} = this.getTransactionIndices(from, to);
 
+        let checkIngredient = (current, main)=>{
+            if(current.ingredient === main) return current.quantity;
+            
+            for(let i = 0; i < current.ingredient.subIngredients.length; i++){
+                checkIngredient(current.ingredient.subIngredients[i], main);
+            }
+
+            return 0;
+        }
+
         let total = 0;
+
         for(let i = start; i < end; i++){
             for(let j = 0; j < this._transactions[i].recipes.length; j++){
-                for(let k = 0; k < this._transactions[i].recipes[j].recipe.ingredients.length; k++){
-                    if(this._transactions[i].recipes[j].recipe.ingredients[k].ingredient === ingredient.ingredient){
-                        total += this._transactions[i].recipes[j].recipe.ingredients[k].quantity;
-                        break;
-                    }
+                let transactionRecipe = this._transactions[i].recipes[j];
+                for(let k = 0; k < transactionRecipe.recipe.ingredients.length; k++){
+                    let recipeIngredient = transactionRecipe.recipe.ingredients[k];
+                    let actualIngredient = recipeIngredient.ingredient;
+                    
+                    total += checkIngredient(recipeIngredient, ingredient);
                 }
             }
         }
@@ -565,21 +577,6 @@ class Merchant{
         return ingredientsByCategory;
     }
 
-    getRecipesForIngredient(ingredient){
-        let recipes = [];
-
-        for(let i = 0; i < this._recipes.length; i++){
-            for(let j = 0; j < this._recipes[i].ingredients.length; j++){
-                if(this._recipes[i].ingredients[j].ingredient === ingredient){
-                    recipes.push(this._recipes[i]);
-                    break;
-                }
-            }
-        }
-
-        return recipes;
-    }
-
     getTransactionIndices(from, to){
         let start, end;
         
@@ -597,9 +594,7 @@ class Merchant{
             }
         }
 
-        if(end === undefined){
-            return false;
-        }
+        if(end === undefined) return false;
 
         return {start: start, end: end};
     }
