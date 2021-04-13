@@ -136,9 +136,7 @@ let analytics = {
     },
 
     displayIngredient: function(){
-        if(this.ingredient === undefined  || this.transactionsByDate.length === 0){
-            return;
-        }
+        if(this.ingredient === undefined  || this.transactionsByDate.length === 0) return;
 
         //break down data into dates and quantities
         let dates = [];

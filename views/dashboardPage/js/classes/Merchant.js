@@ -481,7 +481,7 @@ class Merchant{
             if(current.ingredient === main) return current.quantity;
             
             for(let i = 0; i < current.ingredient.subIngredients.length; i++){
-                checkIngredient(current.ingredient.subIngredients[i], main);
+                return checkIngredient(current.ingredient.subIngredients[i], main);
             }
 
             return 0;
@@ -494,7 +494,6 @@ class Merchant{
                 let transactionRecipe = this._transactions[i].recipes[j];
                 for(let k = 0; k < transactionRecipe.recipe.ingredients.length; k++){
                     let recipeIngredient = transactionRecipe.recipe.ingredients[k];
-                    let actualIngredient = recipeIngredient.ingredient;
                     
                     total += checkIngredient(recipeIngredient, ingredient);
                 }

@@ -46,13 +46,27 @@ class Transaction{
     getIngredientQuantity(ingredient){
         let quantity = 0;
 
+        let traverseSubIngredients = (current, main)=>{
+            if(current.ingredient === main) return current.quantity;
+
+            for(let i = 0; i < current.ingredient.subIngredients.length; i++){
+                return traverseSubIngredients(current.ingredient.subIngredients[i], main);
+            }
+
+            return 0;
+        }
+
         for(let i = 0; i < this._recipes.length; i++){
             const recipe = this._recipes[i].recipe;
             for(let j = 0; j < recipe.ingredients.length; j++){
-                if(recipe.ingredients[j].ingredient === ingredient){
+                let actualIngredient = recipe.ingredients[j].ingredient;
+                if(actualIngredient === ingredient){
                     quantity += recipe.ingredients[j].quantity * this._recipes[i].quantity;
-
-                    break;
+                }else{
+                    for(let k = 0; k < actualIngredient.subIngredients.length; k++){
+                        quantity += traverseSubIngredients(actualIngredient.subIngredients[i], ingredient) * this._recipes.quantity;
+                    }
+                    
                 }
             }
         }
