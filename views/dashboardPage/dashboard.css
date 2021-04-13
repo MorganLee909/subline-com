@@ -99,6 +99,14 @@ Multi-strand use classes
     font-size: 16px;
 }
 
+    .choosable.offColor{
+        background: rgb(179, 191, 209);
+    }
+
+        .choosable.offColor{
+            background: rgb(201, 201, 201);
+        }
+
     .choosable.tall{
         padding: 15px;
     }

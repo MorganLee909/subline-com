@@ -27,24 +27,20 @@ let ingredientDetails = {
         const dailyUseDiv = document.getElementById("dailyUse");
         dailyUseDiv.innerText = `${dailyUse.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
 
-        //Show recipes that this ingredient is a part of
-        let recipeList = document.getElementById("ingredientRecipeList");
+        let subIngredientList = document.getElementById("subIngredientList");
         let template = document.getElementById("ingredientRecipe").content.children[0];
-        let recipes = merchant.getRecipesForIngredient(ingredient.ingredient);
 
-        while(recipeList.children.length > 0){
-            recipeList.removeChild(recipeList.firstChild);
+        while(subIngredientList.children.length > 0){
+            subIngredientList.removeChild(subIngredientList.firstChild);
         }
 
-        for(let i = 0; i < recipes.length; i++){
-            let recipeDiv = template.cloneNode(true);
-            recipeDiv.children[0].innerText = recipes[i].name;
-            recipeDiv.onclick = ()=>{
-                controller.openStrand("recipeBook");
-                controller.openSidebar("recipeDetails", recipes[i]);
-            }
-            recipeDiv.classList.add("choosable");
-            recipeList.appendChild(recipeDiv);
+        for(let i = 0; i < ingredient.ingredient.subIngredients.length; i++){
+            let subIngredient = ingredient.ingredient.subIngredients[i];
+            let button = template.cloneNode(true);
+            button.children[0].innerText = subIngredient.ingredient.name;
+            button.children[1].innerText = `${subIngredient.quantity} ${subIngredient.ingredient.unit}`;
+            button.onclick = ()=>{this.display(merchant.getIngredient(subIngredient.ingredient.id))};
+            subIngredientList.appendChild(button);
         }
     },
 
