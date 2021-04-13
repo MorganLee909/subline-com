@@ -77,9 +77,7 @@ module.exports = {
 
         Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
             .then((response)=>{
-                response[0].name = req.body.name;
-                response[0].category = req.body.category;
-                response[0].ingredients = [];
+                response[0].ingredients = req.body.ingredients;
 
                 // Check ingredients for circular references
                 let isCircular = (ingredient, original)=>{
