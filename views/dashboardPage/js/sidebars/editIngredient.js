@@ -92,7 +92,7 @@ let editIngredient = {
             let subIngredient = ingredient.ingredient.subIngredients[i];
             data.ingredients.push({
                 ingredient: subIngredient.ingredient.id,
-                quantity: subIngredient.quantity 
+                quantity: subIngredient.quantity
             });
         }
 

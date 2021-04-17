@@ -212,7 +212,6 @@ module.exports = {
                 return res.json(recipes);
             })
             .catch((err)=>{
-                console.log(err);
                 if(typeof(err) === "string"){
                     return res.json(err);
                 }

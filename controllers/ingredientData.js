@@ -106,14 +106,7 @@ module.exports = {
                             let ingredient = res.locals.merchant.inventory[j].ingredient;
                             stack = [ingredient];
                             if(ingredient._id.toString() === req.body.id) throw "circular";
-                            if(isCircular(ingredient, response[0]) === false){
-                                response[0].ingredients.push({
-                                    ingredient: req.body.ingredients[i].ingredient,
-                                    quantity: req.body.ingredients[i].quantity
-                                });
-                            }else{
-                                throw "circular";
-                            }
+                            if(isCircular(ingredient, response[0]) === true) throw "circular";
                             break;
                         }
                     }

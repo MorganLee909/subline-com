@@ -205,8 +205,9 @@ class Merchant{
                 defaultUnit,
                 this,
                 ingredient.unitSize,
-                ingredient.ingredients
             );
+
+            createdIngredient.replaceIngredients(ingredient.ingredients);
 
             const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
             this._ingredients.push(merchantIngredient);
