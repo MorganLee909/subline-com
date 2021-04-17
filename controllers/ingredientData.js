@@ -71,22 +71,28 @@ module.exports = {
         }]
     }
     response = Ingredient
+    error response = '$' delimited String
     */
     updateIngredient: function(req, res){
         let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
 
+        let stack = [];
         Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
             .then((response)=>{
                 response[0].ingredients = req.body.ingredients;
 
                 // Check ingredients for circular references
                 let isCircular = (ingredient, original)=>{
-                    if(ingredient.ingredients.length === 0) return false;
+                    if(ingredient.ingredients.length === 0) {
+                        stack.pop();
+                        return false;
+                    }
 
                     for(let i = 0; i < ingredient.ingredients.length; i++){
                         for(let j = 0; j < res.locals.merchant.inventory.length; j++){
                             if(res.locals.merchant.inventory[j].ingredient._id.toString() === ingredient.ingredients[i].ingredient.toString()){
                                 let next = res.locals.merchant.inventory[j].ingredient;
+                                stack.push(next);
                                 if(next._id.toString() === original._id.toString()) return true;
                                 return isCircular(next, original);
                             }
@@ -98,14 +104,15 @@ module.exports = {
                     for(let j = 0; j < res.locals.merchant.inventory.length; j++){
                         if(res.locals.merchant.inventory[j].ingredient._id.toString() === req.body.ingredients[i].ingredient){
                             let ingredient = res.locals.merchant.inventory[j].ingredient;
-                            if(ingredient._id.toString() === req.body.id) throw "YOU HAVE CIRCULAR REFERENCES IN YOUR INGREDIENTS1";
-                            if(isCircular(response[0], response[0]) === false){
+                            stack = [ingredient];
+                            if(ingredient._id.toString() === req.body.id) throw "circular";
+                            if(isCircular(ingredient, response[0]) === false){
                                 response[0].ingredients.push({
                                     ingredient: req.body.ingredients[i].ingredient,
                                     quantity: req.body.ingredients[i].quantity
                                 });
                             }else{
-                                throw "YOU HAVE CIRCULAR REFERENCES IN YOUR INGREDIENTS";
+                                throw "circular";
                             }
                             break;
                         }
@@ -141,8 +148,22 @@ module.exports = {
                 });
             })
             .catch((err)=>{
-                if(typeof(err) === "string"){
-                    return res.json(err);
+                if(err === "circular"){
+                    let string = "YOU ATTEMPTED TO MAKE A CIRCULAR REFERENCE";
+
+                    if(stack.length === 1){
+                        string += `$${stack[0].name} CONTAINS ${stack[0].name}`;
+                    }else{
+                        for(let i = 0; i < stack.length; i++){
+                            if(i === stack.length - 1){
+                                string += `$${stack[i].name} CONTAINS ${stack[0].name}`;
+                                break;
+                            }
+                            string += `$${stack[i].name} CONTAINS ${stack[i+1].name}`;
+                        }
+                    }
+                    
+                    return res.json(string);
                 }
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
