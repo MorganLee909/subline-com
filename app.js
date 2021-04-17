@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const compression = require("compression");
 const https = require("https");
 const fs = require("fs");
+const cssmerger = require("cssmerger");
 
 const app = express();
 
@@ -48,6 +49,12 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(session(sessionOptions));
 require("./routes")(app);
+
+cssmerger([
+    "./views/shared/shared.css",
+    "./views/dashboardPage/dashboard.css",
+    "./views/dashboardPage/sidebars.css"
+], "./views/dashboardPage/bundle.css");
 
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT, ()=>{});
