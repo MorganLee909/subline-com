@@ -126,7 +126,7 @@ let account = {
 
     switchMerchant: function(id){
         let loader = document.getElementById("loaderContainer");
-        loader.style.display = "none";
+        loader.style.display = "flex";
 
         fetch(`/merchant/${id}`)
             .then(response => response.json())
