@@ -109,7 +109,8 @@ let editIngredient = {
         .then(response => response.json())
         .then((response)=>{
             if(typeof(response) === "string"){
-                controller.createBanner(response, "error");
+                controller.createBanner("ERROR: CIRCULAR REFERENCE", "error");
+                controller.openModal("circularReference", response);
             }else{
                 merchant.removeIngredient(merchant.getIngredient(response.ingredient._id));
                 merchant.addIngredients([response]);

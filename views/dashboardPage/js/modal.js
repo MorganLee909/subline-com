@@ -236,6 +236,27 @@ let modal = {
             controller.closeModal();
             controller.createBanner("YOUR SUB-INGREDIENTS WILL NOT BE SAVED UNTIL YOU SUBMIT CHANGES", "alert");
         }
+    },
+
+    circularReference: function(response){
+        let array = response.split("$");
+
+        let modal = document.getElementById("modalCircularReference");
+        modal.style.display = "flex";
+
+        modal.children[0].innerText = array[0];
+
+        while(modal.children[1].children.length > 0){
+            modal.children[1].removeChild(modal.children[1].firstChild);
+        }
+
+        for(let i = 1; i < array.length; i++){
+            let text = document.createElement("p");
+            text.innerText = array[i];
+            modal.children[1].appendChild(text);
+        }
+
+        document.getElementById("circularReferenceButton").onclick = ()=>{controller.closeModal()};
     }
 };
 

@@ -270,6 +270,9 @@ controller = {
             case "editSubIngredients":
                 modalScript.editSubIngredients(data);
                 break;
+            case "circularReference":
+                modalScript.circularReference(data);
+                break;
         }
     },
 

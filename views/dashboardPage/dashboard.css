@@ -842,6 +842,19 @@ Modal
                     width: 100%;
                 }
 
+    #modalCircularReference{
+        flex-direction: column;
+        background: white;
+        align-items: center;
+        padding: 25px;
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+    #modalCircularReference div > *{
+        margin: 10px;
+    }
+
 @media screen and (orientation: portrait){
     @media screen and (max-width: 1400px){
         body{
