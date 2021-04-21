@@ -50,13 +50,11 @@ app.use(express.json());
 app.use(session(sessionOptions));
 require("./routes")(app);
 
-console.time("time");
 cssmerger([
     "./views/shared/css/general.css",
     "./views/shared/css/loader.css",
     "./views/dashboardPage/css"
 ], "./views/dashboardPage/bundle.css");
-console.timeEnd("time");
 
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT, ()=>{});
