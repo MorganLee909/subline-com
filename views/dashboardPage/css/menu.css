@@ -1,0 +1,144 @@
+.menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: rgb(0, 27, 45);
+    width: 18vw;
+    height: 100vh;
+    transition: width 0.3s;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding-bottom: 25px;
+    box-sizing: border-box;
+}
+
+    .menuHead{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 0 20px;
+        margin-top: 10px;
+        font-size: 22px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .menuLogo{
+        width: 25%;
+        height: 25%;
+    }
+
+    .menuHead a{
+        display: flex;
+        align-items: center;
+        color: rgb(255, 99, 107);
+        text-decoration: none;
+        width: 80%;
+    }
+
+    .menuHead p{
+        margin-left: 25px;
+    }
+
+    .menuHead button{
+        background: none;
+        border-style: none;
+        color: rgb(255, 99, 107);
+        font-size: 35px;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .menuHead button:hover{
+        color: rgb(201, 201, 201);
+    }
+
+    .menuHead > button::-moz-focus-inner{
+        border: 0;
+    }
+
+    #menuLocationName{
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .menuButton{
+        display: flex;
+        align-items: center;
+        background: none;
+        border-style: none;
+        color: rgb(255, 99, 107);
+        font-size: 18px;
+        margin: 15px 0;
+        padding-left: 15px;
+        width: 100%;
+        height: 75px;
+        cursor: pointer;
+        text-align: left;
+        border: 0;
+        outline: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+    }
+
+        .menuButton svg{
+            margin-right: 25px;
+        }
+
+        .menuButton::-moz-focus-inner{
+            border: 0;
+        }  
+
+        .menuButton:hover{
+            background: rgb(179, 191, 209);
+        }
+
+    .menu > .active{
+        background: rgb(240, 252, 255);
+        cursor: default;
+    }
+
+    .menu > .active:hover{
+        background: rgb(240, 252, 255);
+    }
+
+    .menuLinks{
+        display: flex;
+        justify-content: space-between;
+        width: 75%;
+    }
+    
+        .menuLinks > *{
+            background: none;
+            border: none;
+            color: white;
+            text-decoration: underline;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+/* Minimized menu */
+.menuMinimized{
+    width: 5vw;
+}
+
+.menuLogoMin{
+    width: 4vw;
+}
+
+.menuHeadMin{
+    display: none;
+    flex-direction: column;
+}
+
+.menuMinimized .menuButton{
+    justify-content: center;
+    padding: 0;
+}
+
+.menuMinimized .menuButton svg{
+    margin: 0;
+}

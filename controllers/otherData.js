@@ -67,7 +67,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
 
                 return res.redirect("/");

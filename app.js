@@ -50,11 +50,17 @@ app.use(express.json());
 app.use(session(sessionOptions));
 require("./routes")(app);
 
+console.time("time");
 cssmerger([
     "./views/shared/shared.css",
     "./views/dashboardPage/dashboard.css",
-    "./views/dashboardPage/sidebars.css"
+    "./views/dashboardPage/sidebars.css",
+
+    "./views/shared/css/header.css",
+    "./views/shared/css/loader.css",
+    "./views/dashboardPage/css"
 ], "./views/dashboardPage/bundle.css");
+console.timeEnd("time");
 
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT, ()=>{});

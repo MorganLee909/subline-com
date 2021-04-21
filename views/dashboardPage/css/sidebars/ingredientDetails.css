@@ -1,0 +1,28 @@
+#ingredientDetails{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #ingredientDetails label{
+        font-size: 20px;
+        text-align: center;
+        margin: 0;
+    }
+
+    #ingredientDetails label p{
+        font-size: 30px;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+    #subIngredientList{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        list-style: none;
+        overflow: auto;
+        max-height: 150px;
+        width: 75%;
+    }
