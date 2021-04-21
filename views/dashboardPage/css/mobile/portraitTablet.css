@@ -1,0 +1,152 @@
+@media screen and (orientation: portrait){
+    @media screen and (max-width: 1400px){
+        body{
+            background:rgb(0, 27, 45);
+        }
+
+        .button{
+            padding: 3px 0;
+        }
+
+        .mobileMenuSelector{
+            color:rgb(240, 252, 255);
+            z-index: 10;
+        }
+
+        .strandTitle{
+            color: white;
+            position: fixed;
+            top: 15px;
+            left: 0;
+            right: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .choosable{
+            background:rgb(201, 201, 201);
+            color: black;
+        }
+
+        /* HOME */
+        #inventoryCheckCard{
+            display: none;
+        }
+
+        #graphCard{
+            display: none;
+        }
+
+        .card{
+            background: white;
+        }
+
+        /* INGREDIENT INVENTORY */
+        #categoryList{
+            width: 95%;
+        }
+
+            .categoryDiv{
+                margin: 5px;
+            }
+
+                .categoryDiv > div:first-of-type p{
+                    padding: 10px;
+                    margin-right: 15px;
+                }
+
+                .categoryDiv > div:first-of-type button{
+                    padding: 10px;
+                    height: initial;
+                    width: initial;
+                    display: flex;
+                }
+
+                .ingredientsDiv{
+                    width: 90%;
+                }
+
+        /* RECIPE BOOK */
+        #recipeList{
+            width: 90%;
+        }
+
+        /* ANALYTICS */
+        #analyticsStrand .strandHead{
+            height: 23vh;
+            flex-direction: column;
+        }
+
+            #analyticsStrand .strandTitle{
+                position: static;
+            }
+
+            .switch{
+                margin-top: 0;
+            }
+
+            .analDateRange{
+                display: none;
+            }
+
+        .analContent{
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+            height: 70vh;
+        }
+
+            .itemsList{
+                width: 90%;
+                height: 47%;
+                margin-bottom: 10px;
+            }
+
+            .analData{
+                height: 47%;
+            }
+
+                .dataRow{
+                    flex-direction: column;
+                }
+
+            #itemUseGraph{
+                display: none;
+            }
+
+            #analDailyAverages{
+                display: none;
+            }
+
+            #recipeSalesGraph{
+                display: none;
+            }
+
+        /* ORDERS */
+        #ordersStrand .strandHead{
+            justify-content: center;
+        }
+
+        #newOrderBtn{
+            display: none;
+        }
+
+        #orderList{
+            width: 90%;
+        }
+
+        #orderList > div p:nth-child(2){
+            display: none;
+        }
+
+        /* TRANSACTIONS */
+        #transactionsStrand .strandHead{
+            justify-content: center;
+        }
+
+        .transactionsList{
+            width: 90%;
+        }
+    }
+}

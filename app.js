@@ -53,7 +53,7 @@ require("./routes")(app);
 console.time("time");
 cssmerger([
     // "./views/shared/shared.css",
-    "./views/dashboardPage/dashboard.css",
+    // "./views/dashboardPage/dashboard.css",
     "./views/dashboardPage/sidebars.css",
 
     "./views/shared/css/general.css",

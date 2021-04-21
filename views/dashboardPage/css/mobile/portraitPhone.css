@@ -1,0 +1,32 @@
+@media screen and (orientation: portrait){
+    @media screen and (min-width: 601px){
+        .strandTitle{
+            font-size: 40px;
+        }
+
+        .mobileMenuSelector{
+            left: 40px;
+            top: 20px;
+        }
+
+        /* HOME */
+        #graphCard{
+            display: flex;
+        }
+
+        /* RECIPE BOOK */
+        #recipeList{
+            width: 75%;
+        }
+
+        /* ORDERS */
+        #ordersStrand .strandHead{
+            margin-top: 25px;
+        }
+
+        /* TRANSACTIONS */
+        #transactionsStrand .strandHead{
+            margin-top: 25px;
+        }
+    }
+}

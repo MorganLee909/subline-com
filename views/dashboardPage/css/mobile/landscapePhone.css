@@ -1,0 +1,68 @@
+@media screen and (orientation: landscape){
+    @media screen and (min-width: 1000px){
+        .mobileMenuSelector{
+            top: 20px;
+            left: 40px;
+        }
+
+        .strandTitle{
+            margin: 15px;
+        }
+
+        /* HOME */
+        #homeStrand{
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+            #graphCard{
+                display: flex;
+            }
+
+            .flexRow{
+                max-height: 40vh;
+            }
+
+            .flexRow:nth-child(2){
+                flex-grow: 2;
+            }
+
+            .flexRow:nth-child(3){
+                flex-grow: 1;
+            }
+
+        /* INGREDIENTS */
+        #categoryList{
+            height: 80%;
+        }
+
+        /* RECIPE BOOK */
+        #recipeList{
+            height: 80%;
+        }
+
+        /* ANALYTICS */
+        #analyticsStrand .strandTitle{
+            margin-top: 8px;
+            margin-left: 30px;
+        }
+
+        .analDateRange{
+            display: block;
+        }
+
+        #analRecipeContent, .analContent{
+            height: 80%;
+        }
+
+        /* ORDERS */
+        #orderList{
+            height: 80%;
+        }
+
+        /* TRANSACTIONS */
+        #transactionsList{
+            height: 80%;
+        }
+    }
+}
