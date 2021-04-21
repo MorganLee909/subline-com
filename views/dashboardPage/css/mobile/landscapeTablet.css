@@ -195,5 +195,117 @@
             #transactionsList{
                 height: 70%;
             }
+
+
+        /* SIDEBARS */
+        .sidebar{
+            width: 100vw;
+            color: white;
+            padding: 3px 15px;
+        }
+
+        .sidebarIconButtons{
+            display: none;
+        }
+
+        /* MENU */
+        #menu{
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            padding: 0;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+            .menuShifter{
+                display: none;
+            }
+
+            .menuHead{
+                justify-content: center;
+                padding: 0;
+                margin-bottom: 0;
+                height: 50px;
+            }
+
+                .menuHead a{
+                    width: initial;
+                    justify-content: center;
+                }
+
+                    .menuLogo{
+                        max-height: 50px;
+                        max-width: 50px;
+                    }
+
+                .menuButton{
+                    width: 40%;
+                    justify-content: center;
+                    background: rgb(201, 201, 201);
+                    color: black;
+                    margin: 15px;
+                    padding-left: 0;
+                    box-shadow: 0 0 5px white;
+                    height: 10vh;
+                }
+
+            /* INGREDIENT DETAILS */
+            #ingredientDetails > *{
+                margin: 0;
+            }
+
+            #recipeListLabel, #subIngredientList{
+                display: none;
+            }
+
+            /* FILTER ORDERS */
+            #orderFilter > *{
+                margin: 0;
+            }
+
+            #orderFilter h1{
+                padding: 0;
+            }
+
+            #filterOrderDateRange, #orderFilter .lineBorder{
+                display: none;
+            }
+
+            .dateRange{
+                padding-bottom: 3px;
+            }
+
+            #orderFilterSubmit{
+                margin-top: 3px;
+            }
+
+            /* ORDER DETAILS */
+            #orderIngredients{
+                display: none;
+            }
+
+            /* TRANSACTION DETAILS */
+            #transactionRecipesLabel, .transactionRecipes, #transactionDetails .lineBorder{
+                display: none;
+            }
+
+            /* FILTER TRANSACTIONS */
+            #transactionFilter > *{
+                margin: 0;
+            }
+
+            #transactionFilterDateLabel{
+                display: none;
+            }
+
+            #transactionFilter .dateRange{
+                margin-bottom: 5px;
+            }
+
+            #transFilterSubmit{
+                margin-top: 5px;
+            }
     }
 }

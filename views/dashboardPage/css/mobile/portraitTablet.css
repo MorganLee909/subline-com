@@ -148,5 +148,48 @@
         .transactionsList{
             width: 90%;
         }
+
+        /* SIDEBARS */
+        .sidebar{
+            width: 100vw;
+            color: white;
+        }
+
+        .sidebarIconButtons{
+            display: none;
+        }
+
+        /* MENU */
+        #menu{
+            display: none;
+            width: 100vw;
+            padding: 0;
+        }
+    
+            .menuShifter{
+                display: none;
+            }
+
+            .menuHead{
+                justify-content: right;
+                padding: 0;
+                margin-bottom: 25px;
+            }
+
+                .menuHead a{
+                    justify-content: center;
+                    margin: auto;
+                }
+
+
+            .menuButton{
+                padding-left: 0;
+                justify-content: center;
+                background: rgb(201, 201, 201);
+                color: black;
+                width: 90%;
+                margin: 15px auto;
+                box-shadow: 0 0 5px white;
+            }
     }
 }

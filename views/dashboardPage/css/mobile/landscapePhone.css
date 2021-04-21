@@ -64,5 +64,44 @@
         #transactionsList{
             height: 80%;
         }
+
+        .menuLogo{
+            max-height: initial;
+            max-width: 300px;
+        }
+
+        .menuHead a p{
+            font-size: 35px;
+        }
+
+        #recipeListLabel, #subIngredientList{
+            display: flex;
+        }
+
+        /* ORDER FILTER */
+        #orderFilterIngredients{
+            max-height: 70%;
+        }
+
+        #orderFilterSubmit{
+            margin-top: 15px;
+        }
+
+        /* ORDER DETAILS */
+        #orderIngredients{
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TRANSACTION DETAILS */
+        #transactionRecipesLabel, .transactionRecipes, #transactionDetails .lineBorder{
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TRANSACTION FILTER */
+        #transFilterRecipeList{
+            max-height: 70%;
+        }
     }
 }
