@@ -8,7 +8,7 @@ const cssmerger = require("cssmerger");
 
 const app = express();
 
-mongoose.connect(`${process.env.DB}/inventory-management`, {
+mongoose.connect(`mongodb://subline:${process.env.SUBLINE_DB_PASS}@localhost:27017/inventory-management?authSource=admin`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -22,7 +22,7 @@ let sessionOptions = {
     sameSite: "lax",
     saveUninitialized: true,
     resave: false,
-}
+};
 
 app.use(express.static(__dirname + "/views"));
 let httpsServer = {};
