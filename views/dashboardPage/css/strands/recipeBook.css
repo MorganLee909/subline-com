@@ -1,0 +1,12 @@
+#recipeBookStrand{
+    display: none;
+    align-items: center;
+}
+
+    #recipeList{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 50%;
+        overflow-y: auto;
+    }

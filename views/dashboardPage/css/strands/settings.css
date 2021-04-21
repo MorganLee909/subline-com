@@ -1,0 +1,110 @@
+#accountStrand{
+    padding: 15px;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+    .settings{
+        display: flex;
+        flex-direction: column;
+        width: 75%;
+        max-height: 100%;
+        overflow-y: auto;
+    }
+
+        .settingsSection{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 15px 0;
+            background: white;
+            padding: 35px;
+        }
+
+            .settingsSectionHeader{
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 25px;
+                border-bottom: 1px solid black;
+            }
+
+                .newLocationButtons{
+                    display: flex;
+                    align-items: center;
+                }
+
+                    .newLocationButtons h1{
+                        padding: 0;
+                        margin-right: 15px;
+                    }
+
+        #accountInformation{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #accountInformationData{
+            width: 50%;
+        }
+
+            #accountInformation label{
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+    #accountUpdate{
+        max-width: 500px;
+    }
+
+    #settingsMerchants{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+        #settingsMerchants button{
+            width: 50%;
+        }
+
+    #securityData{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        #securityData button, #securityData a{
+            width: 240px;
+            box-sizing: border-box;
+        }
+
+    #accountShowPassword{
+        max-width: 300px;
+    }
+
+    #changePasswordBox{
+        flex-direction: column;
+        padding: 25px;
+        background: rgb(179, 191, 209);
+    }
+
+        #changePasswordBox label{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px;
+        }
+
+        #changePasswordBox p{
+            color: red;
+        }
+
+        #accountButtonBox{
+            margin: 0;
+        }

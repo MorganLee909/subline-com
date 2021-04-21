@@ -1,0 +1,166 @@
+.modal{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 27, 45, 0.75);
+}
+
+    .modalBox{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+        .modalBox > svg{
+            color: rgb(255, 99, 107);
+            cursor: pointer;
+        }
+
+        .modalSpreadsheetUpload{
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0;
+            padding: 25px 100px;
+            background: rgb(240, 252, 255);
+            border: 2px solid black;
+        }
+
+            .modalSpreadsheetUpload > *{
+                margin-top: 15px;
+            }
+
+    #modalFeedback{
+        display: flex;
+        flex-direction: column;
+        background: white;
+        padding: 50px;
+    }
+
+        #modalFeedback > *{
+            margin: 15px;
+        }
+
+        #modalFeedback label{
+            display: flex;
+            flex-direction: column;
+
+        }
+
+    #modalNewMerchant{
+        display: flex;
+        flex-direction: column;
+        background: white;
+        padding: 50px;
+        min-width: 350px;
+    }
+
+        #modalNewMerchant h2{
+            text-align: center;
+        }
+
+        #modalNewMerchant > *{
+            margin: 15px;
+        }
+
+        #modalNewMerchant label{
+            display: flex;
+            flex-direction: column;
+        }
+
+    #modalConfirm{
+        display: flex;
+        flex-direction:column;
+        align-items: center;
+        background: white;
+        padding: 50px;
+    }
+
+        #modalConfirm svg{
+            font-size: 50px;
+            margin: 15px;
+            font-weight: bold;
+        }
+
+        #modalConfirm p{
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+    #newMerchantSquareButton{
+        background: white;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+        padding: 9px;
+        cursor: pointer;
+        margin-top: 0;
+        margin-bottom: 0;
+        height: 44px;
+    }
+
+        #newMerchantSquareButton:hover{
+            background: black;
+            color: white;
+        }
+
+    #modalSquareLocations{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        padding: 50px;
+        min-width: 350px;
+    }
+
+        #squareLocationsButtons{
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+    
+    #modalEditSubIngredients{
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        min-width: 500px;
+    }
+
+        #editSubIngredientsContainer{
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+            #editSubAllIng, #editSubCurrentIng{
+                padding: 25px;
+                width: 100%;
+            }
+
+                #editSubAllIng > *{
+                    width: 100%;
+                }
+
+                #editSubCurrentIng > * {
+                    width: 100%;
+                }
+
+    #modalCircularReference{
+        flex-direction: column;
+        background: white;
+        align-items: center;
+        padding: 25px;
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+    #modalCircularReference div > *{
+        margin: 10px;
+    }

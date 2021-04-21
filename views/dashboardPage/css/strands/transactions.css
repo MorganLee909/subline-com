@@ -1,0 +1,10 @@
+.transactions{
+    display: none;
+    align-items: center;
+}
+
+    .transactionsList{
+        width: 50%;
+        overflow-y: auto;
+        margin-top: 50px;
+    }

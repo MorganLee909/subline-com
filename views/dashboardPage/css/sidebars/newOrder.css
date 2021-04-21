@@ -1,0 +1,102 @@
+#newOrderIngredientList{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+}
+
+    .newOrderLabels{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+        .newOrderLabels label{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            margin: 10px 0;
+        }
+
+        .newOrderLabels input{
+            width: 50%;
+        }
+
+    #newOrderIngredients{
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        overflow-y: auto;
+    }
+
+        #newOrderIngredients .choosable{
+            background: rgb(240, 252, 255);
+            justify-content: left;
+        }
+
+            #newOrderIngredients .choosable:hover{
+                background: rgb(179, 191, 209);
+            }
+#newOrder{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    border-left: 1px solid black;
+    padding-left: 25px;
+}
+
+    #newOrder > label{
+        margin: 5px;
+    }
+
+    #selectedIngredientList{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 75%;
+        overflow-y: auto;
+        margin-bottom: 10px;
+    }
+
+        .selectedIngredient{
+            display: flex;
+            flex-direction: column;
+            background: rgb(0, 27, 45);
+            color: white;
+            margin: 5px 0;
+            width: 95%;
+        }
+
+            .selectedIngredient > div{
+                margin: 3px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+            }
+
+                .selectedIngredient p{
+                    font-weight: bold;
+                    font-size: 17px;
+                }
+
+                .newOrderRemove{
+                    background: rgb(0, 27, 45);
+                    border: 1px solid white;
+                    color: white;
+                    font-size: 13px;
+                    font-weight: bold;
+                    padding: 5px;
+                    cursor: pointer;
+                }
+
+                    .newOrderRemove:hover{
+                        background: rgb(201, 201, 201);
+                        color: black;
+                    }
+
+                .selectedIngredient input{
+                    width: 45%;
+                }

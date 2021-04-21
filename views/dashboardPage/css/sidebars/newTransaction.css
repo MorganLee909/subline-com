@@ -1,0 +1,27 @@
+.newTransaction{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    .newTransaction > h2{
+        text-align: center;
+    }
+
+    .newTransactionRecipes{
+        width: 100%;
+        height: 90%;
+        overflow-y: auto;
+    }
+
+    .newTransactionRecipe{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        margin: 10px 0;
+        padding: 5px 0;
+        font-weight: bold;
+        font-size: 17px;
+    }

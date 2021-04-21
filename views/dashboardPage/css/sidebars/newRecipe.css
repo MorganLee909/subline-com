@@ -1,0 +1,67 @@
+#addRecipe{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 50px;
+}
+
+    .recipeBasicInfo{
+        width: 75%;
+        background: rgb(240, 252, 255);
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid black;
+    }
+
+        .recipeBasicInfo label{
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+
+        .recipeBasicInfo input{
+            width: 50%;
+        }
+
+    #addRecipe h2{
+        margin-top: 10px;
+    }
+
+    #recipeInputIngredients{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        margin: 0 0 25px 0;
+        width:100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-shadow: 0 0 2px gray;
+        border-radius: 5px;
+    }
+
+        #recipeInputIngredients div{
+            width: 75%;
+            background: rgb(240, 252, 255);
+            border: 1px solid black;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 10px 15px;
+            text-align: center;
+        }
+
+            #recipeInputIngredients div > label{
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 2px;
+            }
+
+            #recipeInputIngredients input{
+                width: 100px;
+            }
+
+            #recipeInputIngredients div h4{
+                color: rgb(255, 99, 107);
+            }

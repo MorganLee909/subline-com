@@ -1,0 +1,28 @@
+#orderDetails{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    .orderDiv{
+        width: 50%;
+    }
+
+        .subOrderDiv{
+            display: flex;
+            justify-content: space-between;
+        }
+
+    #orderIngredients{
+        width: 90%;
+        overflow: auto;
+    }
+
+    #orderTotalPrice{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 25px;
+        font-weight: bold;
+    }

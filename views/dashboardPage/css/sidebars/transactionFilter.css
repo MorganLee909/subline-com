@@ -1,0 +1,25 @@
+.transactionFilter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #transFilterRecipeList{
+        width: 100%;
+        max-height: 50%;
+        overflow-y: auto;
+    }
+
+        #transFilterRecipeList .choosable{
+            background:rgb(240, 252, 255);
+            justify-content: left;
+        }
+
+        #transFilterRecipeList .choosable:hover{
+            background: rgb(179, 191, 209);
+        }
+
+        #transFilterRecipeList .active{
+            background:rgb(179, 191, 209);
+        }

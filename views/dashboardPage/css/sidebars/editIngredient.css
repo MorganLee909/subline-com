@@ -1,0 +1,41 @@
+#editIngredient{
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+    #editIngredient label{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .unitbuttons{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+
+        .unitButton{
+            margin: 5px;
+            padding: 5px;
+            background: rgb(179, 191, 209);
+            border: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: rgb(255, 99, 107);
+        }
+
+            .unitButton:hover{
+                background: rgb(240, 252, 255);
+            }
+
+            .unitActive{
+                background: rgb(0, 27, 45);
+            }
+
+                .unitActive:hover{
+                    background: rgb(0, 27, 45);
+                    cursor: default;
+                }
