@@ -5,86 +5,70 @@
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
-        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
-        <link rel="stylesheet" href="/shared/shared.css">
-        <link rel="stylesheet" href="/verifyPage/verify.css">
+        <link rel="stylesheet" href="/verifyPage/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div class="header">
-            <a class="headerStart" href="/" >
-                <img src="/shared/images/logo.png" alt="Subline">
-                <div class='headerLogo'>THE SUBLINE</div>
-            </a>
-        
-            <div class="headerEnd">
-                <a id="helpLink" class="headerHide" href="/help">HELP</a>
-        
-                <a id="privacyPolicyLink" class="headerHide" href="/privacy">PRIVACY POLICY</a>
-        
-                <a id="termsLink" class="headerHide" href="/terms">TERMS AND CONDITIONS</a>        
-            </div>
-        </div>
-
         <% include ../shared/banner.ejs %>
+        
+        <form action="/verify/resend" method="post">
+            <h3>An email has been sent to <%=email%>. Use the link in the email to verify your account.</h3>
 
-        <h1 class="title">An email has been sent to <%=email%>.  Use the link in the email to verify your account.</h1>
+            <h3>If you didnt recieve an email or need to change your email address, enter it below and click submit.</h3>
 
-        <p class="text">If you did not recieve an email or need to change your email address, enter it below and click submit.</p>
-
-        <form class="form" action="/verify/resend" method="post">
-            <input class="email" name="email" type="email" required>
+            <input name="email" type="email" placeholder="EMAIL" required>
 
             <input name="id" type="hidden" value="<%=id%>">
 
-            <input class="button" type="submit" value="SUBMIT">
+            <input type="submit" value="SUBMIT">
         </form>
-    </body>
+
+        <script>
+            let locals = <%- JSON.stringify(locals) %>
     
-    <script>
-        let locals = <%- JSON.stringify(locals) %>
-
-        if(locals.banner !== undefined){
-            let bannerElem = document.getElementById("banner");
-            bannerElem.children[0].style.background = locals.banner.color;
-            bannerElem.children[1].innerText = locals.banner.message;
-            bannerElem.style.display = "flex";
-
-            switch(banner.type){
-                case "error":
-                    bannerElem.children[0].innerHTML = `
-                        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="15" y1="9" x2="9" y2="15"></line>
-                            <line x1="9" y1="9" x2="15" y2="15"></line>
-                        </svg>
-                    `;
-                    break;
-                case "success":
-                    bannerElem.children[0].innerHTML = `
-                        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                    `;
-                    break;
-                default: 
-                    bannerElem.children[0].innerHTML = `
-                        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                    `;
+            if(locals.banner !== undefined){
+                let bannerElem = document.getElementById("banner");
+                bannerElem.children[0].style.background = locals.banner.color;
+                bannerElem.children[1].innerText = locals.banner.message;
+                bannerElem.style.display = "flex";
+    
+                switch(banner.type){
+                    case "error":
+                        bannerElem.children[0].innerHTML = `
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
+                        `;
+                        break;
+                    case "success":
+                        bannerElem.children[0].innerHTML = `
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        `;
+                        break;
+                    default: 
+                        bannerElem.children[0].innerHTML = `
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        `;
+                }
+    
+                let timer = setTimeout(()=>{
+                    bannerElem.style.display = "none"
+                }, 7000);
+    
+                bannerElem.children[2].onclick = ()=>{
+                    bannerElem.style.display = "none";
+                    clearTimeout(timer);
+                }
             }
-
-            let timer = setTimeout(()=>{
-                bannerElem.style.display = "none"
-            }, 7000);
-
-            bannerElem.children[2].onclick = ()=>{
-                bannerElem.style.display = "none";
-                clearTimeout(timer);
-            }
-        }
-    </script>
+        </script>
+    </body>
 </html>
