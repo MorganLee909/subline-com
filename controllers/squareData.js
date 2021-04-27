@@ -127,8 +127,18 @@ module.exports = {
                 return Promise.all([items, location]);
             })
             .then((response)=>{
-                if(owner.email === response[1].data.location.business_email) merchant.status = [];
-                merchant.name = response[1].data.location.name;
+                let location = response[1].data.location;
+                if(owner.email === location.business_email) merchant.status = [];
+                merchant.name = location.name;
+
+                merchant.address = {
+                    country: location.address.country,
+                    state: location.address.administrative_district_level_1,
+                    city: location.address.locality,
+                    street: location.address.address_line_1,
+                    postalCode: location.address.postal_code,
+                    timeZone: location.timezone
+                };
                 
                 let recipes = helper.createRecipesFromSquare(response[0].data.objects, merchant._id);
                 merchant.recipes = recipes;
