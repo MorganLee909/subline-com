@@ -1,37 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
-        <link rel="stylesheet" href="/passwordResetPages/passwordReset.css">
-        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="/passwordResetPages/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
     </head>
     <body>
-        <div class="header">
-            <a class="headerStart" href="/" >
-                <img src="/shared/images/logo.png" alt="Subline">
-                <div class='headerLogo'>THE SUBLINE</div>
-            </a>
-        
-            <div class="headerEnd">
-                <a id="helpLink" class="headerHide" href="/help">HELP</a>
-        
-                <a id="privacyPolicyLink" class="headerHide" href="/privacy">PRIVACY POLICY</a>
-        
-                <a id="termsLink" class="headerHide" href="/terms">TERMS AND CONDITIONS</a>        
-            </div>
-        </div>
+        <form action="/reset/email" method="post">
+            <h1>Enter your email:</h1>
 
-        <h1 class="title">Enter your email to reset your password</h1>
+            <input name="email" type="email" placeholder="email">
 
-        <form class="form" action="/reset/email" method="post">
-            <input class="formInput" name="email" type="email" placeholder="email">
+            <input type="submit" value="SEND EMAIL">
 
-            <input class="button" type="submit" value="SEND EMAIL">
+            <a href="/login">CANCEL</a>
+
+            <p>*An email will be sent to you shortly with instructions on reseting your password. If you don't recieve an email with one minute, then try again.</p>
         </form>
-
-        <p class="text">An email will be sent to you shortly with instructions on reseting your password.  If you don't recieve an email within one minute, then try again.</p>
     </body>
 </html>

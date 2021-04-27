@@ -44,32 +44,32 @@ module.exports = {
     },
 
     resetPassword: function(req, res){
-        Merchant.findOne({_id: req.body.id})
-            .then((merchant)=>{
-                if(merchant.session.sessionId !== req.body.code){
-                    req.session.error = "YOUR ACCOUNT COULD NOT BE VERIFIED.  PLEASE CONTACT US IF THE PROBLEM PERSISTS.";
+        Owner.findOne({_id: req.body.id})
+            .then((owner)=>{
+                if(owner.session.sessionId !== req.body.code){
+                    req.session.error = "YOUR ACCOUNT COULD NOT BE VERIFIED. PLEASE CONTACT US IF THE PROBLEM PERSISTS.";
                     return res.redirect("/");
                 }
 
                 if(req.body.password !== req.body.confirmPassword){
                     req.session.error = "PASSWORDS DO NOT MATCH";
-                    return res.redirect(`/reset/${merchant._id}/${merchant.session.sessionId}`);
+                    return res.redirect(`/reset/${owner._id}/${owner.session.sessionId}`);
                 }
 
                 if(req.body.password.length < 10){
                     req.session.error = "PASSWORD MUST CONTAIN AT LEAST 10 CHARACTERS";
-                    return res.redirect(`/reset/${merchant._id}/${merchant.session.sessionId}`);
+                    return res.redirect(`/reset/${owner._id}/${owner.session.sessionId}`);
                 }
 
                 const salt = bcrypt.genSaltSync(10);
                 const hash = bcrypt.hashSync(req.body.password, salt);
 
-                merchant.password = hash;
+                owner.password = hash;
 
-                return merchant.save();
+                return owner.save();
             })
-            .then((merchant)=>{
-                if(merchant !== undefined){
+            .then((owner)=>{
+                if(owner !== undefined){
                     req.session.success = "PASSWORD SUCCESSFULLY UPDATED.  PLEASE LOG IN";
                     return res.redirect("/login");
                 }
@@ -80,7 +80,7 @@ module.exports = {
                 }else if(err.name === "ValidationError"){
                     req.session.error = err.errors[Object.keys(err.errors)[0]].properties.message;
                 }else{
-                    req.session.error = "ERROR: UNABLE TO UPDATE YOUR PASSWORD AT THIS TIME";
+                    req.session.error = "ERROR: UNABLE TO UPDATE YOUR PASSWORD";
                 }
                 return res.redirect("/");
             });
