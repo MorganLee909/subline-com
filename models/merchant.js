@@ -25,6 +25,7 @@ const MerchantSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
+    address: Object,
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
