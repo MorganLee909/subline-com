@@ -24,6 +24,11 @@ let sessionOptions = {
     resave: false,
 };
 
+let cssOptions = {
+    recursive: true,
+    miminize: false
+};
+
 app.use(express.static(__dirname + "/views"));
 let httpsServer = {};
 if(process.env.NODE_ENV === "production"){
@@ -42,6 +47,7 @@ if(process.env.NODE_ENV === "production"){
 
     sessionOptions.domain = process.env.COOKIE_DOMAIN;
     sessionOptions.secure = true;
+    cssOptions.minimize = true;
 }
 
 app.use(compression());
@@ -54,12 +60,12 @@ cssmerger([
     "./views/shared/css/general.css",
     "./views/shared/css/loader.css",
     "./views/dashboardPage/css"
-], "./views/dashboardPage/bundle.css");
+], "./views/dashboardPage/bundle.css", cssOptions);
 
 cssmerger([
     "./views/shared/css/",
     "./views/otherPages/style.css"
-], "./views/otherPages/bundle.css");
+], "./views/otherPages/bundle.css", cssOptions);
 
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT, ()=>{});
