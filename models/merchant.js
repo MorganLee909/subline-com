@@ -25,7 +25,14 @@ const MerchantSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
-    address: Object,
+    address: {
+        country: String,
+        state: String,
+        city: String,
+        street: String,
+        postalCode: String,
+        timeZone: String
+    },
     inventory: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
