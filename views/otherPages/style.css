@@ -4,9 +4,8 @@ form{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 2px solid rgb(0, 27, 45);
-    padding: 30px;
-    border-radius: 10px;
+    border: 1px solid black;
+    padding: 25px;
     background: rgb(240, 252, 255);
     font-size: 16px;
     margin-top: 40px;

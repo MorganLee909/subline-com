@@ -49,28 +49,28 @@ input[type=submit]{
         background: rgb(240, 252, 255);
     }
 
-    a{
-        display: initial;
-        background: rgb(255, 99, 107);
-        border: none;
-        text-decoration: none;
-        padding: 10px 25px;
-        color: black;
-        cursor: pointer;
-        text-align: center;
-        font-size: 15px;
-        min-width: 100px;
-        margin: 5px;
-        max-height: 52px;
+a{
+    display: initial;
+    background: rgb(255, 99, 107);
+    border: none;
+    text-decoration: none;
+    padding: 10px 25px;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+    font-size: 15px;
+    min-width: 100px;
+    margin: 5px;
+    max-height: 52px;
+}
+
+    a:hover{
+        background: rgb(255, 129, 137);
     }
-    
-        a:hover{
-            background: rgb(255, 129, 137);
-        }
-    
-        a:active{
-            background: rgb(240, 252, 255);
-        }
+
+    a:active{
+        background: rgb(240, 252, 255);
+    }
 
 #bannerContainer{
     display: flex;

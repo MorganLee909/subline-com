@@ -1,0 +1,137 @@
+*{margin:0;padding:0;font-family:'Saira',sans-serif;}
+
+html, body{
+    width: 100vw;
+    max-width: 100%;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: rgb(0, 27, 45);
+    height: 75px;
+    padding: 0 25px;
+    box-sizing: border-box;
+}
+
+    .headerStart{
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+        .headerLogo{
+            color: white;
+            font-size: 25px;
+            margin-left: 10px;
+        }
+
+        .headerStart img{
+            max-height: 90%;
+        }
+
+    .headerEnd{
+        display: flex;
+        align-items: center;
+        height: 100%;
+        color: white;
+    }
+
+        .link{
+            margin: 10px;
+            color: white;
+        }
+
+        .enterButton{
+            background: rgb(179, 191, 209);
+            border: none;
+            text-decoration: none;
+            padding: 10px 25px;
+            color: black;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            min-width: 100px;
+            margin: 5px;
+            max-height: 52px;
+        }
+
+            .enterButton:hover{
+                background: rgb(240, 252, 255);
+                color:black;
+            }
+
+            .enterButton:active{
+                background: rgb(0, 27, 45);
+            }
+
+.main-background{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("/shared/images/backgroundImg01.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 88vh;
+    width: 100%;
+    color: rgb(0, 27, 45);
+}
+
+    .logo-text{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 50vw;
+    }
+
+        .logo-text img{
+            max-height: 25vh;
+            margin-bottom: 35px;
+        }
+
+        .logo-text p{
+            font-weight: bold;
+            font-size: 25px;
+            color: rgb(255, 99, 107);
+            text-align: center;
+        }
+
+.more-info{
+    width: 100%;
+    padding: 75px;
+    background:rgb(0, 27, 45);
+    color: white;
+    box-sizing: border-box;
+    text-align: justify;
+    font-size: 25px;
+}
+
+    .more-info > *{
+        margin: 15px;
+    }
+
+    .line-break{
+        width: 100%;
+        border: 1px solid rgb(255, 99, 107);
+        margin: 30px 0;
+    }
+
+    .more-info h1{
+        color: rgb(255, 99, 107);
+        text-align: center;
+        font-size: 45px;
+        margin: 25px 0;
+    }
+
+    ul > *{
+        margin: 15px 0;
+    }
+
+    ul span{
+        color: rgb(255, 99, 107);
+    }
+
+    li{
+        font-size: 20px;
+    }
