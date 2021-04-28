@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <title>The Subline</title>
         <link rel="icon" type="img/png" href="/shared/images/logo.png">
-        <link rel="stylesheet" href="/otherPages/bundle.css">
+        <link rel="stylesheet" href="/otherPages/style2.css">
         <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
     </head>
-    <body id="login">
+    <body id="login" class="main-background">
         <div class="header">
             <a class="headerStart" href="/" >
                 <img src="/shared/images/logo.png" alt="Subline">
@@ -19,7 +19,7 @@
 
         <form action="/login" method="post">
             <h1> Welcome Back </h1>
-    
+
             <label>Email
                 <input type="email" name="email" required>
             </label>
@@ -30,9 +30,9 @@
     
             <input id="signIn" type="submit" value="Sign In">
             
-            <a href="/reset/email" class="link">Forgot your password?</a>
+            <a href="/reset/email">Forgot your password?</a>
 
-            <a class="link" href="/register">Need to register?</a>
+            <a href="/register">Need to register?</a>
         </form>
 
         <% include ../shared/footer %>
