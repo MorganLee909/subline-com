@@ -6,7 +6,6 @@
 }
 
     #categoryList{
-        align-items:center;
         overflow-y: auto;
         width: 80%;
     }
@@ -30,7 +29,7 @@
         padding: 20px 0 20px 100px;
         background: rgb(0, 27, 45);
         flex-grow: 1;
-        color: rgb(255, 99, 107);
+        color: white;
         margin-right: 25px
     }
 

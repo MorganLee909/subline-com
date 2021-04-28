@@ -39,7 +39,8 @@
     }
 
     .menuHead p{
-        margin-left: 25px;
+        margin-left: 10px;
+        font-size: 20px;
     }
 
     .menuHead button{
@@ -70,7 +71,7 @@
         align-items: center;
         background: none;
         border-style: none;
-        color: rgb(255, 99, 107);
+        color: white;
         font-size: 18px;
         margin: 15px 0;
         padding-left: 15px;
@@ -94,11 +95,13 @@
 
         .menuButton:hover{
             background: rgb(179, 191, 209);
+            color: black;
         }
 
     .menu > .active{
         background: rgb(240, 252, 255);
         cursor: default;
+        color: black;
     }
 
     .menu > .active:hover{

@@ -59,6 +59,7 @@ require("./routes")(app);
 cssmerger([
     "./views/shared/css/general.css",
     "./views/shared/css/loader.css",
+    "./views/shared/css/banner.css",
     "./views/dashboardPage/css"
 ], "./views/dashboardPage/bundle.css", cssOptions);
 

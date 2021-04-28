@@ -19,6 +19,7 @@
 
         #orderFilterIngredients .choosable{
             background: rgb(240, 252, 255);
+            color: black;
             justify-content: left;
         }
 

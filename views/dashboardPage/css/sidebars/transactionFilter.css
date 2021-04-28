@@ -14,6 +14,7 @@
         #transFilterRecipeList .choosable{
             background:rgb(240, 252, 255);
             justify-content: left;
+            color: black;
         }
 
         #transFilterRecipeList .choosable:hover{

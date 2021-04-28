@@ -69,10 +69,10 @@ let ingredients = {
 
     toggleCategory: function(div, button){
         if(div.style.display === "none"){
-            button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgb(255, 99, 107)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+            button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>';
             div.style.display = "flex";
         }else if(div.style.display === "flex"){
-            button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgb(255, 99, 107)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+            button.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
             div.style.display = "none";
         }
     },
