@@ -8,14 +8,15 @@ const cssmerger = require("cssmerger");
 
 const app = express();
 
-mongoose.connect(`mongodb://subline:${process.env.SUBLINE_DB_PASS}@localhost:27017/inventory-management?authSource=admin`, {
+app.set("view engine", "ejs");
+
+let mongooseOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
-    useCreateIndex: true
-});
-
-app.set("view engine", "ejs");
+    useCreateIndex: true,
+    dbName: "inventory-management"
+};
 
 let sessionOptions = {
     secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superb.",
@@ -48,7 +49,12 @@ if(process.env.NODE_ENV === "production"){
     sessionOptions.domain = process.env.COOKIE_DOMAIN;
     sessionOptions.secure = true;
     cssOptions.minimize = true;
+    mongooseOptions.auth = {authSource: "admin"};
+    mongooseOptions.user = "website";
+    mongooseOptions.pass = process.env.MONGODB_PASS;
 }
+
+mongoose.connect(`mongodb://127.0.0.1:27017/inventory-management`, mongooseOptions);
 
 app.use(compression());
 app.use(express.urlencoded({extended: true}));
