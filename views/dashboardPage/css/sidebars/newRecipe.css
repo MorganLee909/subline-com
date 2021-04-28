@@ -18,6 +18,7 @@
             display: flex;
             justify-content: space-between;
             margin: 15px 0;
+            color: black;
         }
 
         .recipeBasicInfo input{
@@ -56,6 +57,7 @@
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 2px;
+                color: black;
             }
 
             #recipeInputIngredients input{
