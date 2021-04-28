@@ -62,11 +62,6 @@ cssmerger([
     "./views/dashboardPage/css"
 ], "./views/dashboardPage/bundle.css", cssOptions);
 
-cssmerger([
-    "./views/shared/css/",
-    "./views/otherPages/style.css"
-], "./views/otherPages/bundle.css", cssOptions);
-
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT, ()=>{});
 }

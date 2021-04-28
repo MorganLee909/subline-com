@@ -1,237 +1,287 @@
-*{margin:0;padding:0}
+*{margin:0;padding:0;font-family:'Saira',sans-serif;}
 
-form{
+html, body{
+    width: 100vw;
+    max-width: 100%;
+}
+
+.header{
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border: 1px solid black;
-    padding: 25px;
-    background: rgb(240, 252, 255);
-    font-size: 16px;
-    margin-top: 40px;
-    width: 550px;
-    justify-content: space-evenly;
-    height: auto;
+    justify-content: space-between;
+    width: 100%;
+    background: rgb(0, 27, 45);
+    height: 75px;
+    padding: 0 25px;
+    box-sizing: border-box;
 }
 
-    input[type=text], input[type=password], input[type=email], select {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-    
-    input[type=submit] {
-        width: 100%;
-        background-color:rgb(255, 99, 107);
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 22px;
+    .headerStart{
+        display: flex;
+        align-items: center;
+        text-decoration: none;
     }
 
-    input[type=submit]:hover {
-        background: rgb(243, 77, 86);
+        .headerLogo{
+            color: white;
+            font-size: 25px;
+            margin-left: 10px;
+        }
+
+        .headerStart img{
+            max-height: 90%;
+        }
+
+    .headerEnd{
+        display: flex;
+        align-items: center;
+        height: 100%;
         color: white;
     }
 
-    input[type=text]:focus, input[type=password]:focus {
-        border: 2px solid #555;
-        outline: none;
-    }
+        .link{
+            margin: 10px;
+            color: white;
+        }
 
-#logInButton, #joinButton{
-    color: white;
-}
+        .enterButton{
+            background: rgb(179, 191, 209);
+            border: none;
+            text-decoration: none;
+            padding: 10px 25px;
+            color: black;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            min-width: 100px;
+            margin: 5px;
+            max-height: 52px;
+        }
 
-#squareButton{
+            .enterButton:hover{
+                background: rgb(240, 252, 255);
+                color:black;
+            }
+
+            .enterButton:active{
+                background: rgb(0, 27, 45);
+            }
+
+.main-background{
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid black;
-    background: white;
-    color: black;
+    background-image: url("/shared/images/backgroundImg01.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 88vh;
+    width: 100%;
+    color: rgb(0, 27, 45);
 }
 
-    #squareButton:hover{
-        color: white;
-        background: black;
-    }
-
-/* Public Strand */
-#publicStrand{
-    display: flex;
-    flex-direction: column;
-}
-
-    .main-background{
+    .logo-text{
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        background-image: url("/shared/images/backgroundImg01.jpg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        height: 88vh;
-        width: 100%;
-        color: rgb(0, 27, 45);
+        max-width: 50vw;
     }
 
-        .public-buttons{
-            position: absolute;
-            right: 50px;
-            top: 80px;
+        .logo-text img{
+            max-height: 25vh;
+            margin-bottom: 35px;
         }
-            
-            .public-buttons *{
-                margin: 10px;
-            }
 
-        .logo-text{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            max-width: 50vw;
+        .logo-text p{
+            font-weight: bold;
+            font-size: 25px;
+            color: rgb(255, 99, 107);
             text-align: center;
         }
 
-            .logo-text img{
-                max-height: 25vh;
-                margin-bottom: 50px;
-            }
+.more-info{
+    width: 100%;
+    padding: 75px;
+    background:rgb(0, 27, 45);
+    color: white;
+    box-sizing: border-box;
+    text-align: justify;
+    font-size: 25px;
+}
 
-            .logo-text p{
-                font-weight: bold;
-                font-size: 25px;
-                color: rgb(255, 99, 107);
-            }
-    
-    .more-info{
-        background: rgb(0, 27, 45);
-        color: rgb(201, 201, 201);
-        text-align: center;
-        padding: 75px;
-        border-top: 5px solid black;
+    .more-info > *{
+        margin: 15px;
     }
 
-        .more-info h1{
-            color: rgb(255, 99, 107);
-            margin: 25px;
-            font-size: 45px;
-        }
+    .line-break{
+        width: 100%;
+        border: 1px solid rgb(255, 99, 107);
+        margin: 30px 0;
+    }
 
-        .more-info p{
-            font-size: 25px;
-            color: rgb(201, 201, 201);
-            text-align: justify;
-            padding: 10px;
-        }
+    .more-info h1{
+        color: rgb(255, 99, 107);
+        text-align: center;
+        font-size: 45px;
+        margin: 25px 0;
+    }
 
-        .more-info li{
-            font-size: 20px;
-            color: rgb(201, 201, 201);
-            text-align: justify;
-            padding: 10px;
-        }
+    ul > *{
+        margin: 15px 0;
+    }
 
-        .more-info span{
-            font-weight: bold;
-            color: rgb(255, 99, 107);
-        }
+    ul span{
+        color: rgb(255, 99, 107);
+    }
 
-/*
-Login Page
-*/
+    li{
+        font-size: 20px;
+    }
+
 #login{
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    background-image: url("/shared/images/backgroundImg01.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
     height: 100vh;
 }
 
-/*
-RegisterPage
-*/
-#register{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-image: url("/shared/images/backgroundImg01.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 91.5vh;
-}
-
-    #agreement{
+    form{
         display: flex;
+        flex-direction: column;
+        padding: 25px;
+        background: rgb(240, 252, 255);
+        border: 1px solid black;
+        min-width: 500px;
     }
 
-        #agreement input{
-            margin-right: 15px;
+        form > *{
+            margin: 5px;
         }
 
-    .customText{
-        margin: 20px auto 0 auto;
-    }
+        form h1{
+            text-align: center;
+        }
 
-    #noneButton{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 35px;
-    }
+        label{
+            display: flex;
+            flex-direction: column;
+        }
 
-/*
-Footer Partial
-*/
-.spacer{
-    flex: 1;
-}
+        .submitButton{
+            background: rgb(0, 27, 45);
+            border: none;
+            text-decoration: none;
+            padding: 10px 25px;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            min-width: 100px;
+            margin: 5px;
+            max-height: 52px;
+        }
+        
+            .submitButton:hover{
+                background: rgb(179, 191, 209);
+                color:black;
+            }
+        
+            .submitButton:active{
+                background: rgb(240, 252, 255);
+            }
+
+        form a{
+            text-align: center;
+            color: gray;
+            margin: 5px;
+            font-size: 20px;
+        }
 
 .footer{
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: fixed;
-    bottom: 0;
     padding: 10px;
     background: rgb(240, 252, 255);
     width: 100%;
     box-sizing: border-box;
 }
 
-    .footer > *{
-        margin: 5px;
-    }
-
     .footer div > *{
-        margin: 0 25px;
+        margin: 0 10px;
     }
 
-@media screen and (max-width: 600px){
-    .logo-text img{
-        max-height: 20vh;
-    }
-
-    .logo-text p{
-        font-size: 20px;
-    }
-
-    .more-info{
-        padding: 25px;
-    }
-
-    .public-buttons{
-        right: 25vw;
-    }
+#register{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
 }
+
+    #agreement{
+        flex-direction: row;
+    }
+
+    #agreement p{
+        margin-left: 10px;
+    }
+
+    .customText{
+        text-align: center;
+    }
+
+    #squareButton{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+        background: white;
+        color: black;
+        height: 44px;
+        cursor: pointer;
+    }
+    
+        #squareButton:hover{
+            color: white;
+            background: black;
+        }
+
+.banner{
+    display: flex;
+    width: 75%;
+    height: 65px;
+    margin: 10px auto;
+    box-shadow: 0 0 10px black;
+    border: 2px solid black;
+    background: white;
+    position: fixed;
+}
+
+    .banner > div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 25%;
+        color: white;
+    }
+
+    .banner > p{
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        width: 75%;
+        padding-left: 10px;
+    }
+
+    .banner > button{
+        background: none;
+        border: none;
+        height: 20px;
+        position: relative;
+        top: -10px;
+        right: -10px;
+        cursor: pointer;
+        color: white;
+        pointer-events: all;
+    }
