@@ -2,9 +2,9 @@ let newIngredient = {
     display: function(){
         const selector = document.getElementById("unitSelector");
 
-        document.getElementById("newIngName").value = "";
-        document.getElementById("newIngCategory").value = "";
-        document.getElementById("newIngQuantity").value = 0;
+        document.getElementById("newIngName").placeholder = "NAME";
+        document.getElementById("newIngCategory").placeholder = "CATEGORY";
+        document.getElementById("newIngQuantity").placeholder = "QUANTITY";
         document.getElementById("bottleSizeLabel").style.display = "none";
         selector.value = "g";
 
