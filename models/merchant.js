@@ -26,12 +26,15 @@ const MerchantSchema = new mongoose.Schema({
         default: new Date()
     },
     address: {
-        country: String,
-        state: String,
+        full: String,
         city: String,
-        street: String,
-        postalCode: String,
-        timeZone: String
+        state: String,
+        zip: String
+    },
+    location: {
+        type: {type: String},
+        coordinates: [],
+        required: false
     },
     inventory: [{
         ingredient: {
