@@ -1,18 +1,24 @@
 #addRecipe{
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-bottom: 50px;
+    height: 100%;
 }
 
-    /* #addRecipe .choosable{
+    #addRecipe .choosable{
+        display: flex;
+        justify-content: left;
         background: rgb(240, 252, 255);
-    } */
+        color: black;
+    }
 
     #newRecipeContent{
         display: flex;
+        flex-grow: 10;
         width: 100%;
+        max-height: 85%;
         padding: 10px;
     }
 
@@ -22,9 +28,54 @@
             height: 100%;
             overflow-y: auto;
             padding: 10px;
+            box-sizing: border-box;
         }
 
         #newRecipeData{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
             width: 60%;
             padding: 10px;
+            box-sizing: border-box;
         }
+
+            #newRecipeDataInputs{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #newRecipeDataInputs > *{
+                margin: 5px 0;
+            }
+
+            #newRecipeChosenList{
+                height: 75%;
+                box-sizing: border-box;
+                overflow-y: auto;
+            }
+
+                .newRecipeChosenIngredient{
+                    width: 95%;
+                    margin: 15px auto;
+                }
+
+                    .newRecipeChosenIngredient div{
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+
+                    .newRecipeChosenIngredient button{
+                        padding: 0;
+                        margin: 0 5px;
+                        max-height: none;
+                        min-width: none;
+                    }
+
+                    .newRecipeChosenIngredient input{
+                        width: 100%;
+                    }

@@ -14,7 +14,7 @@ let newRecipe = {
     populateChoices: function(){
         this.unchosen.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
-        let list = document.getElementById("recipeChoicesList");
+        let list = document.getElementById("recipeChoices");
         while(list.children.length > 0){
             list.removeChild(list.firstChild);
         }
@@ -34,13 +34,13 @@ let newRecipe = {
 
     add: function(ingredient){
         let element = document.getElementById("newRecipeChosenIngredient").content.children[0].cloneNode(true);
-        element.children[0].children[0].innerText = ingredient.name;
-        element.children[0].children[1].onclick = ()=>{
+        element.children[0].innerText = ingredient.name;
+        element.children[1].children[0].placeholder = `QUANTITY (${ingredient.unit.toUpperCase()})`;
+        element.children[1].children[1].onclick = ()=>{
             this.unchosen.push(ingredient);
             element.parentElement.removeChild(element);
             this.populateChoices();
         };
-        element.children[1].placeholder = `UNIT (${ingredient.unit.toUpperCase()})`;
         document.getElementById("newRecipeChosenList").appendChild(element);
     },
 };
