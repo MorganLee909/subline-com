@@ -8,6 +8,7 @@ let newRecipe = {
         document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
         document.getElementById("newRecipeSearch").onkeyup = ()=>{this.populateChoices()};
 
+        this.unchosen = [];
         for(let i = 0; i < merchant.ingredients.length; i++){
             this.unchosen.push(merchant.ingredients[i].ingredient);
         }
