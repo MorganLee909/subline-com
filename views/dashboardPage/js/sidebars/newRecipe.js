@@ -5,6 +5,7 @@ let newRecipe = {
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
 
         document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
+        document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
 
         for(let i = 0; i < merchant.ingredients.length; i++){
             this.unchosen.push(merchant.ingredients[i].ingredient);
@@ -88,6 +89,41 @@ let newRecipe = {
             })
             .catch((err)=>{
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
+    },
+
+    submitSpreadsheet: function(){
+        event.preventDefault();
+        controller.closeModal();
+
+        const file = document.getElementById("spreadsheetInput").files[0];
+        let data = new FormData();
+        data.append("recipes", file);
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipes/create/spreadsheet", {
+            method: "post",
+            body: data
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    merchant.addRecipes(response);
+                    state.updateRecipes();
+
+                    controller.createBanner("ALL RECIPES SUCCESSFULLY CREATED", "success");
+                    controller.openStrand("recipeBook");
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";
