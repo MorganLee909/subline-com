@@ -346,7 +346,28 @@ module.exports = {
 
                 let populateOwner = res.locals.owner.populate("merchants", "name").execPopulate();
 
-                return Promise.all([Recipe.create(recipes), res.locals.owner.save(), merchant.save(), populateOwner]);
+                let baseURL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress/";
+                let address = response[0].data.location.address;
+                let geocode = axios.get(`${baseURL}?address=${address.address_line_1}+${address.locality}+${address.administrative_district_level_1}+${address.postal_code}&benchmark=2020&format=json`);
+
+                return Promise.all([geocode, Recipe.create(recipes), res.locals.owner.save(), populateOwner]);
+            })
+            .then((response)=>{
+                let addressData = response[0].data.result.addressMatches[0];
+
+                merchant.address = {
+                    full: addressData.matchedAddress,
+                    city: addressData.addressComponents.city,
+                    state: addressData.addressComponents.state,
+                    zip: addressData.addressComponents.zip
+                };
+
+                merchant.location = {
+                    type: "Point",
+                    coordinates: [addressData.coordinates.x, addressData.coordinates.y]
+                };
+
+                return merchant.save();
             })
             .then((response)=>{
                 req.session.merchant = merchant._id;

@@ -92,7 +92,7 @@ let account = {
             current: document.getElementById("accountCurrentPassword").value,
             new: document.getElementById("accountNewPassword").value,
             confirm: document.getElementById("accountConfirmPassword").value
-        }
+        };
         
         if(data.new !== data.confirm){
             return controller.createBanner("PASSWORDS DO NOT MATCH");
