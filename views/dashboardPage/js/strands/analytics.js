@@ -22,8 +22,8 @@ let analytics = {
 
             this.populateButtons();
 
-            if(merchant.ingredients.length > 0){
-                this.ingredient = merchant.ingredients[0].ingredient;
+            if(merchant.inventory.length > 0){
+                this.ingredient = merchant.inventory[0].ingredient;
             }
             if(merchant.recipes.length > 0){
                 this.recipe = merchant.recipes[0];
@@ -43,12 +43,12 @@ let analytics = {
             ingredientButtons.removeChild(ingredientButtons.firstChild);
         }
 
-        for(let i = 0; i < merchant.ingredients.length; i++){
+        for(let i = 0; i < merchant.inventory.length; i++){
             let button = document.createElement("button");
-            button.innerText = merchant.ingredients[i].ingredient.name;
+            button.innerText = merchant.inventory[i].ingredient.name;
             button.classList.add("choosable");
             button.onclick = ()=>{
-                this.ingredient = merchant.ingredients[i].ingredient;
+                this.ingredient = merchant.inventory[i].ingredient;
                 this.displayIngredient();
             };
             ingredientButtons.appendChild(button);

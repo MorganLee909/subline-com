@@ -57,7 +57,7 @@ class Merchant{
         ){
         this._name = name;
         this._pos = pos;
-        this._ingredients = [];
+        this._inventory = [];
         this._recipes = [];
         this._transactions = [];
         this._orders = [];
@@ -77,7 +77,7 @@ class Merchant{
                 ingredients[i].ingredient.unitType,
                 ingredients[i].defaultUnit,
                 this,
-                ingredients[i].ingredient.unitSize,
+                ingredients[i].ingredient.unitSize
             );
 
             const merchantIngredient = new MerchantIngredient(
@@ -85,7 +85,7 @@ class Merchant{
                 ingredients[i].quantity,
             );
 
-            this._ingredients.push(merchantIngredient);
+            this._inventory.push(merchantIngredient);
         }
 
         for(let i = 0; i < ingredients.length; i++){
@@ -98,10 +98,10 @@ class Merchant{
             let ingredients = [];
             for(let j = 0; j < recipes[i].ingredients.length; j++){
                 const ingredient = recipes[i].ingredients[j];
-                for(let k = 0; k < this._ingredients.length; k++){
-                    if(ingredient.ingredient === this._ingredients[k].ingredient.id){
+                for(let k = 0; k < this._inventory.length; k++){
+                    if(ingredient.ingredient === this._inventory[k].ingredient.id){
                         ingredients.push({
-                            ingredient: this._ingredients[k].ingredient.id,
+                            ingredient: this._inventory[k].ingredient.id,
                             quantity: ingredient.quantity
                         });
                         break;
@@ -149,8 +149,8 @@ class Merchant{
         return this._pos;
     }
 
-    get ingredients(){
-        return this._ingredients;
+    get inventory(){
+        return this._inventory;
     }
 
     /*
@@ -186,20 +186,20 @@ class Merchant{
             createdIngredient.replaceIngredients(ingredient.ingredients);
 
             const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
-            this._ingredients.push(merchantIngredient);
+            this._inventory.push(merchantIngredient);
         }
     }
 
     removeIngredient(ingredient){
-        const index = this._ingredients.indexOf(ingredient);
+        const index = this._inventory.indexOf(ingredient);
         if(index === undefined) return false;
 
-        this._ingredients.splice(index, 1);
+        this._inventory.splice(index, 1);
     }
 
     getIngredient(id){
-        for(let i = 0; i < this._ingredients.length; i++){
-            if(this._ingredients[i].ingredient.id === id) return this._ingredients[i];
+        for(let i = 0; i < this._inventory.length; i++){
+            if(this._inventory[i].ingredient.id === id) return this._inventory[i];
         }
     }
 
@@ -371,9 +371,9 @@ class Merchant{
         this._orders.splice(index, 1);
 
         for(let i = 0; i < order.ingredients.length; i++){
-            for(let j = 0; j < this._ingredients.length; j++){
-                if(order.ingredients[i].ingredient === this._ingredients[j].ingredient){
-                    this._ingredients[j].updateQuantity(-order.ingredients[i].quantity);
+            for(let j = 0; j < this._inventory.length; j++){
+                if(order.ingredients[i].ingredient === this._inventory[j].ingredient){
+                    this._inventory[j].updateQuantity(-order.ingredients[i].quantity);
                     break;
                 }
             }
@@ -531,11 +531,11 @@ class Merchant{
     categorizeIngredients(){
         let ingredientsByCategory = [];
 
-        for(let i = 0; i < this.ingredients.length; i++){
+        for(let i = 0; i < this._inventory.length; i++){
             let categoryExists = false;
             for(let j = 0; j < ingredientsByCategory.length; j++){
-                if(this.ingredients[i].ingredient.category === ingredientsByCategory[j].name){
-                    ingredientsByCategory[j].ingredients.push(this.ingredients[i]);
+                if(this._inventory[i].ingredient.category === ingredientsByCategory[j].name){
+                    ingredientsByCategory[j].ingredients.push(this._inventory[i]);
 
                     categoryExists = true;
                     break;
@@ -544,8 +544,8 @@ class Merchant{
 
             if(!categoryExists){
                 ingredientsByCategory.push({
-                    name: this.ingredients[i].ingredient.category,
-                    ingredients: [this.ingredients[i]]
+                    name: this._inventory[i].ingredient.category,
+                    ingredients: [this._inventory[i]]
                 });
             }
         }

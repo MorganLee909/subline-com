@@ -197,15 +197,15 @@ let modal = {
             left.appendChild(button);
         }
 
-        for(let i = 0; i < merchant.ingredients.length; i++){
+        for(let i = 0; i < merchant.inventory.length; i++){
             let skip = false;
             for(let j = 0; j < ingredient.subIngredients.length; j++){
-                if(merchant.ingredients[i].ingredient === ingredient.subIngredients[j].ingredient){
+                if(merchant.inventory[i].ingredient === ingredient.subIngredients[j].ingredient){
                     let div = template.cloneNode(true);
-                    div.children[0].innerText = merchant.ingredients[i].ingredient.name;
+                    div.children[0].innerText = merchant.inventory[i].ingredient.name;
                     div.children[1].children[0].value = ingredient.subIngredients[j].quantity;
                     div.children[1].children[1].onclick = ()=>{removeIngredient(div, ingredient.subIngredients[j].ingredient)};
-                    div.ingredient = merchant.ingredients[i].ingredient;
+                    div.ingredient = merchant.inventory[i].ingredient;
                     right.appendChild(div);
                     skip = true;
                     break;
@@ -214,9 +214,9 @@ let modal = {
             if(skip === true) continue;
 
             let button = document.createElement("button");
-            button.innerText = merchant.ingredients[i].ingredient.name;
+            button.innerText = merchant.inventory[i].ingredient.name;
             button.classList.add("choosable");
-            button.onclick = ()=>{addIngredient(button, merchant.ingredients[i].ingredient)};
+            button.onclick = ()=>{addIngredient(button, merchant.inventory[i].ingredient)};
             left.appendChild(button);
         }
 

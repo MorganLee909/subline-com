@@ -91,14 +91,14 @@ let home = {
 
     drawInventoryCheckCard: function(){
         let num;
-        if(merchant.ingredients.length < 5){
-            num = merchant.ingredients.length;
+        if(merchant.inventory.length < 5){
+            num = merchant.inventory.length;
         }else{
             num = 5;
         }
         let rands = [];
         for(let i = 0; i < num; i++){
-            let rand = Math.floor(Math.random() * merchant.ingredients.length);
+            let rand = Math.floor(Math.random() * merchant.inventory.length);
 
             if(rands.includes(rand)){
                 i--;
@@ -115,7 +115,7 @@ let home = {
         for(let i = 0; i < rands.length; i++){
             let ingredientCheck = template.cloneNode(true);
             let input = ingredientCheck.children[1].children[1];
-            const ingredient = merchant.ingredients[rands[i]];
+            const ingredient = merchant.inventory[rands[i]];
 
             ingredientCheck.ingredient = ingredient;
             ingredientCheck.children[0].innerText = ingredient.ingredient.name;

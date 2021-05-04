@@ -9,8 +9,8 @@ let newRecipe = {
         document.getElementById("newRecipeSearch").onkeyup = ()=>{this.populateChoices()};
 
         this.unchosen = [];
-        for(let i = 0; i < merchant.ingredients.length; i++){
-            this.unchosen.push(merchant.ingredients[i].ingredient);
+        for(let i = 0; i < merchant.inventory.length; i++){
+            this.unchosen.push(merchant.inventory[i].ingredient);
         }
 
         this.populateChoices();

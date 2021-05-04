@@ -14,12 +14,12 @@ let newOrder = {
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
-        merchant.ingredients.sort((a, b) => (a.ingredient.name > b.ingredient.name) ? 1 : -1);
-        for(let i = 0; i < merchant.ingredients.length; i++){
+        merchant.inventory.sort((a, b) => (a.ingredient.name > b.ingredient.name) ? 1 : -1);
+        for(let i = 0; i < merchant.inventory.length; i++){
             let ingredient = document.createElement("button");
             ingredient.classList = "choosable";
-            ingredient.innerText = merchant.ingredients[i].ingredient.name;
-            ingredient.onclick = ()=>{this.addIngredient(merchant.ingredients[i], ingredient)};
+            ingredient.innerText = merchant.inventory[i].ingredient.name;
+            ingredient.onclick = ()=>{this.addIngredient(merchant.inventory[i], ingredient)};
             ingredientList.appendChild(ingredient);
         }
 

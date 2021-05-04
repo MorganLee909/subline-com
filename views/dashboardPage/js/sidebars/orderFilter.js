@@ -13,15 +13,15 @@ let orderFilter = {
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
-        for(let i = 0; i < merchant.ingredients.length; i++){
+        for(let i = 0; i < merchant.inventory.length; i++){
             let element = document.createElement("div");
             element.classList.add("choosable");
-            element.ingredient = merchant.ingredients[i].ingredient.id;
+            element.ingredient = merchant.inventory[i].ingredient.id;
             element.onclick = ()=>{this.toggleActive(element)};
             ingredientList.appendChild(element);
 
             let text = document.createElement("p");
-            text.innerText = merchant.ingredients[i].ingredient.name;
+            text.innerText = merchant.inventory[i].ingredient.name;
             element.appendChild(text);
         }
 
