@@ -53,7 +53,8 @@ module.exports = {
                                 await response[0].save();
                             }
 
-                            req.session.merchant = (response[1] === null) ? await Merchant.findOne({_id: response[0].merchants[0]}) : response[1];
+                            let gotMerchant = (response[1] === null) ? await Merchant.findOne({_id: response[0].merchants[0]}) : response[1];
+                            req.session.merchant = gotMerchant._id;
                             req.session.owner = response[0].session.sessionId;
                             return res.redirect("/dashboard");
                         }else{
