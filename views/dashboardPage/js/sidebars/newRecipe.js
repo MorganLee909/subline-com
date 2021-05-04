@@ -6,6 +6,7 @@ let newRecipe = {
 
         document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
         document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
+        document.getElementById("newRecipeSearch").onkeyup = ()=>{this.populateChoices()};
 
         for(let i = 0; i < merchant.ingredients.length; i++){
             this.unchosen.push(merchant.ingredients[i].ingredient);
@@ -16,6 +17,7 @@ let newRecipe = {
 
     populateChoices: function(){
         this.unchosen.sort((a, b) => (a.name > b.name) ? 1 : -1);
+        let searchStr = document.getElementById("newRecipeSearch").value;
 
         let list = document.getElementById("recipeChoices");
         while(list.children.length > 0){
@@ -23,15 +25,17 @@ let newRecipe = {
         }
 
         for(let i = 0; i < this.unchosen.length; i++){
-            let ingredient = document.createElement("button");
-            ingredient.innerText = this.unchosen[i].name;
-            ingredient.classList.add("choosable");
-            ingredient.onclick = ()=>{
-                this.add(this.unchosen[i]);
-                this.unchosen.splice(i, 1);
-                this.populateChoices();
-            };
-            list.appendChild(ingredient);
+            if(searchStr === "" || this.unchosen[i].name.toLowerCase().includes(searchStr)){
+                let ingredient = document.createElement("button");
+                ingredient.innerText = this.unchosen[i].name;
+                ingredient.classList.add("choosable");
+                ingredient.onclick = ()=>{
+                    this.add(this.unchosen[i]);
+                    this.unchosen.splice(i, 1);
+                    this.populateChoices();
+                };
+                list.appendChild(ingredient);
+            }
         }
     },
 
