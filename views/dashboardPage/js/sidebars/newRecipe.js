@@ -4,6 +4,8 @@ let newRecipe = {
     display: function(){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
 
+        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
+
         for(let i = 0; i < merchant.ingredients.length; i++){
             this.unchosen.push(merchant.ingredients[i].ingredient);
         }
@@ -55,10 +57,12 @@ let newRecipe = {
         let ingredients = document.getElementById("newRecipeChosenList").children;
         for(let i = 0; i < ingredients.length; i++){
             data.ingredients.push({
-                ingredient: ingredients[i].ingredient,
-                quantity: ingredients[i].children[0].children[0].value
+                ingredient: ingredients[i].ingredient.id,
+                quantity: ingredients[i].children[1].children[0].value
             })
         }
+
+        console.log(data);
     }
 };
 

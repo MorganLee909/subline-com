@@ -371,6 +371,30 @@ controller = {
         document.getElementById("menu").style.display = "none";
         document.querySelector(".contentBlock").style.display = "flex";
         document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
+    },
+
+    baseUnit(quantity, unit){
+        switch(unit){
+            case "g": return quantity;
+            case "kg": return quantity * 1000;
+            case "oz":  return quantity * 28.3495; 
+            case "lb":  return quantity * 453.5924;
+            case "ml": return quantity / 1000; 
+            case "l": return quantity;
+            case "tsp": return quantity / 202.8842; 
+            case "tbsp": return quantity / 67.6278; 
+            case "ozfl": return quantity / 33.8141; 
+            case "cup": return quantity / 4.1667; 
+            case "pt": return quantity / 2.1134; 
+            case "qt": return quantity / 1.0567; 
+            case "gal": return quantity * 3.7854;
+            case "mm": return quantity / 1000; 
+            case "cm": return quantity / 100; 
+            case "m": return quantity;
+            case "in": return quantity / 39.3701; 
+            case "ft": return quantity / 3.2808;
+            default: return quantity;
+        }
     }
 }
 

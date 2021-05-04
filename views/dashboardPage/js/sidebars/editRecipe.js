@@ -84,14 +84,14 @@ let editRecipe = {
 
                 newIngredient = {
                     ingredient: ingredient.ingredient.id,
-                    quantity: ingredient.convertToBase(quantity)
+                    quantity: controller.baseUnit(quantity, ingredient.ingredient.unit)
                 };
             }else{
                 ingredient = ingredients[i].ingredient;
 
                 newIngredient = {
                     ingredient: ingredient.ingredient.id,
-                    quantity: ingredients[i].ingredient.convertToBase(quantity)
+                    quantity: controller.baseUnit(quantity, ingredient.ingredient.unit)
                 };
             }
 

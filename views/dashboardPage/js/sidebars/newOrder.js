@@ -70,7 +70,7 @@ let newOrder = {
 
             data.ingredients.push({
                 ingredient: ingredients[i].ingredient.ingredient.id,
-                quantity: ingredients[i].ingredient.convertToBase(quantity),
+                quantity: controller.baseUnit(quantity, ingredients[i].ingredient.ingredient.unit),
                 pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
             });
         }

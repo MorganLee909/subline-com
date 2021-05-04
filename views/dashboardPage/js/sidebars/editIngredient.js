@@ -76,7 +76,7 @@ let editIngredient = {
             ingredients: []
         }
 
-        data.quantity = ingredient.convertToBase(quantity);
+        data.quantity = controller.baseUnit(quantity, ingredient.ingredient.unit);
 
         //Get the measurement unit
         let units = document.getElementById("unitButtons");
