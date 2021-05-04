@@ -56,13 +56,42 @@ let newRecipe = {
 
         let ingredients = document.getElementById("newRecipeChosenList").children;
         for(let i = 0; i < ingredients.length; i++){
+            let ingredient = ingredients[i].ingredient;
+
             data.ingredients.push({
-                ingredient: ingredients[i].ingredient.id,
-                quantity: ingredients[i].children[1].children[0].value
-            })
+                ingredient: ingredient.id,
+                quantity: controller.baseUnit(ingredients[i].children[1].children[0].value, ingredient.unit)
+            });
         }
 
-        console.log(data);
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipe/create", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    merchant.addRecipes([response]);
+                    state.updateRecipes();
+
+                    controller.createBanner("RECIPE CREATED", "success");
+                    controller.openStrand("recipeBook");
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 };
 
