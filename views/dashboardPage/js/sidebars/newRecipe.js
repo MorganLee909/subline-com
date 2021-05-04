@@ -41,8 +41,25 @@ let newRecipe = {
             element.parentElement.removeChild(element);
             this.populateChoices();
         };
+        element.ingredient = ingredient;
         document.getElementById("newRecipeChosenList").appendChild(element);
     },
+
+    submit: function(){
+        let data = {
+            name: document.getElementById("newRecipeName").value,
+            price: document.getElementById("newRecipePrice").value,
+            ingredients: []
+        };
+
+        let ingredients = document.getElementById("newRecipeChosenList").children;
+        for(let i = 0; i < ingredients.length; i++){
+            data.ingredients.push({
+                ingredient: ingredients[i].ingredient,
+                quantity: ingredients[i].children[0].children[0].value
+            })
+        }
+    }
 };
 
 module.exports = newRecipe;
