@@ -8,41 +8,11 @@
         </button>
     </div>
 
-    <h1>NEW RECIPE</h1>
-
-    <div class="recipeBasicInfo">
-        <label>NAME:
-            <input id="newRecipeName" type="text">
-        </label>
-
-        <label>PRICE:
-            <input id="newRecipePrice" type="number" step="0.01" min="0">
-        </label>
-
-        <label># OF INGREDIENTS:
-            <input id="ingredientCount" type="number" step="1" min="1">
-        </label>
+    <div id="recipeChoices">
+        <div id="recipeChoicesList"></div>
     </div>
 
-    <h2>INGREDIENTS</h2>
+    <div id="newRecipeData">
 
-    <div id="recipeInputIngredients"></div>
-
-    <template id="recipeInputIngredient">
-        <div class="recipeInputIngredient">
-            <h4></h4>
-
-            <label>INGREDIENT:
-                <select></select>
-            </label>
-
-            <label>QUANTITY:
-                <input type="number" step="0.01" min="0">
-            </label>
-        </div>
-    </template>
-    
-    <button id="submitNewRecipe" class="sidebarButton">CREATE</button>
-
-    <button id="recipeFileUpload" class="linkButton">Or, upload a spreadsheet</button>
+    </div>
 </div>
