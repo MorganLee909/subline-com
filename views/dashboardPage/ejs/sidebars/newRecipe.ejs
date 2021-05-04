@@ -8,11 +8,33 @@
         </button>
     </div>
 
-    <div id="recipeChoices">
-        <div id="recipeChoicesList"></div>
+    <div id="newRecipeContent">
+        <div id="recipeChoices">
+            <div id="recipeChoicesList"></div>
+        </div>
+
+        <div id="newRecipeData">
+            <div>
+                <input id="newRecipeName" type="text" placeholder="NAME">
+
+                <input id="newRecipePrice" type="number" step="0.01" min="0" placeholder="PRICE">
+            </div>
+
+            <div id="newRecipeChosenList"></div>
+
+            <button id="submitNewRecipe" class="sidebarButton">CREATE</button>
+        </div>
     </div>
 
-    <div id="newRecipeData">
+    <template id="newRecipeChosenIngredient">
+        <div class="newRecipeChosenIngredient">
+            <div>
+                <p></p>
 
-    </div>
+                <button class="sidebarButton">REMOVE</button>
+            </div>
+
+            <input type="number" step="0.01" min="0">
+        </div>
+    </template>
 </div>
