@@ -128,25 +128,37 @@ module.exports = {
             })
             .then((response)=>{
                 let location = response[1].data.location;
-                if(owner.email === location.business_email) merchant.status = [];
+                if(owner.email === location.business_email.toLowerCase()) owner.status = [];
                 merchant.name = location.name;
-
-                merchant.address = {
-                    country: location.address.country,
-                    state: location.address.administrative_district_level_1,
-                    city: location.address.locality,
-                    street: location.address.address_line_1,
-                    postalCode: location.address.postal_code,
-                    timeZone: location.timezone
-                };
                 
                 let recipes = helper.createRecipesFromSquare(response[0].data.objects, merchant._id);
                 merchant.recipes = recipes;
+
+                let baseURL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress/";
+                let address = location.address;
+                let geocode = axios.get(`${baseURL}?address=${address.address_line_1}+${address.locality}+${address.administrative_district_level_1}+${address.postal_code}&benchmark=2020&format=json`);
     
-                return Promise.all([Recipe.create(recipes), owner.save(), merchant.save()]);
+                return Promise.all([Recipe.create(recipes), geocode, owner.save()]);
             })
             .then((response)=>{
-                req.session.owner = response[1].session.sessionId;
+                let addressData = response[1].data.result.addressMatches[0];
+
+                merchant.address = {
+                    full: addressData.matchedAddress,
+                    city: addressData.addressComponents.city,
+                    state: addressData.addressComponents.state,
+                    zip: addressData.addressComponents.zip
+                };
+
+                merchant.location = {
+                    type: "Point",
+                    coordinates: [addressData.coordinates.x, addressData.coordinates.y]
+                };
+
+                return merchant.save();
+            })
+            .then((response)=>{
+                req.session.owner = owner.session.sessionId;
                 req.session.merchant = merchant._id;
     
                 res.redirect("/dashboard");
