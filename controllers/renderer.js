@@ -65,8 +65,7 @@ module.exports = {
                     let latest = null;
                     if(transactions.length === 0){
                         let latestTransaction = await Transaction.find({merchant: res.locals.merchant._id}).sort({date: -1}).limit(1);
-                        console.log(latestTransaction);
-                        if(latestTransaction.length > 0) latest = new Date(latest[0].date);
+                        if(latestTransaction.length > 0) latest = new Date(latestTransaction[0].date);
                     }else{
                         latest = new Date(transactions[0].date);
                     }
@@ -129,7 +128,6 @@ module.exports = {
                 return res.render("dashboardPage/dashboard", {owner: res.locals.owner, merchant: res.locals.merchant, transactions: transactions});
             })
             .catch((err)=>{
-                console.log(err);
                 req.session.error = "ERROR: UNABLE TO RETRIEVE DATA";
                 return res.redirect("/");
             });
