@@ -108,6 +108,9 @@
         }
 
             .numberInput button{
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 width: 30%;
                 font-size: 23px;
                 background: rgb(0, 27, 45);
@@ -117,20 +120,11 @@
                 cursor: pointer;
             }
 
-            .numberInput button:first-of-type{
-                border-bottom-left-radius: 5px;
-                border-top-left-radius: 5px;
-            }
-
-            .numberInput button:last-of-type{
-                border-bottom-right-radius: 5px;
-                border-top-right-radius: 5px;
-            }
-
             .numberInput input{
                 width: 55%;
                 font-size: 15px;
                 text-align: center;
+                border: 1px solid black;
             }
 
             .numberInput input::-webkit-outer-spin-button,
