@@ -56,7 +56,7 @@ let newRecipe = {
     submit: function(){
         let data = {
             name: document.getElementById("newRecipeName").value,
-            price: document.getElementById("newRecipePrice").value,
+            price: parseInt(document.getElementById("newRecipePrice").value * 100),
             ingredients: []
         };
 

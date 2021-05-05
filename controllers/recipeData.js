@@ -23,7 +23,7 @@ module.exports = {
         let recipe = new Recipe({
             merchant: res.locals.merchant._id,
             name: req.body.name,
-            price: Math.round(req.body.price * 100),
+            price: req.body.price,
             ingredients: req.body.ingredients
         });
 
