@@ -9,65 +9,9 @@ const verifyEmail = require("../emails/verifyEmail.js");
 const bcrypt = require("bcryptjs");
 const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 const ObjectId = require("mongoose").Types.ObjectId;
+const axios = require("axios");
 
 module.exports = {
-    /*
-    GET: gets a merchant to send back to its owner
-    req.params.id = String (merchant id)
-    response = [Owner, Merchant, [Transaction]];
-    */
-    getMerchant: function(req, res){
-        let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants", "name");
-        let merchant = Merchant.findOne({_id: req.params.id}).populate("inventory.ingredient").populate("recipes");
-
-        let now = new Date();
-        let then = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-        let transactions = Transaction.aggregate([
-            {$match: {
-                merchant: ObjectId(req.params.id),
-                date: {$gte: then}
-            }},
-            {$sort: {date: -1}},
-            {$project: {
-                date: 1,
-                recipes: 1
-            }}
-        ]);
-
-        Promise.all([owner, merchant, transactions])
-            .then((response)=>{
-                if(response[0] === null || response[1] === null) throw "unfound";
-                if(response[1].owner.toString() !== response[0]._id.toString()) throw "permissions";
-
-                let responseOwner = {
-                    _id: response[0]._id,
-                    email: response[0].email,
-                    merchants: response[0].merchants,
-                    name: response[0].name
-                };
-
-                for(let i = 0; i < responseOwner.merchants.length; i++){
-                    if(response[1]._id.toString() === responseOwner.merchants[i]._id.toString()){
-                        responseOwner.merchants.splice(i, 1);
-                        break;
-                    }
-                }
-
-                response[1].owner = undefined;
-                response[1].createdAt = undefined;
-
-                req.session.merchant = response[1]._id;
-
-                return res.json([responseOwner, response[1], response[2]]);
-            })
-            .catch((err)=>{
-                if(err === "unfound") return res.json("UNABLE TO FIND THAT MERCHANT");
-                if(err === "permissions") return res.json("YOU DO NOT HAVE PERMISSION TO DO THAT");
-                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
-            });
-    },
-
     /*
     POST - Create a new merchant with no POS system
     req.body = {
@@ -289,10 +233,12 @@ module.exports = {
     req.body = {
         email: String
         name: String
+        address: String
     },
     response = {
         email: String
-        name: String
+        name: String,
+        address: String
     }
     */
     updateData: async function(req, res){
@@ -315,13 +261,33 @@ module.exports = {
             mailgun.messages().send(mailgunData, (err, body)=>{});
         }
 
+        if(req.body.address !== "", req.body.address !== res.locals.merchant.address.full){
+            let baseURL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress/";
+            let address = req.body.address.replace(/ /g, "+");
+            let geocode = await axios.get(`${baseURL}?address=${address}&benchmark=2020&format=json`);
+            let addressData = geocode.data.result.addressMatches[0];
+            
+            res.locals.merchant.address = {
+                full: addressData.matchedAddress,
+                city: addressData.addressComponents.city,
+                state: addressData.addressComponents.state,
+                zip: addressData.addressComponents.zip
+            };
+
+            res.locals.merchant.location = {
+                type: "Point",
+                coordinates: [addressData.coordinates.x, addressData.coordinates.y]
+            };
+        }
+
         res.locals.owner.name = req.body.name;
 
-        res.locals.owner.save()
-            .then((owner)=>{
+        Promise.all([res.locals.owner.save(), res.locals.merchant.save()])
+            .then(()=>{
                 return res.json({
                     email: res.locals.owner.email,
-                    name: res.locals.owner.name
+                    name: res.locals.owner.name,
+                    address: res.locals.merchant.address.full
                 });
             })
             .catch((err)=>{
@@ -427,6 +393,63 @@ module.exports = {
             .catch((err)=>{
                 if(err === "one") return res.json("YOU CANNOT DELETE YOUR ONLY MERCHANT");
                 return res.json("ERROR: UNABLE TO DELETE THE MERCHANT");
+            });
+    },
+
+    /*
+    GET: gets a merchant to send back to its owner
+    req.params.id = String (merchant id)
+    response = [Owner, Merchant, [Transaction]];
+    */
+    getMerchant: function(req, res){
+        let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants", "name");
+        let merchant = Merchant.findOne({_id: req.params.id}).populate("inventory.ingredient").populate("recipes");
+
+        let now = new Date();
+        let then = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+        let transactions = Transaction.aggregate([
+            {$match: {
+                merchant: ObjectId(req.params.id),
+                date: {$gte: then}
+            }},
+            {$sort: {date: -1}},
+            {$project: {
+                date: 1,
+                recipes: 1
+            }}
+        ]);
+
+        Promise.all([owner, merchant, transactions])
+            .then((response)=>{
+                if(response[0] === null || response[1] === null) throw "unfound";
+                if(response[1].owner.toString() !== response[0]._id.toString()) throw "permissions";
+
+                let responseOwner = {
+                    _id: response[0]._id,
+                    email: response[0].email,
+                    merchants: response[0].merchants,
+                    name: response[0].name
+                };
+
+                for(let i = 0; i < responseOwner.merchants.length; i++){
+                    if(response[1]._id.toString() === responseOwner.merchants[i]._id.toString()){
+                        responseOwner.merchants.splice(i, 1);
+                        break;
+                    }
+                }
+
+                response[1].owner = undefined;
+                response[1].createdAt = undefined;
+
+                req.session.merchant = response[1]._id;
+
+                return res.json([responseOwner, response[1], response[2]]);
+            })
+            .catch((err)=>{
+                if(err === "unfound") return res.json("UNABLE TO FIND THAT MERCHANT");
+                if(err === "permissions") return res.json("YOU DO NOT HAVE PERMISSION TO DO THAT");
+                return res.json("ERROR: UNABLE TO RETRIEVE DATA");
             });
     }
 }

@@ -24,7 +24,7 @@ module.exports = function(app){
     app.get("/resetpassword/*", renderer.displayPassReset);
     
     //Merchant
-    app.get("/merchant/:id", merchantData.getMerchant);
+    
     app.post("/merchant/create/none", merchantData.createMerchantNone);
     app.post("/merchant/add/none", session, merchantData.addMerchantNone);
     app.put("/merchant/ingredients/update", session, merchantData.updateIngredientQuantities); //also updates some data in ingredients
@@ -32,6 +32,7 @@ module.exports = function(app){
     app.put("/merchant/update", session, merchantData.updateData);
     app.put("/merchant/password", session, merchantData.changePassword);
     app.delete("/merchant", session, merchantData.deleteMerchant);
+    app.get("/merchant/:id", merchantData.getMerchant);
 
     //Ingredients
     app.post("/ingredients/create", session, ingredientData.createIngredient);  //also adds to merchant
