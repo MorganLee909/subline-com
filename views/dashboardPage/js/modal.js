@@ -77,7 +77,7 @@ let modal = {
                         response[1].inventory,
                         response[1].recipes,
                         [],
-                        response[1].address,
+                        (response[1].address === undefined) ? "" : response[1].address.full,
                         response[0]
                     );
 
@@ -135,7 +135,7 @@ let modal = {
                         response[1].inventory,
                         response[1].recipes,
                         [],
-                        response[1].address,
+                        (response[1].address === undefined) ? "" : response[1].address.full,
                         response[0]
                     );
 

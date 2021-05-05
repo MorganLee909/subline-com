@@ -144,7 +144,7 @@ let account = {
                         response[1].inventory,
                         response[1].recipes,
                         response[2],
-                        response[1].address,
+                        (response[1].address === undefined) ? "" : response[1].address.full,
                         response[0]
                     );
 
@@ -176,7 +176,7 @@ let account = {
                         response[1].inventory,
                         response[1].recipes,
                         response[2],
-                        response[1].address,
+                        (response[1].address === undefined) ? "" : response[1].address.full,
                         response[0]
                     );
                     state.updateMerchant();
