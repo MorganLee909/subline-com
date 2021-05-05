@@ -36,15 +36,16 @@ let newIngredient = {
                 category: document.getElementById("newIngCategory").value,
                 unitType: options[unitSelector.selectedIndex].getAttribute("type")
             },
-            quantity: quantityValue,
+            quantity: controller.baseUnit(quantityValue, unit),
             defaultUnit: unit
         }
 
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
             newIngredient.ingredient.unitType = document.getElementById("bottleUnits").value;
-            newIngredient.ingredient.unitSize = parseFloat(document.getElementById("bottleSize").value);
+            newIngredient.ingredient.unitSize = controller.baseUnit(parseFloat(document.getElementById("bottleSize").value), unit);
         }
+        console.log(newIngredient);
     
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
@@ -52,7 +53,7 @@ let newIngredient = {
         fetch("/ingredients/create", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json;charset=utf-8"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(newIngredient)
         })

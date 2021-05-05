@@ -24,7 +24,7 @@ module.exports = {
     createIngredient: function(req, res){
         let newIngredient = {...req.body};
         if(req.body.defaultUnit === "bottle"){
-            newIngredient.ingredient.unitSize = helper.convertQuantityToBaseUnit(newIngredient.ingredient.unitSize, newIngredient.ingredient.unitType);
+            newIngredient.ingredient.unitSize = newIngredient.ingredient.unitSize;
         }
 
         newIngredient = new Ingredient(newIngredient.ingredient);
@@ -37,7 +37,7 @@ module.exports = {
                     defaultUnit: req.body.defaultUnit
                 }
 
-                newIngredient.quantity = helper.convertQuantityToBaseUnit(req.body.quantity, req.body.defaultUnit);
+                newIngredient.quantity = req.body.quantity, req.body.defaultUnit;
 
                 res.locals.merchant.inventory.push(newIngredient);
 
