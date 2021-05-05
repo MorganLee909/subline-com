@@ -53,6 +53,7 @@ class Merchant{
             ingredients,
             recipes,
             transactions,
+            address,
             owner
         ){
         this._name = name;
@@ -61,6 +62,7 @@ class Merchant{
         this._recipes = [];
         this._transactions = [];
         this._orders = [];
+        this._address = address;
         this._owner = {
             id: owner._id,
             email: owner.email,
@@ -151,6 +153,14 @@ class Merchant{
 
     get inventory(){
         return this._inventory;
+    }
+
+    get address(){
+        return this._address;
+    }
+
+    set address(address){
+        this._address = address;
     }
 
     /*

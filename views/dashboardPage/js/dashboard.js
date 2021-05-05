@@ -23,12 +23,14 @@ const modalScript = require("./modal.js");
 
 const Merchant = require("./classes/Merchant.js");
 
+console.log(data);
 window.merchant = new Merchant(
     data.merchant.name,
     data.merchant.pos,
     data.merchant.inventory,
     data.merchant.recipes,
     data.transactions,
+    data.merchant.address.full,
     data.owner
 );
 

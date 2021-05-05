@@ -261,7 +261,7 @@ module.exports = {
             mailgun.messages().send(mailgunData, (err, body)=>{});
         }
 
-        if(req.body.address !== "", req.body.address !== res.locals.merchant.address.full){
+        if(req.body.address !== "", req.body.address.toLowerCase() !== res.locals.merchant.address.full.toLowerCase()){
             let baseURL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress/";
             let address = req.body.address.replace(/ /g, "+");
             let geocode = await axios.get(`${baseURL}?address=${address}&benchmark=2020&format=json`);

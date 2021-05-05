@@ -48,7 +48,7 @@
         }
 
         #accountInformationData{
-            width: 50%;
+            width: 75%;
         }
 
             #accountInformation label{
@@ -56,6 +56,10 @@
                 justify-content: space-between;
                 width: 100%;
                 margin-bottom: 10px;
+            }
+
+            #accountInformation input{
+                width: 75%;
             }
 
     #accountUpdate{

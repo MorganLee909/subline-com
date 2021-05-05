@@ -5,6 +5,7 @@ let account = {
         document.getElementById("accountStrandTitle").innerText = merchant.owner.name;
         document.getElementById("accountEmail").value = merchant.owner.email;
         document.getElementById("accountOwnerName").value = merchant.owner.name;
+        document.getElementById("accountAddress").value = merchant.address;
 
         document.getElementById("accountUpdate").onclick = ()=>{this.updateData()};
         document.getElementById("deleteMerchant").onclick = ()=>{controller.openModal("confirmDeleteMerchant")};
@@ -48,7 +49,8 @@ let account = {
     updateData: function(){
         let data = {
             email: document.getElementById("accountEmail").value,
-            name: document.getElementById("accountOwnerName").value
+            name: document.getElementById("accountOwnerName").value,
+            address: document.getElementById("accountAddress").value
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -73,10 +75,12 @@ let account = {
                     }
 
                     merchant.owner.name = response.name;
+                    merchant.address = response.address;
 
                     document.getElementById("accountOwnerName").value = merchant.owner.name;
                     document.getElementById("accountStrandTitle").innerText = merchant.owner.name;
                     document.getElementById("accountEmail").value = merchant.owner.email;
+                    document.getElementById("accountAddress").value = merchant.address;
                 }
             })
             .catch((err)=>{
@@ -140,6 +144,7 @@ let account = {
                         response[1].inventory,
                         response[1].recipes,
                         response[2],
+                        response[1].address,
                         response[0]
                     );
 
@@ -171,6 +176,7 @@ let account = {
                         response[1].inventory,
                         response[1].recipes,
                         response[2],
+                        response[1].address,
                         response[0]
                     );
                     state.updateMerchant();
