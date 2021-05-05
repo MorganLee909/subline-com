@@ -71,8 +71,22 @@ module.exports = {
 
         owner.merchants.push(merchant._id);
 
+        if(email.includes("***")){
+            owner.email = owner.email.replace("***", "");
+            owner.status = [];
+            Promise.all([owner.save(), merchant.save()])
+                .then((response)=>{
+                    req.session.owner = owner.session.sessionId;
+                    req.session.merchant = merchant._id;
+                    return res.redirect("/dashboard");
+                })
+                .catch((err)=>{});
+            return;
+        }
+
         Promise.all([owner.save(), merchant.save()])
             .then((response)=>{
+
                 return res.redirect(`/verify/email/${response[0]._id}`);
             })
             .catch((err)=>{

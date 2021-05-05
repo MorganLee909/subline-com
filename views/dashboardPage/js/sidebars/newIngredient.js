@@ -45,7 +45,6 @@ let newIngredient = {
             newIngredient.ingredient.unitType = document.getElementById("bottleUnits").value;
             newIngredient.ingredient.unitSize = controller.baseUnit(parseFloat(document.getElementById("bottleSize").value), unit);
         }
-        console.log(newIngredient);
     
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
