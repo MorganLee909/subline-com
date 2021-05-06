@@ -236,7 +236,7 @@ let modal = {
                 });
             }
 
-            console.log(data);
+            // console.log(data);
 
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
@@ -253,7 +253,12 @@ let modal = {
                     if(typeof(response) === "string"){
                         controller.createBanner(response, "error");
                     }else{
-                        console.log(response);
+                        merchant.removeIngredient(ingredient);
+                        merchant.addIngredients([response]);
+                        state.updateIngredients();
+
+                        controller.createBanner(`SUB-INGREDIENTS UPDATED FOR ${ingredient.name}`, "success");
+                        controller.closeModal();
                     }
                 })
                 .catch((err)=>{
@@ -263,11 +268,6 @@ let modal = {
                 .finally(()=>{
                     loader.style.display = "none";
                 });
-
-            // ingredient.replaceIngredients(subIngredients);
-
-            // controller.closeModal();
-            // controller.createBanner("YOUR SUB-INGREDIENTS WILL NOT BE SAVED UNTIL YOU SUBMIT CHANGES", "alert");
         }
     },
 

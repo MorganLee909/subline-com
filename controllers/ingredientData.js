@@ -131,6 +131,7 @@ module.exports = {
         let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
 
         let stack = [];
+        let merchIngredient = {};
         Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
             .then((response)=>{
                 response[0].ingredients = req.body.ingredients;
@@ -158,6 +159,7 @@ module.exports = {
                 for(let i = 0; i < req.body.ingredients.length; i++){
                     for(let j = 0; j < res.locals.merchant.inventory.length; j++){
                         if(res.locals.merchant.inventory[j].ingredient._id.toString() === req.body.ingredients[i].ingredient){
+                            merchIngredient = res.locals.merchant.inventory[j];
                             let ingredient = res.locals.merchant.inventory[j].ingredient;
                             stack = [ingredient];
                             if(ingredient._id.toString() === req.body.id) throw "circular";
@@ -167,10 +169,10 @@ module.exports = {
                     }
                 }
 
-                return response[0].save();
+                return Promise.all([response[0].save(), res.locals.merchant.save()])
             })
-            .then((ingredient)=>{
-                return res.json(ingredient);
+            .then((response)=>{
+                return res.json(merchIngredient);
             })
             .catch((err)=>{
                 if(err === "circular"){
