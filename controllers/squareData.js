@@ -83,7 +83,7 @@ module.exports = {
             client_secret: process.env.SUBLINE_SQUARE_APPSECRET,
             grant_type: "authorization_code",
             code: code,
-        }
+        };
 
         let merchant = {};
         let owner = Owner.findOne({"session.sessionId": req.session.owner}).populate("merchants");
@@ -110,8 +110,8 @@ module.exports = {
                 merchant.locationId = response.data.merchant.main_location_id;
                 owner.name = response.data.merchant.business_name;
 
-                let items = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
-                    object_types: ["ITEM"]
+                let items = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search-catalog-items`, {
+                    enabled_location_ids: [merchant.locationId]
                 }, {
                     headers: {
                         Authorization: `Bearer ${owner.square.accessToken}`
@@ -131,7 +131,7 @@ module.exports = {
                 if(owner.email === location.business_email.toLowerCase()) owner.status = [];
                 merchant.name = location.name;
                 
-                let recipes = helper.createRecipesFromSquare(response[0].data.objects, merchant._id);
+                let recipes = helper.createRecipesFromSquare(response[0].data.items, merchant._id);
                 merchant.recipes = recipes;
 
                 let baseURL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress/";
@@ -328,11 +328,11 @@ module.exports = {
             }
         });
 
-        let recipes = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
-            object_types: ["ITEM"]
+        let recipes = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search-catalog-items`, {
+            enabled_location_ids: [req.params.location]
         }, {
             headers: {
-                "Authorization": `Bearer ${res.locals.owner.square.accessToken}`,
+                Authorization: `Bearer ${res.locals.owner.square.accessToken}`,
                 "Content-Type": "application/json"
             }
         });
@@ -341,7 +341,7 @@ module.exports = {
             .then((response)=>{
                 merchant.name = response[0].data.location.name;
 
-                let recipes = helper.createRecipesFromSquare(response[1].data.objects, merchant._id);
+                let recipes = helper.createRecipesFromSquare(response[1].data.items, merchant._id);
                 merchant.recipes = recipes;
 
                 let populateOwner = res.locals.owner.populate("merchants", "name").execPopulate();
