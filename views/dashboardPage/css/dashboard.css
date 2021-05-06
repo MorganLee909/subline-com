@@ -113,7 +113,7 @@ body{
 
 .lineBorder{
     width: 100%;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid rgb(255, 99, 107);
     margin: 25px;
 }
 
@@ -183,10 +183,12 @@ Multi-strand use classes
 
     .choosable.offColor{
         background: rgb(179, 191, 209);
+        color: black;
     }
 
         .choosable.offColor{
             background: rgb(201, 201, 201);
+            color: black;
         }
 
     .choosable.tall{
@@ -195,12 +197,10 @@ Multi-strand use classes
 
     .choosable:hover{
         background: rgb(179, 191, 209);
-        color: black;
     }
 
     .choosable.active{
         background: rgb(240, 252, 255);
-        color: black;
     }
 
 .searchBar{
