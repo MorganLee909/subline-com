@@ -170,14 +170,6 @@ let modal = {
             right.removeChild(right.firstChild);
         }
 
-        let leftHeader = document.createElement("h3");
-        leftHeader.innerText = "AVAILABLE";
-        left.appendChild(leftHeader);
-
-        let rightHeader = document.createElement("h3");
-        rightHeader.innerText = "SUB INGREDIENTS";
-        right.appendChild(rightHeader);
-
         let addIngredient = (button, ingredient)=>{
             button.parentElement.removeChild(button);
 
@@ -229,7 +221,7 @@ let modal = {
                 ingredients: []
             };
 
-            for(let i = 1; i < right.children.length; i++){
+            for(let i = 0; i < right.children.length; i++){
                 data.ingredients.push({
                     ingredient: right.children[i].ingredient.id,
                     quantity: parseFloat(right.children[i].children[1].children[0].value)
