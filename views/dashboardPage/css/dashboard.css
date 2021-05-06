@@ -167,7 +167,7 @@ Multi-strand use classes
 
 .choosable{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     background: rgb(0, 27, 45);
     color: white;
