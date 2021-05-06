@@ -14,7 +14,7 @@ let modal = {
             title: document.getElementById("feedbackTitle").value,
             content: document.getElementById("feedbackContent").value,
             date: new Date()
-        }
+        };
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
@@ -224,19 +224,50 @@ let modal = {
 
         //SUBMIT SUB INGREDIENTS
         document.getElementById("submitEditSubIngredients").onclick = ()=>{
-            let subIngredients = [];
+            let data = {
+                id: ingredient.id,
+                ingredients: []
+            };
 
             for(let i = 1; i < right.children.length; i++){
-                subIngredients.push({
+                data.ingredients.push({
                     ingredient: right.children[i].ingredient.id,
                     quantity: parseFloat(right.children[i].children[1].children[0].value)
                 });
             }
 
-            ingredient.replaceIngredients(subIngredients);
+            console.log(data);
 
-            controller.closeModal();
-            controller.createBanner("YOUR SUB-INGREDIENTS WILL NOT BE SAVED UNTIL YOU SUBMIT CHANGES", "alert");
+            let loader = document.getElementById("loaderContainer");
+            loader.style.display = "flex";
+
+            fetch("/ingredients/subingredients", {
+                method: "put",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then((response)=>{
+                    if(typeof(response) === "string"){
+                        controller.createBanner(response, "error");
+                    }else{
+                        console.log(response);
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                    controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+                })
+                .finally(()=>{
+                    loader.style.display = "none";
+                });
+
+            // ingredient.replaceIngredients(subIngredients);
+
+            // controller.closeModal();
+            // controller.createBanner("YOUR SUB-INGREDIENTS WILL NOT BE SAVED UNTIL YOU SUBMIT CHANGES", "alert");
         }
     },
 

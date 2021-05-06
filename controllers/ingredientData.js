@@ -58,7 +58,7 @@ module.exports = {
     },
 
     /*
-    POST: Updates data for a single ingredient
+    PUT: Updates data for a single ingredient
     req.body = {
         id: id of the ingredient,
         name: new name of the ingredient,
@@ -74,12 +74,10 @@ module.exports = {
     error response = '$' delimited String
     */
     updateIngredient: function(req, res){
-        let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
-
-        Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
+        Ingredient.findOne({_id: req.body.id})
             .then((response)=>{
-                response[0].name = req.body.name;
-                response[0].category = req.body.category;
+                response.name = req.body.name;
+                response.category = req.body.category;
                 
                 //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){
@@ -100,7 +98,7 @@ module.exports = {
                         break;
                     }
                 }
-                return Promise.all([response[0].save(), res.locals.merchant.save()])
+                return Promise.all([response.save(), res.locals.merchant.save()])
             })
             .then((response)=>{
                 return res.json({
@@ -121,22 +119,25 @@ module.exports = {
     PUT: updates subingredients on an ingredient
     req.body = {
         id: String (top-level ingredient id),
-        ingredients: {
+        ingredients: [{
             ingredient: String (id)
             quantity: Number
-        }
+        }]
     }
     response = Ingredient
     error response = '$' delimited String
     */
     updateSubIngredients: function(req, res){
+        let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
+
         let stack = [];
-        Ingredient.findOne({_id: req.body.id})
+        Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
             .then((response)=>{
-                response.ingredients = req.body.ingredients;
+                response[0].ingredients = req.body.ingredients;
 
                 // Check ingredients for circular references
                 let isCircular = (ingredient, original)=>{
+
                     if(ingredient.ingredients.length === 0) {
                         stack.pop();
                         return false;
@@ -160,13 +161,13 @@ module.exports = {
                             let ingredient = res.locals.merchant.inventory[j].ingredient;
                             stack = [ingredient];
                             if(ingredient._id.toString() === req.body.id) throw "circular";
-                            if(isCircular(ingredient, response) === true) throw "circular";
+                            if(isCircular(ingredient, response[0]) === true) throw "circular";
                             break;
                         }
                     }
                 }
 
-                return response.save();
+                return response[0].save();
             })
             .then((ingredient)=>{
                 return res.json(ingredient);
