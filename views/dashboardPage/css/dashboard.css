@@ -197,10 +197,12 @@ Multi-strand use classes
 
     .choosable:hover{
         background: rgb(179, 191, 209);
+        color: black;
     }
 
     .choosable.active{
         background: rgb(240, 252, 255);
+        color: black;
     }
 
 .searchBar{

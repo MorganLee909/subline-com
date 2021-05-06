@@ -192,6 +192,7 @@ let modal = {
         }
 
         for(let i = 0; i < merchant.inventory.length; i++){
+            if(ingredient.id === merchant.inventory[i].ingredient.id) continue;
             let skip = false;
             for(let j = 0; j < ingredient.subIngredients.length; j++){
                 if(merchant.inventory[i].ingredient === ingredient.subIngredients[j].ingredient){
