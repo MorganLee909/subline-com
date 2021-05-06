@@ -236,8 +236,6 @@ let modal = {
                 });
             }
 
-            // console.log(data);
-
             let loader = document.getElementById("loaderContainer");
             loader.style.display = "flex";
 
@@ -251,7 +249,13 @@ let modal = {
                 .then(response => response.json())
                 .then((response)=>{
                     if(typeof(response) === "string"){
-                        controller.createBanner(response, "error");
+                        if(response.includes("$") === true) {
+                            controller.createBanner(response.split("$")[0], "error");
+                            controller.closeModal();
+                            controller.openModal("circularReference", response);
+                        }else{
+                            controller.createBanner(response, "error");
+                        }
                     }else{
                         merchant.removeIngredient(ingredient);
                         merchant.addIngredients([response]);
@@ -262,7 +266,6 @@ let modal = {
                     }
                 })
                 .catch((err)=>{
-                    console.log(err);
                     controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
                 })
                 .finally(()=>{

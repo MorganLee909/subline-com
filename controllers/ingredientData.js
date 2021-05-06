@@ -64,11 +64,7 @@ module.exports = {
         name: new name of the ingredient,
         quantity: new quantity of the unit (in grams),
         category: new category of the unit,
-        unit: new default unit of the ingredient,
-        ingredients: [{
-            ingredient: String (Id),
-            quantity: Number
-        }]
+        unit: new default unit of the ingredient
     }
     response = Ingredient
     error response = '$' delimited String
@@ -192,7 +188,7 @@ module.exports = {
                     
                     return res.json(string);
                 }
-                console.log(err);
+                return res.json("ERROR: UNABLE TO UPDATE YOUR SUB-INGREDIENTS");
             });
     },
 

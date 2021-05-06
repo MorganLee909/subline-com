@@ -73,10 +73,9 @@ let editIngredient = {
             id: ingredient.ingredient.id,
             name: document.getElementById("editIngName").value,
             category: document.getElementById("editIngCategory").value,
-            ingredients: []
+            ingredients: [],
+            quantity: controller.baseUnit(quantity, ingredient.ingredient.unit)
         }
-
-        data.quantity = controller.baseUnit(quantity, ingredient.ingredient.unit);
 
         //Get the measurement unit
         let units = document.getElementById("unitButtons");
@@ -85,15 +84,6 @@ let editIngredient = {
                 data.unit = units.children[i].innerText.toLowerCase();
                 break;
             }
-        }
-
-        //Add the sub-ingredients
-        for(let i = 0; i < ingredient.ingredient.subIngredients.length; i++){
-            let subIngredient = ingredient.ingredient.subIngredients[i];
-            data.ingredients.push({
-                ingredient: subIngredient.ingredient.id,
-                quantity: subIngredient.quantity
-            });
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -109,8 +99,7 @@ let editIngredient = {
         .then(response => response.json())
         .then((response)=>{
             if(typeof(response) === "string"){
-                controller.createBanner("ERROR: CIRCULAR REFERENCE", "error");
-                controller.openModal("circularReference", response);
+                controller.createBanner(response, "error");
             }else{
                 merchant.removeIngredient(merchant.getIngredient(response.ingredient._id));
                 merchant.addIngredients([response]);
