@@ -411,11 +411,10 @@ window.state = {
         analytics.populateButtons();
     },
 
-    updateTransactions: function(){
+    updateTransactions: function(transaction){
         home.isPopulated = false;
         ingredients.populateByProperty();
-        analytics.displayIngredient();
-        analytics.displayRecipe();
+        analytics.isPopulated = false;
         home.drawRevenueGraph();
     },
 

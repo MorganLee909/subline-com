@@ -10,7 +10,7 @@ let analytics = {
         if(!this.isPopulated){
             document.getElementById("analRecipeContent").style.display = "none";
 
-            let to = new Date()
+            let to = new Date();
             let from = new Date(to.getFullYear(), to.getMonth() - 1, to.getDate());
 
             document.getElementById("analStartDate").valueAsDate = from;
@@ -22,15 +22,10 @@ let analytics = {
 
             this.populateButtons();
 
-            if(merchant.inventory.length > 0){
-                this.ingredient = merchant.inventory[0].ingredient;
-            }
-            if(merchant.recipes.length > 0){
-                this.recipe = merchant.recipes[0];
-            }
+            if(merchant.inventory.length > 0) this.ingredient = merchant.inventory[0].ingredient;
+            if(merchant.recipes.length > 0) this.recipe = merchant.recipes[0];
             
             this.newDates();
-            
             this.isPopulated = true;
         }
     },
@@ -83,7 +78,7 @@ let analytics = {
         return fetch("/transaction", {
             method: "post",
             headers: {
-                "Content-Type": "application/json;charset=utf-8"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
         })
@@ -219,9 +214,7 @@ let analytics = {
     },
 
     displayRecipe: function(){
-        if(this.recipe === undefined || this.transactionsByDate.length === 0){
-            return;
-        }
+        if(this.recipe === undefined || this.transactionsByDate.length === 0) return;
 
         //break down data into dates and quantities
         let dates = [];
