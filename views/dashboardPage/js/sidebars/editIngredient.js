@@ -74,8 +74,7 @@ let editIngredient = {
             name: document.getElementById("editIngName").value,
             category: document.getElementById("editIngCategory").value,
             ingredients: [],
-            quantity: controller.baseUnit(quantity, ingredient.ingredient.unit)
-        }
+        };
 
         //Get the measurement unit
         let units = document.getElementById("unitButtons");
@@ -85,6 +84,8 @@ let editIngredient = {
                 break;
             }
         }
+
+        data.quantity = controller.baseUnit(quantity, data.unit);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
