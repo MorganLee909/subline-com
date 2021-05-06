@@ -37,6 +37,7 @@ module.exports = function(app){
     //Ingredients
     app.post("/ingredients/create", session, ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", session, ingredientData.updateIngredient);
+    app.put("/ingredients/subingredients", session, ingredientData.updateSubIngredients);
     app.post("/ingredients/create/spreadsheet", session, upload.single("ingredients"), ingredientData.createFromSpreadsheet);
     app.get("/ingredients/download/spreadsheet", session, ingredientData.spreadsheetTemplate);
     app.delete("/ingredients/remove/:id", session, ingredientData.removeIngredient);

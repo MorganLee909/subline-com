@@ -76,42 +76,11 @@ module.exports = {
     updateIngredient: function(req, res){
         let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
 
-        let stack = [];
         Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
             .then((response)=>{
-                response[0].ingredients = req.body.ingredients;
-
-                // Check ingredients for circular references
-                let isCircular = (ingredient, original)=>{
-                    if(ingredient.ingredients.length === 0) {
-                        stack.pop();
-                        return false;
-                    }
-
-                    for(let i = 0; i < ingredient.ingredients.length; i++){
-                        for(let j = 0; j < res.locals.merchant.inventory.length; j++){
-                            if(res.locals.merchant.inventory[j].ingredient._id.toString() === ingredient.ingredients[i].ingredient.toString()){
-                                let next = res.locals.merchant.inventory[j].ingredient;
-                                stack.push(next);
-                                if(next._id.toString() === original._id.toString()) return true;
-                                return isCircular(next, original);
-                            }
-                        }
-                    }
-                }
+                response[0].name = req.body.name;
+                response[0].category = req.body.category;
                 
-                for(let i = 0; i < req.body.ingredients.length; i++){
-                    for(let j = 0; j < res.locals.merchant.inventory.length; j++){
-                        if(res.locals.merchant.inventory[j].ingredient._id.toString() === req.body.ingredients[i].ingredient){
-                            let ingredient = res.locals.merchant.inventory[j].ingredient;
-                            stack = [ingredient];
-                            if(ingredient._id.toString() === req.body.id) throw "circular";
-                            if(isCircular(ingredient, response[0]) === true) throw "circular";
-                            break;
-                        }
-                    }
-                }
-
                 //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){
                     if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
@@ -141,6 +110,68 @@ module.exports = {
                 });
             })
             .catch((err)=>{
+                if(err.name === "ValidationError"){
+                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
+                }
+                return res.json("ERROR: UNABLE TO UPDATE DATA");
+            });
+    },
+
+    /*
+    PUT: updates subingredients on an ingredient
+    req.body = {
+        id: String (top-level ingredient id),
+        ingredients: {
+            ingredient: String (id)
+            quantity: Number
+        }
+    }
+    response = Ingredient
+    error response = '$' delimited String
+    */
+    updateSubIngredients: function(req, res){
+        let stack = [];
+        Ingredient.findOne({_id: req.body.id})
+            .then((response)=>{
+                response.ingredients = req.body.ingredients;
+
+                // Check ingredients for circular references
+                let isCircular = (ingredient, original)=>{
+                    if(ingredient.ingredients.length === 0) {
+                        stack.pop();
+                        return false;
+                    }
+
+                    for(let i = 0; i < ingredient.ingredients.length; i++){
+                        for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                            if(res.locals.merchant.inventory[j].ingredient._id.toString() === ingredient.ingredients[i].ingredient.toString()){
+                                let next = res.locals.merchant.inventory[j].ingredient;
+                                stack.push(next);
+                                if(next._id.toString() === original._id.toString()) return true;
+                                return isCircular(next, original);
+                            }
+                        }
+                    }
+                }
+                
+                for(let i = 0; i < req.body.ingredients.length; i++){
+                    for(let j = 0; j < res.locals.merchant.inventory.length; j++){
+                        if(res.locals.merchant.inventory[j].ingredient._id.toString() === req.body.ingredients[i].ingredient){
+                            let ingredient = res.locals.merchant.inventory[j].ingredient;
+                            stack = [ingredient];
+                            if(ingredient._id.toString() === req.body.id) throw "circular";
+                            if(isCircular(ingredient, response) === true) throw "circular";
+                            break;
+                        }
+                    }
+                }
+
+                return response.save();
+            })
+            .then((ingredient)=>{
+                return res.json(ingredient);
+            })
+            .catch((err)=>{
                 if(err === "circular"){
                     let string = "YOU ATTEMPTED TO MAKE A CIRCULAR REFERENCE";
 
@@ -158,10 +189,7 @@ module.exports = {
                     
                     return res.json(string);
                 }
-                if(err.name === "ValidationError"){
-                    return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
-                }
-                return res.json("ERROR: UNABLE TO UPDATE DATA");
+                console.log(err);
             });
     },
 
