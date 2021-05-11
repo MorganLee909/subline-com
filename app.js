@@ -5,6 +5,7 @@ const compression = require("compression");
 const https = require("https");
 const fs = require("fs");
 const cssmerger = require("cssmerger");
+const esbuild = require("esbuild");
 
 const app = express();
 
@@ -30,6 +31,13 @@ let cssOptions = {
     miminize: false
 };
 
+let esbuildOptions = {
+    entryPoints: ["./views/dashboardPage/js/dashboard.js"],
+    bundle: true,
+    minify: false,
+    outfile: "./views/dashboardPage/bundle.js"
+};
+
 app.use(express.static(__dirname + "/views"));
 let httpsServer = {};
 if(process.env.NODE_ENV === "production"){
@@ -52,6 +60,7 @@ if(process.env.NODE_ENV === "production"){
     mongooseOptions.auth = {authSource: "admin"};
     mongooseOptions.user = "website";
     mongooseOptions.pass = process.env.MONGODB_PASS;
+    esbuildOptions.minify = true;
 }
 
 mongoose.connect(`mongodb://127.0.0.1:27017/inventory-management`, mongooseOptions);
@@ -62,6 +71,7 @@ app.use(express.json());
 app.use(session(sessionOptions));
 require("./routes")(app);
 
+esbuild.buildSync(esbuildOptions);
 cssmerger([
     "./views/shared/css/general.css",
     "./views/shared/css/loader.css",
