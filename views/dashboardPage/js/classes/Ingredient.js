@@ -42,10 +42,6 @@ class Ingredient{
         this._unit = unit;
     }
 
-    get parent(){
-        return this._parent;
-    }
-
     get specialUnit(){
         return this._specialUnit;
     }
@@ -119,7 +115,26 @@ class Ingredient{
         if(length.includes(this._unit)) return length;
         if(this._unit === "bottle") return volume;
         return [];
-    }    
+    }
+
+    getUnitCost(){
+        let totalCost = 0;
+        let quantity = 0;
+
+        for(let i = 0; i < this._parent.orders.length; i++){
+            for(let j = 0; j < this._parent.orders[i].ingredients.length; j++){
+                let ingredient = this._parent.orders[i].ingredients[j];
+
+                if(ingredient.ingredient === this){
+                    totalCost += ingredient.quantity * ingredient.pricePerUnit;
+                    quantity += ingredient.quantity;
+                    break;
+                }
+            }
+        }
+
+        return totalCost / quantity;
+    }
 }
 
 module.exports = Ingredient;
