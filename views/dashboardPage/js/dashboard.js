@@ -404,11 +404,13 @@ window.state = {
         ingredients.populateByProperty();
         analytics.isPopulated = false;
         home.drawInventoryCheckCard();
+        home.drawMostUsedCard();
     },
 
     updateRecipes: function(){
         recipeBook.populateRecipes();
         analytics.isPopulated = false;
+        home.drawMostUsedCard();
     },
 
     updateTransactions: function(transaction){
@@ -416,11 +418,13 @@ window.state = {
         ingredients.populateByProperty();
         analytics.isPopulated = false;
         home.drawRevenueGraph();
+        home.drawMostUsedCard();
     },
 
     updateOrders: function(newOrders){
         ingredients.isPopulated = false;
-        ordersStrand.isPopulated = false;
+        orders.isPopulated = false;
+        home.drawMostUsedCard();
         if(newOrders !== undefined) orders.orders = newOrders;
     },
 

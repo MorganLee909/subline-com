@@ -4,9 +4,10 @@ const Transaction = require("./Transaction.js");
 const Order = require("./Order.js");
 
 class MerchantIngredient{
-    constructor(ingredient, quantity){
+    constructor(ingredient, quantity, parent){
         this._quantity = quantity;
         this._ingredient = ingredient;
+        this._parent = parent;
     }
 
     get ingredient(){
@@ -43,6 +44,48 @@ class MerchantIngredient{
 
     getQuantityDisplay(){
         return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
+    }
+
+    /*
+    Gets the quantity of a single ingredient sold between two dates
+    Inputs:
+        from = start Date
+        to = end Date
+    return: quantity sold in default unit
+    */
+    getSoldQuantity(from, to){
+        const {start, end} = this._parent.getTransactionIndices(from, to);
+
+        let traverseIngredient = (ingredient)=>{
+            if(ingredient === this.ingredient) return true;
+
+            for(let i = 0; i < ingredient.subIngredients.length; i++){
+                let next = traverseIngredient(ingredient.subIngredients[i].ingredient);
+
+                if(next === true){
+                    return ingredient.subIngredients[i].quantity;
+                }else{
+                    return ingredient.subIngredients[i].quantity * next;
+                }
+            }
+
+            return 0;
+        }
+
+        let total = 0;
+
+        for(let i = start; i <= end; i++){
+            for(let j = 0; j < this._parent.transactions[i].recipes.length; j++){
+                let transactionRecipe = this._parent.transactions[i].recipes[j];
+                for(let k = 0; k < transactionRecipe.recipe.ingredients.length; k++){
+                    let ingredient = transactionRecipe.recipe.ingredients[k];
+                    let thing = traverseIngredient(ingredient.ingredient) * ingredient.quantity * transactionRecipe.quantity;
+                    total += thing;
+                }
+            }
+        }
+
+        return total;
     }
 }
 
@@ -85,6 +128,7 @@ class Merchant{
             const merchantIngredient = new MerchantIngredient(
                 ingredient,
                 ingredients[i].quantity,
+                this
             );
 
             this._inventory.push(merchantIngredient);
@@ -230,7 +274,7 @@ class Merchant{
 
             createdIngredient.replaceIngredients(ingredient.ingredients);
 
-            const merchantIngredient = new MerchantIngredient(createdIngredient, quantity);
+            const merchantIngredient = new MerchantIngredient(createdIngredient, quantity, this);
             this._inventory.push(merchantIngredient);
         }
     }
@@ -301,9 +345,7 @@ class Merchant{
             return [];
         }
 
-        if(from === 0){
-            from = this._transactions[this._transactions.length-1].date;
-        }
+        if(from === 0) from = this._transactions[this._transactions.length-1].date;
 
         const {start, end} = this.getTransactionIndices(from, to);
 
@@ -482,43 +524,6 @@ class Merchant{
         }
     
         return ingredientList;
-    }
-
-    /*
-    Gets the quantity of a single ingredient sold between two dates
-    Inputs:
-        ingredient = MerchantIngredient object to find
-        from = start Date
-        to = end Date
-    return: quantity sold in default unit
-    */
-    getSingleIngredientSold(ingredient, from, to = new Date()){
-        const {start, end} = this.getTransactionIndices(from, to);
-
-        let checkIngredient = (current, main)=>{
-            if(current.ingredient === main) return current.quantity;
-            
-            for(let i = 0; i < current.ingredient.subIngredients.length; i++){
-                return checkIngredient(current.ingredient.subIngredients[i], main);
-            }
-
-            return 0;
-        }
-
-        let total = 0;
-
-        for(let i = start; i < end; i++){
-            for(let j = 0; j < this._transactions[i].recipes.length; j++){
-                let transactionRecipe = this._transactions[i].recipes[j];
-                for(let k = 0; k < transactionRecipe.recipe.ingredients.length; k++){
-                    let recipeIngredient = transactionRecipe.recipe.ingredients[k];
-                    
-                    total += checkIngredient(recipeIngredient, ingredient);
-                }
-            }
-        }
-
-        return total;
     }
 
     /*

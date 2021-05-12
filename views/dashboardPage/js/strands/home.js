@@ -4,7 +4,6 @@ let home = {
     display: function(){
         if(!this.isPopulated){
             this.drawRevenueCard();
-            this.drawRevenueGraph();
             this.drawInventoryCheckCard();
             this.drawPopularCard();
 
@@ -35,58 +34,48 @@ let home = {
         document.querySelector("#revenueChange img").src = img;
     },
 
-    drawRevenueGraph: function(){
-        let monthAgo = new Date();
-        monthAgo.setMonth(monthAgo.getMonth() - 1);
-        
-        let revenue = [];
-        let dates = [];
-        let dayRevenue = 0;
-        const transactions = merchant.getTransactions(monthAgo);
-        let currentDate = (transactions.length > 0) ? transactions[0].date : undefined;
-        for(let i = 0; i < transactions.length; i++){
-            if(transactions[i].date.getDate() !== currentDate.getDate()){
-                revenue.push(dayRevenue / 100);
-                dayRevenue = 0;
-                dates.push(currentDate);
-                currentDate = transactions[i].date;
-            }
+    drawMostUsedCard: function(){
+        let ingredients = [];
+        let from = new Date();
+        from.setDate(from.getDate() - 30);
 
-            for(let j = 0; j < transactions[i].recipes.length; j++){
-                const recipe = transactions[i].recipes[j];
-
-                dayRevenue += recipe.recipe.price * recipe.quantity;
-            }
+        for(let i = 0; i < merchant.inventory.length; i++){
+            let thing = merchant.inventory[i].getSoldQuantity(from, new Date());
+            let otherThing = merchant.inventory[i].ingredient.getUnitCost();
+            let cost = thing * otherThing;
+            
+            ingredients.push({
+                inventoryItem: merchant.inventory[i],
+                unitCost: cost
+            });
         }
 
-        const trace = {
-            x: dates,
-            y: revenue,
-            mode: "lines+markers",
-            line: {
-                color: "rgb(255, 99, 107)"
+        ingredients.sort((a, b) => (a.unitCost > b.unitCost) ? -1 : 1);
+        let container = document.getElementById("mostUsedList");
+
+        while(container.children.length > 0){
+            container.removeChild(container.firstChild);
+        }
+
+        let displayCount = (merchant.inventory.length < 5) ? merchant.inventory.length : 5;
+
+        for(let i = 0; i < displayCount; i++){
+            let item = document.createElement("button");
+            item.classList.add("choosable");
+            item.onclick = ()=>{
+                controller.openStrand("ingredients");
+                controller.openSidebar("ingredientDetails", ingredients[i].inventoryItem);
             }
-        }
+            container.appendChild(item);
 
-        let layout = {
-            title: "REVENUE",
-            xaxis: {
-                title: "DATE"
-            },
-            yaxis: {
-                title: "$"
-            },
-            paper_bgcolor: "rgba(0, 0, 0, 0)"
-        }
+            let leftText = document.createElement("p");
+            leftText.innerText = ingredients[i].inventoryItem.ingredient.name;
+            item.appendChild(leftText);
 
-        if(screen.width < 1200){
-            layout.margin = {
-                l: 35,
-                r: 0
-            }
+            let rightText = document.createElement("p");
+            rightText.innerText = `$${ingredients[i].unitCost.toFixed(2)}`;
+            item.appendChild(rightText);
         }
-
-        Plotly.newPlot("graphCard", [trace], layout);
     },
 
     drawInventoryCheckCard: function(){

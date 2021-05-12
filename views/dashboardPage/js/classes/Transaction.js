@@ -45,9 +45,7 @@ class Transaction{
     */
     getIngredientQuantity(ingredient){
         let traverseIngredient = (transIngredient)=>{
-            if(transIngredient === ingredient){
-                return true;
-            }
+            if(transIngredient === ingredient) return true;
 
             for(let i = 0; i < transIngredient.subIngredients.length; i++){
                 let next = traverseIngredient(transIngredient.subIngredients[i].ingredient);
