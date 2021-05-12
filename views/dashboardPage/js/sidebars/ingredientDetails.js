@@ -9,23 +9,33 @@ let ingredientDetails = {
         document.getElementById("ingredientStock").innerText = ingredient.getQuantityDisplay();
 
         //Calculate and display average daily use
-        let quantities = [];
-        let now = new Date();
-        for(let i = 1; i < 31; i++){
-            let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
-            let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
+        // let quantities = [];
+        // let now = new Date();
+        // for(let i = 1; i < 31; i++){
+        //     let endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
+        //     let startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i - 1);
 
-            quantities.push(merchant.getSingleIngredientSold(ingredient, startDay, endDay));
+        //     quantities.push(merchant.getSingleIngredientSold(ingredient, startDay, endDay));
+        // }
+
+        // let sum = 0;
+        // for(let i = 0; i < quantities.length; i++){
+        //     sum += quantities[i];
+        // }
+
+        // let dailyUse = sum / quantities.length;
+        // const dailyUseDiv = document.getElementById("dailyUse");
+        // dailyUseDiv.innerText = `${dailyUse.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
+
+        let unitCostElement = document.getElementById("unitCostDisplay");
+        let unitCost = ingredient.ingredient.getUnitCost();
+        if(unitCost === 0){
+            unitCostElement.parentElement.style.display = "none";
+        }else{
+            unitCostElement.parentElement.style.display = "block";
+            unitCostElement.innerText = `$${unitCost.toFixed(2)}`;
         }
 
-        let sum = 0;
-        for(let i = 0; i < quantities.length; i++){
-            sum += quantities[i];
-        }
-
-        let dailyUse = sum / quantities.length;
-        const dailyUseDiv = document.getElementById("dailyUse");
-        dailyUseDiv.innerText = `${dailyUse.toFixed(2)} ${ingredient.ingredient.unit.toUpperCase()}`;
 
         let subIngredientList = document.getElementById("subIngredientList");
         let template = document.getElementById("ingredientRecipe").content.children[0];

@@ -133,7 +133,7 @@ class Ingredient{
             }
         }
 
-        return totalCost / quantity;
+        return (quantity === 0) ? 0 : totalCost / quantity;
     }
 }
 
