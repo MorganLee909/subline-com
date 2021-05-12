@@ -49,8 +49,12 @@ let orderDetails = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.removeOrder(order);
-                    state.updateOrders();
+                    let from = new Date();
+                    from.setDate(from.getDate() - 30);
+                    if(order.date > from){
+                        merchant.removeOrder(order);
+                        state.updateOrders();
+                    }
 
                     controller.openStrand("orders", merchant.orders);
                     controller.closeModal();

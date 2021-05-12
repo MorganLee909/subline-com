@@ -90,8 +90,12 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addOrders([response], true);
-                    state.updateOrders();
+                    let from = new Date();
+                    from.setDate(from.getDate() - 30);
+                    if(new Date(response.date) > from){
+                        merchant.addOrders([response], true);
+                        state.updateOrders();
+                    }
                     
                     controller.openStrand("orders", merchant.orders);
                     controller.createBanner("NEW ORDER CREATED", "success");
@@ -150,8 +154,12 @@ let newOrder = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.addOrders([response], true);
-                    state.updateOrders();
+                    let from = new Date();
+                    from.setDate(from.getDate() - 30);
+                    if(new Date(response.date) > from){
+                        merchant.addOrders([response], true);
+                        state.updateOrders();
+                    }
 
                     controller.createBanner("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY", "success");
                     controller.openStrand("orders");

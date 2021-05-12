@@ -129,6 +129,41 @@ class Merchant{
                 this
             ));
         }
+
+        //populate orders
+        let from = new Date();
+        from.setDate(from.getDate() - 30);
+        let data = {
+            from: from,
+            to: new Date(),
+            ingredients: []
+        };
+
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/orders/get", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    this.addOrders(response);
+                    state.updateOrders(this._orders);
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 
     get name(){
@@ -330,10 +365,6 @@ class Merchant{
 
     get orders(){
         return this._orders;
-    }
-
-    clearOrders(){
-        this._orders = [];
     }
 
     /*

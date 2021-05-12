@@ -418,9 +418,10 @@ window.state = {
         home.drawRevenueGraph();
     },
 
-    updateOrders: function(){
+    updateOrders: function(newOrders){
         ingredients.isPopulated = false;
         ordersStrand.isPopulated = false;
+        if(newOrders !== undefined) orders.orders = newOrders;
     },
 
     updateMerchant(){
@@ -440,7 +441,7 @@ document.getElementById("homeBtn").onclick = ()=>{controller.openStrand("home")}
 document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("ingredients")};
 document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
 document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
-document.getElementById("ordersBtn").onclick = async ()=>{controller.openStrand("orders")};
+document.getElementById("ordersBtn").onclick = ()=>{controller.openStrand("orders")};
 document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
 document.getElementById("accountBtn").onclick = ()=>{controller.openStrand("account")};
 document.getElementById("feedbackButton").onclick = ()=>{controller.openModal("feedback")};

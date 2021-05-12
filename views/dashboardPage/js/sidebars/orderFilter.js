@@ -69,7 +69,7 @@ let orderFilter = {
             if(typeof(response) === "string"){
                 controller.createBanner(response, "error");
             }else if(response.length === 0){
-                controller.createBanner("NO ORDERS MATCH YOUR SEARCH", "error");
+                controller.createBanner("NO ORDERS MATCH YOUR SEARCH", "alert");
             }else{
                 for(let i = 0; i < response.length; i++){
                     orders.push(new Order(
@@ -84,7 +84,8 @@ let orderFilter = {
                 }
             }
 
-            controller.openStrand("orders", orders);
+            state.updateOrders(orders);
+            controller.openStrand("orders");
         })
         .catch((err)=>{
             controller.createBanner("UNABLE TO DISPLAY THE ORDERS", "error");
