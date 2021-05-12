@@ -402,14 +402,12 @@ controller = {
 window.state = {
     updateIngredients: function(){
         ingredients.populateByProperty();
-        // analytics.populateButtons();
         analytics.isPopulated = false;
         home.drawInventoryCheckCard();
     },
 
     updateRecipes: function(){
         recipeBook.populateRecipes();
-        // analytics.populateButtons();
         analytics.isPopulated = false;
     },
 
