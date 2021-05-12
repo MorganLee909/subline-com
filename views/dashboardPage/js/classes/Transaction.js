@@ -44,30 +44,31 @@ class Transaction{
     Gets the quantity for a given ingredient
     */
     getIngredientQuantity(ingredient){
-        let quantity = 0;
+        let traverseIngredient = (transIngredient)=>{
+            if(transIngredient === ingredient){
+                return true;
+            }
 
-        let traverseSubIngredients = (current, main)=>{
-            if(current.ingredient === main) return current.quantity;
+            for(let i = 0; i < transIngredient.subIngredients.length; i++){
+                let next = traverseIngredient(transIngredient.subIngredients[i].ingredient);
 
-            for(let i = 0; i < current.ingredient.subIngredients.length; i++){
-                return traverseSubIngredients(current.ingredient.subIngredients[i], main);
+                if(next === true){
+                    return transIngredient.subIngredients[i].quantity;
+                }else{
+                    return transIngredient.subIngredients[i].quantity * next;
+                }
             }
 
             return 0;
         }
 
+        let quantity = 0;
+
         for(let i = 0; i < this._recipes.length; i++){
-            const recipe = this._recipes[i].recipe;
-            for(let j = 0; j < recipe.ingredients.length; j++){
-                let actualIngredient = recipe.ingredients[j].ingredient;
-                if(actualIngredient === ingredient){
-                    quantity += recipe.ingredients[j].quantity * this._recipes[i].quantity;
-                }else{
-                    for(let k = 0; k < actualIngredient.subIngredients.length; k++){
-                        quantity += traverseSubIngredients(actualIngredient.subIngredients[i], ingredient) * this._recipes.quantity;
-                    }
-                    
-                }
+            for(let j = 0; j < this._recipes[i].recipe.ingredients.length; j++){
+                let transIngredient = this._recipes[i].recipe.ingredients[j];
+
+                quantity += traverseIngredient(transIngredient.ingredient) * transIngredient.quantity * this._recipes[i].quantity;
             }
         }
 
