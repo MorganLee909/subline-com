@@ -3,38 +3,42 @@ let home = {
 
     display: function(){
         if(!this.isPopulated){
-            this.drawRevenueCard();
+            this.mostUsedRecipes();
             this.drawInventoryCheckCard();
             this.drawPopularCard();
-
             this.isPopulated = true;
         }
     },
 
-    drawRevenueCard: function(){
-        let today = new Date();
-        let firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        let firstOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        let lastMonthToDay = new Date(new Date().setMonth(today.getMonth() - 1));
+    mostUsedRecipes: function(){
+        let from = new Date();
+        from.setDate(from.getDate() - 30);
 
-        const revenueThisMonth = merchant.getRevenue(firstOfMonth);
-        const revenueLastMonthToDay = merchant.getRevenue(firstOfLastMonth, lastMonthToDay);
+        let recipes = merchant.getRecipesSold(from, new Date());
+        recipes.sort((a, b) => (a.quantity > b.quantity) ? -1 : 1);
+        let displayCount = (recipes.length < 10) ? recipes.length : 10;
+        let container = document.getElementById("mostUsedRecipesList");
 
-        document.getElementById("revenue").innerText = `$${revenueThisMonth.toFixed(2)}`;
+        for(let i = 0; i < displayCount; i++){
+            let item = document.createElement("button");
+            item.classList.add("choosable");
+            item.onclick = ()=>{
+                controller.openStrand("recipeBook");
+                controller.openSidebar("recipeDetails", recipes[i].recipe);
+            };
+            container.appendChild(item);
 
-        let revenueChange = ((revenueThisMonth - revenueLastMonthToDay) / revenueLastMonthToDay) * 100;
-        
-        let img = "";
-        if(revenueChange >= 0){
-            img = "/shared/images/upArrow.png";
-        }else{
-            img = "/shared/images/downArrow.png";
+            let leftText = document.createElement("p");
+            leftText.innerText = recipes[i].recipe.name;
+            item.appendChild(leftText);
+
+            let rightText = document.createElement("p");
+            rightText.innerText = recipes[i].quantity;
+            item.appendChild(rightText);
         }
-        document.querySelector("#revenueChange p").innerText = `${Math.abs(revenueChange).toFixed(2)}% vs last month`;
-        document.querySelector("#revenueChange img").src = img;
     },
 
-    drawMostUsedCard: function(){
+    mostUsedIngredients: function(){
         let ingredients = [];
         let from = new Date();
         from.setDate(from.getDate() - 30);
@@ -57,7 +61,7 @@ let home = {
             container.removeChild(container.firstChild);
         }
 
-        let displayCount = (merchant.inventory.length < 5) ? merchant.inventory.length : 5;
+        let displayCount = (merchant.inventory.length < 10) ? merchant.inventory.length : 10;
 
         for(let i = 0; i < displayCount; i++){
             let item = document.createElement("button");
