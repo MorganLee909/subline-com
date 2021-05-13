@@ -44,9 +44,7 @@ let home = {
         from.setDate(from.getDate() - 30);
 
         for(let i = 0; i < merchant.inventory.length; i++){
-            let thing = merchant.inventory[i].getSoldQuantity(from, new Date());
-            let otherThing = merchant.inventory[i].ingredient.getUnitCost();
-            let cost = thing * otherThing;
+            let cost = merchant.inventory[i].getSoldQuantity(from, new Date()) * merchant.inventory[i].ingredient.getUnitCost();
             
             ingredients.push({
                 inventoryItem: merchant.inventory[i],
@@ -63,7 +61,9 @@ let home = {
 
         let displayCount = (merchant.inventory.length < 10) ? merchant.inventory.length : 10;
 
+        console.log(ingredients);
         for(let i = 0; i < displayCount; i++){
+            if(ingredients[i].unitCost === 0) break;
             let item = document.createElement("button");
             item.classList.add("choosable");
             item.onclick = ()=>{

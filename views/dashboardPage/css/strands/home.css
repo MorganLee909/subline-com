@@ -29,37 +29,19 @@
         max-height: 43%;
     }
 
-#revenueCard{
+.mostUsed{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
 }
 
-    #revenue{
-        text-align: center;
-        font-size: 30px;
-        font-weight: bold;
-    }
+#mostUsedRecipesList, #mostUsedList{
+    height: 75%;
+    overflow-y: auto;
+}
 
-    #revenueChange{
-        display: flex;
-    }
-
-    #revenueChange > p{
-        font-weight: 100;
-    }
-
-    #revenueChange img{
-        height: 15px;
-        width: 15px;
-        margin-right: 10px;
-    }
-
-#graphCard{
-    flex-grow: 5;
-    display: flex;
-    justify-content: center;
+#mostUsedRecipesList .choosable, #mostUsedList .choosable {
+    padding: 10px;
 }
 
 #inventoryCheckCard{

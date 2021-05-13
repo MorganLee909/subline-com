@@ -537,9 +537,7 @@ class Merchant{
         }]
     */
     getRecipesSold(from = 0, to = new Date()){
-        if(from === 0){
-            from = this._transactions[0].date;
-        }
+        if(from === 0) from = this._transactions[0].date;
 
         const {start, end} = this.getTransactionIndices(from, to);
 

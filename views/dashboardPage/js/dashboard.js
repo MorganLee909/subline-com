@@ -405,19 +405,21 @@ window.state = {
         analytics.isPopulated = false;
         home.drawInventoryCheckCard();
         home.mostUsedIngredients();
+        home.mostUsedRecipes();
     },
 
     updateRecipes: function(){
         recipeBook.populateRecipes();
         analytics.isPopulated = false;
         home.mostUsedIngredients();
+        home.mostUsedRecipes();
     },
 
     updateTransactions: function(transaction){
         home.isPopulated = false;
         ingredients.populateByProperty();
         analytics.isPopulated = false;
-        home.drawRevenueGraph();
+        home.mostUsedRecipes();
         home.mostUsedIngredients();
     },
 
