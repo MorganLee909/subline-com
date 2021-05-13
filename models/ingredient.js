@@ -41,7 +41,7 @@ const IngredientSchema = new mongoose.Schema({
             required: true,
             min: 0
         }
-    }]
+    }],
 });
 
 module.exports = mongoose.model("Ingredient", IngredientSchema);

@@ -54,37 +54,32 @@ class MerchantIngredient{
     return: quantity sold in default unit
     */
     getSoldQuantity(from, to){
-        const {start, end} = this._parent.getTransactionIndices(from, to);
-
         let traverseIngredient = (ingredient)=>{
-            if(ingredient === this.ingredient) return true;
-
             for(let i = 0; i < ingredient.subIngredients.length; i++){
-                let next = traverseIngredient(ingredient.subIngredients[i].ingredient);
-
-                if(next === true){
-                    return ingredient.subIngredients[i].quantity;
-                }else{
-                    return ingredient.subIngredients[i].quantity * next;
-                }
+                if(ingredient.subIngredients[i].ingredient === this._ingredient) return ingredient.subIngredients[i].quantity;
+                return traverseIngredient(ingredient.subIngredients[i].ingredient);
             }
 
-            return 0;
+            return 1;
         }
 
         let total = 0;
+        const {start, end} = this._parent.getTransactionIndices(from, to);
 
         for(let i = start; i <= end; i++){
             for(let j = 0; j < this._parent.transactions[i].recipes.length; j++){
                 let transactionRecipe = this._parent.transactions[i].recipes[j];
                 for(let k = 0; k < transactionRecipe.recipe.ingredients.length; k++){
                     let ingredient = transactionRecipe.recipe.ingredients[k];
-                    let thing = traverseIngredient(ingredient.ingredient) * ingredient.quantity * transactionRecipe.quantity;
-                    total += thing;
+                    let multiplier = (this._ingredient === ingredient.ingredient) ? 1 : traverseIngredient(ingredient.ingredient);
+                    console.log(`${this._ingredient.name} + ${ingredient.ingredient.name}: ${multiplier}`);
+                    //The multiplier is correct.
+                    total += multiplier * ingredient.quantity * transactionRecipe.quantity;
                 }
             }
         }
 
+        // console.log(`${this._ingredient.name}: ${total}`);
         return total;
     }
 }
@@ -203,6 +198,7 @@ class Merchant{
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
@@ -259,11 +255,9 @@ class Merchant{
     addIngredients(ingredients){
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = ingredients[i].ingredient;
-            console.log(ingredients[i]);
             let quantity = ingredients[i].quantity;
             let defaultUnit = ingredients[i].defaultUnit;
 
-            console.log(ingredient);
             const createdIngredient = new Ingredient(
                 ingredient._id,
                 ingredient.name,

@@ -19,6 +19,10 @@ let home = {
         let displayCount = (recipes.length < 10) ? recipes.length : 10;
         let container = document.getElementById("mostUsedRecipesList");
 
+        while(container.children.length > 0){
+            container.removeChild(container.firstChild);
+        }
+
         for(let i = 0; i < displayCount; i++){
             let item = document.createElement("button");
             item.classList.add("choosable");
