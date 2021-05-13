@@ -61,7 +61,6 @@ let home = {
 
         let displayCount = (merchant.inventory.length < 10) ? merchant.inventory.length : 10;
 
-        console.log(ingredients);
         for(let i = 0; i < displayCount; i++){
             if(ingredients[i].unitCost === 0) break;
             let item = document.createElement("button");

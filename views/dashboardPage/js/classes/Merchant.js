@@ -259,9 +259,11 @@ class Merchant{
     addIngredients(ingredients){
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = ingredients[i].ingredient;
+            console.log(ingredients[i]);
             let quantity = ingredients[i].quantity;
             let defaultUnit = ingredients[i].defaultUnit;
 
+            console.log(ingredient);
             const createdIngredient = new Ingredient(
                 ingredient._id,
                 ingredient.name,

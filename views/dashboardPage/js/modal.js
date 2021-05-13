@@ -250,8 +250,7 @@ let modal = {
                             controller.createBanner(response, "error");
                         }
                     }else{
-                        merchant.removeIngredient(ingredient);
-                        merchant.addIngredients([response]);
+                        ingredient.replaceIngredients(response.ingredients);
                         state.updateIngredients();
 
                         controller.createBanner(`SUB-INGREDIENTS UPDATED FOR ${ingredient.name}`, "success");
@@ -259,6 +258,7 @@ let modal = {
                     }
                 })
                 .catch((err)=>{
+                    console.log(err);
                     controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
                 })
                 .finally(()=>{

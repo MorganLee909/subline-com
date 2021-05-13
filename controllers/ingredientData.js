@@ -155,7 +155,6 @@ module.exports = {
                 for(let i = 0; i < req.body.ingredients.length; i++){
                     for(let j = 0; j < res.locals.merchant.inventory.length; j++){
                         if(res.locals.merchant.inventory[j].ingredient._id.toString() === req.body.ingredients[i].ingredient){
-                            merchIngredient = res.locals.merchant.inventory[j];
                             let ingredient = res.locals.merchant.inventory[j].ingredient;
                             stack = [ingredient];
                             if(ingredient._id.toString() === req.body.id) throw "circular";
@@ -168,7 +167,7 @@ module.exports = {
                 return Promise.all([response[0].save(), res.locals.merchant.save()])
             })
             .then((response)=>{
-                return res.json(merchIngredient);
+                return res.json(response[0]);
             })
             .catch((err)=>{
                 if(err === "circular"){
