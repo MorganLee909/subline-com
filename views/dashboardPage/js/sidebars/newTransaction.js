@@ -75,9 +75,10 @@ let newTransaction = {
                     if(typeof(response) === "string"){
                         controller.createBanner(response, "error");
                     }else{
-                        merchant.addTransactions([response], true);
-                        state.updateTransactions();
-
+                        if(new Date(response.date) > merchant.transactions[merchant.transactions.length-1].date){
+                            merchant.addTransactions([response], true);
+                            state.updateTransactions();
+                        }
                         controller.openStrand("transactions", merchant.getTransactions());
                         controller.createBanner("TRANSACTION CREATED", "success");
                     }
