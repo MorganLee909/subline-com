@@ -48,16 +48,18 @@ let home = {
         from.setDate(from.getDate() - 30);
 
         for(let i = 0; i < merchant.inventory.length; i++){
-            let cost = merchant.inventory[i].getSoldQuantity(from, new Date()) * merchant.inventory[i].ingredient.getUnitCost();
+            let unitCost = merchant.inventory[i].ingredient.getUnitCost();
+            let totalCost = unitCost * merchant.inventory[i].getSoldQuantity(from, new Date());
             
             ingredients.push({
                 inventoryItem: merchant.inventory[i],
-                unitCost: cost
+                unitCost: unitCost,
+                totalCost: totalCost
             });
         }
 
         ingredients.sort((a, b) => (a.unitCost > b.unitCost) ? -1 : 1);
-        let container = document.getElementById("mostUsedList");
+        let container = document.getElementById("mostUsedBody");
 
         while(container.children.length > 0){
             container.removeChild(container.firstChild);
@@ -66,8 +68,8 @@ let home = {
         let displayCount = (merchant.inventory.length < 10) ? merchant.inventory.length : 10;
 
         for(let i = 0; i < displayCount; i++){
-            if(ingredients[i].unitCost === 0) break;
-            let item = document.createElement("button");
+            if(ingredients[i].totalCost === 0) break;
+            let item = document.createElement("tr");
             item.classList.add("choosable");
             item.onclick = ()=>{
                 controller.openStrand("ingredients");
@@ -75,12 +77,16 @@ let home = {
             }
             container.appendChild(item);
 
-            let leftText = document.createElement("p");
+            let leftText = document.createElement("td");
             leftText.innerText = ingredients[i].inventoryItem.ingredient.name;
             item.appendChild(leftText);
 
-            let rightText = document.createElement("p");
-            rightText.innerText = `$${ingredients[i].unitCost.toFixed(2)}`;
+            let centerText = document.createElement("td");
+            centerText.innerText = `$${ingredients[i].unitCost.toFixed(2)}`;
+            item.appendChild(centerText);
+
+            let rightText = document.createElement("td");
+            rightText.innerText = `$${ingredients[i].totalCost.toFixed(2)}`;
             item.appendChild(rightText);
         }
     },

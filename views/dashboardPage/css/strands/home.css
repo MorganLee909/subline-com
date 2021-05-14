@@ -32,15 +32,44 @@
 .mostUsed{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content:start;
 }
 
-#mostUsedRecipesList, #mostUsedList{
+    .scrollTable{
+        max-height: 75%;
+        overflow: auto;
+    }
+
+    .mostUsed table{
+        border-spacing: 0 5px;
+        width: 100%;
+    }
+
+    .mostUsed th {
+        position: sticky;
+        top: 0;
+        background: white;
+    }
+
+    .mostUsed .choosable{
+        display: table-row;
+    }
+
+    .mostUsed .choosable td{
+        padding: 5px 0;
+    }
+
+    #mostUsedBody{
+        max-height: 75%;
+        overflow-y: auto;
+    }
+
+#mostUsedRecipesList{
     height: 75%;
     overflow-y: auto;
 }
 
-#mostUsedRecipesList .choosable, #mostUsedList .choosable {
+#mostUsedRecipesList .choosable{
     padding: 10px;
 }
 
