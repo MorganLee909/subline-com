@@ -56,11 +56,12 @@ ingredients = [{
 parent = merchant that it belongs to
 */
 class Recipe{
-    constructor(id, name, price, ingredients, parent){
+    constructor(id, name, price, ingredients, parent, hidden){
         this._id = id;
         this._name = name;
         this._price = price;
         this._parent = parent;
+        this._hidden = hidden;
         this._ingredients = [];
 
         for(let i = 0; i < ingredients.length; i++){

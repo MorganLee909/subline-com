@@ -95,7 +95,8 @@ let recipeBook = {
                             response.new[i].name,
                             response.new[i].price,
                             merchant,
-                            []
+                            [],
+                            response.new[i].hidden
                         ));
                     }
 

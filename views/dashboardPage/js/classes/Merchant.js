@@ -136,7 +136,8 @@ class Merchant{
                 recipes[i].name,
                 recipes[i].price,
                 ingredients,
-                this
+                this,
+                recipes[i].hidden
             ));
         }
 
@@ -297,7 +298,8 @@ class Merchant{
                 recipes[i].name,
                 recipes[i].price,
                 recipes[i].ingredients,
-                this
+                this,
+                recipes[i].hidden
             ));
         }
     }
