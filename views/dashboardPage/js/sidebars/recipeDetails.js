@@ -1,6 +1,7 @@
 let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
+        document.getElementById("hideRecipeBtn").onclick = ()=>{this.hide(recipe)};
         document.getElementById("recipeName").innerText = recipe.name;
 
         let button = document.getElementById("removeRecipeBtn");
@@ -34,6 +35,23 @@ let recipeDetails = {
         }
 
         document.getElementById("recipePrice").children[1].innerText = `$${recipe.price.toFixed(2)}`;
+    },
+
+    hide: function(recipe){
+        recipe.hidden = (recipe.hidden === true) ? false : true;
+
+        controller.openStrand("recipeBook");
+
+        fetch(`/recipes/hide/${recipe.id}`)
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    recipe.hidden = (recipe.hidden === true) ? false : true;
+                    controller.openStrand("recipes");
+                    controller.createBanner(response, "error");
+                }
+            })
+            .catch((err)=>{});
     },
 
     remove: function(recipe){

@@ -47,6 +47,7 @@ module.exports = function(app){
     app.delete("/recipe/remove/:id", session, recipeData.removeRecipe);
     app.post("/recipes/create/spreadsheet", session, upload.single("recipes"), recipeData.createFromSpreadsheet);
     app.get("/recipes/download/spreadsheet", session, recipeData.spreadsheetTemplate);
+    app.get("/recipes/hide/:id", session, recipeData.hideRecipe);
 
     //Orders
     app.post("/orders/get", session, orderData.getOrders);

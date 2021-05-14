@@ -99,6 +99,14 @@ class Recipe{
         return this._parent;
     }
 
+    get hidden(){
+        return this._hidden;
+    }
+
+    set hidden(hidden){
+        this._hidden = hidden;
+    }
+
     get ingredients(){
         return this._ingredients;
     }

@@ -263,5 +263,26 @@ module.exports = {
                 });
             })
             .catch((err)=>{});
+    },
+
+    /*
+    GET: toggles the hidden property of a recipe
+    req.params.id = String (id of recipe)
+    response = {}
+    */
+    hideRecipe: function(req, res){
+        Recipe.findOne({_id: req.params.id})
+            .then((recipe)=>{
+                if(recipe.merchant.toString() !== res.locals.merchant._id.toString()) throw "unauthorized";
+                recipe.hidden = (recipe.hidden === true) ? false : true;
+                return recipe.save();
+            })
+            .then((recipe)=>{
+                return res.json({});
+            })
+            .catch((err)=>{
+                if(err === "unauthorized") return res.json("YOU DO NOT HAVE PERMISSION TO EDIT THAT RECIPE");
+                return res.json("ERROR: UNABLE TO HIDE/UNHIDE THE RECIPE");
+            });
     }
 }
