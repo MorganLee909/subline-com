@@ -55,12 +55,13 @@ class MerchantIngredient{
     */
     getSoldQuantity(from, to){
         let traverseIngredient = (ingredient)=>{
+            let total = 0;
             for(let i = 0; i < ingredient.subIngredients.length; i++){
                 if(ingredient.subIngredients[i].ingredient === this._ingredient) return ingredient.subIngredients[i].quantity;
-                return traverseIngredient(ingredient.subIngredients[i].ingredient);
+                total += traverseIngredient(ingredient.subIngredients[i].ingredient) * ingredient.subIngredients[i].quantity;
             }
 
-            return 1;
+            return total;
         }
 
         let total = 0;
@@ -72,14 +73,11 @@ class MerchantIngredient{
                 for(let k = 0; k < transactionRecipe.recipe.ingredients.length; k++){
                     let ingredient = transactionRecipe.recipe.ingredients[k];
                     let multiplier = (this._ingredient === ingredient.ingredient) ? 1 : traverseIngredient(ingredient.ingredient);
-                    console.log(`${this._ingredient.name} + ${ingredient.ingredient.name}: ${multiplier}`);
-                    //The multiplier is correct.
                     total += multiplier * ingredient.quantity * transactionRecipe.quantity;
                 }
             }
         }
 
-        // console.log(`${this._ingredient.name}: ${total}`);
         return total;
     }
 }
@@ -198,7 +196,6 @@ class Merchant{
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
