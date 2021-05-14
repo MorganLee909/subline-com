@@ -32,7 +32,7 @@
 .mostUsed{
     display: flex;
     flex-direction: column;
-    justify-content:start;
+    justify-content: start;
 }
 
     .scrollTable{
@@ -57,9 +57,13 @@
 
     .mostUsed .choosable td{
         padding: 5px 0;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    #mostUsedBody{
+    #mostUsedBody, #mostUsedRecipeBody{
         max-height: 75%;
         overflow-y: auto;
     }

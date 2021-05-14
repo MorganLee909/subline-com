@@ -17,14 +17,14 @@ let home = {
         let recipes = merchant.getRecipesSold(from, new Date());
         recipes.sort((a, b) => (a.quantity > b.quantity) ? -1 : 1);
         let displayCount = (recipes.length < 10) ? recipes.length : 10;
-        let container = document.getElementById("mostUsedRecipesList");
+        let container = document.getElementById("mostUsedRecipeBody");
 
         while(container.children.length > 0){
             container.removeChild(container.firstChild);
         }
 
         for(let i = 0; i < displayCount; i++){
-            let item = document.createElement("button");
+            let item = document.createElement("tr");
             item.classList.add("choosable");
             item.onclick = ()=>{
                 controller.openStrand("recipeBook");
@@ -32,12 +32,16 @@ let home = {
             };
             container.appendChild(item);
 
-            let leftText = document.createElement("p");
+            let leftText = document.createElement("td");
             leftText.innerText = recipes[i].recipe.name;
             item.appendChild(leftText);
 
-            let rightText = document.createElement("p");
-            rightText.innerText = recipes[i].quantity;
+            let centerText = document.createElement("td");
+            centerText.innerText = recipes[i].quantity;
+            item.appendChild(centerText);
+
+            let rightText = document.createElement("td");
+            rightText.innerText = `$${(recipes[i].quantity * recipes[i].recipe.price).toFixed(2)}`;
             item.appendChild(rightText);
         }
     },
