@@ -54,28 +54,11 @@ class MerchantIngredient{
     return: quantity sold in default unit
     */
     getSoldQuantity(from, to){
-        let traverseIngredient = (ingredient)=>{
-            let total = 0;
-            for(let i = 0; i < ingredient.subIngredients.length; i++){
-                if(ingredient.subIngredients[i].ingredient === this._ingredient) return ingredient.subIngredients[i].quantity;
-                total += traverseIngredient(ingredient.subIngredients[i].ingredient) * ingredient.subIngredients[i].quantity;
-            }
-
-            return total;
-        }
-
         let total = 0;
         const {start, end} = this._parent.getTransactionIndices(from, to);
 
         for(let i = start; i <= end; i++){
-            for(let j = 0; j < this._parent.transactions[i].recipes.length; j++){
-                let transactionRecipe = this._parent.transactions[i].recipes[j];
-                for(let k = 0; k < transactionRecipe.recipe.ingredients.length; k++){
-                    let ingredient = transactionRecipe.recipe.ingredients[k];
-                    let multiplier = (this._ingredient === ingredient.ingredient) ? 1 : traverseIngredient(ingredient.ingredient);
-                    total += multiplier * ingredient.quantity * transactionRecipe.quantity;
-                }
-            }
+            total += this._parent.transactions[i].getIngredientQuantity(this._ingredient);
         }
 
         return total;

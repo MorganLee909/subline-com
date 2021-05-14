@@ -45,19 +45,13 @@ class Transaction{
     */
     getIngredientQuantity(ingredient){
         let traverseIngredient = (transIngredient)=>{
-            if(transIngredient === ingredient) return true;
-
+            let total = 0;
             for(let i = 0; i < transIngredient.subIngredients.length; i++){
-                let next = traverseIngredient(transIngredient.subIngredients[i].ingredient);
-
-                if(next === true){
-                    return transIngredient.subIngredients[i].quantity;
-                }else{
-                    return transIngredient.subIngredients[i].quantity * next;
-                }
+                if(transIngredient.subIngredients[i].ingredient === ingredient) return transIngredient.subIngredients[i].quantity;
+                total += traverseIngredient(transIngredient.subIngredients[i].ingredient) * transIngredient.subIngredients[i].quantity;
             }
 
-            return 0;
+            return total;
         }
 
         let quantity = 0;
@@ -65,8 +59,8 @@ class Transaction{
         for(let i = 0; i < this._recipes.length; i++){
             for(let j = 0; j < this._recipes[i].recipe.ingredients.length; j++){
                 let transIngredient = this._recipes[i].recipe.ingredients[j];
-
-                quantity += traverseIngredient(transIngredient.ingredient) * transIngredient.quantity * this._recipes[i].quantity;
+                let multiplier = (ingredient === transIngredient.ingredient) ? 1 : traverseIngredient(transIngredient.ingredient);
+                quantity += multiplier * transIngredient.quantity * this._recipes[i].quantity;
             }
         }
 
