@@ -29,6 +29,11 @@
         max-height: 43%;
     }
 
+#homeStrand td, #homeStrand th{
+    text-align: left;
+    padding-left: 25px;
+}
+
 .mostUsed{
     display: flex;
     flex-direction: column;
