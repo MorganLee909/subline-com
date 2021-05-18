@@ -3,6 +3,21 @@
     align-items: center;
 }
 
+    #showHiddenRecipes{
+        display: flex;
+        align-items: center;
+    }
+
+        #showHiddenRecipes:hover{
+            background: rgb(0, 27, 45);
+            color: white;
+        }
+
+        #showHiddenRecipes input{
+            margin-right: 15px;
+            border-radius: none;
+        }
+
     #recipeList{
         display: flex;
         flex-direction: column;
