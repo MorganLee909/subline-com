@@ -38,6 +38,7 @@ let recipeBook = {
         }
 
         for(let i = 0; i < merchant.recipes.length; i++){
+            if(merchant.recipes[i].hidden === true) continue;
             let recipeDiv = template.cloneNode(true);
             recipeDiv.onclick = ()=>{
                 controller.openSidebar("recipeDetails", merchant.recipes[i]);
