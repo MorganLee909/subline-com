@@ -1,6 +1,18 @@
 let recipeDetails = {
     display: function(recipe){
         document.getElementById("editRecipeBtn").onclick = ()=>{controller.openSidebar("editRecipe", recipe)};
+
+        let showIcon = document.getElementById("showRecipeBtn");
+        let hideIcon = document.getElementById("hideRecipeBtn");
+        if(recipe.hidden === true){
+            showIcon.style.display = "block";
+            hideIcon.style.display = "none";
+            showIcon.onclick = ()=>{this.hide(recipe)};
+        }else{
+            showIcon.style.display = "none";
+            hideIcon.style.display = "block";
+            showIcon.onclick = ()=>{this.hide(recipe)};
+        }
         document.getElementById("hideRecipeBtn").onclick = ()=>{this.hide(recipe)};
         document.getElementById("recipeName").innerText = recipe.name;
 
@@ -40,7 +52,9 @@ let recipeDetails = {
     hide: function(recipe){
         recipe.hidden = (recipe.hidden === true) ? false : true;
 
+        state.updateRecipes();
         controller.openStrand("recipeBook");
+        controller.openSidebar("recipeDetails", recipe);
 
         fetch(`/recipes/hide/${recipe.id}`)
             .then(response => response.json())
