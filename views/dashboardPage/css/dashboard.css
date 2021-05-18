@@ -270,3 +270,22 @@ Multi-strand use classes
             background: rgb(201, 201, 201);
             color: black;
         }
+
+.tooltipContainer{
+    position: relative;
+}
+
+    .tooltipContainer:hover .tooltip{
+        visibility: visible;
+    }
+
+    .tooltip{
+        visibility: hidden;
+        background: rgb(0, 27, 45);
+        color:rgb(255, 99, 107);
+        padding: 5px;
+        position: absolute;
+        bottom: 35px;
+        right: -5px;
+        z-index: 10;
+    }
