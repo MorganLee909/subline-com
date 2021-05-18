@@ -3,6 +3,10 @@
     align-items: center;
 }
 
+    #recipeBookStrand .buttonBox{
+        margin: 0;
+    }
+
     #showHiddenRecipes{
         display: flex;
         align-items: center;

@@ -19,6 +19,8 @@ let recipeBook = {
                     button.onclick = ()=>{controller.openSidebar("addRecipe")};
                     break;
             }
+
+            document.getElementById("hiddenRecipesCheckbox").onclick = ()=>{this.populateRecipes()};
                             
             document.getElementById("recipeSearch").oninput = ()=>{this.search()};
 
@@ -31,6 +33,7 @@ let recipeBook = {
     populateRecipes: function(){
         let recipeList = document.getElementById("recipeList");
         let template = document.getElementById("recipe").content.children[0];
+        let hiddenCheck = document.getElementById("hiddenRecipesCheckbox");
 
         this.recipeDivList = [];
         while(recipeList.children.length > 0){
@@ -38,7 +41,7 @@ let recipeBook = {
         }
 
         for(let i = 0; i < merchant.recipes.length; i++){
-            if(merchant.recipes[i].hidden === true) continue;
+            if(merchant.recipes[i].hidden === true && hiddenCheck.checked === false) continue;
             let recipeDiv = template.cloneNode(true);
             recipeDiv.onclick = ()=>{
                 controller.openSidebar("recipeDetails", merchant.recipes[i]);
