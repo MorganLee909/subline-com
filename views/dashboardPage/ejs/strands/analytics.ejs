@@ -2,10 +2,11 @@
     <div class="strandHead">
         <h1 class="strandTitle">ANALYTICS</h1>
 
-        <label class="switch">
-            <input id="analSlider" type="checkbox">
-            <span class="slider"><p>INGREDIENTS</p><p>RECIPES</p></span>
-        </label>
+        <div id="analTabs">
+            <button id="analIngredientsTab" class="analTabButton active">INGREDIENTS</button><!--
+            --><button id="analCategoriesTab" class="analTabButton">CATEGORIES</button><!--
+            --><button id="analRecipesTab" class="analTabButton">RECIPES</button>
+        </div>
 
         <div class="dateRange">
             <h3 class="analDateRange">Date Range:</h3>
@@ -89,6 +90,10 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="analCategoryContent">
+        <h1>CATEGORIES</h1>
     </div>
 
     <div id="analRecipeContent" class="analContent">

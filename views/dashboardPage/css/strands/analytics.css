@@ -1,53 +1,22 @@
-.switch{
-    position: relative;
-    display: inline-block;
-    width: 239px;
-    height: 34px;
+.analTabButton{
+    background: rgb(0, 27, 45);
+    border: none;
     color: white;
+    cursor: pointer;
+    padding: 5px;
+    width: 125px;
 }
 
-    .switch input{
-        opacity: 0;
-        width: 0;
-        height: 0;
+    .analTabButton.active{
+        background: rgb(179, 191, 209);
+        color: black;
     }
 
-        .switch input:focus + .slider{
-            box-shadow: 0 0 1px #2196F3;
-        }
-
-        .switch input:checked + .slider:before {
-            -webkit-transform: translateX(105px);
-            -ms-transform: translateX(92px);
-            transform: translateX(125px);
-        }
-
-    .slider{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        padding: 0 24px 0 5px;
-        background: rgb(0, 27, 45);
-        transition: 0.2s;
-    }
-
-        .slider:before{
-            position: absolute;
-            content: "";
-            height: 30px;
-            width: 110px;
-            left: 1px;
-            bottom: 1px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgb(255, 99, 107);
-            transition: 0.5s;
-        }
+#analCategoriesTab{
+    border-left: 3px solid rgb(255, 99, 107);
+    border-right: 3px solid rgb(255, 99, 107);
+    width: 131px;
+}
 
 .analContent{
     display: flex;

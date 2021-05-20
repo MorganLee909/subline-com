@@ -9,15 +9,19 @@ let analytics = {
     display: function(){
         if(!this.isPopulated){
             document.getElementById("analRecipeContent").style.display = "none";
+            
+            let ingredientTab = document.getElementById("analIngredientsTab");
+            let recipeTab = document.getElementById("analRecipesTab");
+            let categoryTab = document.getElementById("analCategoriesTab");
+            ingredientTab.onclick = ()=>{this.tab(ingredientTab)};
+            categoryTab.onclick = ()=>{this.tab(categoryTab)};
+            recipeTab.onclick = ()=>{this.tab(recipeTab)};
 
             let to = new Date();
             let from = new Date(to.getFullYear(), to.getMonth() - 1, to.getDate());
 
             document.getElementById("analStartDate").valueAsDate = from;
             document.getElementById("analEndDate").valueAsDate = to;
-            let analSlider = document.getElementById("analSlider");
-            analSlider.onclick = ()=>{this.switchDisplay()};
-            analSlider.checked = false;
             document.getElementById("analDateBtn").onclick = ()=>{this.newDates()};
 
             this.populateButtons();
@@ -213,6 +217,10 @@ let analytics = {
         document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
     },
 
+    displayCategory: function(){
+        console.log("howdy");
+    },
+
     displayRecipe: function(){
         if(this.recipe === undefined || this.transactionsByDate.length === 0) return;
 
@@ -274,22 +282,6 @@ let analytics = {
         document.getElementById("recipeAvgRevenue").innerText = `$${(avg * this.recipe.price).toFixed(2)}`;
     },
 
-    switchDisplay: function(){
-        const checkbox = document.getElementById("analSlider");
-        let ingredient = document.getElementById("analIngredientContent");
-        let recipe = document.getElementById("analRecipeContent");
-
-        if(checkbox.checked === true){
-            ingredient.style.display = "none";
-            recipe.style.display = "flex";
-            this.displayRecipe();
-        }else{
-            ingredient.style.display = "flex";
-            recipe.style.display = "none";
-            this.displayIngredient();
-        }
-    },
-
     newDates: async function(){
         const from = document.getElementById("analStartDate").valueAsDate;
         const to = document.getElementById("analEndDate").valueAsDate;
@@ -299,10 +291,53 @@ let analytics = {
 
         await this.getData(from, to);
 
-        if(document.getElementById("analSlider").checked === true){
-            this.displayRecipe();
-        }else{
-            this.displayIngredient();
+        let analTabs = document.getElementById("analTabs");
+        for(let i = 0; i < analTabs.children.length; i++){
+            if(analTabs.children[i].classList.contains("active")){
+                switch(analTabs.children[i].innerText.toLowerCase()){
+                    case "ingredients":
+                        this.displayIngredient();
+                        break;
+                    case "categories":
+                        this.displayCategory();
+                        break;
+                    case "recipes":
+                        this.displayRecipe();
+                        break;
+                }
+            }
+        }
+    },
+
+    tab: function(tab){
+        let analTabs = document.getElementById("analTabs");
+        let ingredientContent = document.getElementById("analIngredientContent");
+        let categoryContent = document.getElementById("analCategoryContent");
+        let recipeContent = document.getElementById("analRecipeContent");
+
+        for(let i = 0; i < analTabs.children.length; i++){
+            analTabs.children[i].classList.remove("active");
+        }
+
+        tab.classList.add("active");
+
+        ingredientContent.style.display = "none";
+        categoryContent.style.display = "none";
+        recipeContent.style.display = "none";
+
+        switch(tab.innerText.toLowerCase()){
+            case "ingredients":
+                this.displayIngredient();
+                ingredientContent.style.display = "flex";
+                break;
+            case "categories":
+                this.displayCategory();
+                categoryContent.style.display = "flex";
+                break;
+            case "recipes":
+                recipeContent.style.display = "flex";
+                this.displayRecipe();
+                break;
         }
     }
 }
