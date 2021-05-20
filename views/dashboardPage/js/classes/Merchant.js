@@ -57,7 +57,7 @@ class MerchantIngredient{
         let total = 0;
         const {start, end} = this._parent.getTransactionIndices(from, to);
 
-        for(let i = start; i <= end; i++){
+        for(let i = start; i < end; i++){
             total += this._parent.transactions[i].getIngredientQuantity(this._ingredient);
         }
 
@@ -325,15 +325,13 @@ class Merchant{
     }
 
     getTransactions(from = 0, to = new Date()){
-        if(merchant._transactions.length <= 0){
-            return [];
-        }
+        if(merchant._transactions.length <= 0) return [];
 
         if(from === 0) from = this._transactions[this._transactions.length-1].date;
 
         const {start, end} = this.getTransactionIndices(from, to);
 
-        return this._transactions.slice(start, end + 1);
+        return this._transactions.slice(start, end);
     }
 
     /*
@@ -459,7 +457,7 @@ class Merchant{
         const {start, end} = this.getTransactionIndices(from, to);
 
         let total = 0;
-        for(let i = start; i <= end; i++){
+        for(let i = start; i < end; i++){
             for(let j = 0; j < this._transactions[i].recipes.length; j++){
                 for(let k = 0; k < this.recipes.length; k++){
                     if(this._transactions[i].recipes[j].recipe === this.recipes[k]){
@@ -526,7 +524,7 @@ class Merchant{
         const {start, end} = this.getTransactionIndices(from, to);
 
         let recipeList = [];
-        for(let i = start; i <= end; i++){
+        for(let i = start; i < end; i++){
             for(let j = 0; j < this._transactions[i].recipes.length; j++){
                 let exists = false;
                 for(let k = 0; k < recipeList.length; k++){
@@ -582,24 +580,27 @@ class Merchant{
     }
 
     getTransactionIndices(from, to){
-        let start, end;
+        let start = 0;
+        let end = 0;
+
+        if(
+            from > this._transactions[0].date ||
+            to >= this._transactions[this._transactions.length-1].date
+        ){
+            for(let i = this._transactions.length - 1; i >= 0; i--){
+                if(this._transactions[i].date > from){
+                    end = i + 1;
+                    break;
+                }
+            }
         
-        for(let i = this._transactions.length - 1; i >= 0; i--){
-            if(this._transactions[i].date >= from){
-                end = i;
-                break;
+            for(let i = 0; i < this._transactions.length; i++){
+                if(this._transactions[i].date <= to){
+                    start = i;
+                    break;
+                }
             }
         }
-        
-        for(let i = 0; i < this._transactions.length; i++){
-            if(this._transactions[i].date < to){
-                start = i;
-                break;
-            }
-        }
-
-        if(end === undefined) return false;
-
         return {start: start, end: end};
     }
 }

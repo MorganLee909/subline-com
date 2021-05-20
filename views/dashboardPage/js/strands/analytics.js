@@ -181,7 +181,7 @@ let analytics = {
 
         let yaxis = `QUANTITY (${this.ingredient.unit.toUpperCase()})`;
 
-        const layout = {
+        let layout = {
             title: this.ingredient.name.toUpperCase(),
             xaxis: {title: "DATE"},
             yaxis: {title: yaxis},
@@ -234,7 +234,56 @@ let analytics = {
     },
 
     displayCategory: function(){
+        if(this.category === undefined) this.category = merchant.categorizeIngredients()[0];
 
+        let startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        let endOfDay = new Date();
+        endOfDay.setDate(endOfDay.getDate() + 1);
+        endOfDay.setHours(0, 0, 0, 0);
+
+        let dates = [];
+        let quantities = [];
+
+        for(let i = 0; i < 30; i++){
+            dates.push(new Date(startOfDay));
+            let transactions = merchant.getTransactions(startOfDay, endOfDay);
+
+            let quantity = 0;
+            for(let j = 0; j < transactions.length; j++){
+                for(let k = 0; k < this.category.ingredients.length; k++){
+                    quantity += transactions[j].getIngredientQuantity(this.category.ingredients[k].ingredient);
+                }
+            }
+
+            startOfDay.setDate(startOfDay.getDate() - 1);
+            endOfDay.setDate(endOfDay.getDate() - 1);
+            quantities.push(quantity);
+        }
+
+        let trace = {
+            x: dates,
+            y: quantities,
+            mode: "lines+markers",
+            line: {
+                color: "rgb(255, 99, 107)"
+            }
+        };
+
+        let layout = {
+            title: this.category.name,
+            xaxis: {title: "DATE"},
+            yaxis: {title: "COST ($)"},
+            margin: {
+                l: 40,
+                r: 10,
+                b: 20,
+                t: 30
+            },
+            paper_bgcolor: "white"
+        }
+
+        Plotly.newPlot("analCategoriesGraph", [trace], layout);
     },
 
     displayRecipe: function(){
