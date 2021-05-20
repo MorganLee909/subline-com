@@ -10,6 +10,7 @@
     .analTabButton.active{
         background: rgb(179, 191, 209);
         color: black;
+        box-shadow: inset 0 0 5px black;
     }
 
 #analCategoriesTab{

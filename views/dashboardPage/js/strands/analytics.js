@@ -3,13 +3,12 @@ const Transaction = require("../classes/Transaction.js");
 let analytics = {
     isPopulated: false,
     ingredient: undefined,
+    category: undefined,
     recipe: undefined,
     transactionsByDate: [],
 
     display: function(){
         if(!this.isPopulated){
-            document.getElementById("analRecipeContent").style.display = "none";
-            
             let ingredientTab = document.getElementById("analIngredientsTab");
             let recipeTab = document.getElementById("analRecipesTab");
             let categoryTab = document.getElementById("analCategoriesTab");
@@ -36,6 +35,7 @@ let analytics = {
 
     populateButtons: function(){
         let ingredientButtons = document.getElementById("analIngredientList");
+        let categoryButtons = document.getElementById("analCategoriesList");
         let recipeButtons = document.getElementById("analRecipeList");
 
         while(ingredientButtons.children.length > 0){
@@ -51,6 +51,22 @@ let analytics = {
                 this.displayIngredient();
             };
             ingredientButtons.appendChild(button);
+        }
+
+        while(categoryButtons.children.length > 0){
+            categoryButtons.removeChild(categoryButtons.firstChild);
+        }
+
+        let categories = merchant.categorizeIngredients();
+        for(let i = 0; i < categories.length; i++){
+            let button = document.createElement("button");
+            button.innerText = categories[i].name;
+            button.classList.add("choosable");
+            button.onclick = ()=>{
+                this.category = categories[i];
+                this.displayCategory();
+            }
+            categoryButtons.appendChild(button);
         }
 
         while(recipeButtons.children.length > 0){
@@ -218,7 +234,7 @@ let analytics = {
     },
 
     displayCategory: function(){
-        console.log("howdy");
+
     },
 
     displayRecipe: function(){
