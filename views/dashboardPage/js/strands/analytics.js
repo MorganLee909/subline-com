@@ -202,12 +202,8 @@ let analytics = {
         let max = quantities[0];
         let sum = 0;
         for(let i = 0; i < quantities.length; i++){
-            if(quantities[i] < min){
-                min = quantities[i];
-            }
-            if(quantities[i] > max){
-                max = quantities[i];
-            }
+            if(quantities[i] < min) min = quantities[i];
+            if(quantities[i] > max) max = quantities[i];
 
             sum += quantities[i];
         }
