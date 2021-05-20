@@ -131,14 +131,17 @@ class Merchant{
                 }
             }
 
-            this._recipes.push(new Recipe(
+            let newRecipe = new Recipe(
                 recipes[i]._id,
                 recipes[i].name,
                 recipes[i].price,
                 ingredients,
                 this,
                 recipes[i].hidden
-            ));
+            );
+
+            newRecipe.calculateIngredientTotals();
+            this._recipes.push(newRecipe);
         }
 
         //populate transactions
@@ -180,6 +183,7 @@ class Merchant{
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
@@ -292,14 +296,17 @@ class Merchant{
     */
     addRecipes(recipes){
         for(let i = 0; i < recipes.length; i++){
-            this._recipes.push(new Recipe(
+            let newRecipe = new Recipe(
                 recipes[i]._id,
                 recipes[i].name,
                 recipes[i].price,
                 recipes[i].ingredients,
                 this,
                 recipes[i].hidden
-            ));
+            );
+
+            newRecipe.calculateIngredientTotals();
+            this._recipes.push(newRecipe);
         }
     }
 

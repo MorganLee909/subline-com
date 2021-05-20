@@ -44,27 +44,12 @@ class Transaction{
     Gets the quantity for a given ingredient
     */
     getIngredientQuantity(ingredient){
-        let traverseIngredient = (transIngredient)=>{
-            let total = 0;
-            for(let i = 0; i < transIngredient.subIngredients.length; i++){
-                if(transIngredient.subIngredients[i].ingredient === ingredient) return transIngredient.subIngredients[i].quantity;
-                total += traverseIngredient(transIngredient.subIngredients[i].ingredient) * transIngredient.subIngredients[i].quantity;
-            }
-
-            return total;
-        }
-
-        let quantity = 0;
-
+        let total = 0;
         for(let i = 0; i < this._recipes.length; i++){
-            for(let j = 0; j < this._recipes[i].recipe.ingredients.length; j++){
-                let transIngredient = this._recipes[i].recipe.ingredients[j];
-                let multiplier = (ingredient === transIngredient.ingredient) ? 1 : traverseIngredient(transIngredient.ingredient);
-                quantity += multiplier * transIngredient.quantity * this._recipes[i].quantity;
-            }
+            total += this._recipes[i].recipe.getIngredientTotal(ingredient.id);
         }
 
-        return quantity;
+        return total;
     }
 }
 

@@ -63,6 +63,7 @@ class Recipe{
         this._parent = parent;
         this._hidden = hidden;
         this._ingredients = [];
+        this._ingredientTotals = {};
 
         for(let i = 0; i < ingredients.length; i++){
             const ingredient = parent.getIngredient(ingredients[i].ingredient);
@@ -111,6 +112,14 @@ class Recipe{
         return this._ingredients;
     }
 
+    get ingredientTotals(){
+        return this._ingredientTotals;
+    }
+
+    getIngredientTotal(id){
+        return (this._ingredientTotals[id] === undefined) ? 0 : this._ingredientTotals[id];
+    }
+
     addIngredient(ingredient, quantity){
         let recipeIngredient = new RecipeIngredient(ingredient, quantity);
         this._ingredients.push(recipeIngredient);
@@ -121,6 +130,24 @@ class Recipe{
 
     removeIngredients(){
         this._ingredients = [];
+    }
+
+    calculateIngredientTotals(){
+        let traverseIngredient = (ingredient, multiplier)=>{
+            for(let i = 0; i < ingredient.subIngredients.length; i++){
+                traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);                
+            }
+
+            if(this._ingredientTotals[ingredient.id] === undefined){
+                this._ingredientTotals[ingredient.id] = multiplier;
+            }else{
+                this._ingredientTotals[ingredient.id] += multiplier;
+            }
+        }
+
+        for(let i = 0; i < this._ingredients.length; i++){
+            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i]._quantity);
+        }
     }
 }
 

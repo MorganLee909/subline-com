@@ -92,19 +92,7 @@ let recipeBook = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    let newRecipes = [];
-                    for(let i = 0; i < response.new.length; i++){
-                        newRecipes.push(new Recipe(
-                            response.new[i]._id,
-                            response.new[i].name,
-                            response.new[i].price,
-                            merchant,
-                            [],
-                            response.new[i].hidden
-                        ));
-                    }
-
-                    merchant.addRecipes(newRecipes);
+                    merchant.addRecipes(response);
 
                     for(let i = 0; i < response.removed.length; i++){
                         for(let j = 0; j < merchant.recipes.length; j++){
