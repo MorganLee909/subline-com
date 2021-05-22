@@ -232,29 +232,45 @@ let analytics = {
     displayCategory: function(){
         if(this.category === undefined) this.category = merchant.categorizeIngredients()[0];
 
-        let startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        let endOfDay = new Date();
-        endOfDay.setDate(endOfDay.getDate() + 1);
-        endOfDay.setHours(0, 0, 0, 0);
+        // let startOfDay = new Date();
+        // startOfDay.setHours(0, 0, 0, 0);
+        // let endOfDay = new Date();
+        // endOfDay.setDate(endOfDay.getDate() + 1);
+        // endOfDay.setHours(0, 0, 0, 0);
+
+        // let dates = [];
+        // let quantities = [];
+
+        // for(let i = 0; i < 30; i++){
+        //     dates.push(new Date(startOfDay));
+        //     let transactions = merchant.getTransactions(startOfDay, endOfDay);
+
+        //     let quantity = 0;
+        //     for(let j = 0; j < transactions.length; j++){
+        //         for(let k = 0; k < this.category.ingredients.length; k++){
+        //             quantity += transactions[j].getIngredientQuantity(this.category.ingredients[k].ingredient);
+        //         }
+        //     }
+
+        //     startOfDay.setDate(startOfDay.getDate() - 1);
+        //     endOfDay.setDate(endOfDay.getDate() - 1);
+        //     quantities.push(quantity);
+        // }
 
         let dates = [];
         let quantities = [];
 
-        for(let i = 0; i < 30; i++){
-            dates.push(new Date(startOfDay));
-            let transactions = merchant.getTransactions(startOfDay, endOfDay);
+        for(let i = 0; i < this.transactionsByDate.length; i++){
+            dates.push(this.transactionsByDate[i].date);
+            let total = 0;
+            for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
+                let transaction = this.transactionsByDate[i].transactions[j];
 
-            let quantity = 0;
-            for(let j = 0; j < transactions.length; j++){
                 for(let k = 0; k < this.category.ingredients.length; k++){
-                    quantity += transactions[j].getIngredientQuantity(this.category.ingredients[k].ingredient);
+                    total += transaction.getIngredientQuantity(this.category.ingredients[k].ingredient);
                 }
             }
-
-            startOfDay.setDate(startOfDay.getDate() - 1);
-            endOfDay.setDate(endOfDay.getDate() - 1);
-            quantities.push(quantity);
+            quantities.push(total);
         }
 
         let trace = {
