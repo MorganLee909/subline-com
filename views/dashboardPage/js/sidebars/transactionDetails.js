@@ -66,7 +66,11 @@ let transactionDetails = {
                     merchant.removeTransaction(this.transaction);
                     state.updateTransactions();
 
-                    controller.openStrand("transactions", merchant.getTransactions());
+                    let from = new Date();
+                    from.setDate(from.getDate() - 7);
+                    from.setHours(0, 0, 0, 0);
+
+                    controller.openStrand("transactions", merchant.getTransactions(from, new Date()));
                     controller.closeModal();
                     controller.createBanner("TRANSACTION REMOVED", "success");
                 }

@@ -34,7 +34,7 @@ window.merchant = new Merchant(
 );
 
 controller = {
-    openStrand: function(strand, data = undefined){
+    openStrand: function(strand, data){
         this.closeSidebar();
 
         let strands = document.querySelectorAll(".strand");
@@ -78,7 +78,7 @@ controller = {
             case "transactions":
                 activeButton = document.getElementById("transactionsBtn");
                 document.getElementById("transactionsStrand").style.display = "flex";
-                transactions.transactions = data;
+                if(data !== undefined) transactions.transactions = data;
                 transactions.display();
                 break;
             case "account":
@@ -419,6 +419,7 @@ window.state = {
         home.isPopulated = false;
         ingredients.populateByProperty();
         analytics.isPopulated = false;
+        transactions.display();
         home.mostUsedRecipes();
         home.mostUsedIngredients();
     },
@@ -439,6 +440,9 @@ window.state = {
         recipeBook.isPopulated = false;
     }
 }
+let from = new Date();
+from.setDate(from.getDate() - 7);
+from.setHours(0, 0, 0, 0);
 
 //Add click listeners for menu buttons
 document.getElementById("menuShifter").onclick = ()=>{controller.changeMenu()}
@@ -448,7 +452,7 @@ document.getElementById("ingredientsBtn").onclick = ()=>{controller.openStrand("
 document.getElementById("recipeBookBtn").onclick = ()=>{controller.openStrand("recipeBook")};
 document.getElementById("analyticsBtn").onclick = ()=>{controller.openStrand("analytics")};
 document.getElementById("ordersBtn").onclick = ()=>{controller.openStrand("orders")};
-document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions", merchant.getTransactions())};
+document.getElementById("transactionsBtn").onclick = ()=>{controller.openStrand("transactions")};
 document.getElementById("accountBtn").onclick = ()=>{controller.openStrand("account")};
 document.getElementById("feedbackButton").onclick = ()=>{controller.openModal("feedback")};
 

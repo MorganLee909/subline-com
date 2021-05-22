@@ -311,9 +311,7 @@ class Merchant{
 
     removeRecipe(recipe){
         const index = this._recipes.indexOf(recipe);
-        if(index === undefined){
-            return false;
-        }
+        if(index === undefined) return false;
 
         this._recipes.splice(index, 1);
 
@@ -324,10 +322,8 @@ class Merchant{
         return this._transactions;
     }
 
-    getTransactions(from = 0, to = new Date()){
+    getTransactions(from, to){
         if(merchant._transactions.length <= 0) return [];
-
-        if(from === 0) from = this._transactions[this._transactions.length-1].date;
 
         const {start, end} = this.getTransactionIndices(from, to);
 
@@ -584,6 +580,7 @@ class Merchant{
         let end = 0;
 
         if(
+            this._transactions.length === 0 ||
             from > this._transactions[0].date ||
             to >= this._transactions[this._transactions.length-1].date
         ){

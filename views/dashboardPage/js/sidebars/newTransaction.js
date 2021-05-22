@@ -75,11 +75,21 @@ let newTransaction = {
                     if(typeof(response) === "string"){
                         controller.createBanner(response, "error");
                     }else{
-                        if(new Date(response.date) > merchant.transactions[merchant.transactions.length-1].date){
+                        let thirtyAgo = new Date();
+                        thirtyAgo.setDate(thirtyAgo.getDate() - 30);
+                        thirtyAgo.setHours(0, 0, 0);
+
+                        if(
+                            merchant.transactions.length === 0 ||
+                            new Date(response.date) > thirtyAgo
+                        ){
                             merchant.addTransactions([response], true);
                             state.updateTransactions();
                         }
-                        controller.openStrand("transactions", merchant.getTransactions());
+                        let from = new Date();
+                        from.setDate(from.getDate() - 7);
+                        from.setHours(0, 0, 0, 0);
+                        controller.openStrand("transactions", merchant.getTransactions(from, new Date()));
                         controller.createBanner("TRANSACTION CREATED", "success");
                     }
                 })

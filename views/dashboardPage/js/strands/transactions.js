@@ -4,13 +4,20 @@ let transactions = {
     display: function(){
         document.getElementById("filterTransactionsButton").onclick = ()=>{controller.openSidebar("transactionFilter")};
         document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
+        if(this.transactions.length === 0){
+            let from = new Date();
+            from.setDate(from.getDate() - 7);
+            from.setHours(0, 0, 0, 0);
 
-        this.populateTransactions(this.transactions);
+            this.transactions = merchant.getTransactions(from, new Date());
+        }
+
+        this.populateTransactions();
 
         this.isPopulated = true;
     },
 
-    populateTransactions: function(transactions){
+    populateTransactions: function(){
         let transactionsList = document.getElementById("transactionsList");
         let template = document.getElementById("transaction").content.children[0];
 
@@ -19,9 +26,9 @@ let transactions = {
         }
 
         let i = 0;
-        while(i < transactions.length && i < 100){
+        while(i < this.transactions.length && i < 100){
             let transactionDiv = template.cloneNode(true);
-            let transaction = transactions[i];
+            let transaction = this.transactions[i];
 
             transactionDiv.onclick = ()=>{
                 controller.openSidebar("transactionDetails", transaction);
@@ -32,12 +39,12 @@ let transactions = {
             let totalRecipes = 0;
             let totalPrice = 0;
 
-            for(let j = 0; j < transactions[i].recipes.length; j++){
-                totalRecipes += transactions[i].recipes[j].quantity;
-                totalPrice += transactions[i].recipes[j].recipe.price * transactions[i].recipes[j].quantity;
+            for(let j = 0; j < transaction.recipes.length; j++){
+                totalRecipes += transaction.recipes[j].quantity;
+                totalPrice += transaction.recipes[j].recipe.price * transaction.recipes[j].quantity;
             }
 
-            transactionDiv.children[0].innerText = transactions[i].date.toLocaleDateString();
+            transactionDiv.children[0].innerText = transaction.date.toLocaleDateString();
             transactionDiv.children[1].innerText = `${totalRecipes} recipes sold`;
             transactionDiv.children[2].innerText = `$${totalPrice.toFixed(2)}`;
 
