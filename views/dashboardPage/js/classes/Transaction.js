@@ -46,7 +46,7 @@ class Transaction{
     getIngredientQuantity(ingredient){
         let total = 0;
         for(let i = 0; i < this._recipes.length; i++){
-            total += this._recipes[i].recipe.getIngredientTotal(ingredient.id);
+            total += this._recipes[i].recipe.getIngredientTotal(ingredient.id) * this._recipes[i].quantity;
         }
 
         return total;
