@@ -62,7 +62,7 @@ let home = {
             });
         }
 
-        ingredients.sort((a, b) => (a.unitCost > b.unitCost) ? -1 : 1);
+        ingredients.sort((a, b) => (a.totalCost > b.totalCost) ? -1 : 1);
         let container = document.getElementById("mostUsedBody");
 
         while(container.children.length > 0){
