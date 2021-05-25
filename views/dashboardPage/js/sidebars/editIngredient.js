@@ -102,8 +102,7 @@ let editIngredient = {
             if(typeof(response) === "string"){
                 controller.createBanner(response, "error");
             }else{
-                merchant.removeIngredient(merchant.getIngredient(response.ingredient._id));
-                merchant.addIngredients([response]);
+                merchant.updateIngredients([response]);
                 state.updateIngredients();
                 controller.openStrand("ingredients");
                 controller.createBanner("INGREDIENT UPDATED", "success");

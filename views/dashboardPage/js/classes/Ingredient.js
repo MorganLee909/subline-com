@@ -13,6 +13,10 @@ class Ingredient{
     get id(){
         return this._id;
     }
+    
+    set id(id){
+        this._id = id;
+    }
 
     get name(){
         return this._name;
@@ -32,6 +36,10 @@ class Ingredient{
 
     get unitType(){
         return this._unitType;
+    }
+
+    set unitType(unitType){
+        this._unitType = unitType;
     }
 
     get unit(){

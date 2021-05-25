@@ -38,6 +38,10 @@ class MerchantIngredient{
         }
     }
 
+    set quantity(quantity){
+        this._quantity = quantity;
+    }
+
     updateQuantity(quantity){
         this._quantity += controller.baseUnit(quantity, this._ingredient.unit);
     }
@@ -264,6 +268,20 @@ class Merchant{
         if(index === undefined) return false;
 
         this._inventory.splice(index, 1);
+    }
+
+    updateIngredients(ingredients){
+        for(let i = 0; i < ingredients.length; i++){
+            let inventoryItem = this.getIngredient(ingredients[i].ingredient._id);
+
+            inventoryItem.quantity = ingredients[i].quantity;
+            inventoryItem.ingredient.id = ingredients[i].ingredient._id;
+            inventoryItem.ingredient.name = ingredients[i].ingredient.name;
+            inventoryItem.ingredient.unitType = ingredients[i].ingredient.unitType;
+            inventoryItem.ingredient.unit = ingredients[i].defaultUnit;
+            inventoryItem.ingredient.unitSize = ingredients[i].ingredient.unitSize;
+            inventoryItem.ingredient.addIngredients(ingredients[i].ingredient.ingredients);
+        }
     }
 
     getIngredient(id){
