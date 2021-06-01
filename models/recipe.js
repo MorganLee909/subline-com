@@ -23,6 +23,10 @@ const RecipeSchema = new mongoose.Schema({
         min: [0, "PRICE OF RECIPE CANNOT BE A NEGATIVE NUMBER"],
         required: [true, "RECIPE PRICE IS REQUIRED"]
     },
+    category: {
+        type: String,
+        required: false
+    }
     hidden: {
         type: Boolean,
         default: false
