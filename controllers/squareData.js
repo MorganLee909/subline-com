@@ -107,7 +107,6 @@ module.exports = {
                 });
             })    
             .then((response)=>{
-                console.log("axiosed");
                 merchant.locationId = response.data.merchant.main_location_id;
                 owner.name = response.data.merchant.business_name;
 
@@ -125,32 +124,31 @@ module.exports = {
                     }
                 });
 
-                return Promise.all([items, location]);
-            })
-            .then((response)=>{
-                let location = response[1].data.location;
-                if(owner.email === location.business_email.toLowerCase()) owner.status = [];
-                merchant.name = location.name;
-                
-                let recipes = helper.createRecipesFromSquare(response[0].data.items, merchant._id);
-                merchant.recipes = recipes;
-
-                let baseUrl = "https://api.geocod.io/v1.6/geocode/";
-                let address = location.address;
-                let geocode = axios.get(`${baseUrl}?q=${address.address_line_1}+${address.locality}+${address.administrative_district_level_1}+${address.postal_code}&api_key=${process.env.SUBLINE_GEOCODE_API}&limit=1`);
-
                 let categories = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
-                    objects_types: ["CATEGORY"]
+                    object_types: ["CATEGORY"],
                 },{
                     headers: {
                         Authorization: `Bearer ${owner.square.accessToken}`
                     }
                 });
-    
-                return Promise.all([Recipe.create(recipes), geocode, owner.save()], categories);
+
+                return Promise.all([items, location, categories]);
             })
             .then((response)=>{
-                console.log(response[1].data.results[0]);
+                let location = response[1].data.location;
+                if(owner.email === location.business_email.toLowerCase()) owner.status = [];
+                merchant.name = location.name;
+
+                let recipes = helper.createRecipesFromSquare(response[0].data.items, response[2].data.objects, merchant._id);
+                merchant.recipes = recipes;
+
+                let baseUrl = "https://api.geocod.io/v1.6/geocode/";
+                let address = location.address;
+                let geocode = axios.get(`${baseUrl}?q=${address.address_line_1}+${address.locality}+${address.administrative_district_level_1}+${address.postal_code}&api_key=${process.env.SUBLINE_GEOCODE_API}&limit=1`);
+    
+                return Promise.all([Recipe.create(recipes), geocode, owner.save()]);
+            })
+            .then((response)=>{
                 let addressData = response[1].data.results[0];
 
                 merchant.address = {
@@ -176,7 +174,6 @@ module.exports = {
                 helper.getAllMerchantTransactions(merchant, owner.square.accessToken);
             })
             .catch((err)=>{
-                console.log(err);
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){

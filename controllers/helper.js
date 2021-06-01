@@ -154,7 +154,7 @@ module.exports = {
         return unitType;
     },
 
-    createRecipesFromSquare: function(squareItems, merchantId){
+    createRecipesFromSquare: function(squareItems, categories, merchantId){
         let recipes = [];
 
         for(let i = 0; i < squareItems.length; i++){
@@ -167,8 +167,16 @@ module.exports = {
                         posId: item.id,
                         merchant: merchantId,
                         name: `${squareItems[i].item_data.name} '${item.item_variation_data.name}'`,
-                        price: price
+                        price: price,
+                        category: ""
                     });
+
+                    for(let k = 0; k < categories.length; k++){
+                        if(squareItems[i].item_data.category_id === categories[k].id){
+                            recipe.category = categories[k].category_data.name;
+                            break;
+                        }
+                    }
 
                     recipes.push(recipe);
                 }
@@ -181,8 +189,16 @@ module.exports = {
                     merchant: merchantId,
                     name: squareItems[i].item_data.name,
                     price: price,
-                    ingredients: []
+                    ingredients: [],
+                    category: ""
                 });
+                
+                for(let j = 0; j < categories.length; j++){
+                    if(squareItems[i].item_data.category_id === categories[j].id){
+                        recipe.category = categories[j].category_data.name;
+                        break;
+                    }
+                }
 
                 recipes.push(recipe);
             }
