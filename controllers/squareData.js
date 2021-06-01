@@ -107,6 +107,7 @@ module.exports = {
                 });
             })    
             .then((response)=>{
+                console.log("axiosed");
                 merchant.locationId = response.data.merchant.main_location_id;
                 owner.name = response.data.merchant.business_name;
 
@@ -127,6 +128,7 @@ module.exports = {
                 return Promise.all([items, location]);
             })
             .then((response)=>{
+                console.log("again");
                 let location = response[1].data.location;
                 if(owner.email === location.business_email.toLowerCase()) owner.status = [];
                 merchant.name = location.name;
@@ -137,11 +139,23 @@ module.exports = {
                 let baseURL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress/";
                 let address = location.address;
                 let geocode = axios.get(`${baseURL}?address=${address.address_line_1}+${address.locality}+${address.administrative_district_level_1}+${address.postal_code}&benchmark=2020&format=json`);
+
+                console.log(owner.square.accessToken);
+                let categories = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
+                    objects_types: ["CATEGORY"]
+                },{
+                    headers: {
+                        Authorization: `Bearer ${owner.square.accessToken}`
+                    }
+                });
     
-                return Promise.all([Recipe.create(recipes), geocode, owner.save()]);
+                return Promise.all([Recipe.create(recipes), geocode, owner.save()], categories);
             })
             .then((response)=>{
+                console.log("again again");
                 let addressData = response[1].data.result.addressMatches[0];
+                console.log("something");
+                console.log(response[2].data);
 
                 merchant.address = {
                     full: addressData.matchedAddress,
@@ -166,6 +180,7 @@ module.exports = {
                 helper.getAllMerchantTransactions(merchant, owner.square.accessToken);
             })
             .catch((err)=>{
+                console.log(err);
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else if(err.name === "ValidationError"){
