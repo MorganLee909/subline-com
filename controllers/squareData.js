@@ -128,7 +128,6 @@ module.exports = {
                 return Promise.all([items, location]);
             })
             .then((response)=>{
-                console.log("again");
                 let location = response[1].data.location;
                 if(owner.email === location.business_email.toLowerCase()) owner.status = [];
                 merchant.name = location.name;
@@ -136,11 +135,10 @@ module.exports = {
                 let recipes = helper.createRecipesFromSquare(response[0].data.items, merchant._id);
                 merchant.recipes = recipes;
 
-                let baseURL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress/";
+                let baseUrl = "https://api.geocod.io/v1.6/geocode/";
                 let address = location.address;
-                let geocode = axios.get(`${baseURL}?address=${address.address_line_1}+${address.locality}+${address.administrative_district_level_1}+${address.postal_code}&benchmark=2020&format=json`);
+                let geocode = axios.get(`${baseUrl}?q=${address.address_line_1}+${address.locality}+${address.administrative_district_level_1}+${address.postal_code}&api_key=${process.env.SUBLINE_GEOCODE_API}&limit=1`);
 
-                console.log(owner.square.accessToken);
                 let categories = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
                     objects_types: ["CATEGORY"]
                 },{
@@ -152,21 +150,19 @@ module.exports = {
                 return Promise.all([Recipe.create(recipes), geocode, owner.save()], categories);
             })
             .then((response)=>{
-                console.log("again again");
-                let addressData = response[1].data.result.addressMatches[0];
-                console.log("something");
-                console.log(response[2].data);
+                console.log(response[1].data.results[0]);
+                let addressData = response[1].data.results[0];
 
                 merchant.address = {
-                    full: addressData.matchedAddress,
-                    city: addressData.addressComponents.city,
-                    state: addressData.addressComponents.state,
-                    zip: addressData.addressComponents.zip
+                    full: response[1].data.results[0].address_components.formatted_address,
+                    city: addressData.address_components.city,
+                    state: addressData.address_components.state,
+                    zip: addressData.address_components.zip
                 };
 
                 merchant.location = {
                     type: "Point",
-                    coordinates: [addressData.coordinates.x, addressData.coordinates.y]
+                    coordinates: [addressData.location.lat, addressData.location.lng]
                 };
 
                 return merchant.save();
