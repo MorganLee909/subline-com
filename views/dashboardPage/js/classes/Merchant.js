@@ -138,6 +138,7 @@ class Merchant{
             let newRecipe = new Recipe(
                 recipes[i]._id,
                 recipes[i].name,
+                recipes[i].category,
                 recipes[i].price,
                 ingredients,
                 this,
@@ -290,6 +291,38 @@ class Merchant{
         }
     }
 
+    /*
+    Groups all of the merchant's ingredients by their category
+    Return: [{
+        name: category name,
+        ingredients: [MerchantIngredient Object]
+    }]
+    */
+    categorizeIngredients(){
+        let ingredientsByCategory = [];
+
+        for(let i = 0; i < this._inventory.length; i++){
+            let categoryExists = false;
+            for(let j = 0; j < ingredientsByCategory.length; j++){
+                if(this._inventory[i].ingredient.category === ingredientsByCategory[j].name){
+                    ingredientsByCategory[j].ingredients.push(this._inventory[i]);
+
+                    categoryExists = true;
+                    break;
+                }
+            }
+
+            if(!categoryExists){
+                ingredientsByCategory.push({
+                    name: this._inventory[i].ingredient.category,
+                    ingredients: [this._inventory[i]]
+                });
+            }
+        }
+
+        return ingredientsByCategory;
+    }
+
     get recipes(){
         return this._recipes;
     }
@@ -316,6 +349,7 @@ class Merchant{
             let newRecipe = new Recipe(
                 recipes[i]._id,
                 recipes[i].name,
+                recipes[i].category,
                 recipes[i].price,
                 recipes[i].ingredients,
                 this,
@@ -334,6 +368,37 @@ class Merchant{
         this._recipes.splice(index, 1);
 
         state.updateRecipes();
+    }
+
+    /*
+    Groups recipes by their categories
+    return: [{
+        name: String,
+        recipes: [Recipe]
+    }]
+    */
+    categorizeRecipes(){
+        let categories = [];
+
+        for(let i = 0; i < this._recipes.length; i++){
+            let exists = false;
+            for(let j = 0; j < categories.length; j++){
+                if(this._recipes[i].category === categories[j].name){
+                    categories[j].recipes.push(this._recipes[i]);
+                    exists = true;
+                    break;
+                }
+            }
+
+            if(exists === false){
+                categories.push({
+                    name: this._recipes[i].category,
+                    recipes: [this._recipes[i]]
+                });
+            }
+        }
+
+        return categories;
     }
 
     get transactions(){
@@ -559,38 +624,6 @@ class Merchant{
         }
 
         return recipeList;
-    }
-    
-    /*
-    Groups all of the merchant's ingredients by their category
-    Return: [{
-        name: category name,
-        ingredients: [MerchantIngredient Object]
-    }]
-    */
-    categorizeIngredients(){
-        let ingredientsByCategory = [];
-
-        for(let i = 0; i < this._inventory.length; i++){
-            let categoryExists = false;
-            for(let j = 0; j < ingredientsByCategory.length; j++){
-                if(this._inventory[i].ingredient.category === ingredientsByCategory[j].name){
-                    ingredientsByCategory[j].ingredients.push(this._inventory[i]);
-
-                    categoryExists = true;
-                    break;
-                }
-            }
-
-            if(!categoryExists){
-                ingredientsByCategory.push({
-                    name: this._inventory[i].ingredient.category,
-                    ingredients: [this._inventory[i]]
-                });
-            }
-        }
-
-        return ingredientsByCategory;
     }
 
     getTransactionIndices(from, to){

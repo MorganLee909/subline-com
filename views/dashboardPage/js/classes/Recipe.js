@@ -56,9 +56,10 @@ ingredients = [{
 parent = merchant that it belongs to
 */
 class Recipe{
-    constructor(id, name, price, ingredients, parent, hidden){
+    constructor(id, name, category, price, ingredients, parent, hidden){
         this._id = id;
         this._name = name;
+        this._category = category;
         this._price = price;
         this._parent = parent;
         this._hidden = hidden;
@@ -86,6 +87,10 @@ class Recipe{
 
     set name(name){
         this._name = name;
+    }
+
+    get category(){
+        return this._category;
     }
 
     get price(){
