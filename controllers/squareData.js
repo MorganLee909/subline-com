@@ -200,8 +200,16 @@ module.exports = {
                     Authorization: `Bearer ${res.locals.owner.square.accessToken}`
                 }
             });
+
+        let categories = axios.post(`${process.env.SQUARE_ADDRESS}/v2/catalog/search`, {
+            object_types: ["CATEGORY"]
+        },{
+            headers: {
+                Authorization: `Bearer ${res.locals.owner.square.accessToken}`
+            }
+        })
     
-        Promise.all([populate, squareRecipes])
+        Promise.all([populate, squareRecipes, categories])
             .then((response)=>{
                 merchantRecipes = res.locals.merchant.recipes.slice();
     
@@ -219,7 +227,7 @@ module.exports = {
                             }
                         }
     
-                        if(!isFound){
+                        if(isFound === false){
                             let priceMoney = itemData.variations[j].item_variation_data.price_money;
                             let price = (priceMoney === undefined) ? 0 : priceMoney.amount;
 
@@ -228,13 +236,21 @@ module.exports = {
                                 merchant: res.locals.merchant._id,
                                 name: "",
                                 price: price,
-                                ingredients: []
+                                ingredients: [],
+                                category: ""
                             });
     
                             if(itemData.variations.length > 1){
                                 newRecipe.name = `${itemData.name} '${itemData.variations[j].item_variation_data.name}'`;
                             }else{
                                 newRecipe.name = itemData.name;
+                            }
+                            
+                            for(let k = 0; k < response[2].data.objects.length; k++){
+                                if(itemData.category_id === response[2].data.objects[k].id){
+                                    newRecipe.category = response[2].data.objects[k].category_data.name;
+                                    break;
+                                }
                             }
     
                             newRecipes.push(newRecipe);
