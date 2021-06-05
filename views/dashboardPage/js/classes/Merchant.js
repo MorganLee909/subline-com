@@ -361,13 +361,31 @@ class Merchant{
         }
     }
 
+    /*
+    Updates a single recipe
+    recipe: Recipe
+    updates: Object
+    */
+    updateRecipe(recipe, updates){
+        recipe.name = updates.name;
+        recipe.category = updates.category;
+        recipe.hidden = updates.category;
+        recipe.price = updates.price;
+
+        recipe.clearIngredients();
+        for(let i = 0; i < updates.ingredients.length; i++){
+            newIngredient = this.getIngredient(updates.ingredients[i].ingredient);
+            recipe.addIngredient(newIngredient.ingredient, updates.ingredients[i].quantity);
+        }
+
+        recipe.calculateIngredientTotals();
+    }
+
     removeRecipe(recipe){
         const index = this._recipes.indexOf(recipe);
         if(index === undefined) return false;
 
         this._recipes.splice(index, 1);
-
-        state.updateRecipes();
     }
 
     /*

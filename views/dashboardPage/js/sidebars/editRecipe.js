@@ -113,8 +113,7 @@ let editRecipe = {
                 if(typeof(response) === "string"){
                     controller.createBanner(response, "error");
                 }else{
-                    merchant.removeRecipe(recipe)
-                    merchant.addRecipes([response]);
+                    merchant.updateRecipe(recipe, response);
                     state.updateRecipes();
                     controller.openStrand("recipeBook");
                     controller.createBanner("RECIPE UPDATED", "success");

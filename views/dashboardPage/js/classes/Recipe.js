@@ -93,6 +93,10 @@ class Recipe{
         return this._category;
     }
 
+    set category(category){
+        this._category = category;
+    }
+
     get price(){
         return this._price / 100;
     }
@@ -117,6 +121,10 @@ class Recipe{
         return this._ingredients;
     }
 
+    clearIngredients(){
+        this._ingredients = [];
+    }
+
     get ingredientTotals(){
         return this._ingredientTotals;
     }
@@ -138,6 +146,8 @@ class Recipe{
     }
 
     calculateIngredientTotals(){
+        this._ingredientTotals = {};
+        
         let traverseIngredient = (ingredient, multiplier)=>{
             for(let i = 0; i < ingredient.subIngredients.length; i++){
                 traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);                
