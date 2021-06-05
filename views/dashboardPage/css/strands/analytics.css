@@ -1,3 +1,14 @@
+#bottomAnalTabs{
+    display:flex;
+    justify-content: center;
+    margin-top: 5px;
+    width: 100%;
+}
+
+    #bottomAnalTabs .analTabButton{
+        width: 100px;
+    }
+
 .analTabButton{
     background: rgb(0, 27, 45);
     border: none;
@@ -12,11 +23,9 @@
         color: black;
     }
 
-    #analCategoriesTab{
-        border-left: 3px solid rgb(255, 99, 107);
-        border-right: 3px solid rgb(255, 99, 107);
-        width: 131px;
-    }
+#analIngredientsTab, #analIndividualTab{
+    border-right: 2px solid rgb(255, 99, 107);
+}
 
 .analContent{
     display: flex;
@@ -79,7 +88,7 @@
     width: 90%;
 }
 
-#analRecipeContent{
+#analIndividualRecipe{
     display: flex;
     justify-content: space-around;
     align-items: center;

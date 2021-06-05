@@ -51,7 +51,7 @@
             display: block;
         }
 
-        #analRecipeContent, .analContent{
+        #analIndividualRecipe, .analContent{
             height: 80%;
         }
 

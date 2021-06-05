@@ -12,9 +12,11 @@ let analytics = {
             let ingredientTab = document.getElementById("analIngredientsTab");
             let recipeTab = document.getElementById("analRecipesTab");
             let categoryTab = document.getElementById("analCategoriesTab");
+            let individualTab = document.getElementById("analIndividualTab");
             ingredientTab.onclick = ()=>{this.tab(ingredientTab)};
             categoryTab.onclick = ()=>{this.tab(categoryTab)};
             recipeTab.onclick = ()=>{this.tab(recipeTab)};
+            individualTab.onclick = ()=>{this.tab(individualTab)};
 
             let to = new Date();
             let from = new Date(to.getFullYear(), to.getMonth() - 1, to.getDate());
@@ -64,7 +66,7 @@ let analytics = {
             button.classList.add("choosable");
             button.onclick = ()=>{
                 this.category = categories[i];
-                this.displayCategory();
+                this.displayIngredientCategory();
             }
             categoryButtons.appendChild(button);
         }
@@ -229,7 +231,7 @@ let analytics = {
         document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
     },
 
-    displayCategory: function(){
+    displayIngredientCategory: function(){
         if(this.category === undefined) this.category = merchant.categorizeIngredients()[0];
 
         let dates = [];
@@ -351,7 +353,7 @@ let analytics = {
                         this.displayIngredient();
                         break;
                     case "categories":
-                        this.displayCategory();
+                        this.displayIngredientCategory();
                         break;
                     case "recipes":
                         this.displayRecipe();
@@ -362,34 +364,36 @@ let analytics = {
     },
 
     tab: function(tab){
-        let analTabs = document.getElementById("analTabs");
-        let ingredientContent = document.getElementById("analIngredientContent");
-        let categoryContent = document.getElementById("analCategoryContent");
-        let recipeContent = document.getElementById("analRecipeContent");
+        let upperGroup = document.getElementById("topAnalTabs");
+        let lowerGroup = document.getElementById("bottomAnalTabs");
+        let strand = document.getElementById("analyticsStrand");
 
-        for(let i = 0; i < analTabs.children.length; i++){
-            analTabs.children[i].classList.remove("active");
+        for(let i = 0; i < tab.parentElement.children.length; i++){
+            tab.parentElement.children[i].classList.remove("active");
         }
 
         tab.classList.add("active");
 
-        ingredientContent.style.display = "none";
-        categoryContent.style.display = "none";
-        recipeContent.style.display = "none";
+        for(let i = 1; i < strand.children.length; i++){
+            strand.children[i].style.display = "none";
+        }
 
-        switch(tab.innerText.toLowerCase()){
-            case "ingredients":
-                ingredientContent.style.display = "flex";
+        if(upperGroup.children[0].classList.contains("active")){
+            if(lowerGroup.children[0].classList.contains("active")){
+                document.getElementById("analIndividualIngredient").style.display = "flex";
                 this.displayIngredient();
-                break;
-            case "categories":
-                categoryContent.style.display = "flex";
-                this.displayCategory();
-                break;
-            case "recipes":
-                recipeContent.style.display = "flex";
+            }else{
+                document.getElementById("analCategoryIngredient").style.display = "flex";
+                this.displayIngredientCategory();
+            }
+        }else{
+            if(lowerGroup.children[0].classList.contains("active")){
+                document.getElementById("analIndividualRecipe").style.display = "flex";
                 this.displayRecipe();
-                break;
+            }else{
+                document.getElementById("analCategoryRecipe").style.display = "flex";
+                this.displayRecipeCategory();
+            }
         }
     }
 }

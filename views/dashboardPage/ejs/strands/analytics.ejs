@@ -3,9 +3,14 @@
         <h1 class="strandTitle">ANALYTICS</h1>
 
         <div id="analTabs">
-            <button id="analIngredientsTab" class="analTabButton active">INGREDIENTS</button><!--
-            --><button id="analCategoriesTab" class="analTabButton">CATEGORIES</button><!--
-            --><button id="analRecipesTab" class="analTabButton">RECIPES</button>
+            <div id="topAnalTabs">
+                <button id="analIngredientsTab" class="analTabButton active">INGREDIENTS</button><!--
+                --><button id="analRecipesTab" class="analTabButton">RECIPES</button>
+            </div>
+            <div id="bottomAnalTabs">
+                <button id="analIndividualTab" class="analTabButton active">INDIVIDUAL</button><!--
+                --><button id="analCategoriesTab" class="analTabButton">CATEGORIES</button>
+            </div>
         </div>
 
         <div class="dateRange">
@@ -20,7 +25,7 @@
         </div>
     </div>
 
-    <div id="analIngredientContent" class="analContent">
+    <div id="analIndividualIngredient" class="analContent">
         <div id="analIngredientList" class="itemsList"></div>
 
         <div class="analData">
@@ -92,13 +97,13 @@
         </div>
     </div>
 
-    <div id="analCategoryContent" class="analContent" style="display:none;">
+    <div id="analCategoryIngredient" class="analContent" style="display:none;">
         <div id="analCategoriesList" class="itemsList"></div>
 
         <div id="analCategoriesGraph"></div>
     </div>
 
-    <div id="analRecipeContent" class="analContent" style="display:none;">
+    <div id="analIndividualRecipe" class="analContent" style="display:none;">
         <ul id="analRecipeList" class="itemsList"></ul>
 
         <div class="analData">
