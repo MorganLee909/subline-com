@@ -56,9 +56,10 @@ class Transaction{
     Gets the quantity for a given recipe
     */
    getRecipeQuantity(recipe){
-       for(let i = 0; i < this._recipes.length; i++){
+        for(let i = 0; i < this._recipes.length; i++){
            if(this._recipes[i].recipe === recipe) return this._recipes[i].quantity;
-       }
+        }
+        return 0;
     }
 }
 

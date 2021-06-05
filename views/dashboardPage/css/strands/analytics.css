@@ -81,7 +81,7 @@
                     text-align: center;
                 }
 
-#analCategoriesGraph{
+#analCategoriesGraph, #analCatRecipeGraph{
     margin-left: 25px;
     flex-grow: 2;
     height: 90%;

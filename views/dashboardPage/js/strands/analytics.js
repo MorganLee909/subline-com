@@ -40,6 +40,7 @@ let analytics = {
         let ingredientButtons = document.getElementById("analIngredientList");
         let categoryButtons = document.getElementById("analCategoriesList");
         let recipeButtons = document.getElementById("analRecipeList");
+        let recipeCategoryButtons = document.getElementById("analCatRecipeList");
 
         while(ingredientButtons.children.length > 0){
             ingredientButtons.removeChild(ingredientButtons.firstChild);
@@ -85,6 +86,23 @@ let analytics = {
                 this.displayRecipe();
             };
             recipeButtons.appendChild(button);
+        }
+
+        while(recipeCategoryButtons.children.length > 0){
+            recipeCategoryButtons.removeChild(recipeCategoryButtons.firstChild);
+        }
+
+        let recipeCategories = merchant.categorizeRecipes();
+        for(let i = 0; i < recipeCategories.length; i++){
+            let button = document.createElement("button");
+            button.innerText = (recipeCategories[i].name === "") ? "UNCATEGORIZED" : recipeCategories[i].name;
+            
+            button.classList.add("choosable");
+            button.onclick = ()=>{
+                this.recipeCategory = recipeCategories[i];
+                this.displayRecipeCategory();
+            }
+            recipeCategoryButtons.appendChild(button);
         }
     },
 
@@ -234,6 +252,7 @@ let analytics = {
 
     displayIngredientCategory: function(){
         if(this.category === undefined) this.category = merchant.categorizeIngredients()[0];
+        if(this.category === undefined) return;
 
         let dates = [];
         let quantities = [];
@@ -348,9 +367,10 @@ let analytics = {
             let total = 0;
             for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
                 for(let k = 0; k < this.recipeCategory.recipes.length; k++){
-                    total += this.transactionsByDate[i].transactions[j].getRecipeQuantity(this.recipeCategory.recipes[i]);
+                    total += this.transactionsByDate[i].transactions[j].getRecipeQuantity(this.recipeCategory.recipes[k]);
                 }
             }
+
             quantities.push(total);
         }
 
@@ -364,7 +384,7 @@ let analytics = {
         };
 
         let layout = {
-            title: this.recipeCategory.name,
+            title: (this.recipeCategory.name === "") ? "UNCATEGORIZED" : this.recipeCategory.name,
             xaxis: {title: "DATE"},
             yaxis: {title: "COST ($)"},
             margin: {
