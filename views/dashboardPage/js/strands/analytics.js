@@ -5,6 +5,7 @@ let analytics = {
     ingredient: undefined,
     category: undefined,
     recipe: undefined,
+    recipeCategory: undefined,
     transactionsByDate: [],
 
     display: function(){
@@ -334,6 +335,48 @@ let analytics = {
 
         document.getElementById("recipeAvgUse").innerText = avg.toFixed(2);
         document.getElementById("recipeAvgRevenue").innerText = `$${(avg * this.recipe.price).toFixed(2)}`;
+    },
+
+    displayRecipeCategory: function(){
+        if(this.recipeCategory === undefined) this.recipeCategory = merchant.categorizeRecipes()[0];
+
+        let dates = [];
+        let quantities = [];
+
+        for(let i = 0; i < this.transactionsByDate.length; i++){
+            dates.push(this.transactionsByDate[i].date);
+            let total = 0;
+            for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
+                for(let k = 0; k < this.recipeCategory.recipes.length; k++){
+                    total += this.transactionsByDate[i].transactions[j].getRecipeQuantity(this.recipeCategory.recipes[i]);
+                }
+            }
+            quantities.push(total);
+        }
+
+        let trace = {
+            x: dates,
+            y: quantities,
+            mode: "lines+markers",
+            line: {
+                color: "rgb(255, 99, 107)"
+            }
+        };
+
+        let layout = {
+            title: this.recipeCategory.name,
+            xaxis: {title: "DATE"},
+            yaxis: {title: "COST ($)"},
+            margin: {
+                l: 40,
+                r: 10,
+                b: 20,
+                t: 30
+            },
+            paper_bgcolor: "white"
+        };
+
+        Plotly.newPlot("analCatRecipeGraph", [trace], layout);
     },
 
     newDates: async function(){
