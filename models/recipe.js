@@ -25,7 +25,11 @@ const RecipeSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: false
+        default: "",
+        validate: {
+            validator: isSanitary,
+            message: "RECIPE CATEGORY CONTAINS ILLEGAL CHARACTERS"
+        }
     },
     hidden: {
         type: Boolean,

@@ -12,6 +12,7 @@ module.exports = {
     req.body = {
         name: name of recipe,
         price: price of the recipe,
+        category: String
         ingredients: [{
             id: id of ingredient,
             quantity: quantity of ingredient in recipe
@@ -24,6 +25,7 @@ module.exports = {
             merchant: res.locals.merchant._id,
             name: req.body.name,
             price: req.body.price,
+            category: req.body.category,
             ingredients: req.body.ingredients
         });
 
@@ -51,6 +53,7 @@ module.exports = {
         id: id of recipe,
         name: name of recipe,
         price: price of recipe,
+        category: String
         ingredients: [{
             ingredient: id of ingredient,
             quantity: quantity of ingredient in recipe
@@ -64,12 +67,14 @@ module.exports = {
                     merchant: res.locals.merchant._id,
                     name: recipe.name,
                     price: recipe.price,
+                    category: recipe.category,
                     date: new Date(),
                     ingredients: recipe.ingredients
                 }).save().catch(()=>{});
 
                 recipe.name = req.body.name;
                 recipe.price = req.body.price;
+                recipe.category = req.body.category;
                 recipe.ingredients = req.body.ingredients;
 
                 return recipe.save();
@@ -78,9 +83,7 @@ module.exports = {
                 res.json(recipe);
             })
             .catch((err)=>{
-                if(typeof(err) === "string"){
-                    return res.json(err);
-                }
+                if(typeof(err) === "string") return res.json(err);
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }
