@@ -8,6 +8,8 @@ let editRecipe = {
             nameInput.parentNode.style.display = "none";
         }
 
+        document.getElementById("editRecipeCategory").value = recipe.category;
+
         //Populate ingredients
         let ingredientList = document.getElementById("editRecipeIngList");
 

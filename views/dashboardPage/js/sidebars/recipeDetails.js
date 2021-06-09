@@ -15,6 +15,7 @@ let recipeDetails = {
         }
         document.getElementById("hideRecipeBtn").onclick = ()=>{this.hide(recipe)};
         document.getElementById("recipeName").innerText = recipe.name;
+        document.getElementById("recipeCategory").innerText = recipe.category;
 
         let button = document.getElementById("removeRecipeBtn");
         switch(merchant.pos){
