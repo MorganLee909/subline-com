@@ -15,7 +15,8 @@ module.exports = {
         category: String
         ingredients: [{
             id: id of ingredient,
-            quantity: quantity of ingredient in recipe
+            quantity: quantity of ingredient in recipe,
+            unit: String
         }]
     }
     Return = newly created recipe in same form as above, with _id
@@ -57,6 +58,7 @@ module.exports = {
         ingredients: [{
             ingredient: id of ingredient,
             quantity: quantity of ingredient in recipe
+            unit: String
         }]
     }
     */

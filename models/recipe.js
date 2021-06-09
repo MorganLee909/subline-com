@@ -45,7 +45,8 @@ const RecipeSchema = new mongoose.Schema({
             type: Number,
             min: [0, "QUANTITY OF INGREDIENTS CANNOT BE A NEGATIVE NUMBER"],
             required: [true, "MUST PROVED A QUANTITY FOR ALL INGREDIENTS"]
-        }
+        },
+        unit: String
     }]
 });
 
