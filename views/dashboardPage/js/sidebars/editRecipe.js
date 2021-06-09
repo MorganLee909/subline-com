@@ -65,6 +65,7 @@ let editRecipe = {
             id: recipe.id,
             name: recipe.name,
             price: document.getElementById("editRecipePrice").value * 100,
+            category: document.getElementById("editRecipeCategory").value,
             ingredients: []
         }
 
