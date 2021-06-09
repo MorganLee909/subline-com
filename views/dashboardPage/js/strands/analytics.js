@@ -409,20 +409,14 @@ let analytics = {
         await this.getData(from, to);
 
         let analTabs = document.getElementById("analTabs");
-        for(let i = 0; i < analTabs.children.length; i++){
-            if(analTabs.children[i].classList.contains("active")){
-                switch(analTabs.children[i].innerText.toLowerCase()){
-                    case "ingredients":
-                        this.displayIngredient();
-                        break;
-                    case "categories":
-                        this.displayIngredientCategory();
-                        break;
-                    case "recipes":
-                        this.displayRecipe();
-                        break;
-                }
-            }
+        if(analTabs.children[0].children[0].classList.contains("active")){
+            if(analTabs.children[1].children[0].classList.contains("active")){
+                this.displayIngredient();
+            }else{this.displayIngredientCategory()};
+        }else{
+            if(analTabs.children[1].children[0].classList.contains("active")){
+                this.displayRecipe();
+            }else{this.displayRecipeCategory()};
         }
     },
 
