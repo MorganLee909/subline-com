@@ -3,12 +3,13 @@ let editRecipe = {
         let nameInput = document.getElementById("editRecipeName");
         if(merchant.pos === "none"){
             nameInput.value = recipe.name;
+            let categoryInput = document.getElementById("editRecipeCategory");
+            categoryInput.value = recipe.category;
+            categoryInput.parentElement.style.display = "block";
         }else{
-            document.getElementById("editRecipeNoName").innertext = recipe.name;
+            document.getElementById("editRecipeNoName").innerText = recipe.name;
             nameInput.parentNode.style.display = "none";
         }
-
-        document.getElementById("editRecipeCategory").value = recipe.category;
 
         //Populate ingredients
         let ingredientList = document.getElementById("editRecipeIngList");
