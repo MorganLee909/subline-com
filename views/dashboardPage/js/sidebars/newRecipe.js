@@ -42,9 +42,9 @@ let newRecipe = {
 
     add: function(ingredient){
         let element = document.getElementById("newRecipeChosenIngredient").content.children[0].cloneNode(true);
-        element.children[0].innerText = ingredient.name;
-        element.children[1].children[0].placeholder = `QUANTITY (${ingredient.unit.toUpperCase()})`;
-        element.children[1].children[1].onclick = ()=>{
+        element.children[0].children[0].innerText = ingredient.name;
+        element.children[1].children[0].placeholder = "QUANTITY";
+        element.children[0].children[1].onclick = ()=>{
             this.unchosen.push(ingredient);
             element.parentElement.removeChild(element);
             this.populateChoices();
