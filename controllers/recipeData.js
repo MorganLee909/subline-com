@@ -12,6 +12,7 @@ module.exports = {
     req.body = {
         name: name of recipe,
         price: price of the recipe,
+        category: String
         ingredients: [{
             id: id of ingredient,
             quantity: quantity of ingredient in recipe
@@ -24,6 +25,7 @@ module.exports = {
             merchant: res.locals.merchant._id,
             name: req.body.name,
             price: req.body.price,
+            category: req.body.category,
             ingredients: req.body.ingredients
         });
 
