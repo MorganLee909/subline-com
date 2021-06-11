@@ -179,3 +179,34 @@
     #modalCircularReference div > *{
         margin: 10px;
     }
+
+    #modalUnitConversion{
+        flex-direction: column;
+        background: white;
+        align-items: center;
+        padding: 25px;
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+        #unitConversions{
+            width: 100%;
+        }
+
+        .convertUnitOption{
+            display: flex;
+            justify-content: space-between;
+            /* background: rgb(0, 27, 45); */
+            margin: 10px;
+            height: 35px;
+        }
+
+            .convertUnitOption div{
+                display: flex;
+                align-items: center;
+                width: 33%;
+            }
+
+            .convertUnitOption input{
+                max-width: 75%;
+            }

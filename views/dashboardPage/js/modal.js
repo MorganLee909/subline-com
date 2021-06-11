@@ -285,6 +285,25 @@ let modal = {
         }
 
         document.getElementById("circularReferenceButton").onclick = ()=>{controller.closeModal()};
+    },
+
+    alternateUnit: function(data){
+        document.getElementById("modalUnitConversion").style.display = "flex";
+        let container = document.getElementById("unitConversions");
+        let template = document.getElementById("convertUnitOption").content.children[0];
+
+        while(container.children.length > 0){
+            container.removeChild(container.firstChild);
+        }
+
+        for(let i = 0; i < data.length; i++){
+            let conversion = template.cloneNode(true);
+            conversion.children[0].children[0].value = 0;
+            conversion.children[0].children[1].innerText = data[i].newIngredient.unit.toUpperCase();
+            conversion.children[2].children[0].value = 1;
+            conversion.children[2].children[1].innerText = data[i].ingredient.unit.toUpperCase();
+            container.appendChild(conversion);
+        }
     }
 };
 

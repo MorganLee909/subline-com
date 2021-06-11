@@ -113,6 +113,10 @@ class Ingredient{
         return `${this._name} (${this._unit.toUpperCase()})`;
     }
 
+    /*
+    Show matching unit types for this ingredient
+    return = [String]
+    */
     getPotentialUnits(){
         let mass = ["g", "kg", "oz", "lb"];
         let volume = ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];

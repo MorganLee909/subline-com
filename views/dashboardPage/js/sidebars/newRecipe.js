@@ -4,7 +4,7 @@ let newRecipe = {
     display: function(){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
 
-        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
+        document.getElementById("submitNewRecipe").onclick = ()=>{this.gatherData()};
         document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
         document.getElementById("newRecipeSearch").onkeyup = ()=>{this.populateChoices()};
 
@@ -53,24 +53,37 @@ let newRecipe = {
         document.getElementById("newRecipeChosenList").appendChild(element);
     },
 
-    submit: function(){
+    gatherData: function(){
         let data = {
             name: document.getElementById("newRecipeName").value,
             category: document.getElementById("newRecipeCategory").value,
             price: parseInt(document.getElementById("newRecipePrice").value * 100),
             ingredients: []
         };
-
+    
+        let mismatchUnits = [];
         let ingredients = document.getElementById("newRecipeChosenList").children;
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = ingredients[i].ingredient;
-
-            data.ingredients.push({
+            let newIngredient = {
                 ingredient: ingredient.id,
-                quantity: controller.baseUnit(ingredients[i].children[1].children[0].value, ingredient.unit)
-            });
+                quantity: ingredients[i].children[1].children[0].value,
+                unit: ingredients[i].children[1].children[1].value
+            }
+    
+            if(ingredient.getPotentialUnits().includes(newIngredient.unit) === false) mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
+    
+            data.ingredients.push(newIngredient);
         }
 
+        if(mismatchUnits.length === 0){
+            this.submit(data);
+            return;
+        }
+        controller.openModal("alternateUnitConversion", mismatchUnits);
+    },
+
+    submit: function(data){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 

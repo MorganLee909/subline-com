@@ -90,12 +90,38 @@
                 </template>
             </div>
 
-            <div id="modalCircularReference" style="display:none";>
+            <div id="modalCircularReference" style="display:none">
                 <h2></h2>
 
                 <div></div>
 
                 <button id="circularReferenceButton" class="button">OK</button>
+            </div>
+
+            <div id="modalUnitConversion" style="display:none">
+                <h2>Some of your ingredients' units do not match</h2>
+
+                <h3>Please enter conversion rates for the following ingredients in this recipe</h3>
+
+                <div id="unitConversions"></div>
+
+                <template id="convertUnitOption">
+                    <div class="convertUnitOption">
+                        <div>
+                            <input type="number" step="0.01">
+
+                            <h2></h2>
+                        </div>
+
+                        <h1>=</h1>
+
+                        <div>
+                            <input type="number" step="0.01">
+
+                            <h2></h2>
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
     </div>

@@ -274,6 +274,9 @@ controller = {
             case "circularReference":
                 modalScript.circularReference(data);
                 break;
+            case "alternateUnitConversion":
+                modalScript.alternateUnit(data);
+                break;
         }
     },
 
