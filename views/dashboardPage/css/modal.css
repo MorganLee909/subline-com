@@ -196,7 +196,6 @@
         .convertUnitOption{
             display: flex;
             justify-content: space-between;
-            /* background: rgb(0, 27, 45); */
             margin: 10px;
             height: 35px;
         }

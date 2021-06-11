@@ -375,7 +375,12 @@ class Merchant{
         recipe.clearIngredients();
         for(let i = 0; i < updates.ingredients.length; i++){
             newIngredient = this.getIngredient(updates.ingredients[i].ingredient);
-            recipe.addIngredient(newIngredient.ingredient, updates.ingredients[i].quantity);
+            recipe.addIngredient(
+                newIngredient.ingredient, 
+                updates.ingredients[i].quantity,
+                updates.ingredients[i].unit,
+                updates.ingredients[i].baseUnitMultiplier
+            );
         }
 
         recipe.calculateIngredientTotals();

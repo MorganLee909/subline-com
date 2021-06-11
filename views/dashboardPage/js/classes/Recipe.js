@@ -2,9 +2,11 @@ const recipeBook = require("../strands/recipeBook.js");
 const analytics = require("../strands/analytics.js");
 
 class RecipeIngredient{
-    constructor(ingredient, quantity){
+    constructor(ingredient, quantity, unit, baseUnitMultiplier){
         this._ingredient = ingredient;
         this._quantity = quantity;
+        this._unit = unit;
+        this._baseUnitMultiplier = baseUnitMultiplier;
     }
 
     get ingredient(){
@@ -70,7 +72,9 @@ class Recipe{
             const ingredient = parent.getIngredient(ingredients[i].ingredient);
             const recipeIngredient = new RecipeIngredient(
                 ingredient.ingredient,
-                ingredients[i].quantity
+                ingredients[i].quantity,
+                ingredients[i].unit,
+                ingredients[i].baseUnitMultiplier
             );
 
             this._ingredients.push(recipeIngredient);
@@ -133,8 +137,8 @@ class Recipe{
         return (this._ingredientTotals[id] === undefined) ? 0 : this._ingredientTotals[id];
     }
 
-    addIngredient(ingredient, quantity){
-        let recipeIngredient = new RecipeIngredient(ingredient, quantity);
+    addIngredient(ingredient, quantity, unit, baseUnitMultiplier){
+        let recipeIngredient = new RecipeIngredient(ingredient, quantity, unit, baseUnitMultiplier);
         this._ingredients.push(recipeIngredient);
 
         recipeBook.isPopulated = false;
