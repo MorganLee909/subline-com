@@ -128,7 +128,9 @@ class Merchant{
                     if(ingredient.ingredient === this._inventory[k].ingredient.id){
                         ingredients.push({
                             ingredient: this._inventory[k].ingredient.id,
-                            quantity: ingredient.quantity
+                            quantity: ingredient.quantity,
+                            unit: ingredient.unit,
+                            baseUnitMultiplier: ingredient.baseUnitMultiplier
                         });
                         break;
                     }
