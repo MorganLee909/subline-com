@@ -52,6 +52,15 @@ class Transaction{
         return total;
     }
 
+    getIngredientQuantityBase(ingredient){
+        let total = 0;
+        for(let i = 0; i < this._recipes.length; i++){
+            total += this._recipes[i].recipe.getIngredientTotalBase(ingredient.id) * this._recipes[i].quantity;
+        }
+
+        return total;
+    }
+
     /*
     Gets the quantity for a given recipe
     */

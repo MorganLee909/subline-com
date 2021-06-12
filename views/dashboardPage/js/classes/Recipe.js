@@ -24,6 +24,10 @@ class RecipeIngredient{
     getQuantityDisplay(){
         return `${this._quantity.toFixed(2)} ${this._unit.toUpperCase()}`;
     }
+
+    getQuantityAsBase(){
+        return this._quantity * this._baseUnitMultiplier;
+    }
 }
 
 /*
@@ -34,6 +38,8 @@ price = price of recipe in cents
 ingredients = [{
     ingredient: Ingredient Object,
     quantity: quantity of the ingredient within the recipe (stored as base unit, i.e grams)
+    unit: String
+    baseUnitmultiplier: Number
 }]
 parent = merchant that it belongs to
 */
@@ -47,6 +53,7 @@ class Recipe{
         this._hidden = hidden;
         this._ingredients = [];
         this._ingredientTotals = {};
+        this._ingredientTotalsBase = {};
 
         for(let i = 0; i < ingredients.length; i++){
             const ingredient = parent.getIngredient(ingredients[i].ingredient);
@@ -117,6 +124,10 @@ class Recipe{
         return (this._ingredientTotals[id] === undefined) ? 0 : this._ingredientTotals[id];
     }
 
+    getIngredientTotalBase(id){
+        return (this._ingredientTotalsBase[i] === undefined) ? 0 : this._ingredientTotals[id];
+    }
+
     addIngredient(ingredient, quantity, unit, baseUnitMultiplier){
         let recipeIngredient = new RecipeIngredient(ingredient, quantity, unit, baseUnitMultiplier);
         this._ingredients.push(recipeIngredient);
@@ -141,6 +152,12 @@ class Recipe{
                 this._ingredientTotals[ingredient.id] = multiplier;
             }else{
                 this._ingredientTotals[ingredient.id] += multiplier;
+            }
+
+            if(this._ingredientTotalsBase[ingredient.id] === undefined){
+                this._ingredientTotalsBase[ingredient.id] = multiplier * this._baseUnitMultiplier;
+            }else{
+                this._ingredientTotalsBase[ingredient.id] += multiplier * this._baseUnitMultiplier;
             }
         }
 

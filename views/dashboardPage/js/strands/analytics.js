@@ -184,7 +184,7 @@ let analytics = {
             let sum = 0;
             for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
                 let transaction = this.transactionsByDate[i].transactions[j];
-                sum += transaction.getIngredientQuantity(this.ingredient);
+                sum += transaction.getIngredientQuantityBase(this.ingredient);
             }
             
             quantities.push(sum);
@@ -264,7 +264,7 @@ let analytics = {
                 let transaction = this.transactionsByDate[i].transactions[j];
 
                 for(let k = 0; k < this.category.ingredients.length; k++){
-                    total += transaction.getIngredientQuantity(this.category.ingredients[k].ingredient);
+                    total += transaction.getIngredientQuantityBase(this.category.ingredients[k].ingredient);
                 }
             }
             quantities.push(total);
