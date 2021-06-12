@@ -1,5 +1,7 @@
 const Merchant = require("./classes/Merchant.js");
 
+const newRecipe = require("./sidebars/newRecipe.js");
+
 let modal = {
     feedback: function(){
         let form = document.getElementById("modalFeedback");
@@ -314,11 +316,11 @@ let modal = {
                     return;
                 }
 
-                console.log(data.mismatchUnits[i].ingredient.unit);
-                let base = controller.baseUnit(inputRight, data.mismatchUnits[i].ingredient.unit);
-                console.log(base);
-                console.log(inputLeft / base);
+                data.mismatchUnits[i].newIngredient.baseUnitMultiplier = data.mismatchUnits[i].ingredient.calculateRecipeMultiplier(inputLeft, inputRight);
             }
+
+            controller.closeModal();
+            newRecipe.submit(data.recipe);
         }
     }
 };

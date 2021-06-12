@@ -147,6 +147,16 @@ class Ingredient{
 
         return (quantity === 0) ? 0 : totalCost / quantity;
     }
+
+    /*
+    Used when the unit on an ingredient does not match the RecipeIngredient unit
+    Calculates the multiplier from RecipeIngredient quantity, to ingredient base unit (unit type)
+    */
+    calculateRecipeMultiplier(recipeQuantity, ingredientQuantity){
+        let unitToBase = controller.baseUnit(ingredientQuantity, this._unit);
+
+        return unitToBase / recipeQuantity;
+    }
 }
 
 module.exports = Ingredient;
