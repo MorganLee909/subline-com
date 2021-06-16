@@ -125,7 +125,7 @@ class Recipe{
     }
 
     getIngredientTotalBase(id){
-        return (this._ingredientTotalsBase[i] === undefined) ? 0 : this._ingredientTotals[id];
+        return (this._ingredientTotalsBase[id] === undefined) ? 0 : this._ingredientTotalsBase[id];
     }
 
     addIngredient(ingredient, quantity, unit, baseUnitMultiplier){
@@ -143,9 +143,10 @@ class Recipe{
     calculateIngredientTotals(){
         this._ingredientTotals = {};
         
-        let traverseIngredient = (ingredient, multiplier)=>{
+        let traverseIngredient = (recipeIngredient, multiplier)=>{
+            let ingredient = recipeIngredient._ingredient;
             for(let i = 0; i < ingredient.subIngredients.length; i++){
-                traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);                
+                traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);
             }
 
             if(this._ingredientTotals[ingredient.id] === undefined){
@@ -155,14 +156,14 @@ class Recipe{
             }
 
             if(this._ingredientTotalsBase[ingredient.id] === undefined){
-                this._ingredientTotalsBase[ingredient.id] = multiplier * this._baseUnitMultiplier;
+                this._ingredientTotalsBase[ingredient.id] = multiplier * recipeIngredient._baseUnitMultiplier;
             }else{
-                this._ingredientTotalsBase[ingredient.id] += multiplier * this._baseUnitMultiplier;
+                this._ingredientTotalsBase[ingredient.id] += multiplier * recipeIngredient._baseUnitMultiplier;
             }
         }
 
         for(let i = 0; i < this._ingredients.length; i++){
-            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i].quantity);
+            traverseIngredient(this._ingredients[i], this._ingredients[i].quantity);
         }
     }
 }
