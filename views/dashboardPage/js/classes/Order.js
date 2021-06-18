@@ -58,6 +58,10 @@ class OrderIngredient{
         }
     }
 
+    get pricePerBaseUnit(){
+        return this._pricePerUnit;
+    }
+
     cost(){
         return (this._quantity * this._pricePerUnit) / 100;
     }

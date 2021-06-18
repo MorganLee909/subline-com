@@ -52,13 +52,13 @@ let home = {
         from.setDate(from.getDate() - 30);
 
         for(let i = 0; i < merchant.inventory.length; i++){
-            let unitCost = merchant.inventory[i].ingredient.getUnitCost();
+            let unitCost = merchant.inventory[i].ingredient.getUnitCost(false);
             let totalCost = unitCost * merchant.inventory[i].getSoldQuantity(from, new Date());
             
             ingredients.push({
                 inventoryItem: merchant.inventory[i],
-                unitCost: unitCost,
-                totalCost: totalCost
+                unitCost: merchant.inventory[i].ingredient.getUnitCost(true),
+                totalCost: totalCost / 100
             });
         }
 
@@ -86,7 +86,7 @@ let home = {
             item.appendChild(leftText);
 
             let centerText = document.createElement("td");
-            centerText.innerText = `$${ingredients[i].unitCost.toFixed(2)}`;
+            centerText.innerText = `$${ingredients[i].unitCost.toFixed(2)}/${ingredients[i].inventoryItem.ingredient.unit.toUpperCase()}`;
             item.appendChild(centerText);
 
             let rightText = document.createElement("td");
