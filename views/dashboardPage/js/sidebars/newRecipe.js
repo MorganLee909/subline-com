@@ -30,6 +30,7 @@ let newRecipe = {
                 let ingredient = document.createElement("button");
                 ingredient.innerText = this.unchosen[i].name;
                 ingredient.classList.add("choosable");
+                ingredient.classList.add("selection");
                 ingredient.onclick = ()=>{
                     this.add(this.unchosen[i]);
                     this.unchosen.splice(i, 1);

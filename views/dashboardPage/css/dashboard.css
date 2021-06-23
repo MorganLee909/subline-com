@@ -271,6 +271,42 @@ Multi-strand use classes
             color: black;
         }
 
+.choosable.selection{
+    justify-content: left;
+    background: rgb(240, 252, 255);
+    color: black;
+    margin: 2px 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chosenSelection{
+    width: 95%;
+    margin: 15px auto;
+}
+
+    .chosenSelection div{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 32px;
+    }
+
+    .chosenSelection input, .chosenSelection select{
+        height: 30px;
+        border: none;
+        width: 47%;
+    }
+
+    .chosenSelection button{
+        padding: 0;
+        margin: 0 5px;
+        max-height: none;
+        min-width: none;
+    }
+
 .tooltipContainer{
     position: relative;
 }

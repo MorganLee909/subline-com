@@ -9,55 +9,68 @@
         </button>
     </div>
 
-    <label>NAME:
-        <input id="editRecipeName" type="text">
-    </label>
+    <h1 id="editRecipeTitle"></h1>
 
-    <h1 id="editRecipeNoName"></h1>
-    
-    <label style="display:none">CATEGORY:
-        <input id="editRecipeCategory" type="text">
-    </label>
+    <div id="editRecipeContents">
+        <div id="editRecipeLeft">
+            <input id="editRecipeSearch" type="text" placeholder="SEARCH">
 
-    <h3>INGREDIENTS</h3>
+            <div id="editRecipeUnused"></div>
+        </div>
 
-    <div id="editRecipeIngList"></div>
+        <div id="editRecipeRight">
+            <h2>LIST OF INGREDIENTS</h2>
 
-    <button id="addRecIng" class="iconButton">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="16"></line>
-            <line x1="8" y1="12" x2="16" y2="12"></line>
-        </svg>
-    </button>
-
-    <div class="lineBorder"></div>
-
-    <h3>PRICE</h3>
-
-    <input id="editRecipePrice" type="number" min="0" step="0.01">
-
-    <div class="lineBorder"></div>
-
-    <div class="buttonBox">
-        <button id="editRecipeSubmit" class="sidebarButton">UPDATE</button>
-        <button id="editRecipeCancel" class="sidebarButton">CANCEL</button>
+            <div id="editRecipeUsed"></div>
+        </div>
     </div>
 
-    <template id="editRecipeIng">
-        <div class="editRecipeIng">
-            <button class="iconButton">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-            </button>
+    <button id="editRecipeSubmit" class="sidebarButton">SUBMIT</button>
 
-            <p></p>
+    <template id="editRecipeInputItem">
+        <div class="chosenSelection">
+            <div>
+                <p></p>
 
-            <select></select>
+                <button id="editRecipeRemoveBtn" class="sidebarButton">REMOVE</button>
+            </div>
 
-            <input type="number" min="0" step="0.01">
+            <div>
+                <input type="number" step="0.01" min="0">
+
+                <select>
+                    <optgroup label="MASS/WEIGHT">
+                        <option type="mass" value="g">G</option>
+                        <option type="mass" value="kg">KG</option>
+                        <option type="mass" value="oz">OZ</option>
+                        <option type="mass" value="lb">LB</option>
+                    </optgroup>
+        
+                    <optgroup label="VOLUME">
+                        <option type="volume" value="ml">ML</option>
+                        <option type="volume" value="l">L</option>
+                        <option type="volume" value="tsp">TSP</option>
+                        <option type="volume" value="tbsp">TBSP</option>
+                        <option type="volume" value="ozfl">OZ. FL</option>
+                        <option type="volume" value="cup">CUP</option>
+                        <option type="volume" value="pt">PT</option>
+                        <option type="volume" value="qt">QT</option>
+                        <option type="volume" value="gal">GAL</option>
+                    </optgroup>
+        
+                    <optgroup label="LENGTH">
+                        <option type="length" value="mm">MM</option>
+                        <option type="length" value="cm">CM</option>
+                        <option type="length" value="m">M</option>
+                        <option type="length" value="in">IN</option>
+                        <option type="length" value="ft">FT</option>
+                    </optgroup>
+        
+                    <optgroup label="OTHER">
+                        <option type="other" value="each">EACH</option>
+                    </optgroup>
+                </select>
+            </div>
         </div>
     </template>
 </div>

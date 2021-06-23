@@ -7,18 +7,6 @@
     height: 100%;
 }
 
-    #addRecipe .choosable{
-        display: flex;
-        justify-content: left;
-        background: rgb(240, 252, 255);
-        color: black;
-        margin: 2px 0;
-        width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
     #newRecipeContent{
         display: flex;
         flex-grow: 10;
