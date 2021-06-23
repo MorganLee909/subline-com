@@ -17,7 +17,7 @@ module.exports = {
             let ingredient = template.cloneNode(true);
             ingredient.ingredient = recipe.ingredients[i].ingredient;
             ingredient.children[0].children[0].innerText = recipe.ingredients[i].ingredient.name;
-            ingredient.children[0].children[1].onclick = ()=>{this.removeIngredient(recipe.ingredients[i])};
+            ingredient.children[0].children[1].onclick = ()=>{this.removeIngredient(ingredient)};
             ingredient.children[1].children[0].value = recipe.ingredients[i].quantity;
             ingredient.children[1].children[1].value = recipe.ingredients[i].unit;
             used.appendChild(ingredient);
@@ -25,21 +25,34 @@ module.exports = {
 
         for(let i = 0; i < merchant.inventory.length; i++){
             if(tempList.includes(merchant.inventory[i].ingredient.id)) continue;
+            this.unused.push(merchant.inventory[i].ingredient);
+        }
 
+        this.displayUnused();
+    },
+
+    displayUnused: function(){
+        let container = document.getElementById("editRecipeUnused");
+        this.unused.sort((a, b) => (a.name > b.name) ? 1 : -1);
+
+        while(container.children.length > 0){
+            container.removeChild(container.firstChild);
+        }
+
+        for(let i = 0; i < this.unused.length; i++){
             let button = document.createElement("button");
-            button.innerText = merchant.inventory[i].ingredient.name;
+            button.innerText = this.unused[i].name;
             button.classList.add("choosable");
             button.classList.add("selection");
-            button.ingredient = merchant.inventory[i].ingredient;
+            button.ingredient = this.unused[i];
             button.onclick = ()=>{this.addIngredient(button)};
-            this.unused.push(button);
-            unused.appendChild(button);
+            container.appendChild(button);
         }
     },
 
     addIngredient: function(ingredient){
         for(let i = 0; i < this.unused.length; i++){
-            if(this.unused[i] === ingredient){
+            if(this.unused[i] === ingredient.ingredient){
                 this.unused.splice(i, 1);
                 break;
             }
@@ -52,19 +65,22 @@ module.exports = {
         let newItem = document.getElementById("editRecipeInputItem").content.children[0].cloneNode(true);
         newItem.ingredient = ingredient.ingredient;
         newItem.children[0].children[0].innerText = ingredient.ingredient.name;
-        newItem.children[0].children[1].onclick = ()=>{this.removeIngredient(ingredient.ingredient)};
+        newItem.children[0].children[1].onclick = ()=>{this.removeIngredient(newItem)};
         used.appendChild(newItem);
     },
 
     removeIngredient: function(ingredient){
-        console.log(ingredient);
+        let used = document.getElementById("editRecipeUsed");
+
+        this.unused.push(ingredient.ingredient);
+
+        used.removeChild(ingredient);
+        this.displayUnused();
     },
 
     search: function(){
-        console.log("searching");
     },
 
     submit: function(){
-        console.log("submitting");
     }
 }
