@@ -289,5 +289,20 @@ module.exports = {
                 if(err === "unauthorized") return res.json("YOU DO NOT HAVE PERMISSION TO EDIT THAT RECIPE");
                 return res.json("ERROR: UNABLE TO HIDE/UNHIDE THE RECIPE");
             });
+    },
+
+    /*
+    POST: gets a list of individual recipes
+    req.body = [String] (ids)
+    response = [Recipe]
+    */
+    findRecipes: function(req, res){
+        Recipe.find(req.body)
+            .then((recipes)=>{
+                return res.json(recipes);
+            })
+            .catch((err)=>{
+                return res.json("ERROR: UNABLE TO FIND DELETED RECIPES TO MATCH WITH TRANSACTIONS");
+            });
     }
 }

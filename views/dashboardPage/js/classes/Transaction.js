@@ -1,6 +1,6 @@
 class TransactionRecipe{
     constructor(recipe, quantity, merchant){
-        this._recipe = merchant.getRecipe(recipe);
+        this._recipe = merchant.getRecipe(recipe, true);
         this._quantity = quantity;
     }
 

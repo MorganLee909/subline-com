@@ -333,6 +333,16 @@ class Merchant{
         for(let i = 0; i < this._recipes.length; i++){
             if(this._recipes[i].id === id) return this._recipes[i];
         }
+
+        return new Recipe(
+            "",
+            "Deleted Recipe",
+            "",
+            0,
+            [],
+            undefined,
+            true
+        );
     }
 
     /*

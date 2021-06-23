@@ -272,7 +272,6 @@ module.exports = {
                 }
     
                 if(newRecipes.length > 0) Recipe.create(newRecipes);
-                if(merchantRecipes.length > 0) Recipe.deleteMany({_id: {$in: ids}});    
 
                 return res.locals.merchant.save();
             })
