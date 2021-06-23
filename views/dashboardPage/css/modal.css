@@ -195,17 +195,19 @@
 
         .convertUnitOption{
             display: flex;
-            justify-content: space-between;
-            margin: 10px;
-            height: 35px;
+            flex-direction: column;
+            margin: 10px 0;
+            border-bottom: 3px solid rgb(255, 99, 107);
         }
 
-            .convertUnitOption div{
-                display: flex;
-                align-items: center;
-                width: 33%;
+            .convertInputBox{
+                margin: 0 10px;
             }
 
-            .convertUnitOption input{
-                max-width: 75%;
+            .convertInputBox > input{
+                max-width: 150px;
+            }
+
+            .convertUnitOption > div{
+                display: flex;
             }
