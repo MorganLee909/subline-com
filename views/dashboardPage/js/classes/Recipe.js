@@ -26,6 +26,10 @@ class RecipeIngredient{
         return this._baseUnitMultiplier;
     }
 
+    get unit(){
+        return this._unit;
+    }
+
     getQuantityDisplay(){
         return `${this._quantity.toFixed(2)} ${this._unit.toUpperCase()}`;
     }
