@@ -155,7 +155,7 @@ class Ingredient{
     calculateRecipeMultiplier(recipeQuantity, ingredientQuantity){
         let unitToBase = controller.baseUnit(ingredientQuantity, this._unit);
 
-        return  recipeQuantity / unitToBase;
+        return unitToBase / recipeQuantity;
     }
 }
 

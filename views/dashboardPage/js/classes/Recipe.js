@@ -6,6 +6,7 @@ class RecipeIngredient{
         this._ingredient = ingredient;
         this._quantity = quantity;
         this._unit = unit;
+        //Quantity * baseUnitMultiplier will give you the quantity converted to the base unit of the ingredient (gram/meter/liter)
         this._baseUnitMultiplier = baseUnitMultiplier;
     }
 
@@ -19,6 +20,10 @@ class RecipeIngredient{
 
     set quantity(quantity){
         this_quantity = controller.baseUnit(quantity, this._ingredient.unit);
+    }
+
+    get baseUnitMultiplier(){
+        return this._baseUnitMultiplier;
     }
 
     getQuantityDisplay(){
@@ -52,8 +57,8 @@ class Recipe{
         this._parent = parent;
         this._hidden = hidden;
         this._ingredients = [];
+        //Ingredient totals is the total amount of each ingredient within the recipe, converted to ingredient base unit
         this._ingredientTotals = {};
-        this._ingredientTotalsBase = {};
 
         for(let i = 0; i < ingredients.length; i++){
             const ingredient = parent.getIngredient(ingredients[i].ingredient);
@@ -120,12 +125,18 @@ class Recipe{
         return this._ingredientTotals;
     }
 
-    getIngredientTotal(id){
+    //Returns the quantity of a single ingredient with the recipe.
+    //Returns the quantity converted to the base unit of the ingredient
+    getIngredientTotal(id, isDisplay = false){
+        if(isDisplay === true){
+            for(let i = 0; i < this._ingredients.length; i++){
+                if(this._ingredients[i].ingredient.id === id){
+                    return (this._ingredientTotals[id] === undefined) ? 0 : controller.displayUnit(this._ingredientTotals[id], this._ingredients[i].ingredient.unit);
+                }
+                break;
+            }
+        }
         return (this._ingredientTotals[id] === undefined) ? 0 : this._ingredientTotals[id];
-    }
-
-    getIngredientTotalBase(id){
-        return (this._ingredientTotalsBase[id] === undefined) ? 0 : this._ingredientTotalsBase[id];
     }
 
     addIngredient(ingredient, quantity, unit, baseUnitMultiplier){
@@ -150,15 +161,9 @@ class Recipe{
             }
 
             if(this._ingredientTotals[ingredient.id] === undefined){
-                this._ingredientTotals[ingredient.id] = multiplier;
+                this._ingredientTotals[ingredient.id] = multiplier * recipeIngredient.baseUnitMultiplier;
             }else{
-                this._ingredientTotals[ingredient.id] += multiplier;
-            }
-
-            if(this._ingredientTotalsBase[ingredient.id] === undefined){
-                this._ingredientTotalsBase[ingredient.id] = multiplier * recipeIngredient._baseUnitMultiplier;
-            }else{
-                this._ingredientTotalsBase[ingredient.id] += multiplier * recipeIngredient._baseUnitMultiplier;
+                this._ingredientTotals[ingredient.id] += multiplier * recipeIngredient.baseUnitMultiplier;
             }
         }
 

@@ -62,7 +62,7 @@ class MerchantIngredient{
         const {start, end} = this._parent.getTransactionIndices(from, to);
 
         for(let i = start; i < end; i++){
-            total += this._parent.transactions[i].getIngredientQuantityBase(this._ingredient);
+            total += this._parent.transactions[i].getIngredientQuantity(this._ingredient);
         }
 
         return total;
