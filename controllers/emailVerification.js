@@ -71,20 +71,25 @@ module.exports = {
     verify: function(req, res){
         Owner.findOne({_id: req.params.id})
             .then((owner)=>{
-                if(req.params.code !== owner.session.sessionId){
-                    throw "UNABLE TO VERIFY EMAIL ADDRESS.  INCORRECT LINK";
-                }
+                if(req.params.code !== owner.session.sessionId) throw "UNABLE TO VERIFY EMAIL ADDRESS. INCORRECT LINK";
 
                 owner.status.splice(owner.status.indexOf("unverified"), 1);
 
-                const mailgunList = mailgun.lists("clientsupport@mail.thesubline.com");
-                const memberData = {
-                    subscribed: true,
-                    address: owner.email,
-                    name: owner.name,
-                    vars: {}
-                }
-                mailgunList.members().create(memberData, (err, data)=>{});
+                axios({
+                    method: "post",
+                    url: "https://api.mailgun.net/v3/lists/clientsupport@mail.thesubline.com/members",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    auth: {
+                        username: "api",
+                        password: process.env.MG_SUBLINE_APIKEY
+                    },
+                    data: queryString.stringify({
+                        address: owner.email,
+                        name: owner.name
+                    })
+                });
 
                 return owner.save();
             })
@@ -94,6 +99,7 @@ module.exports = {
                 return res.redirect("/login");
             })
             .catch((err)=>{
+                console.log(err);
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else{
