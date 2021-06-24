@@ -192,6 +192,8 @@ controller = {
     openModal: function(str, data){
         let modal = document.getElementById("modal");
         modal.style.display = "flex";
+        modal.onclick = ()=>{this.closeModal()};
+        document.querySelector(".modalBox").onclick = ()=>{event.stopPropagation()};
         document.getElementById("modalClose").addEventListener("click", this.closeModal);
         let content = {};
 
