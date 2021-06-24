@@ -64,9 +64,12 @@ module.exports = {
     updateRecipe: function(req, res){
         Recipe.findOne({_id: req.body.id})
             .then((recipe)=>{
-                recipe.name = req.body.name;
-                recipe.price = req.body.price;
-                recipe.category = req.body.category;
+
+                if(merchant.pos === "none"){
+                    recipe.name = req.body.name;
+                    recipe.price = req.body.price;
+                    recipe.category = req.body.category;
+                }
                 recipe.ingredients = req.body.ingredients;
 
                 return recipe.save();
