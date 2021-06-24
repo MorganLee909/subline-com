@@ -99,7 +99,6 @@ module.exports = {
                 return res.redirect("/login");
             })
             .catch((err)=>{
-                console.log(err);
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else{

@@ -1,9 +1,9 @@
 const Owner = require("../models/owner.js");
-const Merchant = require("../models/merchant.js");
 
 const passwordReset = require("../emails/passwordReset.js");
 
-// const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
+const queryString = require("querystring");
+const axios = require("axios");
 const bcrypt = require("bcryptjs");
 
 module.exports = {
@@ -19,16 +19,37 @@ module.exports = {
                     return res.redirect("/");
                 }
                 
-                const mailgunData = {
-                    from: "The Subline <clientsupport@thesubline.net>",
-                    to: owner.email,
-                    subject: "Password Reset",
-                    html: passwordReset({
-                        name: owner.name,
-                        link: `${process.env.SITE}/reset/${owner._id}/${owner.session.sessionId}`
+                // const mailgunData = {
+                //     from: "The Subline <clientsupport@thesubline.net>",
+                //     to: owner.email,
+                //     subject: "Password Reset",
+                //     html: passwordReset({
+                //         name: owner.name,
+                //         link: `${process.env.SITE}/reset/${owner._id}/${owner.session.sessionId}`
+                //     })
+                // };
+                // mailgun.messages().send(mailgunData, (err, body)=>{});
+
+                axios({
+                    method: "post",
+                    url: "https://api.mailgun.net/v3/mail.thesubline.net/messages",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    auth: {
+                        username: "api",
+                        password: process.env.MG_SUBLINE_APIKEY
+                    },
+                    data: queryString.stringify({
+                        from: "The Subline <clientsupport@thesubline.net>",
+                        to: owner.email,
+                        subject: "Password Reset for The Subline",
+                        html: passwordReset({
+                            name: owner.name,
+                            link: `${process.env.SITE}/reset/${owner._id}/${owner.session.sessionId}`
+                        })
                     })
-                };
-                mailgun.messages().send(mailgunData, (err, body)=>{});
+                });
 
                 req.session.success = "PASSWORD RESET EMAIL SENT";
                 return res.redirect("/");
