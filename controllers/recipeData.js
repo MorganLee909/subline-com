@@ -1,5 +1,4 @@
 const Recipe = require("../models/recipe.js");
-const ArchivedRecipe = require("../models/archivedRecipe.js");
 
 const helper = require("./helper.js");
 
@@ -65,15 +64,6 @@ module.exports = {
     updateRecipe: function(req, res){
         Recipe.findOne({_id: req.body.id})
             .then((recipe)=>{
-                new ArchivedRecipe({
-                    merchant: res.locals.merchant._id,
-                    name: recipe.name,
-                    price: recipe.price,
-                    category: recipe.category,
-                    date: new Date(),
-                    ingredients: recipe.ingredients
-                }).save().catch(()=>{});
-
                 recipe.name = req.body.name;
                 recipe.price = req.body.price;
                 recipe.category = req.body.category;
