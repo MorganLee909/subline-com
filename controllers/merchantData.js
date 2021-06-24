@@ -7,9 +7,9 @@ const helper = require("./helper.js");
 const verifyEmail = require("../emails/verifyEmail.js");
 
 const bcrypt = require("bcryptjs");
-// const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 const ObjectId = require("mongoose").Types.ObjectId;
 const axios = require("axios");
+const queryString = require("querystring");
 
 module.exports = {
     /*
@@ -261,16 +261,26 @@ module.exports = {
             res.locals.owner.email = req.body.email.toLowerCase();
             res.locals.owner.status.push("unverified");
 
-            const mailgunData = {
-                from: "The Subline <clientsupport@thesubline.net>",
-                to: res.locals.owner.email,
-                subject: "Email Verification",
-                html: verifyEmail({
-                    name: res.locals.owner.name,
-                    link: `${process.env.SITE}/verify/${res.locals.owner._id}/${res.locals.owner.session.sessionId}`
+            axios({
+                method: "post",
+                url: "https://api.mailgun.net/v3/mailg.thesubline.net/messages",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                auth: {
+                    username: "api",
+                    password: process.env.MG_SUBLINE_APIKEY
+                },
+                data: queryString.stringify({
+                    from: "The Subline <clientsupport@thesubline.net>",
+                    to: res.locals.owner.email,
+                    subject: "The Subline Email Verification",
+                    html: verifyEmail({
+                        name: res.locals.owner.name,
+                        link: `${process.env.SITE}/verify/${res.locals.owner._id}/${res.locals.owner.session.sessionId}`
+                    })
                 })
-            };
-            mailgun.messages().send(mailgunData, (err, body)=>{});
+            });
         }
 
         if(req.body.address !== "" && 

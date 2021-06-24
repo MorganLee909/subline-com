@@ -18,17 +18,6 @@ module.exports = {
                     req.session.error = "USER WITH THIS EMAIL DOES NOT EXIST";
                     return res.redirect("/");
                 }
-                
-                // const mailgunData = {
-                //     from: "The Subline <clientsupport@thesubline.net>",
-                //     to: owner.email,
-                //     subject: "Password Reset",
-                //     html: passwordReset({
-                //         name: owner.name,
-                //         link: `${process.env.SITE}/reset/${owner._id}/${owner.session.sessionId}`
-                //     })
-                // };
-                // mailgun.messages().send(mailgunData, (err, body)=>{});
 
                 axios({
                     method: "post",

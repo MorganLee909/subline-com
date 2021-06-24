@@ -12,8 +12,8 @@ module.exports = {
                 saveOwner = owner;
 
                 return axios({
-                    url: `https://api.mailgun.net/v3/mail.thesubline.net/messages`,
                     method: "post",
+                    url: `https://api.mailgun.net/v3/mail.thesubline.net/messages`,
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
