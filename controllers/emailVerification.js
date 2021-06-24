@@ -1,11 +1,8 @@
 const Owner = require("../models/owner.js");
 
-// const mailgun = require("mailgun.js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
-const formData = require("form-data");
-const Mailgun = require("mailgun.js");
-const mailgun = new Mailgun(formData);
-const mg = mailgun.client({username: "api", key: process.env.MG_SUBLINE_APIKEY});
+const axios = require("axios");
 const verifyEmail = require("../emails/verifyEmail.js");
+const queryString = require("querystring")
 
 module.exports = {
     sendVerifyEmail: function(req, res){
@@ -13,24 +10,25 @@ module.exports = {
         Owner.findOne({_id: req.params.id})
             .then((owner)=>{
                 saveOwner = owner;
-                // const mailgunData = {
-                //     from: "The Subline <clientsupport@thesubline.net>",
-                //     to: owner.email,
-                //     subject: "Email verification",
-                //     html: verifyEmail({
-                //         name: owner.name,
-                //         link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`,
-                //     })
-                // };
-                // mailgun.messages().send(mailgunData, (err, body)=>{});
 
-                return mg.messages.create("mail.thesubline.net", {
-                    from: "The Subline <clientsupport@thesubline.net>",
-                    to: owner.email,
-                    subject: "Email verification",
-                    html: verifyEmail({
-                        name: owner.name,
-                        link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`
+                return axios({
+                    url: `https://api.mailgun.net/v3/mail.thesubline.net/messages`,
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    auth: {
+                        username: "api",
+                        password: process.env.MG_SUBLINE_APIKEY
+                    },
+                    data: queryString.stringify({
+                        from: "The Subline <clientsupport@thesubline.net>",
+                        to: owner.email,
+                        subject: "The Subline Email Verification",
+                        html: verifyEmail({
+                            name: owner.name,
+                            link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`
+                        })
                     })
                 });
             })
