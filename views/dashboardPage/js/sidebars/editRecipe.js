@@ -5,7 +5,7 @@ module.exports = {
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("editRecipeTitle").innerText = recipe.name;
         document.getElementById("editRecipeSearch").oninput = ()=>{this.search()};
-        document.getElementById("editRecipeSubmit").onclick = ()=>{this.submit()};
+        document.getElementById("editRecipeSubmit").onclick = ()=>{this.gatherData(recipe)};
         let used = document.getElementById("editRecipeUsed");
         let template = document.getElementById("editRecipeInputItem").content.children[0];
         let tempList = [];
@@ -79,7 +79,6 @@ module.exports = {
     },
 
     search: function(){
-        console.log("searching");
         let text = document.getElementById("editRecipeSearch").value;
         let newList = [];
 
@@ -93,6 +92,67 @@ module.exports = {
         this.displayUnused(newList);
     },
 
-    submit: function(){
+    gatherData: function(recipe){
+        let items = document.getElementById("editRecipeUsed");
+        let data = {
+            id: recipe.id,
+            name: recipe.name,
+            price: recipe.price * 100,
+            category: recipe.category,
+            ingredients: []
+        };
+
+        let mismatchUnits = [];
+        for(let i = 0; i < items.children.length; i++){
+            let item = items.children[i];
+    
+            let ingredient = {
+                ingredient: item.ingredient.id,
+                quantity: item.children[1].children[0].value,
+                unit: item.children[1].children[1].value
+            };
+
+            if(item.ingredient.getPotentialUnits().includes(ingredient.unit) === false){
+                mismatchUnits.push({ingredient: item.ingredient, newIngredient: ingredient});
+            }else{
+                ingredient.baseUnitMultiplier = 1 / controller.baseUnit(1, ingredient.unit);
+            }
+    
+            data.ingredients.push(ingredient);
+        }
+
+        if(mismatchUnits.length === 0){
+            this.submit(data);
+            return;
+        }
+        controller.openModal("alternateUnitConversion", {mismatchUnits: mismatchUnits, recipe: data, submit: this.submit});
+    },
+
+    submit: function(data){
+        let loader = document.getElementById("loaderContainer");
+        loader.style.display = "flex";
+
+        fetch("/recipe/update", {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then((response)=>{
+                if(typeof(response) === "string"){
+                    controller.createBanner(response, "error");
+                }else{
+                    merchant.updateRecipe(merchant.getRecipe(response._id), response);
+                    controller.closeSidebar();
+                }
+            })
+            .catch((err)=>{
+                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
+            })
+            .finally(()=>{
+                loader.style.display = "none";
+            });
     }
 }

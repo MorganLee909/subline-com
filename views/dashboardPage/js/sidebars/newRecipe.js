@@ -85,7 +85,7 @@ let newRecipe = {
             this.submit(data);
             return;
         }
-        controller.openModal("alternateUnitConversion", {mismatchUnits: mismatchUnits, recipe: data});
+        controller.openModal("alternateUnitConversion", {mismatchUnits: mismatchUnits, recipe: data, submit: this.submit});
     },
 
     submit: function(data){

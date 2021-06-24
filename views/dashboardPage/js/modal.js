@@ -321,7 +321,7 @@ let modal = {
             }
 
             controller.closeModal();
-            newRecipe.submit(data.recipe);
+            data.submit(data.recipe);
         }
     }
 };
