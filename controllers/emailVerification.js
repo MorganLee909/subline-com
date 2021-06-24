@@ -1,25 +1,41 @@
 const Owner = require("../models/owner.js");
 
-const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
+// const mailgun = require("mailgun.js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
+const formData = require("form-data");
+const Mailgun = require("mailgun.js");
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({username: "api", key: process.env.MG_SUBLINE_APIKEY});
 const verifyEmail = require("../emails/verifyEmail.js");
 
 module.exports = {
     sendVerifyEmail: function(req, res){
+        let saveOwner = {};
         Owner.findOne({_id: req.params.id})
             .then((owner)=>{
-                const mailgunData = {
+                saveOwner = owner;
+                // const mailgunData = {
+                //     from: "The Subline <clientsupport@thesubline.net>",
+                //     to: owner.email,
+                //     subject: "Email verification",
+                //     html: verifyEmail({
+                //         name: owner.name,
+                //         link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`,
+                //     })
+                // };
+                // mailgun.messages().send(mailgunData, (err, body)=>{});
+
+                return mg.messages.create("mail.thesubline.net", {
                     from: "The Subline <clientsupport@thesubline.net>",
                     to: owner.email,
                     subject: "Email verification",
                     html: verifyEmail({
                         name: owner.name,
-                        link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`,
+                        link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`
                     })
-                };
-                mailgun.messages().send(mailgunData, (err, body)=>{});
-
-
-                return res.render(`verifyPage/verify`, {id: owner._id, email: owner.email, banner: res.locals.merchant});
+                });
+            })
+            .then((response)=>{
+                return res.render(`verifyPage/verify`, {id: saveOwner._id, email: saveOwner.email, banner: res.locals.merchant});
             })
             .catch((err)=>{
                 req.session.error = "ERROR: UNABLE TO SEND VERIFICATION EMAIL";

@@ -3,7 +3,7 @@ const Merchant = require("../models/merchant.js");
 
 const passwordReset = require("../emails/passwordReset.js");
 
-const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
+// const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 const bcrypt = require("bcryptjs");
 
 module.exports = {

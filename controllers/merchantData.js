@@ -7,7 +7,7 @@ const helper = require("./helper.js");
 const verifyEmail = require("../emails/verifyEmail.js");
 
 const bcrypt = require("bcryptjs");
-const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
+// const mailgun = require("mailgun-js")({apiKey: process.env.MG_SUBLINE_APIKEY, domain: "mail.thesubline.net"});
 const ObjectId = require("mongoose").Types.ObjectId;
 const axios = require("axios");
 
