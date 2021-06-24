@@ -4,10 +4,9 @@ module.exports = {
     display: function(recipe){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("editRecipeTitle").innerText = recipe.name;
-        document.getElementById("editRecipeSearch").onchange = ()=>{this.search()};
+        document.getElementById("editRecipeSearch").oninput = ()=>{this.search()};
         document.getElementById("editRecipeSubmit").onclick = ()=>{this.submit()};
         let used = document.getElementById("editRecipeUsed");
-        let unused = document.getElementById("editRecipeUnused");
         let template = document.getElementById("editRecipeInputItem").content.children[0];
         let tempList = [];
 
@@ -23,28 +22,29 @@ module.exports = {
             used.appendChild(ingredient);
         }
 
+        this.unused = [];
         for(let i = 0; i < merchant.inventory.length; i++){
             if(tempList.includes(merchant.inventory[i].ingredient.id)) continue;
             this.unused.push(merchant.inventory[i].ingredient);
         }
 
-        this.displayUnused();
+        this.displayUnused(this.unused);
     },
 
-    displayUnused: function(){
+    displayUnused: function(items){
         let container = document.getElementById("editRecipeUnused");
-        this.unused.sort((a, b) => (a.name > b.name) ? 1 : -1);
+        items.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
         while(container.children.length > 0){
             container.removeChild(container.firstChild);
         }
 
-        for(let i = 0; i < this.unused.length; i++){
+        for(let i = 0; i < items.length; i++){
             let button = document.createElement("button");
-            button.innerText = this.unused[i].name;
+            button.innerText = items[i].name;
             button.classList.add("choosable");
             button.classList.add("selection");
-            button.ingredient = this.unused[i];
+            button.ingredient = items[i];
             button.onclick = ()=>{this.addIngredient(button)};
             container.appendChild(button);
         }
@@ -75,10 +75,22 @@ module.exports = {
         this.unused.push(ingredient.ingredient);
 
         used.removeChild(ingredient);
-        this.displayUnused();
+        this.displayUnused(this.unused);
     },
 
     search: function(){
+        console.log("searching");
+        let text = document.getElementById("editRecipeSearch").value;
+        let newList = [];
+
+        for(let i = 0; i < this.unused.length; i++){
+            let name = this.unused[i].name.toLowerCase();
+            if(name.includes(text) === true){
+                newList.push(this.unused[i]);
+            }
+        }
+
+        this.displayUnused(newList);
     },
 
     submit: function(){
