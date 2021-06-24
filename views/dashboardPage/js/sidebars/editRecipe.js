@@ -2,8 +2,23 @@ module.exports = {
     unused: [],
 
     display: function(recipe){
+        let title = document.getElementById("editRecipeTitle");
+        let name = document.getElementById("editRecipeName");
+        let category = document.getElementById("editRecipeCategory");
+        let price = document.getElementById("editRecipePrice");
+        title.innerText = recipe.name;
+        name.value = recipe.name;
+        category.value = recipe.category;
+        price.value = recipe.price;
+
+        if(merchant.pos === "none"){
+            name.style.display = "flex";
+            category.style.display = "flex";
+            price.style.display = "flex";
+            title.style.display = "none";
+        }
+
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
-        document.getElementById("editRecipeTitle").innerText = recipe.name;
         document.getElementById("editRecipeSearch").oninput = ()=>{this.search()};
         document.getElementById("editRecipeSubmit").onclick = ()=>{this.gatherData(recipe)};
         let used = document.getElementById("editRecipeUsed");
@@ -96,9 +111,9 @@ module.exports = {
         let items = document.getElementById("editRecipeUsed");
         let data = {
             id: recipe.id,
-            name: recipe.name,
-            price: recipe.price * 100,
-            category: recipe.category,
+            name: document.getElementById("editRecipeName").children[0].value,
+            price: parseInt(document.getElementById("editRecipePrice").children[0].value * 100),
+            category: document.getElementById("editRecipeCategory").children[0].value,
             ingredients: []
         };
 
@@ -145,7 +160,9 @@ module.exports = {
                     controller.createBanner(response, "error");
                 }else{
                     merchant.updateRecipe(merchant.getRecipe(response._id), response);
+                    state.updateRecipes();
                     controller.closeSidebar();
+                    controller.createBanner("RECIPE UPDATED", "success");
                 }
             })
             .catch((err)=>{

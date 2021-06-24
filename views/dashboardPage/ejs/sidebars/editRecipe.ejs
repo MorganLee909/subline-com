@@ -9,7 +9,21 @@
         </button>
     </div>
 
-    <h1 id="editRecipeTitle"></h1>
+    <div id="editRecipeInputContainer">
+        <h1 id="editRecipeTitle"></h1>
+
+        <label id="editRecipeName" style="display:none">NAME:
+            <input type="text">
+        </label>
+        
+        <label id="editRecipeCategory" style="display:none">CATEGORY:
+            <input type="text">
+        </label>
+        
+        <label id="editRecipePrice" style="display:none">PRICE:
+            <input type="number" step="0.01" min="0">
+        </label>
+    </div>
 
     <div id="editRecipeContents">
         <div id="editRecipeLeft">
@@ -22,10 +36,10 @@
             <h2>LIST OF INGREDIENTS</h2>
 
             <div id="editRecipeUsed"></div>
+
+            <button id="editRecipeSubmit" class="sidebarButton">SUBMIT</button>
         </div>
     </div>
-
-    <button id="editRecipeSubmit" class="sidebarButton">SUBMIT</button>
 
     <template id="editRecipeInputItem">
         <div class="chosenSelection">

@@ -1,35 +1,58 @@
-#editRecipeContents{
-    display: flex;
-    flex-grow: 2;
-}
-
-    #editRecipeLeft, #editRecipeRight{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 50%;
-    }
-
-    #editRecipeLeft{
-        border-right: 2px solid rgb(255, 99, 107);
-    }
-
-    #editRecipeUnused, #editRecipeUsed{
-        display: flex;
-        flex-direction: column;
-        width: 95%;
-    }
-
-.editRecipeInputItem{
-    display: flex;
+#editRecipe{
     flex-direction: column;
 }
 
-    .editRecipeInputItem > div{
+    #editRecipeInputContainer{
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        margin: 15px auto;
     }
 
-    .editRecipeInputItem input{
-        width: 150px;
+        #editRecipeInputContainer label{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #editRecipeInputContainer input{
+            margin-left: 10px;
+        }
+
+    #editRecipeContents{
+        display: flex;
+        flex-grow: 2;
+    }
+
+        #editRecipeLeft, #editRecipeRight{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+        }
+
+        #editRecipeLeft{
+            border-right: 2px solid rgb(255, 99, 107);
+        }
+
+        #editRecipeUnused, #editRecipeUsed{
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+        }
+
+    .editRecipeInputItem{
+        display: flex;
+        flex-direction: column;
+    }
+
+        .editRecipeInputItem > div{
+            display: flex;
+            align-items: center;
+        }
+
+        .editRecipeInputItem input{
+            width: 150px;
+        }
+
+    #editRecipeSubmit{
+        margin-top: auto;
     }
