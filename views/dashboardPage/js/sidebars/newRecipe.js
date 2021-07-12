@@ -3,6 +3,14 @@ let newRecipe = {
 
     display: function(){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
+        document.getElementById("newRecipeName").value = "";
+        document.getElementById("newRecipeCategory").value = "";
+        document.getElementById("newRecipePrice").value = "";
+        let chosen = document.getElementById("newRecipeChosenList");
+        
+        while(chosen.children.length > 0){
+            chosen.removeChild(chosen.firstChild);
+        }
 
         document.getElementById("submitNewRecipe").onclick = ()=>{this.gatherData()};
         document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
