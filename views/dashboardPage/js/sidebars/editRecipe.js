@@ -7,9 +7,9 @@ module.exports = {
         let category = document.getElementById("editRecipeCategory");
         let price = document.getElementById("editRecipePrice");
         title.innerText = recipe.name;
-        name.value = recipe.name;
-        category.value = recipe.category;
-        price.value = recipe.price;
+        name.children[0].value = recipe.name;
+        category.children[0].value = recipe.category;
+        price.children[0].value = recipe.price;
 
         if(merchant.pos === "none"){
             name.style.display = "flex";
