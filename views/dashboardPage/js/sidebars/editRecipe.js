@@ -25,6 +25,10 @@ module.exports = {
         let template = document.getElementById("editRecipeInputItem").content.children[0];
         let tempList = [];
 
+        while(used.children.length > 0){
+            used.removeChild(used.firstChild);
+        }
+
         for(let i = 0; i < recipe.ingredients.length; i++){
             tempList.push(recipe.ingredients[i].ingredient.id);
 
