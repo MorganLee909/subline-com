@@ -1,5 +1,7 @@
 #editRecipe{
     flex-direction: column;
+    width: 100%;
+    height: 100%;
 }
 
     #editRecipeInputContainer{
@@ -19,7 +21,10 @@
 
     #editRecipeContents{
         display: flex;
+        flex-basis: 0;
         flex-grow: 2;
+        flex-shrink: 2;
+        overflow: hidden;
     }
 
         #editRecipeLeft, #editRecipeRight{
@@ -37,6 +42,9 @@
             display: flex;
             flex-direction: column;
             width: 95%;
+            flex-basis: 0;
+            flex-grow: 2;
+            overflow-y: auto;
         }
 
     .editRecipeInputItem{
