@@ -6,6 +6,7 @@ const https = require("https");
 const fs = require("fs");
 const cssmerger = require("cssmerger");
 const esbuild = require("esbuild");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 
@@ -67,6 +68,10 @@ mongoose.connect(`mongodb://127.0.0.1:27017/inventory-management`, mongooseOptio
 
 app.use(compression());
 app.use(express.urlencoded({extended: true}));
+app.use(fileUpload({
+    limits: {fileSize: 1024 * 1024},
+    useTempFiles: true
+}));
 app.use(express.json());
 app.use(session(sessionOptions));
 require("./routes")(app);

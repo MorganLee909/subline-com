@@ -77,7 +77,8 @@ class Merchant{
             recipes,
             transactions,
             address,
-            owner
+            owner,
+            id
         ){
         this._name = name;
         this._pos = pos;
@@ -92,6 +93,7 @@ class Merchant{
             merchants: owner.merchants,
             name: owner.name
         };
+        this.id = id;
         
         //populate ingredients
         for(let i = 0; i < ingredients.length; i++){

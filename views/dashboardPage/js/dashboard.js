@@ -30,7 +30,8 @@ window.merchant = new Merchant(
     data.merchant.recipes,
     data.transactions,
     (data.merchant.address === undefined) ? "" : data.merchant.address.full,
-    data.owner
+    data.owner,
+    data.merchant._id
 );
 
 controller = {

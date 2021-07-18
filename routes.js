@@ -9,6 +9,7 @@ const informationPages = require("./controllers/informationPages.js");
 const emailVerification = require("./controllers/emailVerification.js");
 const passwordReset = require("./controllers/passwordReset.js");
 const squareData = require("./controllers/squareData.js");
+const admin = require("./controllers/admin.js");
 
 const session = require("./middleware.js").verifySession;
 const banner = require("./middleware.js").formatBanner;
@@ -92,4 +93,8 @@ module.exports = function(app){
     app.get("/recipes/update/square", session, squareData.updateRecipes);
     app.get("/square/locations", session, squareData.getLocations);
     app.get("/square/add/:location", session, squareData.addMerchant);
+
+    //Admin
+    app.get("/admin/create", (req, res)=>{res.sendFile(`${__dirname}/views/newTest.html`)});
+    app.post("/admin/create", admin.addData);
 }
