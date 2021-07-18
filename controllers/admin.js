@@ -1,4 +1,7 @@
 const Merchant = require("../models/merchant.js");
+const Ingredient = require("../models/ingredient.js");
+const helper = require("./helper.js");
+
 const fs = require("fs");
 
 module.exports = {
@@ -18,12 +21,51 @@ module.exports = {
 
         Merchant.findOne({_id: req.body.id})
             .then((merchant)=>{
-                let data = fs.readFileSync(req.files.ingredients.tempFilePath).toString();
-                data = data.split("/n");
+                //Ingredients
+                let newIngredients = [];
+                if(req.files.ingredients !== undefined){
+                    let ingredientData = fs.readFileSync(req.files.ingredients.tempFilePath).toString();
+                    fs.unlink(req.files.ingredients.tempFilePath, ()=>{});
+                    ingredientData = ingredientData.split("\n");
 
-                console.log(data);
+                    merchant.inventory = [];
+                    for(let i = 0; i < ingredientData.length; i++){
+                        if(ingredientData[i] === "") continue;
+                        let data = ingredientData[i].split(",");
+                        let ingredient = new Ingredient({
+                            name: data[0],
+                            category: data[1],
+                            unitType: helper.getUnitType(data[3]),
+                            ingredients: []
+                        });
+
+                        let merchIngredient = {
+                            ingredient: ingredient._id,
+                            quantity: helper.convertQuantityToBaseUnit(data[2], data[3]),
+                            defaultUnit: data[3]
+                        };
+                        
+                        if(data[3].toLowerCase() === "bottle"){
+                            ingredient.unitType = data[5];
+                            ingredient.unitSize = helper.convertQuantityToBaseUnit(data[4], data[5])
+                            merchIngredient.defaultUnit = "bottle";
+                        }
+
+                        newIngredients.push(ingredient);
+                        merchant.inventory.push(merchIngredient);
+                    }
+                }
+
+                return Promise.all([
+                    merchant.save(),
+                    Ingredient.create(newIngredients)
+                ]);
+            })
+            .then((response)=>{
+                return res.redirect("/dashboard");
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }
