@@ -61,7 +61,7 @@ module.exports = {
                 let indexIngredients = ()=>{
                     let ingredients = {};
                     for(let i = 0; i < merchant.inventory.length; i++){
-                        ingredients[merchant.inventory[i].ingredient.name] = merchant.inventory[i].ingredient;
+                        ingredients[merchant.inventory[i].ingredient.name.toLowerCase()] = merchant.inventory[i].ingredient;
                     }
                     return ingredients;
                 }
@@ -86,8 +86,10 @@ module.exports = {
                         });
 
                         for(let j = 3; j < data.length; j+=3){
+                            if(data[j] === "") break;
+
                             recipe.ingredients.push({
-                                ingredient: ingredientIndices[data[j]],
+                                ingredient: ingredientIndices[data[j].toLowerCase()],
                                 quantity: helper.convertQuantityToBaseUnit(parseFloat(data[j+1]), data[j+2])
                             });
                         }
@@ -107,7 +109,7 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                console.log(err);
+                // console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }
