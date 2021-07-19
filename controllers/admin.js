@@ -2,6 +2,7 @@ const Merchant = require("../models/merchant.js");
 const Ingredient = require("../models/ingredient.js");
 const Recipe = require("../models/recipe.js");
 const Order = require("../models/order.js");
+const Transaction = require("../models/transaction.js");
 const helper = require("./helper.js");
 
 const fs = require("fs");
@@ -23,6 +24,7 @@ module.exports = {
 
         Merchant.findOne({_id: req.body.id})
             .populate("inventory.ingredient")
+            .populate("recipes")
             .then((merchant)=>{
                 //Ingredients
                 let newIngredients = [];
@@ -102,6 +104,15 @@ module.exports = {
                     }
                 }
 
+                let indexRecipes = ()=>{
+                    let recipes = {};
+                    for(let i = 0; i < merchant.recipes.length; i++){
+                        recipes[merchant.recipes[i].name.toLowerCase()] = merchant.recipes[i];
+                    }
+                    return recipes;
+                }
+                let recipeIndices = indexRecipes();
+
                 //Orders
                 let newOrders = [];
                 if(req.files.orders !== undefined){
@@ -135,11 +146,42 @@ module.exports = {
                     }
                 }
 
+                //Transactions
+                let newTransactions = [];
+                if(req.files.transactions !== undefined){
+                    let transactionData = fs.readFileSync(req.files.transactions.tempFilePath).toString()
+                    fs.unlink(req.files.transactions.tempFilePath, ()=>{});
+                    transactionData = transactionData.split("\n");
+
+                    for(let i = 0; i < transactionData.length; i++){
+                        if(transactionData[i] === "") continue;
+                        let data = transactionData[i].split(",");
+
+                        let transaction = new Transaction({
+                            merchant: merchant._id,
+                            date: new Date(data[0]),
+                            recipes: []
+                        });
+
+                        for(let j = 1; j < data.length; j+=2){
+                            if(data[j] === "") break;
+
+                            transaction.recipes.push({
+                                recipe: recipeIndices[data[j].toLowerCase()],
+                                quantity: parseInt(data[j+1])
+                            });
+                        }
+
+                        newTransactions.push(transaction);
+                    }
+                }
+
                 return Promise.all([
                     merchant.save(),
                     Ingredient.create(newIngredients),
                     Recipe.create(newRecipes),
-                    Order.create(newOrders)
+                    Order.create(newOrders),
+                    Transaction.create(newTransactions)
                 ]);
             })
             .then((response)=>{
