@@ -80,11 +80,13 @@ let newRecipe = {
                 unit: ingredients[i].children[1].children[1].value
             }
     
-            if(ingredient.getPotentialUnits().includes(newIngredient.unit) === false){
-                mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
-            }else{
-                newIngredient.baseUnitMultiplier = 1 / controller.baseUnit(1, newIngredient.unit);
-            }
+            // if(ingredient.getPotentialUnits().includes(newIngredient.unit) === false){
+            //     mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
+            // }else{
+            //     newIngredient.baseUnitMultiplier = 1 / controller.baseUnit(1, newIngredient.unit);
+            // }
+
+            
     
             data.ingredients.push(newIngredient);
         }

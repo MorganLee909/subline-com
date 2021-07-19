@@ -40,6 +40,12 @@ let newIngredient = {
             defaultUnit: unit
         }
 
+        switch(newIngredient.ingredient.unitType){
+            case "mass": newIngredient.ingredient.toMass = 1; break;
+            case "volume": newIngredient.ingredient.toVolume = 1; break;
+            case "length": newIngredient.ingredient.toLength = 1; break;
+        }
+
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
             newIngredient.ingredient.unitType = document.getElementById("bottleUnits").value;
