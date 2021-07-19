@@ -1,5 +1,6 @@
 const Merchant = require("../models/merchant.js");
 const Ingredient = require("../models/ingredient.js");
+const Recipe = require("../models/recipe.js");
 const helper = require("./helper.js");
 
 const fs = require("fs");
@@ -20,6 +21,7 @@ module.exports = {
         if(req.body.password !== process.env.ADMIN_PASS) return res.json("bad password");
 
         Merchant.findOne({_id: req.body.id})
+            .populate("inventory.ingredient")
             .then((merchant)=>{
                 //Ingredients
                 let newIngredients = [];
@@ -56,9 +58,49 @@ module.exports = {
                     }
                 }
 
+                let indexIngredients = ()=>{
+                    let ingredients = {};
+                    for(let i = 0; i < merchant.inventory.length; i++){
+                        ingredients[merchant.inventory[i].ingredient.name] = merchant.inventory[i].ingredient;
+                    }
+                    return ingredients;
+                }
+
+                //Recipes
+                let newRecipes = [];
+                if(req.files.recipes !== undefined){
+                    let recipeData = fs.readFileSync(req.files.recipes.tempFilePath).toString();
+                    fs.unlink(req.files.recipes.tempFilePath, ()=>{});
+                    recipeData = recipeData.split("\n");
+
+                    let ingredientIndices = indexIngredients();
+                    for(let i = 0; i < recipeData.length; i++){
+                        if(recipeData[i] === "") continue;
+                        let data = recipeData[i].split(",");
+                        let recipe = new Recipe({
+                            merchant: merchant._id,
+                            name: data[0],
+                            price: parseInt(parseFloat(data[1]) * 100),
+                            category: data[2],
+                            ingredients: []
+                        });
+
+                        for(let j = 3; j < data.length; j+=3){
+                            recipe.ingredients.push({
+                                ingredient: ingredientIndices[data[j]],
+                                quantity: helper.convertQuantityToBaseUnit(parseFloat(data[j+1]), data[j+2])
+                            });
+                        }
+
+                        merchant.recipes.push(recipe);
+                        newRecipes.push(recipe);
+                    }
+                }
+
                 return Promise.all([
                     merchant.save(),
-                    Ingredient.create(newIngredients)
+                    Ingredient.create(newIngredients),
+                    Recipe.create(newRecipes)
                 ]);
             })
             .then((response)=>{
