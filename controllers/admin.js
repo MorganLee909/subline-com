@@ -1,6 +1,7 @@
 const Merchant = require("../models/merchant.js");
 const Ingredient = require("../models/ingredient.js");
 const Recipe = require("../models/recipe.js");
+const Order = require("../models/order.js");
 const helper = require("./helper.js");
 
 const fs = require("fs");
@@ -65,6 +66,7 @@ module.exports = {
                     }
                     return ingredients;
                 }
+                let ingredientIndices = indexIngredients();
 
                 //Recipes
                 let newRecipes = [];
@@ -73,7 +75,8 @@ module.exports = {
                     fs.unlink(req.files.recipes.tempFilePath, ()=>{});
                     recipeData = recipeData.split("\n");
 
-                    let ingredientIndices = indexIngredients();
+                    
+                    merchant.recipes = [];
                     for(let i = 0; i < recipeData.length; i++){
                         if(recipeData[i] === "") continue;
                         let data = recipeData[i].split(",");
@@ -99,17 +102,51 @@ module.exports = {
                     }
                 }
 
+                //Orders
+                let newOrders = [];
+                if(req.files.orders !== undefined){
+                    let orderData = fs.readFileSync(req.files.orders.tempFilePath).toString();
+                    fs.unlink(req.files.orders.tempFilePath, ()=>{});
+                    orderData = orderData.split("\n");
+
+                    for(let i = 0; i < orderData.length; i++){
+                        if(orderData[i] === "") continue;
+                        let data = orderData[i].split(",");
+
+                        let order = new Order({
+                            merchant: merchant._id,
+                            name: data[0],
+                            date: new Date(data[1]),
+                            taxes: parseFloat(data[2]),
+                            fees: parseFloat(data[3]),
+                            ingredients: []
+                        });
+
+                        for(let j = 4; j < data.length; j+=3){
+                            if(data[j] === "") break;
+                            order.ingredients.push({
+                                ingredient: ingredientIndices[data[j].toLowerCase()],
+                                quantity: parseFloat(data[j+1]),
+                                pricePerUnit: parseInt(parseFloat(data[j+2]) * 100)
+                            });
+                        }
+
+                        newOrders.push(order);
+                    }
+                }
+
                 return Promise.all([
                     merchant.save(),
                     Ingredient.create(newIngredients),
-                    Recipe.create(newRecipes)
+                    Recipe.create(newRecipes),
+                    Order.create(newOrders)
                 ]);
             })
             .then((response)=>{
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                // console.log(err);
+                console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }
