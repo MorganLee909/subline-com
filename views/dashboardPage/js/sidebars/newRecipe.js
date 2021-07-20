@@ -85,8 +85,14 @@ let newRecipe = {
             // }else{
             //     newIngredient.baseUnitMultiplier = 1 / controller.baseUnit(1, newIngredient.unit);
             // }
-
             
+            if(["g", "kg", "oz", "lb"].includes(newIngredient.unit) && ingredient.toMass === undefined){
+                mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
+            }else if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(newIngredient.unit) && ingredient.toVolume === undefined){
+                mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
+            }else if(["mm", "cm", "m", "in", "ft"].includes(newIngredient.unit) && ingredient.toLength === undefined){
+                mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
+            }
     
             data.ingredients.push(newIngredient);
         }
