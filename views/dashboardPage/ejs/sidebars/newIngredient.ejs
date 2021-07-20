@@ -74,9 +74,68 @@
         </select>
     </label>
 
-    <button id="submitNewIng" class="sidebarButton">CREATE</button>
-
     <div class="lineBorder"></div>
 
-    <button id="ingredientFileUpload" class="linkButton">Or, upload a spreadsheet</button>
+    <h2>CONVERSIONS (OPTIONAL)</h2>
+
+    <div id="newIngMassConvert" class="converterBox" style="display:none">
+        <input id="massConvertLeft" type="Number">
+
+        <h3 id="massConvertUnitLeft"></h3>
+
+        <p>=</p>
+
+        <input id="massConvertRight" type="number">
+
+        <select id="massConvertUnitRight">
+            <option value="g">G</option>
+            <option value="kg">KG</option>
+            <option value="oz">OZ</option>
+            <option value="lb">LB</option>
+        </select>
+    </div>
+
+    <div id="newIngVolumeConvert" class="converterBox">
+        <input id="volumeConvertLeft" type="Number">
+
+        <h4 id="volumeConvertUnitLeft"></h4>
+
+        <p>=</p>
+
+        <input id="volumeConvertRight" type="number">
+
+        <select id="volumeConvertUnitRight">
+            <option value="ml">ML</option>
+            <option value="l">L</option>
+            <option value="tsp">TSP</option>
+            <option value="tbsp">TBSP</option>
+            <option value="ozfl">OZ. FL</option>
+            <option value="cup">CUP</option>
+            <option value="pt">PT</option>
+            <option value="qt">QT</option>
+            <option value="gal">GAL</option>
+        </select>
+    </div>
+
+    <div id="newIngLengthConvert" class="converterBox">
+        <input id="lengthConvertLeft" type="Number">
+
+        <h4 id="lengthConvertUnitLeft"></h4>
+
+        <p>=</p>
+
+        <input id="lengthConvertRight" type="number">
+
+        <select id="lengthConvertUnitRight">
+            <option value="mm">MM</option>
+            <option value="cm">CM</option>
+            <option value="m">M</option>
+            <option value="in">IN</option>
+            <option value="ft">FT</option>
+        </select>
+    </div>
+    
+    <div class="lineBorder"></div>
+
+    <button id="submitNewIng" class="sidebarButton">CREATE</button>
 </div>

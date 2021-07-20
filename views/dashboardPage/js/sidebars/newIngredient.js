@@ -6,11 +6,12 @@ let newIngredient = {
         document.getElementById("newIngCategory").placeholder = "CATEGORY";
         document.getElementById("newIngQuantity").placeholder = "QUANTITY";
         document.getElementById("bottleSizeLabel").style.display = "none";
+        document.getElementById("volumeConvertUnitLeft").innerText = "G";
+        document.getElementById("lengthConvertUnitLeft").innerText = "G";
         selector.value = "g";
 
         selector.onchange = ()=>{this.unitChange()};
         document.getElementById("submitNewIng").onclick = ()=>{this.submit()};
-        document.getElementById("ingredientFileUpload").addEventListener("click", ()=>{controller.openModal("ingredientSpreadsheet")});
     },
 
     unitChange: function(){
@@ -20,6 +21,29 @@ let newIngredient = {
             bottleLabel.style.display = "block";
         }else{
             bottleLabel.style.display = "none";
+        }
+
+        let convertMass = document.getElementById("newIngMassConvert");
+        let convertVolume = document.getElementById("newIngVolumeConvert");
+        let convertLength = document.getElementById("newIngLengthConvert");
+        if(["g", "kg", "oz", "lb"].includes(select.value)){
+            convertMass.style.display = "none";
+            convertVolume.style.display = "flex";
+            convertLength.style.display = "flex";
+            document.getElementById("volumeConvertUnitLeft").innerText = select.value.toUpperCase();
+            document.getElementById("lengthConvertUnitLeft").innerText = select.value.toUpperCase();
+        }else if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(select.value)){
+            convertMass.style.display = "flex";
+            convertVolume.style.display = "none";
+            convertLength.style.display = "flex";
+            document.getElementById("massConvertUnitLeft").innerText = select.value.toUpperCase();
+            document.getElementById("lengthConvertUnitLeft").innerText = select.value.toUpperCase();
+        }else if(["mm", "cm", "m", "in", "ft"].includes(select.value)){
+            convertMass.style.display = "flex";
+            convertVolume.style.display = "flex";
+            convertLength.style.display = "none";
+            document.getElementById("massConvertUnitLeft").innerText = select.value.toUpperCase();
+            document.getElementById("volumeConvertUnitLeft").innerText = select.value.toUpperCase();
         }
     },
 

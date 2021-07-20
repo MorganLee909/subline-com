@@ -1,5 +1,5 @@
 class Ingredient{
-    constructor(id, name, category, unitType, unit, parent, unitSize = undefined){
+    constructor(id, name, category, unitType, unit, parent, unitSize = undefined, convert){
         this._id = id;
         this._name = name;
         this._category = category;
@@ -8,6 +8,7 @@ class Ingredient{
         this._parent = parent;
         this._unitSize = unitSize;
         this._subIngredients = [];
+        this._convert = convert;
     }
 
     get id(){

@@ -30,9 +30,11 @@ const IngredientSchema = new mongoose.Schema({
         min: [0, "SIZE CANNOT BE A NEGATIVE NUMBER"],
         required: false
     },
-    toMass: Number,
-    toVolume: Number,
-    toLength: Number,
+    convert: {
+        mass: Number,
+        volume: Number,
+        length: Number
+    },
     ingredients: [{
         ingredient: {
             type: mongoose.Schema.Types.ObjectId,
