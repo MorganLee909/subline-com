@@ -12,7 +12,7 @@ let newRecipe = {
             chosen.removeChild(chosen.firstChild);
         }
 
-        document.getElementById("submitNewRecipe").onclick = ()=>{this.gatherData()};
+        document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
         document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
         document.getElementById("newRecipeSearch").onkeyup = ()=>{this.populateChoices()};
 
@@ -62,49 +62,24 @@ let newRecipe = {
         document.getElementById("newRecipeChosenList").appendChild(element);
     },
 
-    gatherData: function(){
+    submit: function(){
         let data = {
             name: document.getElementById("newRecipeName").value,
-            category: document.getElementById("newRecipeCategory").value,
             price: parseInt(document.getElementById("newRecipePrice").value * 100),
-            ingredients: []
-        };
-    
-        let mismatchUnits = [];
+            category: document.getElementById("newRecipeCategory").value,
+            ingredients = []
+        }
+
         let ingredients = document.getElementById("newRecipeChosenList").children;
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = ingredients[i].ingredient;
-            let newIngredient = {
+            data.ingredients.push({
                 ingredient: ingredient.id,
                 quantity: ingredients[i].children[1].children[0].value,
                 unit: ingredients[i].children[1].children[1].value
-            }
-    
-            // if(ingredient.getPotentialUnits().includes(newIngredient.unit) === false){
-            //     mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
-            // }else{
-            //     newIngredient.baseUnitMultiplier = 1 / controller.baseUnit(1, newIngredient.unit);
-            // }
-            
-            if(["g", "kg", "oz", "lb"].includes(newIngredient.unit) && ingredient.toMass === undefined){
-                mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
-            }else if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(newIngredient.unit) && ingredient.toVolume === undefined){
-                mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
-            }else if(["mm", "cm", "m", "in", "ft"].includes(newIngredient.unit) && ingredient.toLength === undefined){
-                mismatchUnits.push({ingredient: ingredient, newIngredient: newIngredient});
-            }
-    
-            data.ingredients.push(newIngredient);
+            });
         }
 
-        if(mismatchUnits.length === 0){
-            this.submit(data);
-            return;
-        }
-        controller.openModal("alternateUnitConversion", {mismatchUnits: mismatchUnits, recipe: data, submit: this.submit});
-    },
-
-    submit: function(data){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
