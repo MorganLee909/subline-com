@@ -248,7 +248,6 @@ let modal = {
                     }
                     div.children[1].children[0].children[1].value = merchant.inventory[i].ingredient.unit;
 
-
                     createOptGroup(
                         div.children[1].children[2].children[1],
                         ingredient.unitType,
@@ -277,10 +276,18 @@ let modal = {
             };
 
             for(let i = 0; i < right.children.length; i++){
+                let leftQuantity = parseFloat(right.children[i].children[1].children[0].children[0].value);
+                let leftUnit = right.children[i].children[1].children[0].children[1].value;
+                let rightQuantity = parseFloat(right.children[i].children[1].children[2].children[0].value);
+                let rightUnit = right.children[i].children[1].children[2].children[1].value;
+
+                let leftBase = controller.baseUnit(leftQuantity, leftUnit);
+                let rightBase = controller.baseUnit(rightQuantity, rightUnit);
+
                 data.ingredients.push({
                     ingredient: right.children[i].ingredient.id,
-                    quantity: parseFloat(right.children[i].children[1].children[0].value),
-                    unit: right.children[i].children[1].children[1].value
+                    quantity: leftBase / rightBase,
+                    unit: right.children[i].children[1].children[0].children[1].value
                 });
             }
 
