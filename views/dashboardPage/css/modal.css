@@ -135,7 +135,7 @@
         flex-direction: column;
         align-items: center;
         background: white;
-        min-width: 500px;
+        width: 75vw;
         max-height: 100%;
     }
 
@@ -167,6 +167,15 @@
                     width: 100%;
                 }
 
+        #editSubcurrentIng input{
+            max-width: 75px;
+        }
+
+        .editSubRightRight {
+            display: flex;
+            justify-content: flex-end;
+        }
+
     #modalCircularReference{
         flex-direction: column;
         background: white;
@@ -179,35 +188,3 @@
     #modalCircularReference div > *{
         margin: 10px;
     }
-
-    #modalUnitConversion{
-        flex-direction: column;
-        background: white;
-        align-items: center;
-        padding: 25px;
-        max-height: 90%;
-        overflow-y: auto;
-    }
-
-        #unitConversions{
-            width: 100%;
-        }
-
-        .convertUnitOption{
-            display: flex;
-            flex-direction: column;
-            margin: 10px 0;
-            border-bottom: 3px solid rgb(255, 99, 107);
-        }
-
-            .convertInputBox{
-                margin: 0 10px;
-            }
-
-            .convertInputBox > input{
-                max-width: 150px;
-            }
-
-            .convertUnitOption > div{
-                display: flex;
-            }

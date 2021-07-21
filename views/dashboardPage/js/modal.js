@@ -1,7 +1,5 @@
 const Merchant = require("./classes/Merchant.js");
 
-const newRecipe = require("./sidebars/newRecipe.js");
-
 let modal = {
     feedback: function(){
         let form = document.getElementById("modalFeedback");
@@ -185,35 +183,47 @@ let modal = {
             }
         }
 
-        let addIngredient = (button, ingredient)=>{
+        let addIngredient = (button, newIngredient)=>{
             button.parentElement.removeChild(button);
 
             let div = template.cloneNode(true);
-            div.children[0].children[0].innerText = ingredient.name;
-            div.children[0].children[1].onclick = ()=>{removeIngredient(div, ingredient)};
-            div.children[1].children[0].value = 0;
-            div.ingredient = ingredient;
+            div.children[0].children[0].innerText = newIngredient.name;
+            div.children[0].children[1].onclick = ()=>{removeIngredient(div, newIngredient)};
+            div.children[1].children[0].children[0].value = 1;
+            div.children[1].children[2].children[0].value = 1;
+            div.ingredient = newIngredient;
             right.appendChild(div);
 
+            if(newIngredient.convert.toMass !== undefined){
+                createOptGroup(div.children[1].children[0].children[1], "Mass", ["g", "kg", "oz", "lb"])
+            }
+            if(newIngredient.convert.toVolume !== undefined){
+                createOptGroup(div.children[1].children[0].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
+            }
+            if(newIngredient.convert.toLength !== undefined){
+                createOptGroup(div.children[1].children[0].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
+            }
+            div.children[1].children[0].children[1].value = newIngredient.unit;
+
             if(ingredient.convert.toMass !== undefined){
-                createOptGroup(div.children[1].children[1], "Mass", ["g", "kg", "oz", "lb"])
+                createOptGroup(div.children[1].children[2].children[1], "Mass", ["g", "kg", "oz", "lb"])
             }
             if(ingredient.convert.toVolume !== undefined){
-                createOptGroup(div.children[1].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
+                createOptGroup(div.children[1].children[2].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
             }
             if(ingredient.convert.toLength !== undefined){
-                createOptGroup(div.children[1].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
+                createOptGroup(div.children[1].children[2].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
             }
-            div.children[1].children[1].value = ingredient.unit;
+            div.children[1].children[2].children[1].value = ingredient.unit;
         }
 
-        let removeIngredient = (div, ingredient)=>{
+        let removeIngredient = (div, newIngredient)=>{
             div.parentElement.removeChild(div);
 
             let button = document.createElement("button");
-            button.innerText = ingredient.name;
+            button.innerText = newIngredient.name;
             button.classList.add("choosable");
-            button.onclick = ()=>{addIngredient(button, ingredient)};
+            button.onclick = ()=>{addIngredient(button, newIngredient)};
             left.appendChild(button);
         }
 
@@ -225,21 +235,34 @@ let modal = {
                     let div = template.cloneNode(true);
                     div.children[0].children[0].innerText = merchant.inventory[i].ingredient.name;
                     div.children[0].children[1].onclick = ()=>{removeIngredient(div, ingredient.subIngredients[j].ingredient)};
-                    div.children[1].children[0].value = ingredient.subIngredients[j].quantity;
+                    div.children[1].children[0].children[0].value = ingredient.subIngredients[j].quantity;
+                    div.children[1].children[2].children[0].value = 1;
                     div.ingredient = merchant.inventory[i].ingredient;
                     right.appendChild(div);
 
                     let conversions = merchant.inventory[i].ingredient.convert;
                     if(conversions.toMass !== undefined){
-                        createOptGroup(div.children[1].children[1], "Mass", ["g", "kg", "oz", "lb"]);
+                        createOptGroup(div.children[1].children[0].children[1], "Mass", ["g", "kg", "oz", "lb"]);
                     }
                     if(conversions.toVolume !== undefined){
-                        createOptGroup(div.children[1].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
+                        createOptGroup(div.children[1].children[0].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
                     }
                     if(conversions.toLength !== undefined){
-                        createOptGroup(div.children[1].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
+                        createOptGroup(div.children[1].children[0].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
                     }
-                    div.children[1].children[1].value = merchant.inventory[i].ingredient.unit;
+                    div.children[1].children[0].children[1].value = merchant.inventory[i].ingredient.unit;
+
+                    conversions = ingredient.convert;
+                    if(conversions.toMass !== undefined){
+                        createOptGroup(div.children[1].children[2].children[1], "Mass", ["g", "kg", "oz", "lb"]);
+                    }
+                    if(conversions.toVolume !== undefined){
+                        createOptGroup(div.children[1].children[2].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
+                    }
+                    if(conversions.toLength !== undefined){
+                        createOptGroup(div.children[1].children[2].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
+                    }
+                    div.children[1].children[2].children[1].value = merchant.inventory[i].ingredient.unit;
 
                     skip = true;
                     break;
