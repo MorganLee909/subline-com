@@ -124,6 +124,7 @@ module.exports = {
         ingredients: [{
             ingredient: String (id)
             quantity: Number
+            unit: String
         }]
     }
     response = Ingredient
@@ -133,7 +134,6 @@ module.exports = {
         let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
 
         let stack = [];
-        let merchIngredient = {};
         Promise.all([Ingredient.findOne({_id: req.body.id}), popMerchant])
             .then((response)=>{
                 response[0].ingredients = req.body.ingredients;

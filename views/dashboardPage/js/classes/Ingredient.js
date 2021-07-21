@@ -55,6 +55,10 @@ class Ingredient{
         return this._specialUnit;
     }
 
+    get convert(){
+        return this._convert;
+    }
+
     get unitSize(){
         switch(this._unit){
             case "g":return this._unitSize; 

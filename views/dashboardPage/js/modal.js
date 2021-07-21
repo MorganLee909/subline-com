@@ -176,11 +176,34 @@ let modal = {
             button.parentElement.removeChild(button);
 
             let div = template.cloneNode(true);
-            div.children[0].innerText = ingredient.name;
+            div.children[0].children[0].innerText = ingredient.name;
+            div.children[0].children[1].onclick = ()=>{removeIngredient(div, ingredient)};
             div.children[1].children[0].value = 0;
-            div.children[1].children[1].onclick = ()=>{removeIngredient(div, ingredient)};
             div.ingredient = ingredient;
             right.appendChild(div);
+
+            let createOptGroup = (container, group, options)=>{
+                let optGroup = document.createElement("optgroup")
+                optGroup.label = group;
+                container.appendChild(optGroup);
+
+                for(let i = 0; i < options.length; i++){
+                    let option = document.createElement("option");
+                    option.innerText = options[i].toUpperCase();
+                    option.value = options[i];
+                    optGroup.appendChild(option);
+                }
+            }
+
+            if(ingredient.convert.toMass !== undefined){
+                createOptGroup(div.children[1].children[1], "Mass", ["g", "kg", "oz", "lb"])
+            }
+            if(ingredient.convert.toVolume !== undefined){
+                createOptGroup(div.children[1].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
+            }
+            if(ingredient.convert.toLength !== undefined){
+                createOptGroup(div.children[1].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
+            }
         }
 
         let removeIngredient = (div, ingredient)=>{
@@ -227,7 +250,8 @@ let modal = {
             for(let i = 0; i < right.children.length; i++){
                 data.ingredients.push({
                     ingredient: right.children[i].ingredient.id,
-                    quantity: parseFloat(right.children[i].children[1].children[0].value)
+                    quantity: parseFloat(right.children[i].children[1].children[0].value),
+                    unit: right.children[i].children[1].children[1].value
                 });
             }
 

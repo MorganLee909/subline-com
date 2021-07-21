@@ -67,7 +67,7 @@ let newRecipe = {
             name: document.getElementById("newRecipeName").value,
             price: parseInt(document.getElementById("newRecipePrice").value * 100),
             category: document.getElementById("newRecipeCategory").value,
-            ingredients = []
+            ingredients: []
         }
 
         let ingredients = document.getElementById("newRecipeChosenList").children;
