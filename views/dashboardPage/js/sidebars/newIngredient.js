@@ -81,7 +81,7 @@ let newIngredient = {
 
         if(controller.unitType(unit) === "mass") newIngredient.convert.toMass = 1;
         if(controller.unitType(unit) === "volume") newIngredient.convert.toVolume = 1;
-        if(controller.unittype(unit) === "length") newIngredient.convert.toLength = 1;
+        if(controller.unitType(unit) === "length") newIngredient.convert.toLength = 1;
 
         if(isNaN(newIngredient.convert.toMass)) newIngredient.convert.toMass = undefined;
         if(isNaN(newIngredient.convert.toVolume)) newIngredient.convert.toVolume = undefined;

@@ -28,8 +28,12 @@ class RecipeIngredient{
         return `${this._quantity.toFixed(2)} ${this._unit.toUpperCase()}`;
     }
 
-    // getQuantityAsBase(){
-    // }
+    getQuantityAsBase(){
+        if(controller.unitType(this._unit) === "mass") return this._quantity / this._ingredient.convert.toMass;
+        if(controller.unitType(this._unit) === "volume") return this._quantity / this._ingredient.convert.toVolume;
+        if(controller.unittype(this._unit) === "length") return this._quantity / this._ingredient.convert.toLength;
+        return this._quantity;
+    }
 }
 
 /*
