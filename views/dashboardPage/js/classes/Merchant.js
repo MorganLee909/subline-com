@@ -104,7 +104,8 @@ class Merchant{
                 ingredients[i].ingredient.unitType,
                 ingredients[i].defaultUnit,
                 this,
-                ingredients[i].ingredient.unitSize
+                ingredients[i].ingredient.unitSize,
+                ingredients[i].ingredient.convert
             );
 
             const merchantIngredient = new MerchantIngredient(
@@ -259,6 +260,7 @@ class Merchant{
                 defaultUnit,
                 this,
                 ingredient.unitSize,
+                ingredient.convert
             );
 
             createdIngredient.replaceIngredients(ingredient.ingredients);
