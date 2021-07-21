@@ -156,16 +156,17 @@ class Recipe{
         this._ingredientTotals = {};
         
         let traverseIngredient = (recipeIngredient, multiplier)=>{
-            let ingredient = recipeIngredient._ingredient;
-            for(let i = 0; i < ingredient.subIngredients.length; i++){
-                traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);
-            }
+            // console.log(recipeIngredient._ingredient);
+            // let ingredient = recipeIngredient._ingredient;
+            // for(let i = 0; i < ingredient.subIngredients.length; i++){
+            //     traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);
+            // }
 
-            if(this._ingredientTotals[ingredient.id] === undefined){
-                this._ingredientTotals[ingredient.id] = multiplier * recipeIngredient.baseUnitMultiplier;
-            }else{
-                this._ingredientTotals[ingredient.id] += multiplier * recipeIngredient.baseUnitMultiplier;
-            }
+            // if(this._ingredientTotals[ingredient.id] === undefined){
+            //     this._ingredientTotals[ingredient.id] = multiplier * recipeIngredient.baseUnitMultiplier;
+            // }else{
+            //     this._ingredientTotals[ingredient.id] += multiplier * recipeIngredient.baseUnitMultiplier;
+            // }
         }
 
         for(let i = 0; i < this._ingredients.length; i++){

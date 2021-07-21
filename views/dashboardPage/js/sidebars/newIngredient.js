@@ -32,7 +32,7 @@ let newIngredient = {
             convertLength.style.display = "flex";
             document.getElementById("volumeConvertUnitLeft").innerText = select.value.toUpperCase();
             document.getElementById("lengthConvertUnitLeft").innerText = select.value.toUpperCase();
-        }else if(controller.unittype(select.value) === "volume"){
+        }else if(controller.unitType(select.value) === "volume"){
             convertMass.style.display = "flex";
             convertVolume.style.display = "none";
             convertLength.style.display = "flex";

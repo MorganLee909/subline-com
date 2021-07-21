@@ -427,7 +427,7 @@ controller = {
 
     unitType(unit){
         if(["g", "kg", "oz", "lb"].includes(unit)) return "mass";
-        if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(unit)) return volume;
+        if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(unit)) return "volume";
         if(["mm", "cm", "m", "in", "ft"].includes(unit)) return "length";
         return "other";
     }

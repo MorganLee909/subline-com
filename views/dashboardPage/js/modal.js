@@ -171,6 +171,19 @@ let modal = {
         while(right.children.length > 0){
             right.removeChild(right.firstChild);
         }
+        
+        let createOptGroup = (container, group, options)=>{
+            let optGroup = document.createElement("optgroup")
+            optGroup.label = group;
+            container.appendChild(optGroup);
+
+            for(let i = 0; i < options.length; i++){
+                let option = document.createElement("option");
+                option.innerText = options[i].toUpperCase();
+                option.value = options[i];
+                optGroup.appendChild(option);
+            }
+        }
 
         let addIngredient = (button, ingredient)=>{
             button.parentElement.removeChild(button);
@@ -182,19 +195,6 @@ let modal = {
             div.ingredient = ingredient;
             right.appendChild(div);
 
-            let createOptGroup = (container, group, options)=>{
-                let optGroup = document.createElement("optgroup")
-                optGroup.label = group;
-                container.appendChild(optGroup);
-
-                for(let i = 0; i < options.length; i++){
-                    let option = document.createElement("option");
-                    option.innerText = options[i].toUpperCase();
-                    option.value = options[i];
-                    optGroup.appendChild(option);
-                }
-            }
-
             if(ingredient.convert.toMass !== undefined){
                 createOptGroup(div.children[1].children[1], "Mass", ["g", "kg", "oz", "lb"])
             }
@@ -204,6 +204,7 @@ let modal = {
             if(ingredient.convert.toLength !== undefined){
                 createOptGroup(div.children[1].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
             }
+            div.children[1].children[1].value = ingredient.unit;
         }
 
         let removeIngredient = (div, ingredient)=>{
@@ -222,11 +223,24 @@ let modal = {
             for(let j = 0; j < ingredient.subIngredients.length; j++){
                 if(merchant.inventory[i].ingredient === ingredient.subIngredients[j].ingredient){
                     let div = template.cloneNode(true);
-                    div.children[0].innerText = merchant.inventory[i].ingredient.name;
+                    div.children[0].children[0].innerText = merchant.inventory[i].ingredient.name;
+                    div.children[0].children[1].onclick = ()=>{removeIngredient(div, ingredient.subIngredients[j].ingredient)};
                     div.children[1].children[0].value = ingredient.subIngredients[j].quantity;
-                    div.children[1].children[1].onclick = ()=>{removeIngredient(div, ingredient.subIngredients[j].ingredient)};
                     div.ingredient = merchant.inventory[i].ingredient;
                     right.appendChild(div);
+
+                    let conversions = merchant.inventory[i].ingredient.convert;
+                    if(conversions.toMass !== undefined){
+                        createOptGroup(div.children[1].children[1], "Mass", ["g", "kg", "oz", "lb"]);
+                    }
+                    if(conversions.toVolume !== undefined){
+                        createOptGroup(div.children[1].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
+                    }
+                    if(conversions.toLength !== undefined){
+                        createOptGroup(div.children[1].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
+                    }
+                    div.children[1].children[1].value = merchant.inventory[i].ingredient.unit;
+
                     skip = true;
                     break;
                 }

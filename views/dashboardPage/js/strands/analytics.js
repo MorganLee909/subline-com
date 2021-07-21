@@ -190,8 +190,6 @@ let analytics = {
             quantities.push(sum);
         }
 
-        console.log(quantities);
-
         //create and display the graph
         let trace = {
             x: dates,
