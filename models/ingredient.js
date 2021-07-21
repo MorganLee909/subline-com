@@ -31,9 +31,9 @@ const IngredientSchema = new mongoose.Schema({
         required: false
     },
     convert: {
-        mass: Number,
-        volume: Number,
-        length: Number
+        toMass: Number,
+        toVolume: Number,
+        toLength: Number
     },
     ingredients: [{
         ingredient: {

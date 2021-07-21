@@ -17,6 +17,11 @@ module.exports = {
         },
         quantity: quantity of ingredient for current merchant,
         defaultUnit: default unit of measurement to display
+        convert: {
+            toMass: Number
+            toVolume: Number
+            toLength: Number
+        }
     }
     Returns:
         Same as above, with the _id
@@ -28,6 +33,7 @@ module.exports = {
         }
 
         newIngredient = new Ingredient(newIngredient.ingredient);
+        newIngredient.convert = req.body.convert;
         newIngredient.ingredients = [];
         
         newIngredient.save()

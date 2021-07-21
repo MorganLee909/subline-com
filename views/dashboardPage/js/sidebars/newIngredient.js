@@ -54,6 +54,16 @@ let newIngredient = {
 
         let unit = unitSelector.value;
 
+        let massConvertLeft = document.getElementById("massConvertLeft").value;
+        let massConvertRight = document.getElementById("massConvertRight").value;
+        let massConvertUnit = document.getElementById("massConvertUnitRight").value;
+        let volumeConvertLeft = document.getElementById("volumeConvertLeft").value;
+        let volumeConvertRight = document.getElementById("volumeConvertRight").value;
+        let volumeConvertUnit = document.getElementById("volumeConvertUnitRight").value;
+        let lengthConvertLeft = document.getElementById("lengthConvertLeft").value;
+        let lengthConvertRight = document.getElementById("lengthConvertRight").value;
+        let lengthConvertUnit = document.getElementById("lengthConvertUnitRight").value;
+
         let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
@@ -61,14 +71,21 @@ let newIngredient = {
                 unitType: options[unitSelector.selectedIndex].getAttribute("type")
             },
             quantity: controller.baseUnit(quantityValue, unit),
-            defaultUnit: unit
+            defaultUnit: unit,
+            convert: {
+                toMass: controller.baseUnit(massConvertRight, massConvertUnit) / controller.baseUnit(massConvertLeft, unit),
+                toVolume: controller.baseUnit(volumeConvertRight, volumeConvertUnit) / controller.baseUnit(volumeConvertLeft, unit),
+                toLength: controller.baseUnit(lengthConvertRight, lengthConvertUnit) / controller.baseUnit(lengthConvertLeft, unit)
+            }
         }
 
-        switch(newIngredient.ingredient.unitType){
-            case "mass": newIngredient.ingredient.toMass = 1; break;
-            case "volume": newIngredient.ingredient.toVolume = 1; break;
-            case "length": newIngredient.ingredient.toLength = 1; break;
-        }
+        if(["g", "kg", "oz", "lb"].includes(unit)) newIngredient.convert.toMass = 1;
+        if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(unit)) newIngredient.convert.toVolume = 1;
+        if(["mm", "cm", "m", "in", "ft"].includes(unit))newIngredient.convert.toLength = 1;
+
+        if(isNaN(newIngredient.convert.toMass)) newIngredient.convert.toMass = undefined;
+        if(isNaN(newIngredient.convert.toVolume)) newIngredient.convert.toVolume = undefined;
+        if(isNaN(newIngredient.convert.toLength)) newIngredient.convert.toLength = undefined;
 
         //Change the ingredient if it is a special unit type (ie "bottle")
         if(unit === "bottle"){
