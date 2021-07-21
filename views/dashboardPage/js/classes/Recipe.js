@@ -2,12 +2,10 @@ const recipeBook = require("../strands/recipeBook.js");
 const analytics = require("../strands/analytics.js");
 
 class RecipeIngredient{
-    constructor(ingredient, quantity, unit, baseUnitMultiplier){
+    constructor(ingredient, quantity, unit){
         this._ingredient = ingredient;
         this._quantity = quantity;
         this._unit = unit;
-        //Quantity * baseUnitMultiplier will give you the quantity converted to the base unit of the ingredient (gram/meter/liter)
-        this._baseUnitMultiplier = baseUnitMultiplier;
     }
 
     get ingredient(){
@@ -22,10 +20,6 @@ class RecipeIngredient{
         this_quantity = controller.baseUnit(quantity, this._ingredient.unit);
     }
 
-    get baseUnitMultiplier(){
-        return this._baseUnitMultiplier;
-    }
-
     get unit(){
         return this._unit;
     }
@@ -34,9 +28,8 @@ class RecipeIngredient{
         return `${this._quantity.toFixed(2)} ${this._unit.toUpperCase()}`;
     }
 
-    getQuantityAsBase(){
-        return this._quantity * this._baseUnitMultiplier;
-    }
+    // getQuantityAsBase(){
+    // }
 }
 
 /*
