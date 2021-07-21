@@ -205,15 +205,11 @@ let modal = {
             }
             div.children[1].children[0].children[1].value = newIngredient.unit;
 
-            if(ingredient.convert.toMass !== undefined){
-                createOptGroup(div.children[1].children[2].children[1], "Mass", ["g", "kg", "oz", "lb"])
-            }
-            if(ingredient.convert.toVolume !== undefined){
-                createOptGroup(div.children[1].children[2].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
-            }
-            if(ingredient.convert.toLength !== undefined){
-                createOptGroup(div.children[1].children[2].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
-            }
+            createOptGroup(
+                div.children[1].children[2].children[1],
+                ingredient.unitType,
+                ingredient.getPotentialUnits()    
+            );
             div.children[1].children[2].children[1].value = ingredient.unit;
         }
 
@@ -252,16 +248,12 @@ let modal = {
                     }
                     div.children[1].children[0].children[1].value = merchant.inventory[i].ingredient.unit;
 
-                    conversions = ingredient.convert;
-                    if(conversions.toMass !== undefined){
-                        createOptGroup(div.children[1].children[2].children[1], "Mass", ["g", "kg", "oz", "lb"]);
-                    }
-                    if(conversions.toVolume !== undefined){
-                        createOptGroup(div.children[1].children[2].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
-                    }
-                    if(conversions.toLength !== undefined){
-                        createOptGroup(div.children[1].children[2].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
-                    }
+
+                    createOptGroup(
+                        div.children[1].children[2].children[1],
+                        ingredient.unitType,
+                        ingredient.getPotentialUnits()    
+                    );
                     div.children[1].children[2].children[1].value = merchant.inventory[i].ingredient.unit;
 
                     skip = true;
