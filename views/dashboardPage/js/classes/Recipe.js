@@ -155,21 +155,20 @@ class Recipe{
     calculateIngredientTotals(){
         this._ingredientTotals = {};
 
-        let traverseIngredient = (recipeIngredient, multiplier)=>{
-            let ingredient = recipeIngredient._ingredient;
+        let traverseIngredient = (ingredient, multiplier)=>{
             for(let i = 0; i < ingredient.subIngredients.length; i++){
                 traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);
             }
 
-            if(this._ingredientstotals[ingredient.id] === undefined){
-                this.ingredienttotals[ingredient.id] = multiplier;
+            if(this._ingredientTotals[ingredient.id] === undefined){
+                this._ingredientTotals[ingredient.id] = multiplier;
             }else{
                 this._ingredientTotals[ingredient.id] += multiplier;
             }
         }
 
         for(let i = 0; i < this._ingredients.length; i++){
-            traverseIngredient(this._ingredients[i], this._ingredients[i].getQuantityAsBase());
+            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i].getQuantityAsBase());
         }
     }
 }

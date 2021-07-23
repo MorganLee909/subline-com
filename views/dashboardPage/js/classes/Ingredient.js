@@ -163,7 +163,7 @@ class Ingredient{
         return [];
     }
 
-    getUnitCost(isDisplay = false){
+    getUnitCost(){
         let totalCost = 0;
         let quantity = 0;
 
@@ -172,7 +172,7 @@ class Ingredient{
                 let ingredient = this._parent.orders[i].ingredients[j];
 
                 if(ingredient.ingredient === this){
-                    totalCost += ingredient.quantity * (isDisplay === true) ?  ingredient.pricePerUnit : ingredient.pricePerBaseUnit;
+                    totalCost += ingredient.pricePerUnit * ingredient.quantity;
                     quantity += ingredient.quantity;
                     break;
                 }

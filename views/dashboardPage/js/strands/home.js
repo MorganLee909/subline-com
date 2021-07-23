@@ -52,12 +52,12 @@ let home = {
         from.setDate(from.getDate() - 30);
 
         for(let i = 0; i < merchant.inventory.length; i++){
-            let unitCost = merchant.inventory[i].ingredient.getUnitCost(false);
+            let unitCost = merchant.inventory[i].ingredient.getUnitCost();
             let totalCost = unitCost * merchant.inventory[i].getSoldQuantity(from, new Date());
             
             ingredients.push({
                 inventoryItem: merchant.inventory[i],
-                unitCost: merchant.inventory[i].ingredient.getUnitCost(true),
+                unitCost: merchant.inventory[i].ingredient.getUnitCost(),
                 totalCost: totalCost / 100
             });
         }

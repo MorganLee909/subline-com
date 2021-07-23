@@ -146,7 +146,6 @@ class Merchant{
                 recipes[i].hidden
             );
 
-            newRecipe.calculateIngredientTotals();
             this._recipes.push(newRecipe);
         }
 
