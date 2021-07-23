@@ -17,7 +17,7 @@ class RecipeIngredient{
     }
 
     set quantity(quantity){
-        this_quantity = controller.baseUnit(quantity, this._ingredient.unit);
+        this._quantity = controller.baseUnit(quantity, this._ingredient.unit);
     }
 
     get unit(){
@@ -154,23 +154,22 @@ class Recipe{
 
     calculateIngredientTotals(){
         this._ingredientTotals = {};
-        
-        let traverseIngredient = (recipeIngredient, multiplier)=>{
-            // console.log(recipeIngredient._ingredient);
-            // let ingredient = recipeIngredient._ingredient;
-            // for(let i = 0; i < ingredient.subIngredients.length; i++){
-            //     traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);
-            // }
 
-            // if(this._ingredientTotals[ingredient.id] === undefined){
-            //     this._ingredientTotals[ingredient.id] = multiplier * recipeIngredient.baseUnitMultiplier;
-            // }else{
-            //     this._ingredientTotals[ingredient.id] += multiplier * recipeIngredient.baseUnitMultiplier;
-            // }
+        let traverseIngredient = (recipeIngredient, multiplier)=>{
+            let ingredient = recipeIngredient._ingredient;
+            for(let i = 0; i < ingredient.subIngredients.length; i++){
+                traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);
+            }
+
+            if(this._ingredientstotals[ingredient.id] === undefined){
+                this.ingredienttotals[ingredient.id] = multiplier;
+            }else{
+                this._ingredientTotals[ingredient.id] += multiplier;
+            }
         }
 
         for(let i = 0; i < this._ingredients.length; i++){
-            traverseIngredient(this._ingredients[i], this._ingredients[i].quantity);
+            traverseIngredient(this._ingredients[i], this._ingredients[i].getQuantityAsBase());
         }
     }
 }

@@ -430,6 +430,50 @@ controller = {
         if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(unit)) return "volume";
         if(["mm", "cm", "m", "in", "ft"].includes(unit)) return "length";
         return "other";
+    },
+
+    unitMultiplier(from, to){
+        let multiplier = 1;
+        
+        switch(from){
+            case "kg": multiplier = 1000; break;
+            case "oz": multiplier = 28.3495; break;
+            case "lb": multiplier = 453.5924; break;
+            case "ml": multiplier = .001; break;
+            case "tsp": multiplier = .00492892004404; break;
+            case "tbsp": multiplier = 0.0147868184386; break;
+            case "ozfl": multiplier = 0.0295734619582; break;
+            case "cup": multiplier = 0.239998080015; break;
+            case "pt": multiplier = 0.473171193338; break;
+            case "qt": multiplier = 0.946342386675; break;
+            case "gal": multiplier = 3.7854; break;
+            case "mm": multiplier = 0.001; break;
+            case "cm": multiplier = 0.01; break;
+            case "in": multiplier = 0.025399986284; break;
+            case "ft": multiplier = 0.304803706413; break;
+        }
+
+        switch(to){
+            case "g": return multiplier;
+            case "kg": return multiplier / 1000;
+            case "oz": return multiplier / 28.3495;
+            case "lb": return multiplier / 453.5924;
+            case "ml": return multiplier * 1000;
+            case "l": return multiplier;
+            case "tsp": return multiplier * 202.8842;
+            case "tbsp": return multiplier * 67.6278;
+            case "cup": return multiplier * 4.1667;
+            case "pt": return multiplier * 2.1134;
+            case "qt": return multiplier * 1.0567
+            case "gal": return multiplier / 3.7854;
+            case "mm": return multiplier * 1000;
+            case "cm": return multiplier * 100;
+            case "m": return multiplier;
+            case "in": return multiplier * 39.3701;
+            case "ft": return multiplier * 3.2808;
+        }
+
+        return multiplier;
     }
 }
 

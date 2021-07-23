@@ -29,7 +29,7 @@ let ingredientDetails = {
             let subIngredient = ingredient.ingredient.subIngredients[i];
             let button = template.cloneNode(true);
             button.children[0].innerText = subIngredient.ingredient.name;
-            button.children[1].innerText = `${subIngredient.quantity} ${subIngredient.ingredient.unit}`;
+            button.children[1].innerText = subIngredient.getDisplayQuantity();
             button.onclick = ()=>{this.display(merchant.getIngredient(subIngredient.ingredient.id))};
             subIngredientList.appendChild(button);
         }

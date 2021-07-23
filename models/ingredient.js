@@ -41,7 +41,7 @@ const IngredientSchema = new mongoose.Schema({
             ref: "Ingredient",
             required: true
         },
-        quantity: {
+        quantity: { //quantity per base unit of parent
             type: Number,
             required: true,
             min: 0

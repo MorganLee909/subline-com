@@ -103,9 +103,10 @@ class Merchant{
                 ingredients[i].ingredient.category,
                 ingredients[i].ingredient.unitType,
                 ingredients[i].defaultUnit,
+                ingredients[i].ingredient.ingredients,
+                ingredients[i].ingredient.convert,
                 this,
                 ingredients[i].ingredient.unitSize,
-                ingredients[i].ingredient.convert
             );
 
             const merchantIngredient = new MerchantIngredient(
@@ -115,11 +116,6 @@ class Merchant{
             );
 
             this._inventory.push(merchantIngredient);
-        }
-
-        for(let i = 0; i < ingredients.length; i++){
-            let thisIngredient = this.getIngredient(ingredients[i].ingredient._id);
-            thisIngredient.ingredient.addIngredients(ingredients[i].ingredient.ingredients);
         }
 
         //populate recipes
@@ -258,12 +254,11 @@ class Merchant{
                 ingredient.category,
                 ingredient.unitType,
                 defaultUnit,
+                ingredient.ingredients,
+                ingredient.convert,
                 this,
-                ingredient.unitSize,
-                ingredient.convert
+                ingredient.unitSize
             );
-
-            createdIngredient.replaceIngredients(ingredient.ingredients);
 
             const merchantIngredient = new MerchantIngredient(createdIngredient, quantity, this);
             this._inventory.push(merchantIngredient);

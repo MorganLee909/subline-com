@@ -281,13 +281,12 @@ let modal = {
                 let rightQuantity = parseFloat(right.children[i].children[1].children[2].children[0].value);
                 let rightUnit = right.children[i].children[1].children[2].children[1].value;
 
-                let leftBase = controller.baseUnit(leftQuantity, leftUnit);
                 let rightBase = controller.baseUnit(rightQuantity, rightUnit);
 
                 data.ingredients.push({
                     ingredient: right.children[i].ingredient.id,
-                    quantity: leftBase / rightBase,
-                    unit: right.children[i].children[1].children[0].children[1].value
+                    quantity: leftQuantity / rightBase,
+                    unit: leftUnit
                 });
             }
 
