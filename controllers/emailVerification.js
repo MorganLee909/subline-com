@@ -94,9 +94,10 @@ module.exports = {
                 return owner.save();
             })
             .then((owner)=>{
-                req.session.success = "EMAIL VERIFIED. PLEASE LOG IN";
+                req.session.owner = owner.session.sessionId;
+                req.session.merchant = owner.merchants[0].toString();
 
-                return res.redirect("/login");
+                return res.redirect("/dashboard");
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){
