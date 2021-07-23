@@ -58,7 +58,7 @@ let home = {
             ingredients.push({
                 inventoryItem: merchant.inventory[i],
                 unitCost: merchant.inventory[i].ingredient.getUnitCost(),
-                totalCost: totalCost / 100
+                totalCost: totalCost
             });
         }
 
