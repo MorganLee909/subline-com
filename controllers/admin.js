@@ -63,8 +63,13 @@ module.exports = {
 
                 let indexIngredients = ()=>{
                     let ingredients = {};
-                    for(let i = 0; i < merchant.inventory.length; i++){
-                        ingredients[merchant.inventory[i].ingredient.name.toLowerCase()] = merchant.inventory[i].ingredient;
+                    let inventory = (req.files.ingredients === undefined) ? merchant.inventory : newIngredients;
+                    for(let i = 0; i < inventory.length; i++){
+                        if(req.files.ingredients === undefined){
+                            ingredients[inventory[i].ingredient.name.toLowerCase()] = inventory[i].ingredient;
+                        }else{
+                            ingredients[inventory[i].name.toLowerCase()] = inventory[i];
+                        }
                     }
                     return ingredients;
                 }
