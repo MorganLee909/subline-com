@@ -100,7 +100,8 @@ module.exports = {
 
                             recipe.ingredients.push({
                                 ingredient: ingredientIndices[data[j].toLowerCase()],
-                                quantity: helper.convertQuantityToBaseUnit(parseFloat(data[j+1]), data[j+2])
+                                quantity: helper.convertQuantityToBaseUnit(parseFloat(data[j+1]), data[j+2]),
+                                unit: data[j+2]
                             });
                         }
 
@@ -193,6 +194,7 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }
