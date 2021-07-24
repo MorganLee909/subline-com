@@ -33,17 +33,28 @@ module.exports = {
                     let ingredientData = fs.readFileSync(req.files.ingredients.tempFilePath).toString();
                     fs.unlink(req.files.ingredients.tempFilePath, ()=>{});
                     ingredientData = ingredientData.split("\n");
-
+                    let convertMass = {toMass: 1};
+                    let convertVolume = {toVolume: 1};
+                    let convertLength = {toLength: 1};
+                    
                     merchant.inventory = [];
                     for(let i = 0; i < ingredientData.length; i++){
                         if(ingredientData[i] === "") continue;
                         let data = ingredientData[i].split(",");
+                        let unitType = helper.getUnitType(data[3]);
                         let ingredient = new Ingredient({
                             name: data[0],
                             category: data[1],
-                            unitType: helper.getUnitType(data[3]),
-                            ingredients: []
+                            unitType: unitType,
+                            ingredients: [],
                         });
+
+                        switch(unitType){
+                            case "mass": ingredient.convert = convertMass; break;
+                            case "volume": ingredient.convert = convertVolume; break;
+                            case "length": ingredient.convert = convertLength; break;
+                            default: ingredient.convert = convertMass; break;
+                        }
 
                         let merchIngredient = {
                             ingredient: ingredient._id,
@@ -157,6 +168,7 @@ module.exports = {
                 //Transactions
                 let newTransactions = [];
                 if(req.files.transactions !== undefined){
+                    Transaction.deleteMany({merchant: req.body.id}).catch((err)=>{});
                     let transactionData = fs.readFileSync(req.files.transactions.tempFilePath).toString()
                     fs.unlink(req.files.transactions.tempFilePath, ()=>{});
                     transactionData = transactionData.split("\n");
@@ -196,7 +208,6 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }
