@@ -6,6 +6,7 @@ const Transaction = require("../models/transaction.js");
 const helper = require("./helper.js");
 
 const fs = require("fs");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 module.exports = {
     /*
@@ -122,6 +123,7 @@ module.exports = {
                 //Orders
                 let newOrders = [];
                 if(req.files.orders !== undefined){
+                    Order.deleteMany({merchant: req.body.id}).catch((err)=>{});
                     let orderData = fs.readFileSync(req.files.orders.tempFilePath).toString();
                     fs.unlink(req.files.orders.tempFilePath, ()=>{});
                     orderData = orderData.split("\n");
@@ -134,8 +136,8 @@ module.exports = {
                             merchant: merchant._id,
                             name: data[0],
                             date: new Date(data[1]),
-                            taxes: parseFloat(data[2]),
-                            fees: parseFloat(data[3]),
+                            taxes: parseInt(parseFloat(data[2]) * 100),
+                            fees: parseInt(parseFloat(data[3]) * 100),
                             ingredients: []
                         });
 
