@@ -20,7 +20,7 @@ module.exports = {
 
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("editRecipeSearch").oninput = ()=>{this.search()};
-        document.getElementById("editRecipeSubmit").onclick = ()=>{this.gatherData(recipe)};
+        document.getElementById("editRecipeSubmit").onclick = ()=>{this.submit(recipe.id)};
         let used = document.getElementById("editRecipeUsed");
         let template = document.getElementById("editRecipeInputItem").content.children[0];
         let tempList = [];
@@ -111,43 +111,25 @@ module.exports = {
         this.displayUnused(newList);
     },
 
-    gatherData: function(recipe){
-        let items = document.getElementById("editRecipeUsed");
+    submit: function(id){
         let data = {
-            id: recipe.id,
+            id: id,
             name: document.getElementById("editRecipeName").children[0].value,
             price: parseInt(document.getElementById("editRecipePrice").children[0].value * 100),
             category: document.getElementById("editRecipeCategory").children[0].value,
             ingredients: []
         };
 
-        let mismatchUnits = [];
-        for(let i = 0; i < items.children.length; i++){
-            let item = items.children[i];
-    
-            let ingredient = {
-                ingredient: item.ingredient.id,
-                quantity: item.children[1].children[0].value,
-                unit: item.children[1].children[1].value
-            };
-
-            if(item.ingredient.getPotentialUnits().includes(ingredient.unit) === false){
-                mismatchUnits.push({ingredient: item.ingredient, newIngredient: ingredient});
-            }else{
-                ingredient.baseUnitMultiplier = 1 / controller.baseUnit(1, ingredient.unit);
-            }
-    
-            data.ingredients.push(ingredient);
+        let divs = document.getElementById("editRecipeUsed").children;
+        for(let i = 0; i < divs.length; i++){
+            data.ingredients.push({
+                ingredient: divs[i].ingredient.id,
+                quantity: divs[i].children[1].children[0].value,
+                unit: divs[i].children[1].children[1].value
+            });
         }
 
-        if(mismatchUnits.length === 0){
-            this.submit(data);
-            return;
-        }
-        controller.openModal("alternateUnitConversion", {mismatchUnits: mismatchUnits, recipe: data, submit: this.submit});
-    },
 
-    submit: function(data){
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 

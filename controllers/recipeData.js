@@ -65,7 +65,7 @@ module.exports = {
         Recipe.findOne({_id: req.body.id})
             .then((recipe)=>{
 
-                if(merchant.pos === "none"){
+                if(res.locals.merchant.pos === "none"){
                     recipe.name = req.body.name;
                     recipe.price = req.body.price;
                     recipe.category = req.body.category;
