@@ -96,8 +96,9 @@ module.exports = {
             case "volume": select.value = "ml"; break;
             case "length": select.value = "mm"; break;
             case "other":
-                select.value = "other";
+                select.value = "each";
                 select.children[3].style.display = "block";
+                break;
         }
 
         used.appendChild(newItem);
