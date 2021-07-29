@@ -85,6 +85,21 @@ module.exports = {
         newItem.ingredient = ingredient.ingredient;
         newItem.children[0].children[0].innerText = ingredient.ingredient.name;
         newItem.children[0].children[1].onclick = ()=>{this.removeIngredient(newItem)};
+
+        let select = newItem.children[1].children[1];
+        if(ingredient.ingredient.convert.toMass !== undefined) select.children[0].style.display = "block";
+        if(ingredient.ingredient.convert.toVolume !== undefined) select.children[1].style.display = "block";
+        if(ingredient.ingredient.convert.toLength !== undefined) select.children[2].style.display = "block";
+
+        switch(ingredient.ingredient.unitType){
+            case "mass": select.value = "g"; break;
+            case "volume": select.value = "ml"; break;
+            case "length": select.value = "mm"; break;
+            case "other":
+                select.value = "other";
+                select.children[3].style.display = "block";
+        }
+
         used.appendChild(newItem);
     },
 
@@ -128,7 +143,6 @@ module.exports = {
                 unit: divs[i].children[1].children[1].value
             });
         }
-
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
