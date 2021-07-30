@@ -101,12 +101,10 @@ class Merchant{
                 ingredients[i].ingredient._id,
                 ingredients[i].ingredient.name,
                 ingredients[i].ingredient.category,
-                ingredients[i].ingredient.unitType,
-                ingredients[i].defaultUnit,
+                ingredients[i].unit,
                 ingredients[i].ingredient.ingredients,
                 ingredients[i].ingredient.convert,
-                this,
-                ingredients[i].ingredient.unitSize,
+                this
             );
 
             const merchantIngredient = new MerchantIngredient(
@@ -245,18 +243,16 @@ class Merchant{
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = ingredients[i].ingredient;
             let quantity = ingredients[i].quantity;
-            let defaultUnit = ingredients[i].defaultUnit;
+            let unit = ingredients[i].unit;
 
             const createdIngredient = new Ingredient(
                 ingredient._id,
                 ingredient.name,
                 ingredient.category,
-                ingredient.unitType,
-                defaultUnit,
+                unit,
                 ingredient.ingredients,
                 ingredient.convert,
-                this,
-                ingredient.unitSize
+                this
             );
 
             const merchantIngredient = new MerchantIngredient(createdIngredient, quantity, this);
