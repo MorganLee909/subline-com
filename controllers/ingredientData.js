@@ -115,7 +115,6 @@ module.exports = {
         ingredients: [{
             ingredient: String (id)
             quantity: Number
-            unit: String
         }]
     }
     response = Ingredient

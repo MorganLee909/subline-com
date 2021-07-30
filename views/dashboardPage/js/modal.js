@@ -194,13 +194,13 @@ let modal = {
             div.ingredient = newIngredient;
             right.appendChild(div);
 
-            if(newIngredient.convert.toMass !== undefined){
+            if(newIngredient.convert.toMass > 0){
                 createOptGroup(div.children[1].children[0].children[1], "Mass", ["g", "kg", "oz", "lb"])
             }
-            if(newIngredient.convert.toVolume !== undefined){
+            if(newIngredient.convert.toVolume > 0){
                 createOptGroup(div.children[1].children[0].children[1], "Volume", ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"]);
             }
-            if(newIngredient.convert.toLength !== undefined){
+            if(newIngredient.convert.toLength > 0){
                 createOptGroup(div.children[1].children[0].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
             }
             div.children[1].children[0].children[1].value = newIngredient.unit;
@@ -208,9 +208,11 @@ let modal = {
             createOptGroup(
                 div.children[1].children[2].children[1],
                 ingredient.unitType,
-                ingredient.getPotentialUnits()    
+                ingredient.getPotentialUnits()
             );
-            div.children[1].children[2].children[1].value = ingredient.unit;
+
+            div.children[1].children[0].children[1].value = ingredient.unit;
+            div.children[1].children[2].children[1].value = newIngredient.unit;
         }
 
         let removeIngredient = (div, newIngredient)=>{
@@ -253,6 +255,7 @@ let modal = {
                         ingredient.unitType,
                         ingredient.getPotentialUnits()    
                     );
+                    div.children[1].children[0].children[1].value = ingredient.unit;
                     div.children[1].children[2].children[1].value = merchant.inventory[i].ingredient.unit;
 
                     skip = true;
@@ -281,11 +284,12 @@ let modal = {
                 let rightQuantity = parseFloat(right.children[i].children[1].children[2].children[0].value);
                 let rightUnit = right.children[i].children[1].children[2].children[1].value;
 
-                let rightBase = controller.baseUnit(rightQuantity, rightUnit);
+                leftQuantity *= controller.unitMultiplier(leftUnit, controller.getBaseUnit(leftUnit));
+                rightQuantity *= controller.unitMultiplier(rightUnit, controller.getBaseUnit(rightUnit));
 
                 data.ingredients.push({
                     ingredient: right.children[i].ingredient.id,
-                    quantity: leftQuantity / rightBase,
+                    quantity: leftQuantity / rightQuantity,
                     unit: leftUnit
                 });
             }
