@@ -376,6 +376,7 @@ controller = {
         document.getElementById("mobileMenuSelector").onclick = ()=>{this.openMenu()};
     },
 
+    //TOREMOVE
     baseUnit(quantity, unit){
         switch(unit){
             case "g": return quantity;
@@ -424,11 +425,35 @@ controller = {
         }
     },
 
+    //TOREMOVE
     unitType(unit){
         if(["g", "kg", "oz", "lb"].includes(unit)) return "mass";
         if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(unit)) return "volume";
         if(["mm", "cm", "m", "in", "ft"].includes(unit)) return "length";
         return "other";
+    },
+
+    getBaseUnit(unit){
+        switch(unit){
+            case "g": return "g";
+            case "kg": return "g";
+            case "oz": return "g";
+            case "lb": return "g";
+            case "l": return "l";
+            case "ml": return "l";
+            case "tsp": return "l";
+            case "tbsp": return "l";
+            case "ozfl": return "l";
+            case "cup": return "l";
+            case "pt": return "l";
+            case "qt": return "l";
+            case "gal": return "l";
+            case "mm": return "m";
+            case "cm": return "m";
+            case "m": return "m";
+            case "in": return "m";
+            case "ft": return "m";
+        }
     },
 
     unitMultiplier(from, to){

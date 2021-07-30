@@ -67,25 +67,23 @@ let editIngredient = {
     },
 
     submit(ingredient){
-        const quantity = parseFloat(document.getElementById("editIngQuantityLabel").children[0].value);
+        let quantity = parseFloat(document.getElementById("editIngQuantityLabel").children[0].value);
+        let unit = document.getElementById("unitButtons").querySelector(".unitActive").innerText.toLowerCase();
 
         let data = {
-            id: ingredient.ingredient.id,
-            name: document.getElementById("editIngName").value,
-            category: document.getElementById("editIngCategory").value,
-            ingredients: [],
-        };
-
-        //Get the measurement unit
-        let units = document.getElementById("unitButtons");
-        for(let i = 0; i < units.children.length; i++){
-            if(units.children[i].classList.contains("unitActive")){
-                data.unit = units.children[i].innerText.toLowerCase();
-                break;
-            }
+            ingredient: {
+                id: ingredient.ingredient.id,
+                name: document.getElementById("editIngName").value,
+                category: document.getElementById("editIngCategory").value,
+                convert: {
+                    toMass: 0,
+                    toVolume: 0,
+                    toLength: 0
+                }
+            },
+            quantity: quantity * controller.unitMultiplier(unit, controller.getBaseUnit(unit)),
+            unit: unit
         }
-
-        data.quantity = controller.baseUnit(quantity, data.unit);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";

@@ -60,41 +60,38 @@ module.exports = {
     /*
     PUT: Updates data for a single ingredient
     req.body = {
-        id: id of the ingredient,
-        name: new name of the ingredient,
-        quantity: new quantity of the unit (in grams),
-        category: new category of the unit,
-        unit: new default unit of the ingredient
+        ingredient: {
+            id: String (id of Ingredient)
+            name: String
+            category: String
+            convert: {
+                toMass: Number
+                toVolume: Number
+                toLength: Number
+            }
+        }
+        quantity: Number
+        unit: String
     }
     response = Ingredient
-    error response = '$' delimited String
     */
     updateIngredient: function(req, res){
         Ingredient.findOne({_id: req.body.id})
-            .then((response)=>{
-                response.name = req.body.name;
-                response.category = req.body.category;
+            .then((ingredient)=>{
+                ingredient.name = req.body.ingredient.name;
+                ingredient.category = req.body.ingredient.category;
+                ingredient.convert = req.body.convert;
                 
                 //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){
                     if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
-                        res.locals.merchant.inventory[i].defaultUnit = req.body.unit;
-
-                        if(res.locals.merchant.inventory[i].quantity !== req.body.quantity){
-                            new InventoryAdjustment({
-                                date: new Date(),
-                                merchant: req.session.owner,
-                                ingredient: req.body.id,
-                                quantity: req.body.quantity - res.locals.merchant.inventory[i].quantity
-                            }).save().catch(()=>{});
-
-                            res.locals.merchant.inventory[i].quantity = req.body.quantity;
-                        }
+                        res.locals.merchant.inventory[i].unit = req.body.unit;
+                        res.locals.merchant.inventory[i].quantity = req.body.quantity;
                         
                         break;
                     }
                 }
-                return Promise.all([response.save(), res.locals.merchant.save()])
+                return Promise.all([ingredient.save(), res.locals.merchant.save()])
             })
             .then((response)=>{
                 return res.json({
