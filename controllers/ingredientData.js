@@ -13,37 +13,33 @@ module.exports = {
         ingredient: {
             name: name of ingredient,
             category: category of ingredient,
-            unitType: category for the unit (mass, volume, length)
-        },
-        quantity: quantity of ingredient for current merchant,
-        defaultUnit: default unit of measurement to display
-        convert: {
-            toMass: Number
-            toVolume: Number
-            toLength: Number
+            convert: {
+                toMass: Number
+                toVolume: Number
+                toLength: Number
+            }
         }
+            quantity: quantity of ingredient for current merchant,
+            unit: String
     }
     Returns:
         Same as above, with the _id
     */
     createIngredient: function(req, res){
-        let newIngredient = {...req.body};
-        if(req.body.defaultUnit === "bottle"){
-            newIngredient.ingredient.unitSize = newIngredient.ingredient.unitSize;
-        }
-
-        newIngredient = new Ingredient(newIngredient.ingredient);
-        newIngredient.convert = req.body.convert;
-        newIngredient.ingredients = [];
+        let newIngredient = new Ingredient({
+            name: req.body.ingredient.name,
+            category: req.body.ingredient.category,
+            convert: req.body.ingredient.category,
+            ingredients: []
+        })
         
         newIngredient.save()
             .then((ingredient)=>{
                 newIngredient = {
-                    ingredient: ingredient,
-                    defaultUnit: req.body.defaultUnit
+                    ingredient: ingredient._id,
+                    quantity: req.body.quantity,
+                    unit: req.body.unit
                 }
-
-                newIngredient.quantity = req.body.quantity, req.body.defaultUnit;
 
                 res.locals.merchant.inventory.push(newIngredient);
 
@@ -53,9 +49,7 @@ module.exports = {
                 return res.json(newIngredient);
             })
             .catch((err)=>{
-                if(typeof(err) === "string"){
-                    return res.json(err);
-                }
+                if(typeof(err) === "string") return res.json(err);
                 if(err.name === "ValidationError"){
                     return res.json(err.errors[Object.keys(err.errors)[0]].properties.message);
                 }

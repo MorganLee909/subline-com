@@ -21,15 +21,6 @@ const IngredientSchema = new mongoose.Schema({
             message: "INGREDIENT CATEGORY CONTAINS ILLEGAL CHARACTERS"
         }
     },
-    unitType: {
-        type: String,
-        required: [true, "UNIT TYPE IS REQUIRED"]
-    },
-    unitSize: {
-        type: Number,
-        min: [0, "SIZE CANNOT BE A NEGATIVE NUMBER"],
-        required: false
-    },
     convert: {
         toMass: Number,
         toVolume: Number,
@@ -41,7 +32,7 @@ const IngredientSchema = new mongoose.Schema({
             ref: "Ingredient",
             required: true
         },
-        quantity: { //quantity per base unit of parent
+        quantity: {
             type: Number,
             required: true,
             min: 0
