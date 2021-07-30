@@ -68,14 +68,14 @@ let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
                 category: document.getElementById("newIngCategory").value,
+                unit: unit,
                 convert: {
                     toMass: controller.baseUnit(massConvertRight, massConvertUnit) / controller.baseUnit(massConvertLeft, unit),
                     toVolume: controller.baseUnit(volumeConvertRight, volumeConvertUnit) / controller.baseUnit(volumeConvertLeft, unit),
                     toLength: controller.baseUnit(lengthConvertRight, lengthConvertUnit) / controller.baseUnit(lengthConvertLeft, unit)
                 }
             },
-            quantity: controller.baseUnit(quantityValue, unit),
-            unit: unit,
+            quantity: controller.baseUnit(quantityValue, unit)
         }
 
         if(controller.unitType(unit) === "mass") newIngredient.convert.toMass = 1;

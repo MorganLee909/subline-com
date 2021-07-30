@@ -45,10 +45,6 @@ const MerchantSchema = new mongoose.Schema({
         quantity: {
             type: Number,
             required: [true, "INGREDIENT QUANTITY IS REQUIRED"]
-        },
-        unit: {
-            type: String,
-            required: [true, "INGREDIENT UNIT IS REQUIRED"]
         }
     }],
     recipes: [{

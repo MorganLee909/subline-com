@@ -18,9 +18,9 @@ module.exports = {
                 toVolume: Number
                 toLength: Number
             }
+            unit: String
         }
             quantity: quantity of ingredient for current merchant,
-            unit: String
     }
     Returns:
         Same as above, with the _id
@@ -29,6 +29,7 @@ module.exports = {
         let newIngredient = new Ingredient({
             name: req.body.ingredient.name,
             category: req.body.ingredient.category,
+            unit: req.body.ingredient.unit,
             convert: req.body.ingredient.category,
             ingredients: []
         })
@@ -38,7 +39,6 @@ module.exports = {
                 newIngredient = {
                     ingredient: ingredient._id,
                     quantity: req.body.quantity,
-                    unit: req.body.unit
                 }
 
                 res.locals.merchant.inventory.push(newIngredient);
@@ -64,6 +64,7 @@ module.exports = {
             id: String (id of Ingredient)
             name: String
             category: String
+            unit: String
             convert: {
                 toMass: Number
                 toVolume: Number
@@ -71,7 +72,6 @@ module.exports = {
             }
         }
         quantity: Number
-        unit: String
     }
     response = Ingredient
     */
@@ -80,14 +80,13 @@ module.exports = {
             .then((ingredient)=>{
                 ingredient.name = req.body.ingredient.name;
                 ingredient.category = req.body.ingredient.category;
-                ingredient.convert = req.body.convert;
+                ingredient.convert = req.body.ingredient.convert;
+                ingredient.unit = req.body.ingredient.unit;
                 
                 //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){
                     if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
-                        res.locals.merchant.inventory[i].unit = req.body.unit;
-                        res.locals.merchant.inventory[i].quantity = req.body.quantity;
-                        
+                        res.locals.merchant.inventory[i].quantity = req.body.quantity;                        
                         break;
                     }
                 }
@@ -97,7 +96,6 @@ module.exports = {
                 return res.json({
                     ingredient: response[0],
                     quantity: req.body.quantity,
-                    defaultUnit: req.body.unit
                 });
             })
             .catch((err)=>{

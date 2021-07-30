@@ -133,14 +133,14 @@ let editIngredient = {
                 id: ingredient.ingredient.id,
                 name: document.getElementById("editIngName").value,
                 category: document.getElementById("editIngCategory").value,
+                unit: unit,
                 convert: {
                     toMass: rightMass / leftMass,
                     toVolume: rigthVolume / leftVolume,
                     toLength: rightLength / leftLength
                 }
             },
-            quantity: quantity * controller.unitMultiplier(unit, controller.getBaseUnit(unit)),
-            unit: unit
+            quantity: quantity * controller.unitMultiplier(unit, controller.getBaseUnit(unit))
         }
 
         let loader = document.getElementById("loaderContainer");

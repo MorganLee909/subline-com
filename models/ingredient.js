@@ -21,6 +21,10 @@ const IngredientSchema = new mongoose.Schema({
             message: "INGREDIENT CATEGORY CONTAINS ILLEGAL CHARACTERS"
         }
     },
+    unit: {
+        type: String,
+        required: true
+    },
     convert: {
         toMass: Number,
         toVolume: Number,
