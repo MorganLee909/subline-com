@@ -1,6 +1,5 @@
 const Owner = require("../models/owner.js");
 const Merchant = require("../models/merchant.js");
-const InventoryAdjustment = require("../models/inventoryAdjustment");
 const Transaction = require("../models/transaction.js");
 
 const helper = require("./helper.js");
@@ -152,7 +151,6 @@ module.exports = {
     }]
     */
     updateIngredientQuantities: function(req, res){
-        let adjustments = [];
         let changedIngredients = [];
         res.locals.merchant
             .populate("inventory.ingredient")
@@ -167,13 +165,6 @@ module.exports = {
                         }
                     }
 
-                    adjustments.push(new InventoryAdjustment({
-                        date: Date.now(),
-                        merchant: req.session.owner,
-                        ingredient: req.body[i].id,
-                        quantity: req.body[i].quantity - updateIngredient.quantity,
-                    }));
-
                     updateIngredient.quantity = helper.convertQuantityToBaseUnit(req.body[i].quantity, updateIngredient.defaultUnit);
                     changedIngredients.push(updateIngredient);
                 }
@@ -181,10 +172,7 @@ module.exports = {
                 return merchant.save();
             })
             .then((newMerchant)=>{
-                res.json(changedIngredients);
-
-                InventoryAdjustment.create(adjustments).catch(()=>{});
-                return;
+                return res.json(changedIngredients);
             })
             .catch((err)=>{
                 if(typeof(err) === "string"){

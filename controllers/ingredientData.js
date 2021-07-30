@@ -1,5 +1,4 @@
 const Ingredient = require("../models/ingredient");
-const InventoryAdjustment = require("../models/inventoryAdjustment.js");
 
 const helper = require("./helper.js");
 
