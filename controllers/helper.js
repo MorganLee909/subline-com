@@ -126,34 +126,6 @@ module.exports = {
         return result;
     },
 
-    getUnitType: function(unit){
-        let unitType = "";
-
-        switch(unit){
-            case "g": unitType = "mass"; break;
-            case "kg": unitType = "mass"; break;
-            case "oz": unitType = "mass"; break;
-            case "lb": unitType = "mass"; break;
-            case "ml": unitType = "volume"; break;
-            case "l": unitType = "volume"; break;
-            case "tsp": unitType = "volume"; break;
-            case "tbsp": unitType = "volume"; break;
-            case "ozfl": unitType = "volume"; break;
-            case "cup": unitType = "volume"; break;
-            case "pt": unitType = "volume"; break;
-            case "qt": unitType = "volume"; break;
-            case "gal": unitType = "volume"; break;
-            case "mm": unitType = "length"; break;
-            case "cm": unitType = "length"; break;
-            case "m": unitType = "length"; break;
-            case "in": unitType = "length"; break;
-            case "ft": unitType = "length"; break;
-            default: unitType = "other"; break;
-        }
-
-        return unitType;
-    },
-
     createRecipesFromSquare: function(squareItems, categories, merchantId){
         let recipes = [];
 

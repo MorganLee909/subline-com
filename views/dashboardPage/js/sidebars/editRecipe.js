@@ -87,19 +87,11 @@ module.exports = {
         newItem.children[0].children[1].onclick = ()=>{this.removeIngredient(newItem)};
 
         let select = newItem.children[1].children[1];
-        if(ingredient.ingredient.convert.toMass !== undefined) select.children[0].style.display = "block";
-        if(ingredient.ingredient.convert.toVolume !== undefined) select.children[1].style.display = "block";
-        if(ingredient.ingredient.convert.toLength !== undefined) select.children[2].style.display = "block";
+        if(ingredient.ingredient.convert.toMass <= 0) select.children[0].style.display = "block";
+        if(ingredient.ingredient.convert.toVolume <= 0) select.children[1].style.display = "block";
+        if(ingredient.ingredient.convert.toLength <= 0) select.children[2].style.display = "block";
 
-        switch(ingredient.ingredient.unitType){
-            case "mass": select.value = "g"; break;
-            case "volume": select.value = "ml"; break;
-            case "length": select.value = "mm"; break;
-            case "other":
-                select.value = "each";
-                select.children[3].style.display = "block";
-                break;
-        }
+        select.value = ingredient.ingredient.unit;
 
         used.appendChild(newItem);
     },

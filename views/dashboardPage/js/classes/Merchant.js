@@ -248,7 +248,6 @@ class Merchant{
             _id: String,
             name: String,
             category: String,
-            unitType: String,
             specialUnit: String || undefined,
             unitSize: Number || undefined
         }
@@ -291,9 +290,7 @@ class Merchant{
             inventoryItem.quantity = ingredients[i].quantity;
             inventoryItem.ingredient.id = ingredients[i].ingredient._id;
             inventoryItem.ingredient.name = ingredients[i].ingredient.name;
-            inventoryItem.ingredient.unitType = ingredients[i].ingredient.unitType;
-            inventoryItem.ingredient.unit = ingredients[i].defaultUnit;
-            inventoryItem.ingredient.unitSize = ingredients[i].ingredient.unitSize;
+            inventoryItem.ingredient.unit = ingredients[i].ingredient.unit;
             inventoryItem.ingredient.addIngredients(ingredients[i].ingredient.ingredients);
         }
     }

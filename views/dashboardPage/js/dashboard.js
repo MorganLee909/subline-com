@@ -426,12 +426,27 @@ controller = {
         }
     },
 
-    //TOREMOVE
-    unitType(unit){
-        if(["g", "kg", "oz", "lb"].includes(unit)) return "mass";
-        if(["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"].includes(unit)) return "volume";
-        if(["mm", "cm", "m", "in", "ft"].includes(unit)) return "length";
-        return "other";
+    getUnitType(unit){
+        switch(unit){
+            case "g": return "mass";
+            case "kg": return "mass";
+            case "oz": return "mass";
+            case "lb": return "mass";
+            case "l": return "volume";
+            case "ml": return "volume";
+            case "tsp": return "volume";
+            case "tbsp": return "volume";
+            case "ozfl": return "volume";
+            case "cup": return "volume";
+            case "pt": return "volume";
+            case "qt": return "volume";
+            case "gal": return "volume";
+            case "mm": return "length";
+            case "cm": return "length";
+            case "m": return "length";
+            case "in": return "length";
+            case "ft": return "length";
+        }
     },
 
     getBaseUnit(unit){

@@ -18,22 +18,6 @@ let editIngredient = {
         quantLabel.innerText = `CURRENT STOCK (${ingredient.ingredient.unit.toUpperCase()})`;
         document.getElementById("editIngSubmit").onclick = ()=>{this.submit(ingredient)};
 
-        //Make any changes for special ingredients
-        if(ingredient.ingredient.unit === "bottle"){
-            specialLabel.style.display = "flex";
-            specialLabel.innerText = `BOTTLE SIZE (${ingredient.ingredient.unitType.toUpperCase()}):`;
-            
-            let sizeInput = document.createElement("input");
-            sizeInput.id = "editIngSpecialSize";
-            sizeInput.type = "number";
-            sizeInput.min = "0";
-            sizeInput.step = "0.01";
-            sizeInput.value = ingredient.ingredient.unitSize.toFixed(2);
-            specialLabel.appendChild(sizeInput);
-        }else{
-            specialLabel.style.display = "none";
-        }
-
         //Populate the unit buttons
         const units = ingredient.ingredient.getPotentialUnits();
 

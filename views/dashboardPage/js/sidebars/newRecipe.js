@@ -65,15 +65,7 @@ let newRecipe = {
         if(ingredient.convert.toVolume !== undefined) select.children[1].style.display = "block";
         if(ingredient.convert.toLength !== undefined) select.children[2].style.display = "block";
 
-        switch(ingredient.unitType){
-            case "mass": select.value = "g"; break;
-            case "volume": select.value = "ml"; break;
-            case "length": select.value = "mm"; break;
-            case "other":
-                select.children[3].style.display = "block";
-                select.value = "each";
-                break;
-        }
+        select.value = ingredient.unit;
 
         document.getElementById("newRecipeChosenList").appendChild(element);
     },

@@ -207,7 +207,7 @@ let modal = {
 
             createOptGroup(
                 div.children[1].children[2].children[1],
-                ingredient.unitType,
+                controller.getUnitType(ingredient.unit),
                 ingredient.getPotentialUnits()
             );
 
@@ -252,7 +252,7 @@ let modal = {
 
                     createOptGroup(
                         div.children[1].children[2].children[1],
-                        ingredient.unitType,
+                        controller.getUnitType(ingredient.unit),
                         ingredient.getPotentialUnits()    
                     );
                     div.children[1].children[0].children[1].value = ingredient.unit;

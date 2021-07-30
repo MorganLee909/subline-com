@@ -11,7 +11,7 @@ class SubIngredient{
     }
 
     getDisplayQuantity(){
-        let mult = controller.unitMultiplier(controller.unitType(this.parent.unit), this.parent.unit);
+        let mult = controller.unitMultiplier(controller.getUnitType(this.parent.unit), this.parent.unit);
         return `${this.quantity * mult} ${this.unit} / ${this.parent.unit}`;
     }
 }

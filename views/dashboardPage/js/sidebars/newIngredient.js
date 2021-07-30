@@ -26,19 +26,19 @@ let newIngredient = {
         let convertMass = document.getElementById("newIngMassConvert");
         let convertVolume = document.getElementById("newIngVolumeConvert");
         let convertLength = document.getElementById("newIngLengthConvert");
-        if(controller.unitType(select.value) === "mass"){
+        if(controller.getUnitType(select.value) === "mass"){
             convertMass.style.display = "none";
             convertVolume.style.display = "flex";
             convertLength.style.display = "flex";
             document.getElementById("volumeConvertUnitLeft").innerText = select.value.toUpperCase();
             document.getElementById("lengthConvertUnitLeft").innerText = select.value.toUpperCase();
-        }else if(controller.unitType(select.value) === "volume"){
+        }else if(controller.getUnitType(select.value) === "volume"){
             convertMass.style.display = "flex";
             convertVolume.style.display = "none";
             convertLength.style.display = "flex";
             document.getElementById("massConvertUnitLeft").innerText = select.value.toUpperCase();
             document.getElementById("lengthConvertUnitLeft").innerText = select.value.toUpperCase();
-        }else if(controller.unitType(select.value) === "length"){
+        }else if(controller.getUnitType(select.value) === "length"){
             convertMass.style.display = "flex";
             convertVolume.style.display = "flex";
             convertLength.style.display = "none";
@@ -77,10 +77,6 @@ let newIngredient = {
             },
             quantity: controller.baseUnit(quantityValue, unit)
         }
-
-        if(controller.unitType(unit) === "mass") newIngredient.convert.toMass = 1;
-        if(controller.unitType(unit) === "volume") newIngredient.convert.toVolume = 1;
-        if(controller.unitType(unit) === "length") newIngredient.convert.toLength = 1;
 
         if(isNaN(newIngredient.convert.toMass)) newIngredient.convert.toMass = undefined;
         if(isNaN(newIngredient.convert.toVolume)) newIngredient.convert.toVolume = undefined;
