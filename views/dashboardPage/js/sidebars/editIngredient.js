@@ -44,7 +44,38 @@ let editIngredient = {
             button.onclick = ()=>{this.changeUnit(button)};
             buttonList.appendChild(button);
             
-            if(units[i] === ingredient.ingredient.unit) button.classList.add("unitActive");
+            if(units[i] === ingredient.unit) button.classList.add("unitActive");
+        }
+
+        //Offer conversions
+        let massDiv = document.getElementById("editIngMass");
+        let volumeDiv = document.getElementById("editIngVolume");
+        let lengthDiv = document.getElementById("editIngLength");
+
+        massDiv.children[1].innerText = ingredient.unit.toUpperCase();
+        massDiv.children[3].innerText = ingredient.ingredient.convert.toMass;
+
+        volumeDiv.children[1].innerText = ingredient.unit.toUpperCase();
+        volumeDiv.children[3].innerText = ingredient.ingredient.convert.toVolume;
+
+        lengthDiv.children[1].innerText = ingredient.unit.toUpperCase();
+        lengthDiv.children[3].innerText = ingredient.ingredient.convert.toLength;
+
+        switch(controller.getBaseUnit(ingredient.unit)){
+            case "g": 
+                massDiv.style.display = "none";
+                volumeDiv.style.display = "flex";
+                lengthDiv.style.display = "flex";
+                break;
+            case "l":
+                massDiv.style.display = "flex";
+                volumeDiv.style.display = "none";
+                lengthDiv.style.display = "flex";
+                break;
+            case "m":
+                massDiv.style.display = "flex";
+                volumeDiv.style.display = "flex";
+                lengthDiv.style.display = "none";
         }
 
         let quantInput = document.createElement("input");
@@ -64,11 +95,38 @@ let editIngredient = {
         }
 
         button.classList.add("unitActive");
+
+        document.getElementById("editIngMass").children[1].innerText = button.innerText;
+        document.getElementById("editIngVolume").children[1].innerText = button.innerText;
+        document.getElementById("editIngLength").children[1].innerText = button.innerText;
     },
 
     submit(ingredient){
         let quantity = parseFloat(document.getElementById("editIngQuantityLabel").children[0].value);
         let unit = document.getElementById("unitButtons").querySelector(".unitActive").innerText.toLowerCase();
+
+        let massDiv = document.getElementById("editIngMass");
+        let volumeDiv = document.getElementById("editIngVolume");
+        let lengthDiv = document.getElementById("editIngLength");
+
+        let leftMass = massDiv.children[0].value;
+        let rightMass = massDiv.children[3].value;
+        let leftVolume = volumeDiv.children[0].value;
+        let rightVolume = volumeDiv.children[3].value;
+        let leftLength = lengthDiv.children[0].value;
+        let rightLength = lengthDiv.children[3].value;
+        let leftUnit = massDiv.children[1].innerText.toLowerCase();
+        let rightUnitMass = massDiv.children[4].value;
+        let rightUnitVolume = massDiv.children[4].value;
+        let rightUnitLength = massDivchildren[4].value;
+        let leftMultiplier = controller.unitMultiplier(leftUnit, controller.getBaseUnit(leftUnit));
+
+        leftMass *= leftMultiplier;
+        leftVolume *= leftMultiplier;
+        leftLength *= leftMultiplier;
+        rightMass *= controller.unitMultiplier(rightUnitMass, controller.getBaseUnit(rightUnitMass));
+        rightVolume *= controller.unitMultiplier(rightUnitVolume, controller.getBaseUnit(rightUnitVolume));
+        rightLength *= controller.unitMultiplier(rightUnitLength, controller.getBaseUnit(rightUnitLength));
 
         let data = {
             ingredient: {
@@ -76,9 +134,9 @@ let editIngredient = {
                 name: document.getElementById("editIngName").value,
                 category: document.getElementById("editIngCategory").value,
                 convert: {
-                    toMass: 0,
-                    toVolume: 0,
-                    toLength: 0
+                    toMass: rightMass / leftMass,
+                    toVolume: rigthVolume / leftVolume,
+                    toLength: rightLength / leftLength
                 }
             },
             quantity: quantity * controller.unitMultiplier(unit, controller.getBaseUnit(unit)),

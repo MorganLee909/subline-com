@@ -401,6 +401,7 @@ controller = {
         }
     },
 
+    //TOREMOVE
     displayUnit(quantity, unit){
         switch(unit){
             case "g": return quantity;
