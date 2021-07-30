@@ -68,15 +68,14 @@ let newIngredient = {
             ingredient: {
                 name: document.getElementById("newIngName").value,
                 category: document.getElementById("newIngCategory").value,
-                unitType: options[unitSelector.selectedIndex].getAttribute("type")
+                convert: {
+                    toMass: controller.baseUnit(massConvertRight, massConvertUnit) / controller.baseUnit(massConvertLeft, unit),
+                    toVolume: controller.baseUnit(volumeConvertRight, volumeConvertUnit) / controller.baseUnit(volumeConvertLeft, unit),
+                    toLength: controller.baseUnit(lengthConvertRight, lengthConvertUnit) / controller.baseUnit(lengthConvertLeft, unit)
+                }
             },
             quantity: controller.baseUnit(quantityValue, unit),
-            defaultUnit: unit,
-            convert: {
-                toMass: controller.baseUnit(massConvertRight, massConvertUnit) / controller.baseUnit(massConvertLeft, unit),
-                toVolume: controller.baseUnit(volumeConvertRight, volumeConvertUnit) / controller.baseUnit(volumeConvertLeft, unit),
-                toLength: controller.baseUnit(lengthConvertRight, lengthConvertUnit) / controller.baseUnit(lengthConvertLeft, unit)
-            }
+            unit: unit,
         }
 
         if(controller.unitType(unit) === "mass") newIngredient.convert.toMass = 1;
@@ -86,12 +85,6 @@ let newIngredient = {
         if(isNaN(newIngredient.convert.toMass)) newIngredient.convert.toMass = undefined;
         if(isNaN(newIngredient.convert.toVolume)) newIngredient.convert.toVolume = undefined;
         if(isNaN(newIngredient.convert.toLength)) newIngredient.convert.toLength = undefined;
-
-        //Change the ingredient if it is a special unit type (ie "bottle")
-        if(unit === "bottle"){
-            newIngredient.ingredient.unitType = document.getElementById("bottleUnits").value;
-            newIngredient.ingredient.unitSize = controller.baseUnit(parseFloat(document.getElementById("bottleSize").value), unit);
-        }
     
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
