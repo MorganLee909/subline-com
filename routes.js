@@ -38,30 +38,22 @@ module.exports = function(app){
     app.post("/ingredients/create", session, ingredientData.createIngredient);  //also adds to merchant
     app.put("/ingredients/update", session, ingredientData.updateIngredient);
     app.put("/ingredients/subingredients", session, ingredientData.updateSubIngredients);
-    app.post("/ingredients/create/spreadsheet", session, upload.single("ingredients"), ingredientData.createFromSpreadsheet);
-    app.get("/ingredients/download/spreadsheet", session, ingredientData.spreadsheetTemplate);
     app.delete("/ingredients/remove/:id", session, ingredientData.removeIngredient);
 
     //Recipes
     app.post("/recipe/create", session, recipeData.createRecipe);
     app.put("/recipe/update", session, recipeData.updateRecipe);
     app.delete("/recipe/remove/:id", session, recipeData.removeRecipe);
-    app.post("/recipes/create/spreadsheet", session, upload.single("recipes"), recipeData.createFromSpreadsheet);
-    app.get("/recipes/download/spreadsheet", session, recipeData.spreadsheetTemplate);
     app.get("/recipes/hide/:id", session, recipeData.hideRecipe);
 
     //Orders
     app.post("/orders/get", session, orderData.getOrders);
     app.post("/order/create", session, orderData.createOrder);
-    app.post("/orders/create/spreadsheet", session, upload.single("orders"), orderData.createFromSpreadsheet);
-    app.get("/orders/download/spreadsheet", session, orderData.spreadsheetTemplate);
     app.delete("/order/:id", session, orderData.removeOrder);
 
     //Transactions
     app.post("/transaction", session, transactionData.getTransactions);
     app.post("/transaction/create", session, transactionData.createTransaction);
-    app.post("/transactions/create/spreadsheet", session, upload.single("transactions"), transactionData.createFromSpreadsheet);
-    app.get("/transactions/download/spreadsheet", session, transactionData.spreadsheetTemplate);
     app.delete("/transaction/:id", session, transactionData.remove);
     app.get("/populatesometransactions", session, transactionData.populate);
 
