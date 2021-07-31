@@ -59,8 +59,19 @@ class MerchantIngredient{
         return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), unit) * convertMultiplier;
     }
 
-    updateQuantity(quantity){
-        this._quantity += controller.baseUnit(quantity, this._ingredient.unit);
+    /*
+    Takes in quantity and unit of that quantity and subtracts from the quantity on the ingredient
+    quantity: Number
+    unit: String
+    */
+    updateQuantity(quantity, unit){
+        quantity *= controller.unitMultiplier(unit, controller.getBaseUnit(unit))
+        switch(controller.getUnitType(this._ingredient.unit)){
+            case "mass": quantity /= this._ingredient.convert.toMass; break;
+            case "volume": quantity /= this._ingredient.convert.toVolume; break;
+            case "length": quantity /= this._ingredient.convert.toLength; break;
+        }
+        this._quantity += quantity;
     }
 
     getQuantityDisplay(){
@@ -249,7 +260,6 @@ class Merchant{
             name: String,
             category: String,
             specialUnit: String || undefined,
-            unitSize: Number || undefined
         }
         quantity: Number
         defaultUnit: String

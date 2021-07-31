@@ -31,7 +31,13 @@ class OrderIngredient{
     }
 
     updateQuantity(quantity){
-        this._quantity += controller.baseUnit(quantity, this._ingredient.unit);
+        quantity *= controller.unitMultiplier(unit, controller.getBaseUnit(unit))
+        switch(controller.getUnitType(this._ingredient.unit)){
+            case "mass": quantity /= this._ingredient.convert.toMass; break;
+            case "volume": quantity /= this._ingredient.convert.toVolume; break;
+            case "length": quantity /= this._ingredient.convert.toLength; break;
+        }
+        this._quantity += quantity;
     }
 
     get pricePerUnit(){
