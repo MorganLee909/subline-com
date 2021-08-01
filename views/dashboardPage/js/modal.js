@@ -226,19 +226,20 @@ let modal = {
         }
 
         for(let i = 0; i < merchant.inventory.length; i++){
-            if(ingredient.id === merchant.inventory[i].ingredient.id) continue;
+            let merchIngredient = merchant.inventory[i].ingredient;
+            if(ingredient.id === merchIngredient.id) continue;
             let skip = false;
             for(let j = 0; j < ingredient.subIngredients.length; j++){
-                if(merchant.inventory[i].ingredient === ingredient.subIngredients[j].ingredient){
+                if(merchIngredient === ingredient.subIngredients[j].ingredient){
                     let div = template.cloneNode(true);
-                    div.children[0].children[0].innerText = merchant.inventory[i].ingredient.name;
+                    div.children[0].children[0].innerText = merchIngredient.name;
                     div.children[0].children[1].onclick = ()=>{removeIngredient(div, ingredient.subIngredients[j].ingredient)};
-                    div.children[1].children[0].children[0].value = ingredient.subIngredients[j].quantity;
-                    div.children[1].children[2].children[0].value = 1;
-                    div.ingredient = merchant.inventory[i].ingredient;
+                    div.children[1].children[0].children[0].value = parseFloat((ingredient.subIngredients[j].quantity).toFixed(3));
+                    div.children[1].children[2].children[0].value = controller.unitMultiplier(controller.getBaseUnit(ingredient.unit), ingredient.unit);
+                    div.ingredient = merchIngredient;
                     right.appendChild(div);
 
-                    let conversions = merchant.inventory[i].ingredient.convert;
+                    let conversions = merchIngredient.convert;
                     if(conversions.toMass !== undefined){
                         createOptGroup(div.children[1].children[0].children[1], "Mass", ["g", "kg", "oz", "lb"]);
                     }
@@ -248,15 +249,15 @@ let modal = {
                     if(conversions.toLength !== undefined){
                         createOptGroup(div.children[1].children[0].children[1], "Length", ["mm", "cm", "m", "in", "ft"]);
                     }
-                    div.children[1].children[0].children[1].value = merchant.inventory[i].ingredient.unit;
+                    div.children[1].children[0].children[1].value = merchIngredient.unit;
 
                     createOptGroup(
                         div.children[1].children[2].children[1],
                         controller.getUnitType(ingredient.unit),
-                        ingredient.getPotentialUnits()    
+                        ingredient.getPotentialUnits()
                     );
-                    div.children[1].children[0].children[1].value = ingredient.unit;
-                    div.children[1].children[2].children[1].value = merchant.inventory[i].ingredient.unit;
+                    div.children[1].children[0].children[1].value = ingredient.subIngredients[j].unit;
+                    div.children[1].children[2].children[1].value = ingredient.unit;
 
                     skip = true;
                     break;

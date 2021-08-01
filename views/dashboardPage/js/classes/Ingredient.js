@@ -2,7 +2,8 @@ class SubIngredient{
     constructor(id, ingredient, quantity, unit, parent){
         this.id = id;
         this._ingredient = ingredient;
-        this.quantity = quantity;
+        this._quantity = quantity;
+        this.unit = unit;
         this._parent = parent;
     }
 
@@ -11,20 +12,10 @@ class SubIngredient{
     }
 
     get quantity(){
-        let convertMultiplier = 1;
-        switch(controller.getBaseUnit(this._ingredient.unit)){
-            case "g":
-                convertMultiplier = this._ingredient.convert.toMass;
-                break;
-            case "l":
-                convertMultiplier = this._ingredient.convert.toVolume;
-                break;
-            case "m":
-                convertMultiplier = this._ingredient.convert.toLength;
-                break;
-        }
+        let subQuantity = this._quantity * controller.unitMultiplier(controller.getBaseUnit(this.unit), this.unit);
+        let parentMultiplier = controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit);
 
-        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit) * convertMultiplier;
+        return subQuantity / parentMultiplier;
     }
 
     getDisplayQuantity(){
@@ -47,6 +38,7 @@ class Ingredient{
                 subIngredients[i]._id,
                 subIngredients[i].ingredient,
                 subIngredients[i].quantity,
+                subIngredients[i].unit,
                 this
             ));
         }

@@ -85,7 +85,7 @@ module.exports = {
                 //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){
                     if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.ingredient.id){
-                        res.locals.merchant.inventory[i].quantity = req.body.quantity;                        
+                        res.locals.merchant.inventory[i].quantity = req.body.quantity;         
                         break;
                     }
                 }
@@ -112,6 +112,7 @@ module.exports = {
         ingredients: [{
             ingredient: String (id)
             quantity: Number
+            unit: String
         }]
     }
     response = Ingredient
