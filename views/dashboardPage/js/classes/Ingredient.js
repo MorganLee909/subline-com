@@ -37,7 +37,7 @@ class Ingredient{
         this._id = id;
         this._name = name;
         this._category = category;
-        this._unit = unit;
+        this.unit = unit;
         this._subIngredients = [];
         this._parent = parent;
         this._convert = convert;
@@ -74,14 +74,6 @@ class Ingredient{
 
     set category(category){
         this._category = category;
-    }
-
-    get unit(){
-        return this._unit;
-    }
-
-    set unit(unit){
-        this._unit = unit;
     }
 
     get convert(){
@@ -124,6 +116,14 @@ class Ingredient{
         }
 
         return (quantity === 0) ? 0 : totalCost / quantity;
+    }
+
+    getPotentialUnits(){
+        switch(controller.getUnitType(this.unit)){
+            case "mass": return ["g", "kg", "oz", "lb"];
+            case "volume": return ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
+            case "length": return ["mm", "cm", "m", "in", "ft"];
+        }
     }
 }
 

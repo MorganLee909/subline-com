@@ -31,7 +31,7 @@ class MerchantIngredient{
                 convertMultiplier = this._ingredient.convert.toLength;
                 break;
         }
-
+        
         return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit) * convertMultiplier;
     }
 

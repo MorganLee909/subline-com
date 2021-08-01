@@ -75,7 +75,7 @@ module.exports = {
     response = Ingredient
     */
     updateIngredient: function(req, res){
-        Ingredient.findOne({_id: req.body.id})
+        Ingredient.findOne({_id: req.body.ingredient.id})
             .then((ingredient)=>{
                 ingredient.name = req.body.ingredient.name;
                 ingredient.category = req.body.ingredient.category;
@@ -84,7 +84,7 @@ module.exports = {
                 
                 //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){
-                    if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.id){
+                    if(res.locals.merchant.inventory[i].ingredient.toString() === req.body.ingredient.id){
                         res.locals.merchant.inventory[i].quantity = req.body.quantity;                        
                         break;
                     }
