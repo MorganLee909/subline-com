@@ -514,6 +514,15 @@ controller = {
         }
 
         return multiplier;
+    },
+
+    /*
+    Applies unitMultiplier to a specific quantity and unit
+    quantity = quantity of ingredient
+    unit = unit of ingredient
+    */
+    toBase: function(quantity, unit){
+        return quantity * this.unitMultiplier(unit, this.getBaseUnit(unit));
     }
 }
 

@@ -49,20 +49,20 @@ let newIngredient = {
 
     submit: function(){
         let unitSelector = document.getElementById("unitSelector");
-        let options = document.querySelectorAll("#unitSelector option");
-        const quantityValue = parseFloat(document.getElementById("newIngQuantity").value);
+        let quantityValue = parseFloat(document.getElementById("newIngQuantity").value);
 
         let unit = unitSelector.value;
 
-        let massConvertLeft = document.getElementById("massConvertLeft").value;
-        let massConvertRight = document.getElementById("massConvertRight").value;
-        let massConvertUnit = document.getElementById("massConvertUnitRight").value;
-        let volumeConvertLeft = document.getElementById("volumeConvertLeft").value;
-        let volumeConvertRight = document.getElementById("volumeConvertRight").value;
-        let volumeConvertUnit = document.getElementById("volumeConvertUnitRight").value;
-        let lengthConvertLeft = document.getElementById("lengthConvertLeft").value;
-        let lengthConvertRight = document.getElementById("lengthConvertRight").value;
-        let lengthConvertUnit = document.getElementById("lengthConvertUnitRight").value;
+        let massDiv = document.getElementById("newIngMassConvert");
+        let volumeDiv = document.getElementById("newIngVolumeConvert");
+        let lengthDiv = document.getElementById("newIngLengthConvert");
+
+        let massLeft = controller.toBase(massDiv.children[0].value, unit)
+        let massRight = controller.toBase(massDiv.children[3].value, massDiv.children[4].value);
+        let volumeLeft = controller.toBase(volumeDiv.children[0].value, unit)
+        let volumeRight = controller.toBase(volumeDiv.children[3].value, volumeDiv.children[4].value);
+        let lengthLeft = controller.toBase(lengthDiv.children[0].value, unit)
+        let lengthRight = controller.toBase(lengthDiv.children[3].value, lengthDiv.children[4].value);
 
         let newIngredient = {
             ingredient: {
@@ -70,18 +70,24 @@ let newIngredient = {
                 category: document.getElementById("newIngCategory").value,
                 unit: unit,
                 convert: {
-                    toMass: controller.baseUnit(massConvertRight, massConvertUnit) / controller.baseUnit(massConvertLeft, unit),
-                    toVolume: controller.baseUnit(volumeConvertRight, volumeConvertUnit) / controller.baseUnit(volumeConvertLeft, unit),
-                    toLength: controller.baseUnit(lengthConvertRight, lengthConvertUnit) / controller.baseUnit(lengthConvertLeft, unit)
+                    toMass: massRight / massLeft,
+                    toVolume: volumeRight / volumeLeft,
+                    toLength: lengthRight / lengthLeft
                 }
             },
             quantity: controller.baseUnit(quantityValue, unit)
         }
 
-        if(isNaN(newIngredient.convert.toMass)) newIngredient.convert.toMass = undefined;
-        if(isNaN(newIngredient.convert.toVolume)) newIngredient.convert.toVolume = undefined;
-        if(isNaN(newIngredient.convert.toLength)) newIngredient.convert.toLength = undefined;
+        if(isNaN(newIngredient.ingredient.convert.toMass)) newIngredient.ingredient.convert.toMass = 0;
+        if(isNaN(newIngredient.ingredient.convert.toVolume)) newIngredient.ingredient.convert.toVolume = 0;
+        if(isNaN(newIngredient.ingredient.convert.toLength)) newIngredient.ingredient.convert.toLength = 0;
     
+        switch(controller.getUnitType(unit)){
+            case "mass": newIngredient.ingredient.convert.toMass = 1; break;
+            case "volume": newIngredient.convert.ingredient.toVolume = 1; break;
+            case "length": newIngredient.convert.ingredient.toLength = 1; break;
+        }
+
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
 
@@ -103,42 +109,6 @@ let newIngredient = {
 
                     controller.createBanner("INGREDIENT CREATED", "success");
                 }
-            })
-            .catch((err)=>{
-                controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
-    },
-
-    submitSpreadsheet: function(){
-        event.preventDefault();
-        controller.closeModal();
-
-        const file = document.getElementById("spreadsheetInput").files[0];
-        let data = new FormData();
-        data.append("ingredients", file);
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        fetch("/ingredients/create/spreadsheet", {
-            method: "post",
-            body: data
-        })
-            .then(response => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    controller.createBanner(response, "error");
-                }else{
-                    merchant.addIngredients(response);
-                    state.updateIngredients();
-
-                    controller.createBanner("INGREDIENTS SUCCESSFULLY ADDED", "success");
-                    controller.openStrand("ingredients");
-                }
-                
             })
             .catch((err)=>{
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");

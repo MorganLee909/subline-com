@@ -14,37 +14,13 @@ class MerchantIngredient{
         return this._ingredient;
     }
 
-    get quantity(){
-        switch(this._ingredient.unit){
-            case "g":return this._quantity; 
-            case "kg": return this._quantity / 1000;
-            case "oz": return this._quantity / 28.3495;
-            case "lb": return this._quantity / 453.5924;
-            case "ml": return this._quantity * 1000;
-            case "l": return this._quantity;
-            case "tsp": return this._quantity * 202.8842;
-            case "tbsp": return this._quantity * 67.6278;
-            case "ozfl": return this._quantity * 33.8141;
-            case "cup": return this._quantity * 4.1667;
-            case "pt": return this._quantity * 2.1134;
-            case "qt": return this._quantity * 1.0567;
-            case "gal": return this._quantity / 3.7854;
-            case "mm": return this._quantity * 1000;
-            case "cm": return this._quantity * 100;
-            case "m": return this._quantity;
-            case "in": return this._quantity * 39.3701;
-            case "ft": return this._quantity * 3.2808;
-            default: return this._quantity;
-        }
-    }
-
     set quantity(quantity){
         this._quantity = quantity;
     }
 
-    quantity(unit = this._ingredient.unit){
+    get quantity(){
         let convertMultiplier = 1;
-        switch(controller.getBaseUnit(unit)){
+        switch(controller.getBaseUnit(this._ingredient.unit)){
             case "g":
                 convertMultiplier = this._ingredient.convert.toMass;
                 break;
@@ -56,7 +32,7 @@ class MerchantIngredient{
                 break;
         }
 
-        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), unit) * convertMultiplier;
+        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit) * convertMultiplier;
     }
 
     /*
@@ -129,7 +105,7 @@ class Merchant{
                 ingredients[i].ingredient._id,
                 ingredients[i].ingredient.name,
                 ingredients[i].ingredient.category,
-                ingredients[i].unit,
+                ingredients[i].ingredient.unit,
                 ingredients[i].ingredient.ingredients,
                 ingredients[i].ingredient.convert,
                 this
@@ -269,7 +245,7 @@ class Merchant{
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = ingredients[i].ingredient;
             let quantity = ingredients[i].quantity;
-            let unit = ingredients[i].unit;
+            let unit = ingredients[i].ingredient.unit;
 
             const createdIngredient = new Ingredient(
                 ingredient._id,

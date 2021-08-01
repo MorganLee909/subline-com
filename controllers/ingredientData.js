@@ -29,14 +29,14 @@ module.exports = {
             name: req.body.ingredient.name,
             category: req.body.ingredient.category,
             unit: req.body.ingredient.unit,
-            convert: req.body.ingredient.category,
+            convert: req.body.ingredient.convert,
             ingredients: []
-        })
+        });
         
         newIngredient.save()
             .then((ingredient)=>{
                 newIngredient = {
-                    ingredient: ingredient._id,
+                    ingredient: ingredient,
                     quantity: req.body.quantity,
                 }
 
@@ -94,7 +94,7 @@ module.exports = {
             .then((response)=>{
                 return res.json({
                     ingredient: response[0],
-                    quantity: req.body.quantity,
+                    quantity: req.body.quantity
                 });
             })
             .catch((err)=>{

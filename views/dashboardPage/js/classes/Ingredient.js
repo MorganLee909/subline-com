@@ -1,18 +1,34 @@
 class SubIngredient{
-    constructor(id, ingredient, quantity, parent){
+    constructor(id, ingredient, quantity, unit, parent){
         this.id = id;
         this._ingredient = ingredient;
         this.quantity = quantity;
-        this.parent = parent;
+        this._parent = parent;
     }
 
     get ingredient(){
         return merchant.getIngredient(this._ingredient).ingredient;
     }
 
+    get quantity(){
+        let convertMultiplier = 1;
+        switch(controller.getBaseUnit(this._ingredient.unit)){
+            case "g":
+                convertMultiplier = this._ingredient.convert.toMass;
+                break;
+            case "l":
+                convertMultiplier = this._ingredient.convert.toVolume;
+                break;
+            case "m":
+                convertMultiplier = this._ingredient.convert.toLength;
+                break;
+        }
+
+        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit) * convertMultiplier;
+    }
+
     getDisplayQuantity(){
-        let mult = controller.unitMultiplier(controller.getUnitType(this.parent.unit), this.parent.unit);
-        return `${this.quantity * mult} ${this.unit} / ${this.parent.unit}`;
+        return `${this._quantity} ${this._ingredient.unit} / ${this._parent.quantity} ${this._parent.unit}`;
     }
 }
 
