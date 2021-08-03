@@ -38,6 +38,12 @@ module.exports = {
             ingredient.children[0].children[1].onclick = ()=>{this.removeIngredient(ingredient)};
             ingredient.children[1].children[0].value = recipe.ingredients[i].quantity;
             ingredient.children[1].children[1].value = recipe.ingredients[i].unit;
+
+            let select = ingredient.children[1].children[1];
+            if(recipe.ingredients[i].ingredient.convert.toMass > 0) select.children[0].style.display = "block";
+            if(recipe.ingredients[i].ingredient.convert.toVolume > 0) select.children[1].style.display = "block";
+            if(recipe.ingredients[i].ingredient.convert.toLength > 0) select.children[2].style.display = "block";
+            
             used.appendChild(ingredient);
         }
 
@@ -87,9 +93,9 @@ module.exports = {
         newItem.children[0].children[1].onclick = ()=>{this.removeIngredient(newItem)};
 
         let select = newItem.children[1].children[1];
-        if(ingredient.ingredient.convert.toMass <= 0) select.children[0].style.display = "block";
-        if(ingredient.ingredient.convert.toVolume <= 0) select.children[1].style.display = "block";
-        if(ingredient.ingredient.convert.toLength <= 0) select.children[2].style.display = "block";
+        if(ingredient.ingredient.convert.toMass > 0) select.children[0].style.display = "block";
+        if(ingredient.ingredient.convert.toVolume > 0) select.children[1].style.display = "block";
+        if(ingredient.ingredient.convert.toLength > 0) select.children[2].style.display = "block";
 
         select.value = ingredient.ingredient.unit;
 

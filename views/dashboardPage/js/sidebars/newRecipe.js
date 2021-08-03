@@ -13,7 +13,6 @@ let newRecipe = {
         }
 
         document.getElementById("submitNewRecipe").onclick = ()=>{this.submit()};
-        document.getElementById("recipeFileUpload").onclick = ()=>{controller.openModal("recipeSpreadsheet")};
         document.getElementById("newRecipeSearch").onkeyup = ()=>{this.populateChoices()};
 
         this.unchosen = [];
@@ -61,9 +60,9 @@ let newRecipe = {
         element.ingredient = ingredient;
 
         let select = element.children[1].children[1];
-        if(ingredient.convert.toMass !== undefined) select.children[0].style.display = "block";
-        if(ingredient.convert.toVolume !== undefined) select.children[1].style.display = "block";
-        if(ingredient.convert.toLength !== undefined) select.children[2].style.display = "block";
+        if(ingredient.convert.toMass > 0) select.children[0].style.display = "block";
+        if(ingredient.convert.toVolume > 0) select.children[1].style.display = "block";
+        if(ingredient.convert.toLength > 0) select.children[2].style.display = "block";
 
         select.value = ingredient.unit;
 
@@ -111,42 +110,8 @@ let newRecipe = {
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
-    },
-
-    submitSpreadsheet: function(){
-        event.preventDefault();
-        controller.closeModal();
-
-        const file = document.getElementById("spreadsheetInput").files[0];
-        let data = new FormData();
-        data.append("recipes", file);
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        fetch("/recipes/create/spreadsheet", {
-            method: "post",
-            body: data
-        })
-            .then(response => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    controller.createBanner(response, "error");
-                }else{
-                    merchant.addRecipes(response);
-                    state.updateRecipes();
-
-                    controller.createBanner("ALL RECIPES SUCCESSFULLY CREATED", "success");
-                    controller.openStrand("recipeBook");
-                }
-            })
-            .catch((err)=>{
-                controller.createBanner("UNABLE TO DISPLAY NEW RECIPES.  PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{
                 loader.style.display = "none";

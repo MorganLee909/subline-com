@@ -167,7 +167,7 @@ class Recipe{
         }
 
         for(let i = 0; i < this._ingredients.length; i++){
-            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i].getQuantityAsBase());
+            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i].quantity);
         }
     }
 }
