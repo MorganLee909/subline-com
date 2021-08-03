@@ -2,7 +2,6 @@ let newOrder = {
     display: function(){
         document.getElementById("sidebarDiv").classList.add("sidebarWide");
         document.getElementById("newOrderIngredientList").style.display = "flex";
-        document.getElementById("orderFileUpload").addEventListener("click", ()=>{controller.openModal("orderSpreadsheet")});
 
         let selectedList = document.getElementById("selectedIngredientList");
         while(selectedList.children.length > 0){
@@ -131,47 +130,7 @@ let newOrder = {
             case "ft": return price * 3.2808;
             default: return price;
         }
-    },
-
-    submitSpreadsheet: function(){
-        event.preventDefault();
-        controller.closeModal();
-
-        const file = document.getElementById("spreadsheetInput").files[0];
-        let data = new FormData();
-        data.append("orders", file);
-        data.append("timeOffset", new Date().getTimezoneOffset());
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        fetch("/orders/create/spreadsheet", {
-            method: "post",
-            body: data
-        })
-            .then(response => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    controller.createBanner(response, "error");
-                }else{
-                    let from = new Date();
-                    from.setDate(from.getDate() - 30);
-                    if(new Date(response.date) > from){
-                        merchant.addOrders([response], true);
-                        state.updateOrders();
-                    }
-
-                    controller.createBanner("ORDER CREATED AND INGREDIENTS UPDATED SUCCESSFULLY", "success");
-                    controller.openStrand("orders");
-                }
-            })
-            .catch((err)=>{
-                controller.createBanner("UNABLE TO DISPLAY NEW ORDER. PLEASE REFRESH THE PAGE.", "error");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
     }
-}
+};
 
 module.exports = newOrder;

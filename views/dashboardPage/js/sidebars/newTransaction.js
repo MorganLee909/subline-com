@@ -2,7 +2,6 @@ let newTransaction = {
     display: function(){
         let recipeList = document.getElementById("newTransactionRecipes");
         let template = document.getElementById("createTransaction").content.children[0];
-        document.getElementById("transactionFileUpload").addEventListener("click", ()=>{controller.openModal("transactionSpreadsheet")});
 
         while(recipeList.children.length > 0){
             recipeList.removeChild(recipeList.firstChild);
@@ -100,45 +99,6 @@ let newTransaction = {
                     loader.style.display = "none";
                 });
         }
-    },
-
-    submitSpreadsheet: function(){
-        event.preventDefault();
-        controller.closeModal();
-
-        const file = document.getElementById("spreadsheetInput").files[0];
-        let data = new FormData();
-        data.append("transactions", file);
-        data.append("timeOffset", new Date().getTimezoneOffset());
-
-        let loader = document.getElementById("loaderContainer");
-        loader.style.display = "flex";
-
-        fetch("/transactions/create/spreadsheet", {
-            method: "post",
-            body: data
-        })
-            .then(response => response.json())
-            .then((response)=>{
-                if(typeof(response) === "string"){
-                    controller.createBanner(response, "error");
-                }else{
-                    for(let i = 0; i < response.recipes.length; i++){
-                        response.recipes[i].recipe = response.recipes[i].recipe._id;
-                    }
-                    merchant.addTransactions([response], true);
-                    state.updateTransactions();
-
-                    controller.openStrand("transactions", merchant.transactions);
-                    controller.createBanner("TRANSACTION SUCCESSFULLY CREATED.  INGREDIENTS UPDATED", "success");
-                }
-            })
-            .catch((err)=>{
-                controller.createBanner("UNABLE TO DISPLAY NEW TRANSACTIONS.  PLEASE REFRESH THE PAGE", "error");
-            })
-            .finally(()=>{
-                loader.style.display = "none";
-            });
     }
 }
 
