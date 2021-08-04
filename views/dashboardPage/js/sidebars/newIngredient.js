@@ -15,8 +15,8 @@ let newIngredient = {
     },
 
     unitChange: function(){
-        const select = document.getElementById("unitSelector");
-        const bottleLabel = document.getElementById("bottleSizeLabel");
+        let select = document.getElementById("unitSelector");
+        let bottleLabel = document.getElementById("bottleSizeLabel");
         if(select.value === "bottle"){
             bottleLabel.style.display = "block";
         }else{
@@ -26,24 +26,39 @@ let newIngredient = {
         let convertMass = document.getElementById("newIngMassConvert");
         let convertVolume = document.getElementById("newIngVolumeConvert");
         let convertLength = document.getElementById("newIngLengthConvert");
+
+        let massLeft = document.getElementById("massConvertUnitLeft");
+        let volumeLeft = document.getElementById("volumeConvertUnitLeft");
+        let lengthLeft = document.getElementById("lengthConvertUnitLeft");
         if(controller.getUnitType(select.value) === "mass"){
             convertMass.style.display = "none";
             convertVolume.style.display = "flex";
             convertLength.style.display = "flex";
-            document.getElementById("volumeConvertUnitLeft").innerText = select.value.toUpperCase();
-            document.getElementById("lengthConvertUnitLeft").innerText = select.value.toUpperCase();
+            volumeLeft.innerText = select.value.toUpperCase();
+            lengthLeft.innerText = select.value.toUpperCase();
         }else if(controller.getUnitType(select.value) === "volume"){
             convertMass.style.display = "flex";
             convertVolume.style.display = "none";
             convertLength.style.display = "flex";
-            document.getElementById("massConvertUnitLeft").innerText = select.value.toUpperCase();
-            document.getElementById("lengthConvertUnitLeft").innerText = select.value.toUpperCase();
+            massLeft.innerText = select.value.toUpperCase();
+            lengthLeft.innerText = select.value.toUpperCase();
         }else if(controller.getUnitType(select.value) === "length"){
             convertMass.style.display = "flex";
             convertVolume.style.display = "flex";
             convertLength.style.display = "none";
-            document.getElementById("massConvertUnitLeft").innerText = select.value.toUpperCase();
-            document.getElementById("volumeConvertUnitLeft").innerText = select.value.toUpperCase();
+            massLeft.innerText = select.value.toUpperCase();
+            volumeLeft.innerText = select.value.toUpperCase();
+        }else if(select.value === "bottle"){
+            convertMass.style.display ="flex";
+            convertVolume.style.display = "none";
+            convertLength.style.display = "flex";
+            massLeft.innerText = "ML";
+            lengthLeft.innerText = "ML";
+            let bottleSelect = document.getElementById("bottleUnits");
+            bottleSelect.onchange = ()=>{
+                massLeft.innerText = bottleSelect.value.toUpperCase();
+                lengthLeft.innerText = bottleSelect.value.toUpperCase();
+            }
         }
     },
 
@@ -76,7 +91,7 @@ let newIngredient = {
                 }
             },
             quantity: controller.baseUnit(quantityValue, unit)
-        }
+        };
 
         if(isNaN(newIngredient.ingredient.convert.toMass)) newIngredient.ingredient.convert.toMass = 0;
         if(isNaN(newIngredient.ingredient.convert.toVolume)) newIngredient.ingredient.convert.toVolume = 0;
@@ -84,8 +99,14 @@ let newIngredient = {
     
         switch(controller.getUnitType(unit)){
             case "mass": newIngredient.ingredient.convert.toMass = 1; break;
-            case "volume": newIngredient.convert.ingredient.toVolume = 1; break;
-            case "length": newIngredient.convert.ingredient.toLength = 1; break;
+            case "volume": newIngredient.ingredient.convert.toVolume = 1; break;
+            case "length": newIngredient.ingredient.convert.toLength = 1; break;
+            case "bottle": 
+                let bottleQuant = document.getElementById("bottleSize").value;
+                let bottleUnit = document.getElementById("bottleUnits").value;
+                newIngredient.ingredient.convert.toVolume = 1 / controller.toBase(bottleQuant, bottleUnit);
+                newIngredient.quantity = quantityValue * controller.toBase(bottleQuant, bottleUnit);
+                break;
         }
 
         let loader = document.getElementById("loaderContainer");

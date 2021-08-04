@@ -446,6 +446,7 @@ controller = {
             case "m": return "length";
             case "in": return "length";
             case "ft": return "length";
+            case "bottle": return "bottle";
         }
     },
 
@@ -469,6 +470,7 @@ controller = {
             case "m": return "m";
             case "in": return "m";
             case "ft": return "m";
+            case "bottle": return "l";
         }
     },
 
