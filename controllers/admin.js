@@ -6,7 +6,6 @@ const Transaction = require("../models/transaction.js");
 const helper = require("./helper.js");
 
 const fs = require("fs");
-const ObjectId = require("mongoose").Types.ObjectId;
 
 module.exports = {
     /*
@@ -17,7 +16,9 @@ module.exports = {
     }
     req.files = {
         ingredients: txt
-        recipes: txt 
+        recipes: txt
+        orders: txt
+        transactions: txt
     }
     */
     addData: function(req, res){
@@ -29,45 +30,57 @@ module.exports = {
             .then((merchant)=>{
                 //Ingredients
                 let newIngredients = [];
+                let ingredientData = {};
                 if(req.files.ingredients !== undefined){
-                    let ingredientData = fs.readFileSync(req.files.ingredients.tempFilePath).toString();
+                    ingredientData = fs.readFileSync(req.files.ingredients.tempFilePath).toString();
                     fs.unlink(req.files.ingredients.tempFilePath, ()=>{});
                     ingredientData = ingredientData.split("\n");
-                    let convertMass = {toMass: 1};
-                    let convertVolume = {toVolume: 1};
-                    let convertLength = {toLength: 1};
                     
                     merchant.inventory = [];
                     for(let i = 0; i < ingredientData.length; i++){
                         if(ingredientData[i] === "") continue;
                         let data = ingredientData[i].split(",");
-                        let unitType = helper.getUnitType(data[3]);
                         let ingredient = new Ingredient({
                             name: data[0],
                             category: data[1],
-                            unitType: unitType,
+                            unit: data[3],
                             ingredients: [],
+                            convert: {
+                                toMass: data[4] || 0,
+                                toVolume: data[5] || 0,
+                                toLength: data[6] || 0
+                            }
                         });
 
-                        switch(unitType){
-                            case "mass": ingredient.convert = convertMass; break;
-                            case "volume": ingredient.convert = convertVolume; break;
-                            case "length": ingredient.convert = convertLength; break;
-                            default: ingredient.convert = convertMass; break;
+                        let toMass = ingredient.convert.toMass;
+                        let toVolume = ingredient.convert.toVolume;
+                        let toLength = ingredient.convert.toLength;
+                        switch(data[3]){
+                            case "g": toMass = 1; break;
+                            case "kg": toMass = 1; break;
+                            case "oz": toMass = 1; break;
+                            case "lb": toMass = 1; break;
+                            case "ml": toVolume = 1; break;
+                            case "l": toVolume = 1; break;
+                            case "tsp": toVolume = 1; break;
+                            case "tbsp": toVolume = 1; break;
+                            case "ozfl": toVolume = 1; break;
+                            case "cup": toVolume = 1; break;
+                            case "pt": toVolume = 1; break;
+                            case "qt": toVolume = 1; break;
+                            case "gal": toVolume = 1; break;
+                            case "mm": toLength = 1; break;
+                            case "cm": toLength = 1; break;
+                            case "m": toLength = 1; break;
+                            case "in": toLength = 1; break;
+                            case "ft": toLength = 1; break;
                         }
 
                         let merchIngredient = {
                             ingredient: ingredient._id,
                             quantity: helper.convertQuantityToBaseUnit(data[2], data[3]),
-                            defaultUnit: data[3]
                         };
                         
-                        if(data[3].toLowerCase() === "bottle"){
-                            ingredient.unitType = data[5];
-                            ingredient.unitSize = helper.convertQuantityToBaseUnit(data[4], data[5])
-                            merchIngredient.defaultUnit = "bottle";
-                        }
-
                         newIngredients.push(ingredient);
                         merchant.inventory.push(merchIngredient);
                     }
@@ -87,13 +100,29 @@ module.exports = {
                 }
                 let ingredientIndices = indexIngredients();
 
+                //Sub-ingredients
+                if(req.files.ingredients !== undefined){
+                    for(let i = 0; i < ingredientData.length; i++){
+                        if(ingredientData[i] === "") continue;
+                        let data = ingredientData[i].split(",");
+
+                        for(let j = 7; j < data.length; j+=3){
+                            if(data[j] === "") break;
+                            ingredientIndices[data[0].toLowerCase()].ingredients.push({
+                                ingredient: ingredientIndices[data[j].toLowerCase()]._id,
+                                quantity: (data[j+1] * helper.convertQuantityToBaseUnit(1, data[j+2])) / helper.convertQuantityToBaseUnit(1, data[3]),
+                                unit: data[j+2]
+                            })
+                        }
+                    }
+                }
+
                 //Recipes
                 let newRecipes = [];
                 if(req.files.recipes !== undefined){
                     let recipeData = fs.readFileSync(req.files.recipes.tempFilePath).toString();
                     fs.unlink(req.files.recipes.tempFilePath, ()=>{});
                     recipeData = recipeData.split("\n");
-
                     
                     merchant.recipes = [];
                     for(let i = 0; i < recipeData.length; i++){
@@ -208,6 +237,7 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
+                console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }
