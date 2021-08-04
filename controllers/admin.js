@@ -237,7 +237,6 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
-                console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }

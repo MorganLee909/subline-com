@@ -19,9 +19,6 @@ class SubIngredient{
     }
 
     getDisplayQuantity(){
-        console.log(this._ingredient);
-        console.log(this._parent);
-        console.log(this._parent.unit);
         return `${parseFloat(this.quantity.toFixed(2))} ${this.unit} / ${this._parent.unit}`;
     }
 }
