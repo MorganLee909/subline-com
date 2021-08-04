@@ -1,10 +1,5 @@
 const Ingredient = require("../models/ingredient");
 
-const helper = require("./helper.js");
-
-const xlsx = require("xlsx");
-const fs = require("fs");
-
 module.exports = {
     /*
     POST - create a single ingredient and then add to the merchant

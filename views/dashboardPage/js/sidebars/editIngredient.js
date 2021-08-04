@@ -20,6 +20,16 @@ let editIngredient = {
 
         //Populate the unit buttons
         let units = ingredient.ingredient.getPotentialUnits();
+        let hiders = document.querySelectorAll(".bottleHide");
+        if(units.length === 0){
+            for(let i = 0; i < hiders.length; i++){
+                hiders[i].style.display = "none";
+            }
+        }else{
+            for(let i = 0; i < hiders.length; i++){
+                hiders[i].style.display = "flex";
+            }
+        }
 
         for(let i = 0; i < units.length; i++){
             let button = document.createElement("button");
@@ -132,7 +142,7 @@ let editIngredient = {
 
     submit: function(ingredient){
         let quantity = parseFloat(document.getElementById("editIngQuantityLabel").children[0].value);
-        let unit = document.getElementById("unitButtons").querySelector(".unitActive").innerText.toLowerCase();
+        let unit = (ingredient.ingredient.unit === "bottle") ? "bottle" : document.getElementById("unitButtons").querySelector(".unitActive").innerText.toLowerCase();
 
         let massDiv = document.getElementById("editIngMass");
         let volumeDiv = document.getElementById("editIngVolume");
@@ -176,6 +186,11 @@ let editIngredient = {
             case "mass": data.ingredient.convert.toMass = 1; break;
             case "volume": data.ingredient.convert.toVolume = 1; break;
             case "length": data.ingredient.convert.toLength = 1; break;
+            case "bottle":
+                data.quantity = quantity / data.ingredient.convert.toVolume;
+                data.ingredient.convert.toMass = 1 / controller.toBase(rightMass / leftMass);
+                data.ingredient.convert.toVolume = ingredient.ingredient.convert.toVolume;
+                data.ingredient.convert.toLength = 1 / controller.toBase(rightLength / leftLength);
         }
 
         let loader = document.getElementById("loaderContainer");

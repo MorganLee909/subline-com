@@ -115,6 +115,7 @@ class Ingredient{
             case "mass": return ["g", "kg", "oz", "lb"];
             case "volume": return ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
             case "length": return ["mm", "cm", "m", "in", "ft"];
+            default: return [];
         }
     }
 }
