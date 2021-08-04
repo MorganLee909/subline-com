@@ -64,7 +64,7 @@ let newRecipe = {
         if(ingredient.convert.toVolume > 0) select.children[1].style.display = "block";
         if(ingredient.convert.toLength > 0) select.children[2].style.display = "block";
 
-        select.value = ingredient.unit;
+        select.value = (ingredient.unit === "bottle") ? "ml" : ingredient.unit;
 
         document.getElementById("newRecipeChosenList").appendChild(element);
     },
