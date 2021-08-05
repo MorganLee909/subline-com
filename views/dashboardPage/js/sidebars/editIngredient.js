@@ -1,9 +1,11 @@
 let editIngredient = {
-
     display: function(ingredient){
         let buttonList = document.getElementById("unitButtons");
         let quantLabel = document.getElementById("editIngQuantityLabel");
+        let name = document.getElementById("editIngName");
+        let unit = ingredient.ingredient.unit;
 
+        name.focus();
         document.getElementById("editSubIngredients").onclick = ()=>{controller.openModal("editSubIngredients", ingredient.ingredient)};
 
         //Clear any existing data
@@ -12,25 +14,15 @@ let editIngredient = {
         }
 
         //Populate basic fields
-        document.getElementById("editIngTitle").innerText = ingredient.ingredient.name;
+        name.innerText = ingredient.ingredient.name;
         document.getElementById("editIngName").value = ingredient.ingredient.name;
         document.getElementById("editIngCategory").value = ingredient.ingredient.category;
-        quantLabel.innerText = `CURRENT STOCK (${ingredient.ingredient.unit.toUpperCase()})`;
+        quantLabel.innerText = `CURRENT STOCK (${unit.toUpperCase()})`;
         document.getElementById("editIngSubmit").onclick = ()=>{this.submit(ingredient)};
 
         //Populate the unit buttons
         let units = ingredient.ingredient.getPotentialUnits();
-        let hiders = document.querySelectorAll(".bottleHide");
-        if(units.length === 0){
-            for(let i = 0; i < hiders.length; i++){
-                hiders[i].style.display = "none";
-            }
-        }else{
-            for(let i = 0; i < hiders.length; i++){
-                hiders[i].style.display = "flex";
-            }
-        }
-
+        let ingredientUnit = (unit === "bottle") ? ingredient.ingredient.altUnit : unit;
         for(let i = 0; i < units.length; i++){
             let button = document.createElement("button");
             button.classList.add("unitButton");
@@ -38,37 +30,37 @@ let editIngredient = {
             button.onclick = ()=>{this.changeUnit(button, ingredient)};
             buttonList.appendChild(button);
             
-            if(units[i] === ingredient.ingredient.unit) button.classList.add("unitActive");
+            if(units[i] === ingredientUnit) button.classList.add("unitActive");
         }
 
         //Offer conversions
         let massDiv = document.getElementById("editIngMass");
         let volumeDiv = document.getElementById("editIngVolume");
         let lengthDiv = document.getElementById("editIngLength");
-        let multiplier = controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.unit), ingredient.ingredient.unit);
+        let multiplier = controller.unitMultiplier(controller.getBaseUnit(unit), unit);
 
         massDiv.children[0].value = 1;
-        massDiv.children[1].innerText = ingredient.ingredient.unit.toUpperCase();
+        massDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
         massDiv.children[3].value = parseFloat((ingredient.ingredient.convert.toMass / multiplier).toFixed(3));
         massDiv.children[4].value = "g";
         massDiv.children[4].previousValue = "g";
         massDiv.children[4].onchange = ()=>{this.changeConversionSelect(massDiv)};
 
         volumeDiv.children[0].value = 1;
-        volumeDiv.children[1].innerText = ingredient.ingredient.unit.toUpperCase();
+        volumeDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
         volumeDiv.children[3].value = parseFloat((ingredient.ingredient.convert.toVolume / multiplier).toFixed(3));
         volumeDiv.children[4].value = "l";
         volumeDiv.children[4].previousValue = "l";
         volumeDiv.children[4].onchange = ()=>{this.changeConversionSelect(volumeDiv)};
 
         lengthDiv.children[0].value = 1;
-        lengthDiv.children[1].innerText = ingredient.ingredient.unit.toUpperCase();
+        lengthDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
         lengthDiv.children[3].value = parseFloat((ingredient.ingredient.convert.toLength / multiplier).toFixed(3));
         lengthDiv.children[4].value = "m";
         lengthDiv.children[4].value = "m";
         lengthDiv.children[4].onchange = ()=>{this.changeConversionSelect(lengthDiv)};
 
-        switch(controller.getBaseUnit(ingredient.ingredient.unit)){
+        switch(controller.getBaseUnit(unit)){
             case "g": 
                 massDiv.style.display = "none";
                 volumeDiv.style.display = "flex";
@@ -97,7 +89,8 @@ let editIngredient = {
     changeUnit: function(button, ingredient){
         //update current stock quantity
         let label = document.getElementById("editIngQuantityLabel");
-        label.innerText = `CURRENT STOCK (${button.innerText})`;
+        if(ingredient.ingredient.unit !== "bottle") label.innerText = `CURRENT STOCK (${button.innerText})`;
+        if(ingredient.ingredient.unit === "bottle") label.innerText = "CURRENT STOCK (bottle)";
         let input = document.createElement("input");
         input.id = "editIngQuantity";
         input.type = "number";
@@ -115,7 +108,6 @@ let editIngredient = {
         volumeDiv.children[1].innerText = button.innerText;
         lengthDiv.children[1].innerText = button.innerText;
         let multiplier = controller.unitMultiplier(document.querySelector(".unitActive").innerText.toLowerCase(), button.innerText.toLowerCase());
-        
     
         massDiv.children[0].value = parseFloat((massDiv.children[0].value * multiplier).toFixed(3));
         massDiv.children[3].value = parseFloat((massDiv.children[3].value * multiplier).toFixed(3));
@@ -142,7 +134,8 @@ let editIngredient = {
 
     submit: function(ingredient){
         let quantity = parseFloat(document.getElementById("editIngQuantityLabel").children[0].value);
-        let unit = (ingredient.ingredient.unit === "bottle") ? "bottle" : document.getElementById("unitButtons").querySelector(".unitActive").innerText.toLowerCase();
+        let selectedUnit = document.getElementById("unitButtons").querySelector(".unitActive").innerText.toLowerCase();
+        let unit = (ingredient.ingredient.unit === "bottle") ? "bottle" : selectedUnit;
 
         let massDiv = document.getElementById("editIngMass");
         let volumeDiv = document.getElementById("editIngVolume");
@@ -167,6 +160,7 @@ let editIngredient = {
         rightVolume *= controller.unitMultiplier(rightUnitVolume, controller.getBaseUnit(rightUnitVolume));
         rightLength *= controller.unitMultiplier(rightUnitLength, controller.getBaseUnit(rightUnitLength));
 
+        console.log(quantity);
         let data = {
             ingredient: {
                 id: ingredient.ingredient.id,
@@ -180,7 +174,7 @@ let editIngredient = {
                 }
             },
             quantity: quantity * controller.unitMultiplier(unit, controller.getBaseUnit(unit))
-        }
+        };
 
         switch(controller.getUnitType(unit)){
             case "mass": data.ingredient.convert.toMass = 1; break;
@@ -188,10 +182,13 @@ let editIngredient = {
             case "length": data.ingredient.convert.toLength = 1; break;
             case "bottle":
                 data.quantity = quantity / data.ingredient.convert.toVolume;
-                data.ingredient.convert.toMass = 1 / controller.toBase(rightMass / leftMass);
+                // data.ingredient.convert.toMass = 1 / controller.toBase(rightMass / leftMass);
                 data.ingredient.convert.toVolume = ingredient.ingredient.convert.toVolume;
-                data.ingredient.convert.toLength = 1 / controller.toBase(rightLength / leftLength);
+                // data.ingredient.convert.toLength = 1 / controller.toBase(rightLength / leftLength);
+                data.ingredient.altUnit = selectedUnit;
+                break;
         }
+        console.log(data);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";

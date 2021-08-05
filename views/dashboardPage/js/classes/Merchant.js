@@ -106,6 +106,7 @@ class Merchant{
                 ingredients[i].ingredient.name,
                 ingredients[i].ingredient.category,
                 ingredients[i].ingredient.unit,
+                ingredients[i].ingredient.altUnit,
                 ingredients[i].ingredient.ingredients,
                 ingredients[i].ingredient.convert,
                 this
@@ -252,6 +253,7 @@ class Merchant{
                 ingredient.name,
                 ingredient.category,
                 unit,
+                ingredients[i].ingredient.altUnit,
                 ingredient.ingredients,
                 ingredient.convert,
                 this

@@ -7,12 +7,13 @@ module.exports = {
         ingredient: {
             name: name of ingredient,
             category: category of ingredient,
+            unit: String
+            altUnit: String (optional)
             convert: {
                 toMass: Number
                 toVolume: Number
                 toLength: Number
             }
-            unit: String
         }
             quantity: quantity of ingredient for current merchant,
     }
@@ -24,6 +25,7 @@ module.exports = {
             name: req.body.ingredient.name,
             category: req.body.ingredient.category,
             unit: req.body.ingredient.unit,
+            altUnit: req.body.ingredient.altUnit,
             convert: req.body.ingredient.convert,
             ingredients: []
         });
@@ -59,6 +61,7 @@ module.exports = {
             name: String
             category: String
             unit: String
+            altUnit: String (optional)
             convert: {
                 toMass: Number
                 toVolume: Number
@@ -76,6 +79,7 @@ module.exports = {
                 ingredient.category = req.body.ingredient.category;
                 ingredient.convert = req.body.ingredient.convert;
                 ingredient.unit = req.body.ingredient.unit;
+                ingredient.altUnit = req.body.ingredient.altUnit;
                 
                 //find and update ingredient on merchant
                 for(let i = 0; i < res.locals.merchant.inventory.length; i++){

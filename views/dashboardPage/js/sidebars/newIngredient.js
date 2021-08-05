@@ -1,8 +1,10 @@
 let newIngredient = {
     display: function(){
-        const selector = document.getElementById("unitSelector");
+        let selector = document.getElementById("unitSelector");
+        let name = document.getElementById("newIngName");
 
-        document.getElementById("newIngName").placeholder = "NAME";
+        name.focus();
+        name.placeholder = "NAME";
         document.getElementById("newIngCategory").placeholder = "CATEGORY";
         document.getElementById("newIngQuantity").placeholder = "QUANTITY";
         document.getElementById("bottleSizeLabel").style.display = "none";
@@ -106,6 +108,7 @@ let newIngredient = {
                 let bottleUnit = document.getElementById("bottleUnits").value;
                 newIngredient.ingredient.convert.toVolume = 1 / controller.toBase(bottleQuant, bottleUnit);
                 newIngredient.quantity = quantityValue * controller.toBase(bottleQuant, bottleUnit);
+                newIngredient.ingredient.altUnit = bottleUnit;
                 break;
         }
 

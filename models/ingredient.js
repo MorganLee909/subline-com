@@ -25,6 +25,10 @@ const IngredientSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    altUnit: {
+        type: String,
+        required: false
+    },
     convert: {
         toMass: Number,
         toVolume: Number,

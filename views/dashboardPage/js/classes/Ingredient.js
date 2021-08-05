@@ -24,11 +24,12 @@ class SubIngredient{
 }
 
 class Ingredient{
-    constructor(id, name, category, unit, subIngredients, convert, parent){
+    constructor(id, name, category, unit, altUnit, subIngredients, convert, parent){
         this._id = id;
         this._name = name;
         this._category = category;
         this.unit = unit;
+        this.altUnit = altUnit;
         this._subIngredients = [];
         this._parent = parent;
         this._convert = convert;
@@ -115,7 +116,7 @@ class Ingredient{
             case "mass": return ["g", "kg", "oz", "lb"];
             case "volume": return ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
             case "length": return ["mm", "cm", "m", "in", "ft"];
-            default: return [];
+            case "bottle": return ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
         }
     }
 }
