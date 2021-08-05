@@ -38,6 +38,7 @@ let editIngredient = {
         let volumeDiv = document.getElementById("editIngVolume");
         let lengthDiv = document.getElementById("editIngLength");
         let multiplier = controller.unitMultiplier(controller.getBaseUnit(unit), unit);
+        if(unit === "bottle") multiplier = controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.altUnit), ingredient.ingredient.altUnit);
 
         massDiv.children[0].value = 1;
         massDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
@@ -57,7 +58,7 @@ let editIngredient = {
         lengthDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
         lengthDiv.children[3].value = parseFloat((ingredient.ingredient.convert.toLength / multiplier).toFixed(3));
         lengthDiv.children[4].value = "m";
-        lengthDiv.children[4].value = "m";
+        lengthDiv.children[4].previousValue = "m";
         lengthDiv.children[4].onchange = ()=>{this.changeConversionSelect(lengthDiv)};
 
         switch(controller.getBaseUnit(unit)){
@@ -160,7 +161,6 @@ let editIngredient = {
         rightVolume *= controller.unitMultiplier(rightUnitVolume, controller.getBaseUnit(rightUnitVolume));
         rightLength *= controller.unitMultiplier(rightUnitLength, controller.getBaseUnit(rightUnitLength));
 
-        console.log(quantity);
         let data = {
             ingredient: {
                 id: ingredient.ingredient.id,
@@ -181,14 +181,13 @@ let editIngredient = {
             case "volume": data.ingredient.convert.toVolume = 1; break;
             case "length": data.ingredient.convert.toLength = 1; break;
             case "bottle":
-                data.quantity = quantity / data.ingredient.convert.toVolume;
-                // data.ingredient.convert.toMass = 1 / controller.toBase(rightMass / leftMass);
+                data.ingredient.convert.toMass = controller.toBase(rightMass / leftMass, rightUnitMass);
                 data.ingredient.convert.toVolume = ingredient.ingredient.convert.toVolume;
-                // data.ingredient.convert.toLength = 1 / controller.toBase(rightLength / leftLength);
+                data.ingredient.convert.toLength = controller.toBase(rightLength / leftLength, rightUnitLength);
+                data.quantity = quantity / data.ingredient.convert.toVolume;
                 data.ingredient.altUnit = selectedUnit;
                 break;
         }
-        console.log(data);
 
         let loader = document.getElementById("loaderContainer");
         loader.style.display = "flex";
