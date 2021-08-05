@@ -200,7 +200,9 @@ let analytics = {
             }
         }
 
-        let yaxis = `QUANTITY (${this.ingredient.unit.toUpperCase()})`;
+        let unit = (this.ingredient.unit === "bottle") ? this.ingredient.altUnit : this.ingredient.unit;
+
+        let yaxis = `QUANTITY (${unit.toUpperCase()})`;
 
         let layout = {
             title: this.ingredient.name.toUpperCase(),
@@ -229,9 +231,9 @@ let analytics = {
             sum += quantities[i];
         }
 
-        document.getElementById("analMinUse").innerText = `${min.toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analAvgUse").innerText = `${(sum / quantities.length).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analMaxUse").innerText = `${max.toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analMinUse").innerText = `${min.toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analAvgUse").innerText = `${(sum / quantities.length).toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analMaxUse").innerText = `${max.toFixed(2)} ${unit.toUpperCase()}`;
 
         //Create weekday averages
         let dayUse = [0, 0, 0, 0, 0, 0, 0];
@@ -241,13 +243,13 @@ let analytics = {
             dayCount[dates[i].getDay()]++;
         }
 
-        document.getElementById("analDayOne").innerText = `${(dayUse[0] / dayCount[0]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analDayTwo").innerText = `${(dayUse[1] / dayCount[1]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analDayThree").innerText = `${(dayUse[2] / dayCount[2]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analDayFour").innerText = `${(dayUse[3] / dayCount[3]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
-        document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
+        document.getElementById("analDayOne").innerText = `${(dayUse[0] / dayCount[0]).toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analDayTwo").innerText = `${(dayUse[1] / dayCount[1]).toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analDayThree").innerText = `${(dayUse[2] / dayCount[2]).toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analDayFour").innerText = `${(dayUse[3] / dayCount[3]).toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analDayFive").innerText = `${(dayUse[4] / dayCount[4]).toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analDaySix").innerText = `${(dayUse[5] / dayCount[5]).toFixed(2)} ${unit.toUpperCase()}`;
+        document.getElementById("analDaySeven").innerText = `${(dayUse[6] / dayCount[6]).toFixed(2)} ${unit.toUpperCase()}`;
     },
 
     displayIngredientCategory: function(){

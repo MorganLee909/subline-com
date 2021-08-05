@@ -447,6 +447,7 @@ controller = {
             case "in": return "length";
             case "ft": return "length";
             case "bottle": return "bottle";
+            case "each": return "each";
         }
     },
 

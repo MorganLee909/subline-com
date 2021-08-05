@@ -117,6 +117,7 @@ class Ingredient{
             case "volume": return ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
             case "length": return ["mm", "cm", "m", "in", "ft"];
             case "bottle": return ["ml", "l", "tsp", "tbsp", "ozfl", "cup", "pt", "qt", "gal"];
+            case "each": return ["each"];
         }
     }
 }
