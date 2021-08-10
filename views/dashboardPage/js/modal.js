@@ -212,8 +212,8 @@ let modal = {
                 ingredient.getPotentialUnits()
             );
 
-            div.children[1].children[0].children[1].value = ingredient.unit;
-            div.children[1].children[2].children[1].value = newIngredient.unit;
+            div.children[1].children[0].children[1].value = (newIngredient.unit === "bottle") ? newIngredient.altUnit : newIngredient.unit;
+            div.children[1].children[2].children[1].value = (ingredient.unit === "bottle") ? ingredient.altUnit : ingredient.unit;
         }
 
         let removeIngredient = (div, newIngredient)=>{
