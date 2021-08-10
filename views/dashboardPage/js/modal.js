@@ -183,12 +183,12 @@ let modal = {
             }
         }
 
-        let addIngredient = (newIngredient)=>{
+        let addIngredient = (newIngredient, leftVal = 1, rightVal = 1)=>{
             let div = template.cloneNode(true);
             div.children[0].children[0].innerText = newIngredient.name;
             div.children[0].children[1].onclick = ()=>{removeIngredient(div, newIngredient)};
-            div.children[1].children[0].children[0].value = 1;
-            div.children[1].children[2].children[0].value = 1;
+            div.children[1].children[0].children[0].value = leftVal;
+            div.children[1].children[2].children[0].value = rightVal;
             div.ingredient = newIngredient;
             right.appendChild(div);
 
@@ -229,7 +229,8 @@ let modal = {
         for(let i = 0; i < merchant.inventory.length; i++){
             let baseIngredient = merchant.inventory[i].ingredient;
             if(baseIngredient === ingredient) continue;
-            if(ingredient.subIngredients.find(j => j.ingredient.id === baseIngredient.id) === undefined){
+            let subIngredient = ingredient.subIngredients.find(j => j.ingredient.id === baseIngredient.id);
+            if(subIngredient === undefined){
                 let button = document.createElement("button");
                 button.innerText = baseIngredient.name;
                 button.classList.add("choosable");
@@ -238,7 +239,11 @@ let modal = {
                     addIngredient(baseIngredient)};
                 left.appendChild(button);
             }else{
-                addIngredient(baseIngredient);
+                addIngredient(
+                    baseIngredient,
+                    parseFloat((subIngredient.quantity).toFixed(2)),
+                    controller.unitMultiplier(controller.getBaseUnit(ingredient.unit), ingredient.unit)
+                );
             }
         }
 
