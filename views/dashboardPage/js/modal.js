@@ -228,6 +228,7 @@ let modal = {
 
         for(let i = 0; i < merchant.inventory.length; i++){
             let baseIngredient = merchant.inventory[i].ingredient;
+            if(baseIngredient === ingredient) continue;
             if(ingredient.subIngredients.find(j => j.ingredient.id === baseIngredient.id) === undefined){
                 let button = document.createElement("button");
                 button.innerText = baseIngredient.name;
