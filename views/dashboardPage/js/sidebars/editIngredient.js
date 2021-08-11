@@ -180,7 +180,6 @@ let editIngredient = {
             case "mass": data.ingredient.convert.toMass = 1; break;
             case "volume": data.ingredient.convert.toVolume = 1; break;
             case "length": data.ingredient.convert.toLength = 1; break;
-            case "each":
             case "bottle":
                 data.ingredient.convert.toMass = controller.toBase(rightMass / leftMass, rightUnitMass);
                 data.ingredient.convert.toVolume = ingredient.ingredient.convert.toVolume;
