@@ -98,11 +98,15 @@ let newIngredient = {
         if(isNaN(newIngredient.ingredient.convert.toMass)) newIngredient.ingredient.convert.toMass = 0;
         if(isNaN(newIngredient.ingredient.convert.toVolume)) newIngredient.ingredient.convert.toVolume = 0;
         if(isNaN(newIngredient.ingredient.convert.toLength)) newIngredient.ingredient.convert.toLength = 0;
-    
+
+        let convert = newIngredient.ingredient.convert;
         switch(controller.getUnitType(unit)){
             case "mass": newIngredient.ingredient.convert.toMass = 1; break;
             case "volume": newIngredient.ingredient.convert.toVolume = 1; break;
             case "length": newIngredient.ingredient.convert.toLength = 1; break;
+            // case "mass": convert.toMass = controller.unitMultiplier(unit, "g"); break;
+            // case "volume": convert.toVolume = controller.unitMultiplier(unit, "l"); break;
+            // case "length": convert.toLength = controller.unitMultiplier(unit, "m"); break;
             case "bottle": 
                 let bottleQuant = document.getElementById("bottleSize").value;
                 let bottleUnit = document.getElementById("bottleUnits").value;

@@ -505,6 +505,7 @@ controller = {
             case "l": return multiplier;
             case "tsp": return multiplier * 202.8842;
             case "tbsp": return multiplier * 67.6278;
+            case "ozfl": return multiplier * 33.8141;
             case "cup": return multiplier * 4.1667;
             case "pt": return multiplier * 2.1134;
             case "qt": return multiplier * 1.0567
