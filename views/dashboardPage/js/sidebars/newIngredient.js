@@ -89,7 +89,8 @@ let newIngredient = {
                 convert: {
                     toMass: massRight / massLeft,
                     toVolume: volumeRight / volumeLeft,
-                    toLength: lengthRight / lengthLeft
+                    toLength: lengthRight / lengthLeft,
+                    toBottle: 0
                 }
             },
             quantity: controller.baseUnit(quantityValue, unit)
@@ -101,18 +102,15 @@ let newIngredient = {
 
         let convert = newIngredient.ingredient.convert;
         switch(controller.getUnitType(unit)){
-            case "mass": newIngredient.ingredient.convert.toMass = 1; break;
-            case "volume": newIngredient.ingredient.convert.toVolume = 1; break;
-            case "length": newIngredient.ingredient.convert.toLength = 1; break;
-            // case "mass": convert.toMass = controller.unitMultiplier(unit, "g"); break;
-            // case "volume": convert.toVolume = controller.unitMultiplier(unit, "l"); break;
-            // case "length": convert.toLength = controller.unitMultiplier(unit, "m"); break;
-            case "bottle": 
+            case "mass": convert.toMass = 1; break;
+            case "volume": convert.toVolume = 1; break;
+            case "length": convert.toLength = 1; break;
+            case "bottle":
                 let bottleQuant = document.getElementById("bottleSize").value;
                 let bottleUnit = document.getElementById("bottleUnits").value;
-                newIngredient.ingredient.convert.toVolume = 1 / controller.toBase(bottleQuant, bottleUnit);
-                newIngredient.quantity = quantityValue * controller.toBase(bottleQuant, bottleUnit);
                 newIngredient.ingredient.altUnit = bottleUnit;
+                newIngredient.ingredient.convert.toVolume = 1;
+                newIngredient.ingredient.convert.toBottle = 1 / controller.toBase((bottleQuant), bottleUnit);
                 break;
         }
 

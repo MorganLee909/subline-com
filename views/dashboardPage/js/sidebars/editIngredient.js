@@ -85,19 +85,42 @@ let editIngredient = {
         quantInput.step = "0.01";
         quantInput.value = ingredient.quantity.toFixed(2);
         quantLabel.appendChild(quantInput);
+        
+        let bottleLabel = document.getElementById("editSpecialLabel");
+        if(ingredient.ingredient.unit === "bottle"){
+            bottleLabel.innerText = `BOTTLE SIZE (${ingredient.ingredient.altUnit.toUpperCase()})`;
+            let bottleInput = document.createElement("input");
+            bottleInput.id = "editSpecialInput";
+            bottleInput.type = "number";
+            bottleInput.min = "0";
+            bottleInput.value = 1 / ingredient.ingredient.convert.toBottle * controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.altUnit), ingredient.ingredient.altUnit);
+            bottleLabel.appendChild(bottleInput);
+            bottleLabel.style.display = "flex";
+        }else{
+            bottleLabel.style.display = "none";
+        }
     },
 
     changeUnit: function(button, ingredient){
         //update current stock quantity
-        let label = document.getElementById("editIngQuantityLabel");
-        if(ingredient.ingredient.unit !== "bottle") label.innerText = `CURRENT STOCK (${button.innerText})`;
-        if(ingredient.ingredient.unit === "bottle") label.innerText = "CURRENT STOCK (bottle)";
+        let label = {};
+        let newValue = 0;
+        if(ingredient.ingredient.unit === "bottle"){
+            label = document.getElementById("editSpecialLabel");
+            label.innerText = `BOTTLE SIZE (${button.innerText})`;
+            newValue = controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.altUnit), button.innerText.toLowerCase()) / ingredient.ingredient.convert.toBottle;
+        }else{
+            label = document.getElementById("editIngQuantityLabel");
+            label.innerText = `CURRENT STOCK (${button.innerText})`;
+            newValue = ingredient.quantity * controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.unit), button.innerText.toLowerCase());
+        }
+        
         let input = document.createElement("input");
         input.id = "editIngQuantity";
         input.type = "number";
         input.min = "0";
         input.step = "0.01";
-        input.value = (ingredient.quantity * controller.unitMultiplier(ingredient.ingredient.unit, button.innerText.toLowerCase())).toFixed(2);
+        input.value = newValue.toFixed(2);
         label.appendChild(input);
         
         //update conversions

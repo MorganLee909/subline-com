@@ -30,6 +30,9 @@ class MerchantIngredient{
             case "m":
                 convertMultiplier = this._ingredient.convert.toLength;
                 break;
+            case "bottle":
+                convertMultiplier = this._ingredient.convert.toBottle;
+                break;
         }
         
         return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit) * convertMultiplier;

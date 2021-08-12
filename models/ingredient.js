@@ -32,7 +32,8 @@ const IngredientSchema = new mongoose.Schema({
     convert: {
         toMass: Number,
         toVolume: Number,
-        toLength: Number
+        toLength: Number,
+        toBottle: Number
     },
     ingredients: [{
         ingredient: {
