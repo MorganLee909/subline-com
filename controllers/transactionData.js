@@ -63,7 +63,7 @@ module.exports = {
         ingredientUpdates: an object that contains all of the ingredients that
             need to be updated as well as the amount to change. 
             keys = id
-            values = quantity to change in grams
+            values = quantity to change in base unit
     }
     */
     createTransaction: function(req, res){
@@ -73,7 +73,6 @@ module.exports = {
             for(let j = 0; j < res.locals.merchant.inventory.length; j++){
                 if(res.locals.merchant.inventory[j].ingredient._id.toString() === keys[i]){
                     res.locals.merchant.inventory[j].quantity -= req.body.ingredientUpdates[keys[i]];
-
                     break;
                 }
             }
@@ -81,9 +80,7 @@ module.exports = {
 
         res.locals.merchant.save()
             .then((merchant)=>{
-                if(req.body.date === null){
-                    throw "NEW TRANSACTIONS MUST CONTAIN A DATE";
-                }
+                if(req.body.date === null) throw "NEW TRANSACTIONS MUST CONTAIN A DATE";
 
                 return new Transaction({
                     merchant: res.locals.merchant._id,

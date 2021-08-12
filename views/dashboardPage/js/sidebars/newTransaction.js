@@ -44,12 +44,13 @@ let newTransaction = {
                     quantity: quantity
                 });
 
-                for(let j = 0; j < recipe.ingredients.length; j++){
-                    let ingredient = recipe.ingredients[j];
-                    if(data.ingredientUpdates[ingredient.ingredient.id]){
-                        data.ingredientUpdates[ingredient.ingredient.id] += controller.baseUnit(ingredient.quantity, ingredient.ingredient.unit) * quantity;
+                let keys = Object.keys(recipe.ingredientTotals);
+
+                for(let j = 0; j < keys.length; j++){
+                    if(data.ingredientUpdates[keys[j]] === undefined){
+                        data.ingredientUpdates[keys[j]] = recipe.ingredientTotals[keys[j]] * quantity;
                     }else{
-                        data.ingredientUpdates[ingredient.ingredient.id] = controller.baseUnit(ingredient.quantity, ingredient.ingredient.unit) * quantity;
+                        data.ingredientUpdates[keys[j]] += recipe.ingredientTotals[keys[j]] * quantity
                     }
                 }
             }else if(quantity < 0){

@@ -80,10 +80,11 @@ let newRecipe = {
         let ingredients = document.getElementById("newRecipeChosenList").children;
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = ingredients[i].ingredient;
+            let unit = ingredients[i].children[1].children[1].value;
             data.ingredients.push({
                 ingredient: ingredient.id,
-                quantity: ingredients[i].children[1].children[0].value,
-                unit: ingredients[i].children[1].children[1].value
+                quantity: controller.toBase(ingredients[i].children[1].children[0].value, unit),
+                unit: unit
             });
         }
 

@@ -472,7 +472,7 @@ class Merchant{
                     let recipe = transaction.recipes[j].recipe;
                     for(let k = 0; k < recipe.ingredients.length; k++){
                         let ingredient = recipe.ingredients[k].ingredient;
-                        let quantity = transaction.recipes[j].quantity * recipe.ingredients[k].quantity;
+                        let quantity = transaction.recipes[j].quantity * recipe.ingredients[k]._quantity;
 
                         this.getIngredient(ingredient.id).updateQuantity(-quantity);
                     }

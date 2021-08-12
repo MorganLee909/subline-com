@@ -13,17 +13,11 @@ class RecipeIngredient{
     }
 
     get quantity(){
-        return this._quantity;
+        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._unit), this._unit);
     }
 
     set quantity(quantity){
-        quantity *= controller.unitMultiplier(unit, controller.getBaseUnit(unit))
-        switch(controller.getUnitType(this._ingredient.unit)){
-            case "mass": quantity /= this._ingredient.convert.toMass; break;
-            case "volume": quantity /= this._ingredient.convert.toVolume; break;
-            case "length": quantity /= this._ingredient.convert.toLength; break;
-        }
-        this._quantity += quantity;
+        this._quantity = quantity;
     }
 
     get unit(){
@@ -31,7 +25,7 @@ class RecipeIngredient{
     }
 
     getQuantityDisplay(){
-        return `${this._quantity.toFixed(2)} ${this._unit.toUpperCase()}`;
+        return `${this.quantity.toFixed(2)} ${this._unit.toUpperCase()}`;
     }
 }
 
@@ -61,12 +55,11 @@ class Recipe{
         this._ingredientTotals = {};
 
         for(let i = 0; i < ingredients.length; i++){
-            const ingredient = parent.getIngredient(ingredients[i].ingredient);
-            const recipeIngredient = new RecipeIngredient(
+            let ingredient = parent.getIngredient(ingredients[i].ingredient);
+            let recipeIngredient = new RecipeIngredient(
                 ingredient.ingredient,
                 ingredients[i].quantity,
                 ingredients[i].unit,
-                ingredients[i].baseUnitMultiplier
             );
 
             this._ingredients.push(recipeIngredient);
@@ -156,7 +149,7 @@ class Recipe{
 
         let traverseIngredient = (ingredient, multiplier)=>{
             for(let i = 0; i < ingredient.subIngredients.length; i++){
-                traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i].quantity);
+                traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i]._quantity);
             }
 
             if(this._ingredientTotals[ingredient.id] === undefined){
@@ -167,7 +160,7 @@ class Recipe{
         }
 
         for(let i = 0; i < this._ingredients.length; i++){
-            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i].quantity);
+            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i]._quantity);
         }
     }
 }
