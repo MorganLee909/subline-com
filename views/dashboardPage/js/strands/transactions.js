@@ -6,7 +6,7 @@ let transactions = {
         document.getElementById("newTransactionButton").onclick = ()=>{controller.openSidebar("newTransaction")};
         if(this.transactions.length === 0){
             let from = new Date();
-            from.setDate(from.getDate() - 7);
+            from.setDate(from.getDate() - 30);
             from.setHours(0, 0, 0, 0);
 
             this.transactions = merchant.getTransactions(from, new Date());
