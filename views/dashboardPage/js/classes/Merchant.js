@@ -20,19 +20,18 @@ class MerchantIngredient{
 
     get quantity(){
         let convertMultiplier = 1;
-        switch(controller.getBaseUnit(this._ingredient.unit)){
-            case "g":
+        switch(controller.getUnitType(this._ingredient.unit)){
+            case "mass":
                 convertMultiplier = this._ingredient.convert.toMass;
                 break;
-            case "l":
+            case "volume":
                 convertMultiplier = this._ingredient.convert.toVolume;
                 break;
-            case "m":
+            case "length":
                 convertMultiplier = this._ingredient.convert.toLength;
                 break;
             case "bottle":
-                convertMultiplier = this._ingredient.convert.toBottle;
-                break;
+                return this._quantity * this._ingredient.convert.toBottle;
         }
         
         return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit) * convertMultiplier;

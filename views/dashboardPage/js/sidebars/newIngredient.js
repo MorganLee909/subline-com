@@ -110,7 +110,8 @@ let newIngredient = {
                 let bottleUnit = document.getElementById("bottleUnits").value;
                 newIngredient.ingredient.altUnit = bottleUnit;
                 newIngredient.ingredient.convert.toVolume = 1;
-                newIngredient.ingredient.convert.toBottle = 1 / controller.toBase((bottleQuant), bottleUnit);
+                newIngredient.ingredient.convert.toBottle = 1 / controller.toBase(bottleQuant, bottleUnit);
+                newIngredient.quantity = quantityValue * controller.toBase(bottleQuant, bottleUnit);
                 break;
         }
 

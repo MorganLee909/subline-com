@@ -105,18 +105,20 @@ let editIngredient = {
         //update current stock quantity
         let label = {};
         let newValue = 0;
+        let inputId = "";
         if(ingredient.ingredient.unit === "bottle"){
             label = document.getElementById("editSpecialLabel");
             label.innerText = `BOTTLE SIZE (${button.innerText})`;
+            inputId = "editIngQuantity";
             newValue = controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.altUnit), button.innerText.toLowerCase()) / ingredient.ingredient.convert.toBottle;
         }else{
             label = document.getElementById("editIngQuantityLabel");
             label.innerText = `CURRENT STOCK (${button.innerText})`;
-            newValue = ingredient.quantity * controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.unit), button.innerText.toLowerCase());
+            inputId = "editSpecialInput";
+            newValue = ingredient.quantity * controller.unitMultiplier(ingredient.ingredient.unit, button.innerText.toLowerCase());
         }
         
         let input = document.createElement("input");
-        input.id = "editIngQuantity";
         input.type = "number";
         input.min = "0";
         input.step = "0.01";
@@ -193,7 +195,8 @@ let editIngredient = {
                 convert: {
                     toMass: rightMass / leftMass,
                     toVolume: rightVolume / leftVolume,
-                    toLength: rightLength / leftLength
+                    toLength: rightLength / leftLength,
+                    toBottle: 0
                 }
             },
             quantity: quantity * controller.unitMultiplier(unit, controller.getBaseUnit(unit))
@@ -204,11 +207,11 @@ let editIngredient = {
             case "volume": data.ingredient.convert.toVolume = 1; break;
             case "length": data.ingredient.convert.toLength = 1; break;
             case "bottle":
-                data.ingredient.convert.toMass = controller.toBase(rightMass / leftMass, rightUnitMass);
-                data.ingredient.convert.toVolume = ingredient.ingredient.convert.toVolume;
-                data.ingredient.convert.toLength = controller.toBase(rightLength / leftLength, rightUnitLength);
-                data.quantity = quantity / data.ingredient.convert.toVolume;
+                let bottleQuant = document.getElementById("editSpecialInput").value;
                 data.ingredient.altUnit = selectedUnit;
+                data.ingredient.convert.toVolume = 1;
+                data.ingredient.convert.toBottle = 1 / controller.toBase(bottleQuant, selectedUnit);
+                data.quantity = quantity * controller.toBase(bottleQuant, selectedUnit);
                 break;
         }
 
