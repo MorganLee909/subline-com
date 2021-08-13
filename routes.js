@@ -14,8 +14,6 @@ const admin = require("./controllers/admin.js");
 const session = require("./middleware.js").verifySession;
 const banner = require("./middleware.js").formatBanner;
 
-const upload = require("multer")({dest: "uploads/"});
-
 module.exports = function(app){
     //Render page
     app.get("/", banner, renderer.landingPage);
