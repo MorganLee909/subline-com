@@ -18,13 +18,10 @@ module.exports = {
     }
     */
     addData: function(req, res){
-        if(req.body.password !== process.env.ADMIN_PASS) return res.json("bad password");
-
         Merchant.findOne({_id: req.session.merchant})
             .populate("inventory.ingredient")
             .populate("recipes")
             .then((merchant)=>{
-                // console.log(merchant);
                 //Ingredients
                 let newIngredients = [];
                 let ingredientData = {};
