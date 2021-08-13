@@ -10,10 +10,6 @@ const fs = require("fs");
 module.exports = {
     /*
     POST: Adding data for admins
-    req.body = {
-        password: String
-        id: String <merchant id>
-    }
     req.files = {
         ingredients: txt
         recipes: txt
@@ -24,10 +20,11 @@ module.exports = {
     addData: function(req, res){
         if(req.body.password !== process.env.ADMIN_PASS) return res.json("bad password");
 
-        Merchant.findOne({_id: req.body.id})
+        Merchant.findOne({_id: req.session.merchant})
             .populate("inventory.ingredient")
             .populate("recipes")
             .then((merchant)=>{
+                // console.log(merchant);
                 //Ingredients
                 let newIngredients = [];
                 let ingredientData = {};
@@ -46,40 +43,46 @@ module.exports = {
                             unit: data[3],
                             ingredients: [],
                             convert: {
-                                toMass: data[4] || 0,
-                                toVolume: data[5] || 0,
-                                toLength: data[6] || 0
+                                toMass: data[6] || 0,
+                                toVolume: data[7] || 0,
+                                toLength: data[8] || 0,
+                                toBottle: 0
                             }
                         });
 
-                        let toMass = ingredient.convert.toMass;
-                        let toVolume = ingredient.convert.toVolume;
-                        let toLength = ingredient.convert.toLength;
                         switch(data[3]){
-                            case "g": toMass = 1; break;
-                            case "kg": toMass = 1; break;
-                            case "oz": toMass = 1; break;
-                            case "lb": toMass = 1; break;
-                            case "ml": toVolume = 1; break;
-                            case "l": toVolume = 1; break;
-                            case "tsp": toVolume = 1; break;
-                            case "tbsp": toVolume = 1; break;
-                            case "ozfl": toVolume = 1; break;
-                            case "cup": toVolume = 1; break;
-                            case "pt": toVolume = 1; break;
-                            case "qt": toVolume = 1; break;
-                            case "gal": toVolume = 1; break;
-                            case "mm": toLength = 1; break;
-                            case "cm": toLength = 1; break;
-                            case "m": toLength = 1; break;
-                            case "in": toLength = 1; break;
-                            case "ft": toLength = 1; break;
+                            case "g": ingredient.convert.toMass = 1; break;
+                            case "kg": ingredient.convert.toMass = 1; break;
+                            case "oz": ingredient.convert.toMass = 1; break;
+                            case "lb": ingredient.convert.toMass = 1; break;
+                            case "ml": ingredient.convert.toVolume = 1; break;
+                            case "l": ingredient.convert.toVolume = 1; break;
+                            case "tsp": ingredient.convert.toVolume = 1; break;
+                            case "tbsp": ingredient.convert.toVolume = 1; break;
+                            case "ozfl": ingredient.convert.toVolume = 1; break;
+                            case "cup": ingredient.convert.toVolume = 1; break;
+                            case "pt": ingredient.convert.toVolume = 1; break;
+                            case "qt": ingredient.convert.toVolume = 1; break;
+                            case "gal": ingredient.convert.toVolume = 1; break;
+                            case "mm": ingredient.convert.toLength = 1; break;
+                            case "cm": ingredient.convert.toLength = 1; break;
+                            case "m": ingredient.convert.toLength = 1; break;
+                            case "in": ingredient.convert.toLength = 1; break;
+                            case "ft": ingredient.convert.toLength = 1; break;
+                            case "bottle": ingredient.convert.toVolume = 1; break;
                         }
 
                         let merchIngredient = {
                             ingredient: ingredient._id,
                             quantity: helper.convertQuantityToBaseUnit(data[2], data[3]),
                         };
+
+                        
+                        if(ingredient.unit === "bottle"){
+                            ingredient.altUnit = data[5];
+                            ingredient.convert.toBottle = helper.convertQuantityToBaseUnit(data[4], data[5]);
+                            merchIngredient.quantity = data[2] / ingredient.convert.toBottle;
+                        }
                         
                         newIngredients.push(ingredient);
                         merchant.inventory.push(merchIngredient);
@@ -106,7 +109,7 @@ module.exports = {
                         if(ingredientData[i] === "") continue;
                         let data = ingredientData[i].split(",");
 
-                        for(let j = 7; j < data.length; j+=3){
+                        for(let j = 9; j < data.length; j+=3){
                             if(data[j] === "") break;
                             ingredientIndices[data[0].toLowerCase()].ingredients.push({
                                 ingredient: ingredientIndices[data[j].toLowerCase()]._id,
@@ -237,6 +240,7 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
+                // console.log(err);
                 return res.json("ERROR: A whoopsie has been made");
             });
     }

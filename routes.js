@@ -88,5 +88,5 @@ module.exports = function(app){
 
     //Admin
     app.get("/admin/create", (req, res)=>{res.sendFile(`${__dirname}/views/newTest.html`)});
-    app.post("/admin/create", admin.addData);
+    app.post("/admin/create", session, admin.addData);
 }
