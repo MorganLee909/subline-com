@@ -93,7 +93,7 @@ let newIngredient = {
                     toBottle: 0
                 }
             },
-            quantity: controller.baseUnit(quantityValue, unit)
+            quantity: controller.toBase(quantityValue, unit)
         };
 
         if(isNaN(newIngredient.ingredient.convert.toMass)) newIngredient.ingredient.convert.toMass = 0;
