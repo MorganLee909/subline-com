@@ -77,8 +77,8 @@ module.exports = {
                         
                         if(ingredient.unit === "bottle"){
                             ingredient.altUnit = data[5];
-                            ingredient.convert.toBottle = helper.convertQuantityToBaseUnit(data[4], data[5]);
-                            merchIngredient.quantity = data[2] / ingredient.convert.toBottle;
+                            merchIngredient.quantity = helper.convertQuantityToBaseUnit(data[4], data[5]) * data[2];
+                            ingredient.convert.toBottle = data[2] / merchIngredient.quantity;
                         }
                         
                         newIngredients.push(ingredient);

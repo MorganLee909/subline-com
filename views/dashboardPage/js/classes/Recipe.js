@@ -120,16 +120,14 @@ class Recipe{
 
     //Returns the quantity of a single ingredient with the recipe.
     //Returns the quantity converted to the base unit of the ingredient
-    getIngredientTotal(id, isDisplay = false){
-        if(isDisplay === true){
-            for(let i = 0; i < this._ingredients.length; i++){
-                if(this._ingredients[i].ingredient.id === id){
-                    return (this._ingredientTotals[id] === undefined) ? 0 : controller.displayUnit(this._ingredientTotals[id], this._ingredients[i].ingredient.unit);
-                }
-                break;
+    getIngredientTotal(id){
+        for(let i = 0; i < this._ingredients.length; i++){
+            if(this._ingredients[i].ingredient.id === id){
+                return (this._ingredientTotals[id] === undefined) ? 0 : this._ingredientTotals[id] * controller.unitMultiplier(controller.toBase(this._ingredients[i].ingredient.unit), this._ingredients[i].ingredient.unit);
             }
         }
-        return (this._ingredientTotals[id] === undefined) ? 0 : this._ingredientTotals[id];
+
+        return 0;
     }
 
     addIngredient(ingredient, quantity, unit, baseUnitMultiplier){

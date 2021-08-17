@@ -66,12 +66,21 @@ let newOrder = {
         for(let i = 0; i < ingredients.length; i++){
             let quantity = ingredients[i].children[1].children[0].value;
             let price = ingredients[i].children[1].children[1].value;
+            let unit = (ingredients[i].ingredient.ingredient.unit === "bottle") ? ingredients[i].ingredient.ingredient.altUnit : ingredients[i].ingredient.ingredient.unit;
 
-            data.ingredients.push({
+            let newIngredient = {
                 ingredient: ingredients[i].ingredient.ingredient.id,
-                quantity: controller.baseUnit(quantity, ingredients[i].ingredient.ingredient.unit),
-                pricePerUnit: this.convertPrice(ingredients[i].ingredient.ingredient, price * 100)
-            });
+                quantity: controller.toBase(quantity, unit),
+                pricePerUnit: this.convertPrice(controller.getBaseUnit(unit), price * 100)
+            };
+
+            if(ingredients[i].ingredient.ingredient.unit === "bottle"){
+                newIngredient.quantity = quantity / ingredients[i].ingredient.ingredient.convert.toBottle;
+                newIngredient.pricePerUnit = this.convertPrice(controller.getBaseUnit(unit), price * ingredients[i].ingredient.ingredient.convert.toBottle * 100);
+            }
+            console.log(newIngredient);
+
+            data.ingredients.push(newIngredient);
         }
 
         let loader = document.getElementById("loaderContainer");
@@ -108,8 +117,8 @@ let newOrder = {
             });
     },
 
-    convertPrice: function(ingredient, price){
-        switch(ingredient.unit){
+    convertPrice: function(unit, price){
+        switch(unit){
             case "g": return price;
             case "kg": return price / 1000; 
             case "oz": return price / 28.3495; 

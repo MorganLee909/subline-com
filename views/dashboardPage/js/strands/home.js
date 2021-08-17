@@ -50,6 +50,7 @@ let home = {
         let ingredients = [];
         let from = new Date();
         from.setDate(from.getDate() - 30);
+        from.setHours(0, 0, 0, 0);
 
         for(let i = 0; i < merchant.inventory.length; i++){
             let unitCost = merchant.inventory[i].ingredient.getUnitCost();
