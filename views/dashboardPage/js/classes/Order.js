@@ -26,6 +26,7 @@ class OrderIngredient{
             case "cm": return this._quantity * 100;
             case "in": return this._quantity * 39.3701;
             case "ft": return this._quantity * 3.2808;
+            case "bottle": return this._quantity * this._ingredient.convert.toBottle;
             default: return this._quantity;
         }
     }
@@ -60,6 +61,7 @@ class OrderIngredient{
             case "m": return this._pricePerUnit / 100;
             case "in": return (this._pricePerUnit / 39.3701) / 100; 
             case "ft": return (this._pricePerUnit / 3.2808) / 100;
+            case "bottle": return (this._pricePerUnit / this._ingredient.convert.toBottle) / 100;
             default: return this._pricePerUnit / 100;
         }
     }

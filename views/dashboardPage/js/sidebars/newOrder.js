@@ -71,14 +71,15 @@ let newOrder = {
             let newIngredient = {
                 ingredient: ingredients[i].ingredient.ingredient.id,
                 quantity: controller.toBase(quantity, unit),
-                pricePerUnit: this.convertPrice(controller.getBaseUnit(unit), price * 100)
+                pricePerUnit: (price * 100) / controller.unitMultiplier(unit, controller.getBaseUnit(unit))
             };
 
             if(ingredients[i].ingredient.ingredient.unit === "bottle"){
-                newIngredient.quantity = quantity / ingredients[i].ingredient.ingredient.convert.toBottle;
-                newIngredient.pricePerUnit = this.convertPrice(controller.getBaseUnit(unit), price * ingredients[i].ingredient.ingredient.convert.toBottle * 100);
+                let unitMultiplier = controller.unitMultiplier(unit, controller.getBaseUnit(unit));
+                let toBottle = ingredients[i].ingredient.ingredient.convert.toBottle;
+                newIngredient.quantity = quantity / toBottle;
+                newIngredient.pricePerUnit = toBottle * (price * 100);
             }
-            console.log(newIngredient);
 
             data.ingredients.push(newIngredient);
         }
