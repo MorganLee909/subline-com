@@ -3,29 +3,21 @@ const analytics = require("../strands/analytics.js");
 
 class RecipeIngredient{
     constructor(ingredient, quantity, unit){
-        this._ingredient = ingredient;
+        this.ingredient = ingredient;
         this._quantity = quantity;
-        this._unit = unit;
-    }
-
-    get ingredient(){
-        return this._ingredient;
+        this.unit = unit;
     }
 
     get quantity(){
-        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._unit), this._unit);
+        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this.unit), this.unit);
     }
 
     set quantity(quantity){
         this._quantity = quantity;
     }
 
-    get unit(){
-        return this._unit;
-    }
-
     getQuantityDisplay(){
-        return `${this.quantity.toFixed(2)} ${this._unit.toUpperCase()}`;
+        return `${this.quantity.toFixed(2)} ${this.unit.toUpperCase()}`;
     }
 }
 
@@ -44,15 +36,15 @@ parent = merchant that it belongs to
 */
 class Recipe{
     constructor(id, name, category, price, ingredients, parent, hidden){
-        this._id = id;
-        this._name = name;
-        this._category = category;
+        this.id = id;
+        this.name = name;
+        this.category = category;
         this._price = price;
-        this._parent = parent;
-        this._hidden = hidden;
-        this._ingredients = [];
+        this.parent = parent;
+        this.hidden = hidden;
+        this.ingredients = [];
         //Ingredient totals is the total amount of each ingredient within the recipe, converted to ingredient base unit
-        this._ingredientTotals = {};
+        this.ingredientTotals = {};
 
         for(let i = 0; i < ingredients.length; i++){
             let ingredient = parent.getIngredient(ingredients[i].ingredient);
@@ -62,28 +54,8 @@ class Recipe{
                 ingredients[i].unit,
             );
 
-            this._ingredients.push(recipeIngredient);
+            this.ingredients.push(recipeIngredient);
         }
-    }
-
-    get id(){
-        return this._id;
-    }
-
-    get name(){
-        return this._name;
-    }
-
-    set name(name){
-        this._name = name;
-    }
-
-    get category(){
-        return this._category;
-    }
-
-    set category(category){
-        this._category = category;
     }
 
     get price(){
@@ -94,36 +66,16 @@ class Recipe{
         this._price = price;
     }
 
-    get parent(){
-        return this._parent;
-    }
-
-    get hidden(){
-        return this._hidden;
-    }
-
-    set hidden(hidden){
-        this._hidden = hidden;
-    }
-
-    get ingredients(){
-        return this._ingredients;
-    }
-
     clearIngredients(){
-        this._ingredients = [];
-    }
-
-    get ingredientTotals(){
-        return this._ingredientTotals;
+        this.ingredients = [];
     }
 
     //Returns the quantity of a single ingredient with the recipe.
     //Returns the quantity converted to the base unit of the ingredient
     getIngredientTotal(id){
-        for(let i = 0; i < this._ingredients.length; i++){
-            if(this._ingredients[i].ingredient.id === id){
-                return (this._ingredientTotals[id] === undefined) ? 0 : this._ingredientTotals[id] * controller.unitMultiplier(controller.toBase(this._ingredients[i].ingredient.unit), this._ingredients[i].ingredient.unit);
+        for(let i = 0; i < this.ingredients.length; i++){
+            if(this.ingredients[i].ingredient.id === id){
+                return (this.ingredientTotals[id] === undefined) ? 0 : this.ingredientTotals[id] * controller.unitMultiplier(controller.toBase(this.ingredients[i].ingredient.unit), this.ingredients[i].ingredient.unit);
             }
         }
 
@@ -132,33 +84,29 @@ class Recipe{
 
     addIngredient(ingredient, quantity, unit, baseUnitMultiplier){
         let recipeIngredient = new RecipeIngredient(ingredient, quantity, unit, baseUnitMultiplier);
-        this._ingredients.push(recipeIngredient);
+        this.ingredients.push(recipeIngredient);
 
         recipeBook.isPopulated = false;
         analytics.isPopulated = false;
     }
 
-    removeIngredients(){
-        this._ingredients = [];
-    }
-
     calculateIngredientTotals(){
-        this._ingredientTotals = {};
+        this.ingredientTotals = {};
 
         let traverseIngredient = (ingredient, multiplier)=>{
             for(let i = 0; i < ingredient.subIngredients.length; i++){
                 traverseIngredient(ingredient.subIngredients[i].ingredient, multiplier * ingredient.subIngredients[i]._quantity);
             }
 
-            if(this._ingredientTotals[ingredient.id] === undefined){
-                this._ingredientTotals[ingredient.id] = multiplier;
+            if(this.ingredientTotals[ingredient.id] === undefined){
+                this.ingredientTotals[ingredient.id] = multiplier;
             }else{
-                this._ingredientTotals[ingredient.id] += multiplier;
+                this.ingredientTotals[ingredient.id] += multiplier;
             }
         }
 
-        for(let i = 0; i < this._ingredients.length; i++){
-            traverseIngredient(this._ingredients[i]._ingredient, this._ingredients[i]._quantity);
+        for(let i = 0; i < this.ingredients.length; i++){
+            traverseIngredient(this.ingredients[i]._ingredient, this.ingredients[i]._quantity);
         }
     }
 }
