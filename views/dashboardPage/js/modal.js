@@ -326,42 +326,6 @@ let modal = {
         }
 
         document.getElementById("circularReferenceButton").onclick = ()=>{controller.closeModal()};
-    },
-
-    alternateUnit: function(data){
-        document.getElementById("modalUnitConversion").style.display = "flex";
-        let container = document.getElementById("unitConversions");
-        let template = document.getElementById("convertUnitOption").content.children[0];
-
-        while(container.children.length > 0){
-            container.removeChild(container.firstChild);
-        }
-
-        for(let i = 0; i < data.mismatchUnits.length; i++){
-            let conversion = template.cloneNode(true);
-            conversion.children[0].innerText = data.mismatchUnits[i].ingredient.name;
-            conversion.children[1].children[0].children[0].value = data.mismatchUnits[i].newIngredient.quantity;
-            conversion.children[1].children[0].children[1].innerText = data.mismatchUnits[i].newIngredient.unit.toUpperCase();
-            conversion.children[1].children[2].children[1].innerText = data.mismatchUnits[i].ingredient.unit.toUpperCase();
-            container.appendChild(conversion);
-        }
-
-        //Submit conversions
-        document.getElementById("submitAlternateUnits").onclick = ()=>{
-            for(let i = 0; i < container.children.length; i++){
-                let inputLeft = container.children[i].children[1].children[0].children[0].value;
-                let inputRight = container.children[i].children[1].children[2].children[0].value;
-                if(inputLeft === "" || inputRight === "" || inputLeft === 0 || inputRight === 0){
-                    controller.createBanner("ALL FIELDS ARE REQUIRED", "error");
-                    return;
-                }
-
-                data.mismatchUnits[i].newIngredient.baseUnitMultiplier = data.mismatchUnits[i].ingredient.calculateRecipeMultiplier(inputLeft, inputRight);
-            }
-
-            controller.closeModal();
-            data.submit(data.recipe);
-        }
     }
 };
 
