@@ -198,34 +198,6 @@ controller = {
         let content = {};
 
         switch(str){
-            case "ingredientSpreadsheet":
-                content = document.getElementById("modalSpreadsheetUpload");
-                content.style.display = "flex";
-                document.getElementById("modalSpreadsheetTitle").innerText = "ingredients";
-                document.getElementById("spreadsheetDownload").href = "/ingredients/download/spreadsheet";
-                content.onsubmit = newIngredient.submitSpreadsheet;
-                break;
-            case "recipeSpreadsheet":
-                content = document.getElementById("modalSpreadsheetUpload");
-                content.style.display = "flex";
-                document.getElementById("modalSpreadsheetTitle").innerText = "recipes";
-                document.getElementById("spreadsheetDownload").href = "/recipes/download/spreadsheet";
-                content.onsubmit = newRecipe.submitSpreadsheet;
-                break;
-            case "orderSpreadsheet":
-                content = document.getElementById("modalSpreadsheetUpload");
-                content.style.display = "flex";
-                document.getElementById("modalSpreadsheetTitle").innerText = "orders";
-                document.getElementById("spreadsheetDownload").href = "/orders/download/spreadsheet";
-                content.onsubmit = newOrder.submitSpreadsheet;
-                break;
-            case "transactionSpreadsheet":
-                content = document.getElementById("modalSpreadsheetUpload");
-                content.style.display = "flex";
-                document.getElementById("modalSpreadsheetTitle").innerText = "transactions";
-                document.getElementById("spreadsheetDownload").href = "/transactions/download/spreadsheet";
-                content.onsubmit = newTransaction.submitSpreadsheet;
-                break;
             case "feedback":
                 modalScript.feedback();
                 break;
