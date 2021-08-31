@@ -520,23 +520,6 @@ class Merchant{
         }
     }
 
-    getRevenue(from, to = new Date()){
-        const {start, end} = this.getTransactionIndices(from, to);
-
-        let total = 0;
-        for(let i = start; i < end; i++){
-            for(let j = 0; j < this.transactions[i].recipes.length; j++){
-                for(let k = 0; k < this.recipes.length; k++){
-                    if(this.transactions[i].recipes[j].recipe === this.recipes[k]){
-                        total += this.transactions[i].recipes[j].quantity * this.recipes[k].price;
-                    }
-                }
-            }
-        }
-
-        return total;
-    }
-
     /*
     Gets the quantity of each ingredient sold between two dates (dateRange)
     Inputs:

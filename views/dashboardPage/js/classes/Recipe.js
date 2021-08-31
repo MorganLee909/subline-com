@@ -106,7 +106,7 @@ class Recipe{
         }
 
         for(let i = 0; i < this.ingredients.length; i++){
-            traverseIngredient(this.ingredients[i]._ingredient, this.ingredients[i]._quantity);
+            traverseIngredient(this.ingredients[i].ingredient, this.ingredients[i]._quantity);
         }
     }
 }
