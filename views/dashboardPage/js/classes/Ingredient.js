@@ -79,10 +79,13 @@ class Ingredient{
 
     addIngredients(ingredients){
         for(let i = 0; i < ingredients.length; i++){
-            this._subIngredients.push({
-                ingredient: this._parent.getIngredient(ingredients[i].ingredient).ingredient,
-                quantity: ingredients[i].quantity
-            });
+            this._subIngredients.push(new SubIngredient(
+                ingredients[i].id,
+                ingredients[i].ingredient,
+                ingredients[i].quantity,
+                ingredients[i].unit,
+                this
+            ));
         }
     }
 
