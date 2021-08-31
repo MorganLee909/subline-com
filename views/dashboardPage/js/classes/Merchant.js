@@ -270,6 +270,17 @@ class Merchant{
         const index = this._inventory.indexOf(ingredient);
         if(index === undefined) return false;
 
+        for(let i = 0; i < this._inventory.length; i++){
+            for(let j = 0; j < this._inventory[i].ingredient.subIngredients.length; j++){
+                let subIngredients = this._inventory[i].ingredient.subIngredients;
+
+                if(subIngredients[j].ingredient === ingredient.ingredient){
+                    subIngredients.splice(j, 1);
+                    break;
+                }
+            }
+        }
+
         this._inventory.splice(index, 1);
     }
 
