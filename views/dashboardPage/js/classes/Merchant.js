@@ -6,35 +6,31 @@ const Order = require("./Order.js");
 class MerchantIngredient{
     constructor(ingredient, quantity, parent){
         this._quantity = quantity;
-        this._ingredient = ingredient;
-        this._parent = parent;
-    }
-
-    get ingredient(){
-        return this._ingredient;
-    }
-
-    set quantity(quantity){
-        this._quantity = quantity;
+        this.ingredient = ingredient;
+        this.parent = parent;
     }
 
     get quantity(){
         let convertMultiplier = 1;
-        switch(controller.getUnitType(this._ingredient.unit)){
+        switch(controller.getUnitType(this.ingredient.unit)){
             case "mass":
-                convertMultiplier = this._ingredient.convert.toMass;
+                convertMultiplier = this.ingredient.convert.toMass;
                 break;
             case "volume":
-                convertMultiplier = this._ingredient.convert.toVolume;
+                convertMultiplier = this.ingredient.convert.toVolume;
                 break;
             case "length":
-                convertMultiplier = this._ingredient.convert.toLength;
+                convertMultiplier = this.ingredient.convert.toLength;
                 break;
             case "bottle":
-                return this._quantity * this._ingredient.convert.toBottle;
+                return this._quantity * this.ingredient.convert.toBottle;
         }
         
-        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this._ingredient.unit), this._ingredient.unit) * convertMultiplier;
+        return this._quantity * controller.unitMultiplier(controller.getBaseUnit(this.ingredient.unit), this.ingredient.unit) * convertMultiplier;
+    }
+
+    set quantity(quantity){
+        this._quantity = quantity;
     }
 
     /*
@@ -44,16 +40,16 @@ class MerchantIngredient{
     */
     updateQuantity(quantity, unit){
         quantity *= controller.unitMultiplier(unit, controller.getBaseUnit(unit))
-        switch(controller.getUnitType(this._ingredient.unit)){
-            case "mass": quantity /= this._ingredient.convert.toMass; break;
-            case "volume": quantity /= this._ingredient.convert.toVolume; break;
-            case "length": quantity /= this._ingredient.convert.toLength; break;
+        switch(controller.getUnitType(this.ingredient.unit)){
+            case "mass": quantity /= this.ingredient.convert.toMass; break;
+            case "volume": quantity /= this.ingredient.convert.toVolume; break;
+            case "length": quantity /= this.ingredient.convert.toLength; break;
         }
         this._quantity += quantity;
     }
 
     getQuantityDisplay(){
-        return `${this.quantity.toFixed(2)} ${this._ingredient.unit.toUpperCase()}`;
+        return `${this.quantity.toFixed(2)} ${this.ingredient.unit.toUpperCase()}`;
     }
 
     /*
@@ -65,10 +61,10 @@ class MerchantIngredient{
     */
     getSoldQuantity(from, to){
         let total = 0;
-        const {start, end} = this._parent.getTransactionIndices(from, to);
+        const {start, end} = this.parent.getTransactionIndices(from, to);
 
         for(let i = start; i < end; i++){
-            total += this._parent.transactions[i].getIngredientQuantity(this._ingredient);
+            total += this.parent.transactions[i].getIngredientQuantity(this.ingredient);
         }
 
         return total;
@@ -86,14 +82,14 @@ class Merchant{
             owner,
             id
         ){
-        this._name = name;
-        this._pos = pos;
-        this._inventory = [];
-        this._recipes = [];
-        this._transactions = [];
-        this._orders = [];
-        this._address = address;
-        this._owner = {
+        this.name = name;
+        this.pos = pos;
+        this.inventory = [];
+        this.recipes = [];
+        this.transactions = [];
+        this.orders = [];
+        this.address = address;
+        this.owner = {
             id: owner._id,
             email: owner.email,
             merchants: owner.merchants,
@@ -120,7 +116,7 @@ class Merchant{
                 this
             );
 
-            this._inventory.push(merchantIngredient);
+            this.inventory.push(merchantIngredient);
         }
 
         //populate recipes
@@ -128,10 +124,10 @@ class Merchant{
             let ingredients = [];
             for(let j = 0; j < recipes[i].ingredients.length; j++){
                 const ingredient = recipes[i].ingredients[j];
-                for(let k = 0; k < this._inventory.length; k++){
-                    if(ingredient.ingredient === this._inventory[k].ingredient.id){
+                for(let k = 0; k < this.inventory.length; k++){
+                    if(ingredient.ingredient === this.inventory[k].ingredient.id){
                         ingredients.push({
-                            ingredient: this._inventory[k].ingredient.id,
+                            ingredient: this.inventory[k].ingredient.id,
                             quantity: ingredient.quantity,
                             unit: ingredient.unit,
                             baseUnitMultiplier: ingredient.baseUnitMultiplier
@@ -151,12 +147,12 @@ class Merchant{
                 recipes[i].hidden
             );
 
-            this._recipes.push(newRecipe);
+            this.recipes.push(newRecipe);
         }
 
         //populate transactions
         for(let i = 0; i < transactions.length; i++){
-            this._transactions.push(new Transaction(
+            this.transactions.push(new Transaction(
                 transactions[i]._id,
                 transactions[i].date,
                 transactions[i].recipes,
@@ -189,7 +185,7 @@ class Merchant{
                     controller.createBanner(response, "error");
                 }else{
                     this.addOrders(response);
-                    state.updateOrders(this._orders);
+                    state.updateOrders(this.orders);
                 }
             })
             .catch((err)=>{
@@ -198,38 +194,6 @@ class Merchant{
             .finally(()=>{
                 loader.style.display = "none";
             });
-    }
-
-    get name(){
-        return this._name;
-    }
-
-    set name(name){
-        this._name = name;
-    }
-
-    get email(){
-        return this._email;
-    }
-
-    set email(email){
-        this._email = email;
-    }
-
-    get pos(){
-        return this._pos;
-    }
-
-    get inventory(){
-        return this._inventory;
-    }
-
-    get address(){
-        return this._address;
-    }
-
-    set address(address){
-        this._address = address;
     }
 
     /*
@@ -262,17 +226,17 @@ class Merchant{
             );
 
             const merchantIngredient = new MerchantIngredient(createdIngredient, quantity, this);
-            this._inventory.push(merchantIngredient);
+            this.inventory.push(merchantIngredient);
         }
     }
 
     removeIngredient(ingredient){
-        const index = this._inventory.indexOf(ingredient);
+        const index = this.inventory.indexOf(ingredient);
         if(index === undefined) return false;
 
-        for(let i = 0; i < this._inventory.length; i++){
-            for(let j = 0; j < this._inventory[i].ingredient.subIngredients.length; j++){
-                let subIngredients = this._inventory[i].ingredient.subIngredients;
+        for(let i = 0; i < this.inventory.length; i++){
+            for(let j = 0; j < this.inventory[i].ingredient.subIngredients.length; j++){
+                let subIngredients = this.inventory[i].ingredient.subIngredients;
 
                 if(subIngredients[j].ingredient === ingredient.ingredient){
                     subIngredients.splice(j, 1);
@@ -281,7 +245,7 @@ class Merchant{
             }
         }
 
-        this._inventory.splice(index, 1);
+        this.inventory.splice(index, 1);
     }
 
     updateIngredients(ingredients){
@@ -297,8 +261,8 @@ class Merchant{
     }
 
     getIngredient(id){
-        for(let i = 0; i < this._inventory.length; i++){
-            if(this._inventory[i].ingredient.id === id) return this._inventory[i];
+        for(let i = 0; i < this.inventory.length; i++){
+            if(this.inventory[i].ingredient.id === id) return this.inventory[i];
         }
     }
 
@@ -312,11 +276,11 @@ class Merchant{
     categorizeIngredients(){
         let ingredientsByCategory = [];
 
-        for(let i = 0; i < this._inventory.length; i++){
+        for(let i = 0; i < this.inventory.length; i++){
             let categoryExists = false;
             for(let j = 0; j < ingredientsByCategory.length; j++){
-                if(this._inventory[i].ingredient.category === ingredientsByCategory[j].name){
-                    ingredientsByCategory[j].ingredients.push(this._inventory[i]);
+                if(this.inventory[i].ingredient.category === ingredientsByCategory[j].name){
+                    ingredientsByCategory[j].ingredients.push(this.inventory[i]);
 
                     categoryExists = true;
                     break;
@@ -325,8 +289,8 @@ class Merchant{
 
             if(!categoryExists){
                 ingredientsByCategory.push({
-                    name: this._inventory[i].ingredient.category,
-                    ingredients: [this._inventory[i]]
+                    name: this.inventory[i].ingredient.category,
+                    ingredients: [this.inventory[i]]
                 });
             }
         }
@@ -334,13 +298,9 @@ class Merchant{
         return ingredientsByCategory;
     }
 
-    get recipes(){
-        return this._recipes;
-    }
-
     getRecipe(id){
-        for(let i = 0; i < this._recipes.length; i++){
-            if(this._recipes[i].id === id) return this._recipes[i];
+        for(let i = 0; i < this.recipes.length; i++){
+            if(this.recipes[i].id === id) return this.recipes[i];
         }
 
         return new Recipe(
@@ -378,7 +338,7 @@ class Merchant{
             );
 
             newRecipe.calculateIngredientTotals();
-            this._recipes.push(newRecipe);
+            this.recipes.push(newRecipe);
         }
     }
 
@@ -408,10 +368,10 @@ class Merchant{
     }
 
     removeRecipe(recipe){
-        const index = this._recipes.indexOf(recipe);
+        const index = this.recipes.indexOf(recipe);
         if(index === undefined) return false;
 
-        this._recipes.splice(index, 1);
+        this.recipes.splice(index, 1);
     }
 
     /*
@@ -424,11 +384,11 @@ class Merchant{
     categorizeRecipes(){
         let categories = [];
 
-        for(let i = 0; i < this._recipes.length; i++){
+        for(let i = 0; i < this.recipes.length; i++){
             let exists = false;
             for(let j = 0; j < categories.length; j++){
-                if(this._recipes[i].category === categories[j].name){
-                    categories[j].recipes.push(this._recipes[i]);
+                if(this.recipes[i].category === categories[j].name){
+                    categories[j].recipes.push(this.recipes[i]);
                     exists = true;
                     break;
                 }
@@ -436,8 +396,8 @@ class Merchant{
 
             if(exists === false){
                 categories.push({
-                    name: this._recipes[i].category,
-                    recipes: [this._recipes[i]]
+                    name: this.recipes[i].category,
+                    recipes: [this.recipes[i]]
                 });
             }
         }
@@ -445,16 +405,12 @@ class Merchant{
         return categories;
     }
 
-    get transactions(){
-        return this._transactions;
-    }
-
     getTransactions(from, to){
-        if(merchant._transactions.length <= 0) return [];
+        if(merchant.transactions.length <= 0) return [];
 
         const {start, end} = this.getTransactionIndices(from, to);
 
-        return this._transactions.slice(start, end);
+        return this.transactions.slice(start, end);
     }
 
     /*
@@ -476,7 +432,7 @@ class Merchant{
                 this
             );
 
-            this._transactions.push(transaction);
+            this.transactions.push(transaction);
 
             if(isNew === true){
                 for(let j = 0; j < transaction.recipes.length; j++){
@@ -505,13 +461,9 @@ class Merchant{
             }
         }
 
-        this._transactions.splice(this._transactions.indexOf(transaction), 1);
+        this.transactions.splice(this.transactions.indexOf(transaction), 1);
 
         state.updateTransactions();
-    }
-
-    get orders(){
-        return this._orders;
     }
 
     /*
@@ -540,7 +492,7 @@ class Merchant{
                 this
             );
 
-            this._orders.push(order);
+            this.orders.push(order);
 
             if(isNew === true){
                 for(let j = 0; j < order.ingredients.length; j++){
@@ -551,29 +503,21 @@ class Merchant{
     }
 
     removeOrder(order){
-        const index = this._orders.indexOf(order);
+        const index = this.orders.indexOf(order);
         if(index === undefined){
             return false;
         }
 
-        this._orders.splice(index, 1);
+        this.orders.splice(index, 1);
 
         for(let i = 0; i < order.ingredients.length; i++){
-            for(let j = 0; j < this._inventory.length; j++){
-                if(order.ingredients[i].ingredient === this._inventory[j].ingredient){
-                    this._inventory[j].updateQuantity(-order.ingredients[i].quantity);
+            for(let j = 0; j < this.inventory.length; j++){
+                if(order.ingredients[i].ingredient === this.inventory[j].ingredient){
+                    this.inventory[j].updateQuantity(-order.ingredients[i].quantity);
                     break;
                 }
             }
         }
-    }
-
-    get units(){
-        return this._units;
-    }
-
-    get owner(){
-        return this._owner;
     }
 
     getRevenue(from, to = new Date()){
@@ -581,10 +525,10 @@ class Merchant{
 
         let total = 0;
         for(let i = start; i < end; i++){
-            for(let j = 0; j < this._transactions[i].recipes.length; j++){
+            for(let j = 0; j < this.transactions[i].recipes.length; j++){
                 for(let k = 0; k < this.recipes.length; k++){
-                    if(this._transactions[i].recipes[j].recipe === this.recipes[k]){
-                        total += this._transactions[i].recipes[j].quantity * this.recipes[k].price;
+                    if(this.transactions[i].recipes[j].recipe === this.recipes[k]){
+                        total += this.transactions[i].recipes[j].quantity * this.recipes[k].price;
                     }
                 }
             }
@@ -642,26 +586,26 @@ class Merchant{
         }]
     */
     getRecipesSold(from = 0, to = new Date()){
-        if(from === 0) from = this._transactions[0].date;
+        if(from === 0) from = this.transactions[0].date;
 
         const {start, end} = this.getTransactionIndices(from, to);
 
         let recipeList = [];
         for(let i = start; i < end; i++){
-            for(let j = 0; j < this._transactions[i].recipes.length; j++){
+            for(let j = 0; j < this.transactions[i].recipes.length; j++){
                 let exists = false;
                 for(let k = 0; k < recipeList.length; k++){
-                    if(recipeList[k].recipe === this._transactions[i].recipes[j].recipe){
+                    if(recipeList[k].recipe === this.transactions[i].recipes[j].recipe){
                         exists = true;
-                        recipeList[k].quantity += this._transactions[i].recipes[j].quantity;
+                        recipeList[k].quantity += this.transactions[i].recipes[j].quantity;
                         break;
                     }
                 }
 
                 if(!exists){
                     recipeList.push({
-                        recipe: this._transactions[i].recipes[j].recipe,
-                        quantity: this._transactions[i].recipes[j].quantity
+                        recipe: this.transactions[i].recipes[j].recipe,
+                        quantity: this.transactions[i].recipes[j].quantity
                     });
                 }
             }
@@ -675,19 +619,19 @@ class Merchant{
         let end = 0;
 
         if(
-            this._transactions.length === 0 ||
-            from > this._transactions[0].date ||
-            to >= this._transactions[this._transactions.length-1].date
+            this.transactions.length === 0 ||
+            from > this.transactions[0].date ||
+            to >= this.transactions[this.transactions.length-1].date
         ){
-            for(let i = this._transactions.length - 1; i >= 0; i--){
-                if(this._transactions[i].date > from){
+            for(let i = this.transactions.length - 1; i >= 0; i--){
+                if(this.transactions[i].date > from){
                     end = i + 1;
                     break;
                 }
             }
         
-            for(let i = 0; i < this._transactions.length; i++){
-                if(this._transactions[i].date <= to){
+            for(let i = 0; i < this.transactions.length; i++){
+                if(this.transactions[i].date <= to){
                     start = i;
                     break;
                 }
