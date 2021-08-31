@@ -193,8 +193,22 @@ module.exports = {
             }
         }
 
-        Promise.all([res.locals.merchant.save(), Ingredient.deleteOne({_id: req.params.id})])
+        let popMerchant = res.locals.merchant.populate("inventory.ingredient").execPopulate();
+
+        Promise.all([res.locals.merchant.save(), Ingredient.deleteOne({_id: req.params.id}), popMerchant])
             .then((response)=>{
+                for(let i = 0; i < res.locals.merchant.inventory.length; i++){
+                    for(let j = 0; j < res.locals.merchant.inventory[i].ingredient.ingredients.length; j++){
+                        let subIngredients = res.locals.merchant.inventory[i].ingredient.ingredients;
+
+                        if(subIngredients[j].ingredient.toString() === req.params.id){
+                            subIngredients.splice(j, 1);
+                            res.locals.merchant.inventory[i].ingredient.save().catch((err)=>{});
+                            break;
+                        }
+                    }
+                }
+
                 return res.json({});
             })
             .catch((err)=>{
