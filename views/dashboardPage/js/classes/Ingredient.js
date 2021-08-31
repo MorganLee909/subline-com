@@ -4,7 +4,7 @@ class SubIngredient{
         this._ingredient = ingredient;
         this._quantity = quantity;
         this.unit = unit;
-        this._parent = parent;
+        this.parent = parent;
     }
 
     get ingredient(){
@@ -19,24 +19,24 @@ class SubIngredient{
     }
 
     getDisplayQuantity(){
-        return `${parseFloat(this.quantity.toFixed(2))} ${this.unit} / ${this._parent.unit}`;
+        return `${parseFloat(this.quantity.toFixed(2))} ${this.unit} / ${this.parent.unit}`;
     }
 }
 
 class Ingredient{
     constructor(id, name, category, unit, altUnit, subIngredients, convert, parent){
-        this._id = id;
-        this._name = name;
-        this._category = category;
+        this.id = id;
+        this.name = name;
+        this.category = category;
         this.unit = unit;
         this.altUnit = altUnit;
-        this._subIngredients = [];
-        this._parent = parent;
-        this._convert = convert;
+        this.subIngredients = [];
+        this.parent = parent;
+        this.convert = convert;
 
         for(let i = 0; i < subIngredients.length; i++){
-            this._subIngredients.push(new SubIngredient(
-                subIngredients[i]._id,
+            this.subIngredients.push(new SubIngredient(
+                subIngredients[i].id,
                 subIngredients[i].ingredient,
                 subIngredients[i].quantity,
                 subIngredients[i].unit,
@@ -45,41 +45,9 @@ class Ingredient{
         }
     }
 
-    get id(){
-        return this._id;
-    }
-    
-    set id(id){
-        this._id = id;
-    }
-
-    get name(){
-        return this._name;
-    }
-
-    set name(name){
-        this._name = name;
-    }
-
-    get category(){
-        return this._category;
-    }
-
-    set category(category){
-        this._category = category;
-    }
-
-    get convert(){
-        return this._convert;
-    }
-
-    get subIngredients(){
-        return this._subIngredients;
-    }
-
     addIngredients(ingredients){
         for(let i = 0; i < ingredients.length; i++){
-            this._subIngredients.push(new SubIngredient(
+            this.subIngredients.push(new SubIngredient(
                 ingredients[i].id,
                 ingredients[i].ingredient,
                 ingredients[i].quantity,
@@ -90,7 +58,7 @@ class Ingredient{
     }
 
     replaceIngredients(ingredients){
-        this._subIngredients = [];
+        this.subIngredients = [];
 
         this.addIngredients(ingredients);
     }
@@ -99,9 +67,9 @@ class Ingredient{
         let totalCost = 0;
         let quantity = 0;
 
-        for(let i = 0; i < this._parent.orders.length; i++){
-            for(let j = 0; j < this._parent.orders[i].ingredients.length; j++){
-                let ingredient = this._parent.orders[i].ingredients[j];
+        for(let i = 0; i < this.parent.orders.length; i++){
+            for(let j = 0; j < this.parent.orders[i].ingredients.length; j++){
+                let ingredient = this.parent.orders[i].ingredients[j];
 
                 if(ingredient.ingredient === this){
                     totalCost += ingredient.pricePerUnit * ingredient.quantity;
