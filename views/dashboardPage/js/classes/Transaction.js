@@ -1,43 +1,23 @@
 class TransactionRecipe{
     constructor(recipe, quantity, merchant){
-        this._recipe = merchant.getRecipe(recipe, true);
-        this._quantity = quantity;
-    }
-
-    get recipe(){
-        return this._recipe;
-    }
-
-    get quantity(){
-        return this._quantity;
+        this.recipe = merchant.getRecipe(recipe, true);
+        this.quantity = quantity;
     }
 }
 
 class Transaction{
     constructor(id, date, recipes, parent){
-        this._id = id;
-        this._date = new Date(date);
-        this._recipes = [];
+        this.id = id;
+        this.date = new Date(date);
+        this.recipes = [];
 
         for(let i = 0; i < recipes.length; i++){
-            this._recipes.push(new TransactionRecipe(
+            this.recipes.push(new TransactionRecipe(
                 recipes[i].recipe,
                 recipes[i].quantity,
                 parent
             ));
         }
-    }
-
-    get id(){
-        return this._id;
-    }
-
-    get date(){
-        return this._date;
-    }
-
-    get recipes(){
-        return this._recipes;
     }
 
     /*
@@ -46,8 +26,8 @@ class Transaction{
     getIngredientQuantity(ingredient, isDisplay = false){
         let total = 0;
 
-        for(let i = 0; i < this._recipes.length; i++){
-            total += this._recipes[i].recipe.getIngredientTotal(ingredient.id) * this._recipes[i].quantity;
+        for(let i = 0; i < this.recipes.length; i++){
+            total += this.recipes[i].recipe.getIngredientTotal(ingredient.id) * this.recipes[i].quantity;
         }
 
         return total;
@@ -57,8 +37,8 @@ class Transaction{
     Gets the quantity for a given recipe
     */
    getRecipeQuantity(recipe){
-        for(let i = 0; i < this._recipes.length; i++){
-           if(this._recipes[i].recipe === recipe) return this._recipes[i].quantity;
+        for(let i = 0; i < this.recipes.length; i++){
+           if(this.recipes[i].recipe === recipe) return this.recipes[i].quantity;
         }
         return 0;
     }
