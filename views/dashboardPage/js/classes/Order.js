@@ -1,16 +1,12 @@
 class OrderIngredient{
     constructor(ingredient, quantity, pricePerUnit){
-        this._ingredient = merchant.getIngredient(ingredient).ingredient;
+        this.ingredient = merchant.getIngredient(ingredient).ingredient;
         this._quantity = quantity;
         this._pricePerUnit = pricePerUnit;
     }
 
-    get ingredient(){
-        return this._ingredient;
-    }
-
     get quantity(){
-        switch(this._ingredient.unit){
+        switch(this.ingredient.unit){
             case "kg": return this._quantity / 1000;
             case "oz": return this._quantity / 28.3495;
             case "lb": return this._quantity / 453.5924;
@@ -26,23 +22,23 @@ class OrderIngredient{
             case "cm": return this._quantity * 100;
             case "in": return this._quantity * 39.3701;
             case "ft": return this._quantity * 3.2808;
-            case "bottle": return this._quantity * this._ingredient.convert.toBottle;
+            case "bottle": return this._quantity * this.ingredient.convert.toBottle;
             default: return this._quantity;
         }
     }
 
     updateQuantity(quantity){
         quantity *= controller.unitMultiplier(unit, controller.getBaseUnit(unit))
-        switch(controller.getUnitType(this._ingredient.unit)){
-            case "mass": quantity /= this._ingredient.convert.toMass; break;
-            case "volume": quantity /= this._ingredient.convert.toVolume; break;
-            case "length": quantity /= this._ingredient.convert.toLength; break;
+        switch(controller.getUnitType(this.ingredient.unit)){
+            case "mass": quantity /= this.ingredient.convert.toMass; break;
+            case "volume": quantity /= this.ingredient.convert.toVolume; break;
+            case "length": quantity /= this.ingredient.convert.toLength; break;
         }
         this._quantity += quantity;
     }
 
     get pricePerUnit(){
-        switch(this._ingredient.unit){
+        switch(this.ingredient.unit){
             case "g": return this._pricePerUnit / 100;
             case "kg": return (this._pricePerUnit * 1000) / 100; 
             case "oz": return (this._pricePerUnit * 28.3495) / 100; 
@@ -61,7 +57,7 @@ class OrderIngredient{
             case "m": return this._pricePerUnit / 100;
             case "in": return (this._pricePerUnit / 39.3701) / 100; 
             case "ft": return (this._pricePerUnit / 3.2808) / 100;
-            case "bottle": return (this._pricePerUnit / this._ingredient.convert.toBottle) / 100;
+            case "bottle": return (this._pricePerUnit / this.ingredient.convert.toBottle) / 100;
             default: return this._pricePerUnit / 100;
         }
     }
@@ -92,33 +88,21 @@ parent = the merchant that it belongs to
 */
 class Order{
     constructor(id, name, date, taxes, fees, ingredients, parent){
-        this._id = id;
-        this._name = name;
-        this._date = new Date(date);
+        this.id = id;
+        this.name = name;
+        this.date = new Date(date);
         this._taxes = taxes;
         this._fees = fees;
-        this._ingredients = [];
-        this._parent = parent;
+        this.ingredients = [];
+        this.parent = parent;
 
         for(let i = 0; i < ingredients.length; i++){
-            this._ingredients.push(new OrderIngredient(
+            this.ingredients.push(new OrderIngredient(
                 ingredients[i].ingredient,
                 ingredients[i].quantity,
                 ingredients[i].pricePerUnit
             ));
         }
-    }
-
-    get id(){
-        return this._id;
-    }
-
-    get name(){
-        return this._name;
-    }
-
-    get date(){
-        return this._date;
     }
 
     get taxes(){
@@ -129,18 +113,14 @@ class Order{
         return this._fees / 100;
     }
 
-    get parent(){
-        return this._parent;
-    }
-
     get ingredients(){
-        return this._ingredients;
+        return this.ingredients;
     }
 
     getIngredientCost(){
         let sum = 0;
-        for(let i = 0; i < this._ingredients.length; i++){
-            sum += this._ingredients[i].cost();
+        for(let i = 0; i < this.ingredients.length; i++){
+            sum += this.ingredients[i].cost();
         }
         return sum;
     }
