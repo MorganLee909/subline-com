@@ -10,6 +10,15 @@ let analytics = {
 
     display: function(){
         if(!this.isPopulated){
+            let analIngredientList = document.getElementById("analIngredientList");
+            let analCategoriesList = document.getElementById("analCategoriesList");
+            let analRecipeList = document.getElementById("analRecipeList");
+            let analCatRecipeList = document.getElementById("analCatRecipeList");
+            analIngredientList.onkeyup = ()=>{this.searchItems(analIngredientList.children)};
+            analCategoriesList.onkeyup = ()=>{this.searchItems(analCategoriesList.children)};
+            analRecipeList.onkeyup = ()=>{this.searchItems(analRecipeList.children)};
+            analCatRecipeList.onkeyup = ()=>{this.searchItems(analCatRecipeList.children)};
+
             let ingredientTab = document.getElementById("analIngredientsTab");
             let recipeTab = document.getElementById("analRecipesTab");
             let categoryTab = document.getElementById("analCategoriesTab");
@@ -42,8 +51,8 @@ let analytics = {
         let recipeButtons = document.getElementById("analRecipeList");
         let recipeCategoryButtons = document.getElementById("analCatRecipeList");
 
-        while(ingredientButtons.children.length > 0){
-            ingredientButtons.removeChild(ingredientButtons.firstChild);
+        while(ingredientButtons.children.length > 1){
+            ingredientButtons.removeChild(ingredientButtons.lastChild);
         }
 
         for(let i = 0; i < merchant.inventory.length; i++){
@@ -57,7 +66,7 @@ let analytics = {
             ingredientButtons.appendChild(button);
         }
 
-        while(categoryButtons.children.length > 0){
+        while(categoryButtons.children.length > 1){
             categoryButtons.removeChild(categoryButtons.firstChild);
         }
 
@@ -73,7 +82,7 @@ let analytics = {
             categoryButtons.appendChild(button);
         }
 
-        while(recipeButtons.children.length > 0){
+        while(recipeButtons.children.length > 1){
             recipeButtons.removeChild(recipeButtons.firstChild);
         }
 
@@ -88,7 +97,7 @@ let analytics = {
             recipeButtons.appendChild(button);
         }
 
-        while(recipeCategoryButtons.children.length > 0){
+        while(recipeCategoryButtons.children.length > 1){
             recipeCategoryButtons.removeChild(recipeCategoryButtons.firstChild);
         }
 
@@ -452,6 +461,23 @@ let analytics = {
             }else{
                 document.getElementById("analCategoryRecipe").style.display = "flex";
                 this.displayRecipeCategory();
+            }
+        }
+    },
+
+    searchItems: function(list){
+        let searchString = list[0].value;
+        if(searchString === ""){
+            for(let i = 1; i < list.length; i++){
+                list[i].style.display = "block";
+            }
+        }else{
+            for(let i = 1; i < list.length; i++){
+                if(!list[i].innerText.toLowerCase().includes(searchString)){
+                    list[i].style.display = "none";
+                }else{
+                    list[i].style.display = "block";
+                }
             }
         }
     }

@@ -37,11 +37,20 @@
 }
 
     .itemsList{
+        display: flex;
+        flex-direction: column;
         list-style-type: none;
         width: 15%;
         max-height: 95%;
         overflow-y: auto;
+        margin-bottom: auto;
     }
+
+        .itemsList > *{
+            width: 100%;
+            box-sizing: border-box;
+            margin: 2px 0;
+        }
 
     .analData{
         display: flex;
