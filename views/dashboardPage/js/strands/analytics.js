@@ -476,7 +476,7 @@ let analytics = {
                 if(!list[i].innerText.toLowerCase().includes(searchString)){
                     list[i].style.display = "none";
                 }else{
-                    list[i].style.display = "block";
+                    list[i].style.display = "flex";
                 }
             }
         }

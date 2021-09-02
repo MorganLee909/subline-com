@@ -9,7 +9,8 @@ let newOrder = {
         }
 
         let ingredientList = document.getElementById("newOrderIngredients");
-        while(ingredientList.children.length > 0){
+        ingredientList.children[0].onkeyup = ()=>{this.searchIngredients()};
+        while(ingredientList.children.length > 1){
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
@@ -116,6 +117,25 @@ let newOrder = {
             .finally(()=>{
                 loader.style.display = "none";
             });
+    },
+
+    searchIngredients: function(){
+        let items = document.getElementById("newOrderIngredients").children;
+        let searchString = items[0].value.toLowerCase();
+
+        if(searchString === ""){
+            for(let i = 1; i < items.length; i++){
+                items[i].style.display = "flex";
+            }
+        }else{
+            for(let i = 1; i < items.length; i++){
+                if(items[i].innerText.toLowerCase().includes(searchString)){
+                    items[i].style.display = "flex";
+                }else{
+                    items[i].style.display = "none";
+                }
+            }
+        }
     }
 };
 
