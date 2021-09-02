@@ -1,31 +1,60 @@
 let newTransaction = {
     display: function(){
-        let recipeList = document.getElementById("newTransactionRecipes");
-        let template = document.getElementById("createTransaction").content.children[0];
+        document.getElementById("sidebarDiv").classList.add("sidebarWide");
+        document.getElementById("newTransactionDate").valueAsDate = new Date();
 
-        while(recipeList.children.length > 0){
+        let recipeList = document.getElementById("newTransAvailable");
+        recipeList.children[0].onkeyup = ()=>{this.searchRecipes()};
+        while(recipeList.children.length > 1){
             recipeList.removeChild(recipeList.firstChild);
         }
 
         for(let i = 0; i < merchant.recipes.length; i++){
-            let recipeDiv = template.cloneNode(true);
-            recipeDiv.recipe = merchant.recipes[i];
-            recipeList.appendChild(recipeDiv);
-
-            recipeDiv.children[0].innerText = merchant.recipes[i].name;
+            let button = document.createElement("button");
+            button.classList.add("choosable");
+            button.innerText = merchant.recipes[i].name;
+            button.onclick = ()=>{this.add(merchant.recipes[i], button)};
+            recipeList.appendChild(button);
         }
 
         document.getElementById("submitNewTransaction").onclick = ()=>{this.submit()};
     },
 
+    add: function(recipe, element){
+        element.style.display = "none";
+
+        let template = document.getElementById("createTransaction").content.children[0].cloneNode(true);
+        template.children[0].children[0].innerText = recipe.name;
+        template.children[0].children[1].onclick = ()=>{
+            template.parentElement.removeChild(template);
+            element.style.display = "flex";
+        };
+        template.recipe = recipe;
+        document.getElementById("newTransactionRecipes").appendChild(template);
+    },
+
+    searchRecipes: function(){
+        let items = document.getElementById("newTransAvailable").children;
+        let searchString = items[0].value.toLowerCase();
+
+        if(searchString === ""){
+            for(let i = 1; i < items.length; i++){
+                items[i].style.display = "flex";
+            }
+        }else{
+            for(let i = 1; i < items.length; i++){
+                if(items[i].innerText.toLowerCase().includes(searchString)){
+                    items[i].style.display = "flex";
+                }else{
+                    items[i].style.display = "none";
+                }
+            }
+        }
+    },
+
     submit: function(){
         let recipeDivs = document.getElementById("newTransactionRecipes");
         let date = document.getElementById("newTransactionDate").valueAsDate;
-
-        if(date === null){
-            controller.createBanner("DATE IS REQUIRED FOR TRANSACTIONS", "error");
-            return;
-        }
 
         date.setHours(0, 0, 0, 0);
         

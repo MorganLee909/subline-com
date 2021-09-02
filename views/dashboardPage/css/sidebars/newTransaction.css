@@ -9,20 +9,68 @@
         text-align: center;
     }
 
-    .newTransactionRecipes{
+    #newTransHorizontal{
+        display: flex;
         width: 100%;
-        height: 90%;
-        overflow-y: auto;
+        margin-top: 10px;
+        flex-basis: 100px;
+        flex-grow: 2;
+        max-height: 75%;
     }
 
-    .newTransactionRecipe{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: white;
-        margin: 10px 0;
-        padding: 5px 0;
-        font-weight: bold;
-        font-size: 17px;
-        color: black;
-    }
+        #newTransAdd{
+            width: 50%;
+        }
+    
+        #newTransAvailable{
+            width: 50%;
+            padding-right: 5px;
+            border-right: 2px solid rgb(255, 99, 107);
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        #newTransAvailable .choosable{
+            background: rgb(240, 252, 255);
+            color: black;
+        }
+
+        #newTransAvailable input{
+            padding-right: 2px;
+            box-sizing: border-box;
+            width: 99%;
+        }
+
+            #newTransAvailable .choosable:hover{
+                background: rgb(179, 191, 209);
+            }
+
+        .newTransactionRecipes{
+            width: 100%;
+            height: 90%;
+            overflow-y: auto;
+        }
+
+        .newTransactionRecipe{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px 0;
+            font-weight: bold;
+            font-size: 17px;
+            color: white;
+        }
+
+        .newTransactionRecipe div{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 2px;
+            padding-left: 10px;
+            box-sizing: border-box;
+        }
+
+        .newTransactionRecipe input{
+            box-sizing: border-box;
+            width: 99%;
+        }

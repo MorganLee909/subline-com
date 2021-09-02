@@ -13,14 +13,28 @@
 
     <input id="newTransactionDate" type="date">
 
-    <div id="newTransactionRecipes" class="newTransactionRecipes"></div>
+    <div id="newTransHorizontal">
+        <div id="newTransAvailable">
+            <input type="text" placeholder="SEARCH">
+        </div>
+
+        <div id="newTransAdd">
+            <h3>TRANSACTIONS</h3>
+
+            <div id="newTransactionRecipes" class="newTransactionRecipes"></div>
+            
+            <template id="createTransaction">
+                <div class="newTransactionRecipe">
+                    <div>
+                        <p></p>
+
+                        <button class="newOrderRemove">REMOVE</button>
+                    </div>
+                    <input type="number" min="0" step="1" value="0">
+                </div>
+            </template>
+        </div>
+    </div>
 
     <button id="submitNewTransaction" class="sidebarButton">Create</button>
-
-    <template id="createTransaction">
-        <div class="newTransactionRecipe">
-            <p></p>
-            <input type="number" min="0" step="1" value="0">
-        </div>
-    </template>
 </div>
