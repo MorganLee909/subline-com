@@ -17,7 +17,7 @@ let mongooseOptions = {
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true,
-    dbName: "inventory-management"
+    dbName: "subline"
 };
 
 let sessionOptions = {
@@ -60,7 +60,7 @@ if(process.env.NODE_ENV === "production"){
     cssOptions.minimize = true;
     mongooseOptions.auth = {authSource: "admin"};
     mongooseOptions.user = "website";
-    mongooseOptions.pass = process.env.MONGODB_PASS;
+    mongooseOptions.pass = process.env.SUBLINE_DB_PASS;
     esbuildOptions.minify = true;
 }
 
