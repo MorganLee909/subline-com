@@ -43,8 +43,8 @@ app.use(express.static(__dirname + "/views"));
 let httpsServer = {};
 if(process.env.NODE_ENV === "production"){
     httpsServer = https.createServer({
-        key: fs.readFileSync("/etc/letsencrypt/live/www.thesubline.com/privkey.pem", "utf8"),
-        cert: fs.readFileSync("/etc/letsencrypt/live/www.thesubline.com/fullchain.pem", "utf8")
+        key: fs.readFileSync("/etc/letsencrypt/live/thesubline.com/privkey.pem", "utf8"),
+        cert: fs.readFileSync("/etc/letsencrypt/live/thesubline.com/fullchain.pem", "utf8")
     }, app);
 
     app.use((req, res, next)=>{
