@@ -21,7 +21,7 @@ let mongooseOptions = {
 };
 
 let sessionOptions = {
-    secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superb.",
+    secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superbly Sublime.",
     sameSite: "lax",
     saveUninitialized: true,
     resave: false,
@@ -36,7 +36,8 @@ let esbuildOptions = {
     entryPoints: ["./views/dashboardPage/js/dashboard.js"],
     bundle: true,
     minify: false,
-    outfile: "./views/dashboardPage/bundle.js"
+    outfile: "./views/dashboardPage/bundle.js",
+    sourcemap: true
 };
 
 app.use(express.static(__dirname + "/views"));
@@ -62,6 +63,7 @@ if(process.env.NODE_ENV === "production"){
     mongooseOptions.user = "website";
     mongooseOptions.pass = process.env.SUBLINE_DB_PASS;
     esbuildOptions.minify = true;
+    esbuildOptions.sourcemap = false;
 }
 
 mongoose.connect(`mongodb://127.0.0.1:27017/inventory-management`, mongooseOptions);
@@ -87,5 +89,4 @@ cssmerger([
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT, ()=>{});
 }
-
 app.listen(process.env.PORT, ()=>{});

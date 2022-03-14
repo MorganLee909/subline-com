@@ -10,7 +10,7 @@ let newOrder = {
 
         let ingredientList = document.getElementById("newOrderIngredients");
         ingredientList.children[0].onkeyup = ()=>{this.searchIngredients()};
-        while(ingredientList.children.length > 1){
+        while(ingredientList.children.length > 0){
             ingredientList.removeChild(ingredientList.firstChild);
         }
 
@@ -76,7 +76,6 @@ let newOrder = {
             };
 
             if(ingredients[i].ingredient.ingredient.unit === "bottle"){
-                let unitMultiplier = controller.unitMultiplier(unit, controller.getBaseUnit(unit));
                 let toBottle = ingredients[i].ingredient.ingredient.convert.toBottle;
                 newIngredient.quantity = quantity / toBottle;
                 newIngredient.pricePerUnit = toBottle * (price * 100);
@@ -112,6 +111,7 @@ let newOrder = {
                 }
             })
             .catch((err)=>{
+                console.error(err);
                 controller.createBanner("SOMETHING WENT WRONG. PLEASE REFRESH THE PAGE", "error");
             })
             .finally(()=>{

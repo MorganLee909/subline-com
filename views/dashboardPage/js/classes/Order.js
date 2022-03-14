@@ -109,10 +109,6 @@ class Order{
         return this._fees / 100;
     }
 
-    get ingredients(){
-        return this.ingredients;
-    }
-
     getIngredientCost(){
         let sum = 0;
         for(let i = 0; i < this.ingredients.length; i++){
