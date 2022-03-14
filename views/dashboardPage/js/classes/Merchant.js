@@ -496,7 +496,7 @@ class Merchant{
 
             if(isNew === true){
                 for(let j = 0; j < order.ingredients.length; j++){
-                    this.getIngredient(order.ingredients[j].ingredient.id).updateQuantity(order.ingredients[j].quantity);
+                    this.getIngredient(order.ingredients[j].ingredient.id).updateQuantity(order.ingredients[j].quantity, order.ingredients[j].ingredient.unit);
                 }
             }
         }

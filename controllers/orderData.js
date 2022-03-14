@@ -67,7 +67,6 @@ module.exports = {
     } 
     */ 
     createOrder: function(req, res){
-        console.log(req.body);
         let newOrder = new Order(req.body);
         newOrder.merchant = res.locals.merchant._id;
         newOrder.save()
