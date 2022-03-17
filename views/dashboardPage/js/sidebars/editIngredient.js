@@ -44,21 +44,21 @@ let editIngredient = {
         massDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
         massDiv.children[3].value = parseFloat((ingredient.ingredient.convert.toMass / multiplier).toFixed(3));
         massDiv.children[4].value = "g";
-        massDiv.children[4].previousValue = "g";
+        massDiv.children[4].previousUnit = "g";
         massDiv.children[4].onchange = ()=>{this.changeConversionSelect(massDiv)};
 
         volumeDiv.children[0].value = 1;
         volumeDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
         volumeDiv.children[3].value = parseFloat((ingredient.ingredient.convert.toVolume / multiplier).toFixed(3));
         volumeDiv.children[4].value = "l";
-        volumeDiv.children[4].previousValue = "l";
+        volumeDiv.children[4].previousUnit = "l";
         volumeDiv.children[4].onchange = ()=>{this.changeConversionSelect(volumeDiv)};
 
         lengthDiv.children[0].value = 1;
         lengthDiv.children[1].innerText = (unit === "bottle") ? ingredient.ingredient.altUnit.toUpperCase() : unit.toUpperCase();
         lengthDiv.children[3].value = parseFloat((ingredient.ingredient.convert.toLength / multiplier).toFixed(3));
         lengthDiv.children[4].value = "m";
-        lengthDiv.children[4].previousValue = "m";
+        lengthDiv.children[4].previousUnit = "m";
         lengthDiv.children[4].onchange = ()=>{this.changeConversionSelect(lengthDiv)};
 
         switch(controller.getBaseUnit(unit)){

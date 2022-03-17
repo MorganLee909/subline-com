@@ -37,7 +37,6 @@ let esbuildOptions = {
     bundle: true,
     minify: false,
     outfile: "./views/dashboardPage/bundle.js",
-    sourcemap: true
 };
 
 app.use(express.static(__dirname + "/views"));
@@ -63,7 +62,6 @@ if(process.env.NODE_ENV === "production"){
     mongooseOptions.user = "website";
     mongooseOptions.pass = process.env.SUBLINE_DB_PASS;
     esbuildOptions.minify = true;
-    esbuildOptions.sourcemap = false;
 }
 
 mongoose.connect(`mongodb://127.0.0.1:27017/inventory-management`, mongooseOptions);
