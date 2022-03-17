@@ -105,16 +105,13 @@ let editIngredient = {
         //update current stock quantity
         let label = {};
         let newValue = 0;
-        let inputId = "";
         if(ingredient.ingredient.unit === "bottle"){
             label = document.getElementById("editSpecialLabel");
             label.innerText = `BOTTLE SIZE (${button.innerText})`;
-            inputId = "editIngQuantity";
             newValue = controller.unitMultiplier(controller.getBaseUnit(ingredient.ingredient.altUnit), button.innerText.toLowerCase()) / ingredient.ingredient.convert.toBottle;
         }else{
             label = document.getElementById("editIngQuantityLabel");
             label.innerText = `CURRENT STOCK (${button.innerText})`;
-            inputId = "editSpecialInput";
             newValue = ingredient.quantity * controller.unitMultiplier(ingredient.ingredient.unit, button.innerText.toLowerCase());
         }
         

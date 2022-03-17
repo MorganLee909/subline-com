@@ -138,7 +138,7 @@ module.exports = {
         for(let i = 0; i < divs.length; i++){
             data.ingredients.push({
                 ingredient: divs[i].ingredient.id,
-                quantity: divs[i].children[1].children[0].value,
+                quantity: controller.toBase(divs[i].children[1].children[0].value, divs[i].children[1].children[1].value),
                 unit: divs[i].children[1].children[1].value
             });
         }

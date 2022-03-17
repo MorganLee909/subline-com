@@ -256,6 +256,7 @@ class Merchant{
             inventoryItem.ingredient.id = ingredients[i].ingredient._id;
             inventoryItem.ingredient.name = ingredients[i].ingredient.name;
             inventoryItem.ingredient.unit = ingredients[i].ingredient.unit;
+            inventoryItem.ingredient.convert = ingredients[i].ingredient.convert;
             inventoryItem.ingredient.addIngredients(ingredients[i].ingredient.ingredients);
         }
     }

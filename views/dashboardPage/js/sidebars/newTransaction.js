@@ -5,7 +5,7 @@ let newTransaction = {
 
         let recipeList = document.getElementById("newTransAvailable");
         recipeList.children[0].onkeyup = ()=>{this.searchRecipes()};
-        while(recipeList.children.length > 1){
+        while(recipeList.children.length > 0){
             recipeList.removeChild(recipeList.firstChild);
         }
 
