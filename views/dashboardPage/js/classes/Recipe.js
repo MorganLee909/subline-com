@@ -75,7 +75,18 @@ class Recipe{
     getIngredientTotal(id){
         for(let i = 0; i < this.ingredients.length; i++){
             if(this.ingredients[i].ingredient.id === id){
-                return (this.ingredientTotals[id] === undefined) ? 0 : this.ingredientTotals[id] * controller.unitMultiplier(controller.toBase(this.ingredients[i].ingredient.unit), this.ingredients[i].ingredient.unit);
+                if(this.ingredientTotals[id] === undefined) break;
+                let ingredientTotal = this.ingredientTotals[id];
+                let toIngredientBase = 0;
+
+                switch(controller.getBaseUnit(this.ingredients[i].unit)){
+                    case "g": toIngredientBase = this.ingredients[i].ingredient.convert.toMass; break;
+                    case "l": toIngredientBase = this.ingredients[i].ingredient.convert.toVolume; break;
+                    case "m": toIngredientBase = this.ingredients[i].ingredient.convert.toLength; break;
+                }
+
+                return ingredientTotal / toIngredientBase;
+                // return (this.ingredientTotals[id] === undefined) ? 0 : this.ingredientTotals[id] * controller.unitMultiplier(controller.toBase(this.ingredients[i].ingredient.unit), this.ingredients[i].ingredient.unit);
             }
         }
 
@@ -90,6 +101,7 @@ class Recipe{
         analytics.isPopulated = false;
     }
 
+    //Ingredient totals are stored as base of the recipeIngredient unit
     calculateIngredientTotals(){
         this.ingredientTotals = {};
 
