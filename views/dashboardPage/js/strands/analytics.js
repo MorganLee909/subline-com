@@ -67,7 +67,7 @@ let analytics = {
         }
 
         while(categoryButtons.children.length > 1){
-            categoryButtons.removeChild(categoryButtons.firstChild);
+            categoryButtons.removeChild(categoryButtons.lastChild);
         }
 
         let categories = merchant.categorizeIngredients();
@@ -83,7 +83,7 @@ let analytics = {
         }
 
         while(recipeButtons.children.length > 1){
-            recipeButtons.removeChild(recipeButtons.firstChild);
+            recipeButtons.removeChild(recipeButtons.lastChild);
         }
 
         for(let i = 0; i < merchant.recipes.length; i++){
@@ -98,7 +98,7 @@ let analytics = {
         }
 
         while(recipeCategoryButtons.children.length > 1){
-            recipeCategoryButtons.removeChild(recipeCategoryButtons.firstChild);
+            recipeCategoryButtons.removeChild(recipeCategoryButtons.lastChild);
         }
 
         let recipeCategories = merchant.categorizeRecipes();
@@ -275,7 +275,8 @@ let analytics = {
                 let transaction = this.transactionsByDate[i].transactions[j];
 
                 for(let k = 0; k < this.category.ingredients.length; k++){
-                    total += transaction.getIngredientQuantity(this.category.ingredients[k].ingredient, true);
+                    let ingredient = this.category.ingredients[k].ingredient;
+                    total += transaction.getIngredientQuantity(ingredient, true) * ingredient.getUnitCost();
                 }
             }
             quantities.push(total);
@@ -379,6 +380,7 @@ let analytics = {
             for(let j = 0; j < this.transactionsByDate[i].transactions.length; j++){
                 for(let k = 0; k < this.recipeCategory.recipes.length; k++){
                     total += this.transactionsByDate[i].transactions[j].getRecipeQuantity(this.recipeCategory.recipes[k]);
+                    total *= this.recipeCategory.recipes[k].price;
                 }
             }
 
@@ -397,7 +399,7 @@ let analytics = {
         let layout = {
             title: (this.recipeCategory.name === "") ? "UNCATEGORIZED" : this.recipeCategory.name,
             xaxis: {title: "DATE"},
-            yaxis: {title: "COST ($)"},
+            yaxis: {title: "REVENUE ($)"},
             margin: {
                 l: 40,
                 r: 10,
