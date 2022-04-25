@@ -73,24 +73,18 @@ class Recipe{
     //Returns the quantity of a single ingredient with the recipe.
     //Returns the quantity converted to the base unit of the ingredient
     getIngredientTotal(id){
-        for(let i = 0; i < this.ingredients.length; i++){
-            if(this.ingredients[i].ingredient.id === id){
-                if(this.ingredientTotals[id] === undefined) break;
-                let ingredientTotal = this.ingredientTotals[id];
-                let toIngredientBase = 0;
+        if(this.ingredientTotals[id] === undefined) return 0;
 
-                switch(controller.getBaseUnit(this.ingredients[i].unit)){
-                    case "g": toIngredientBase = this.ingredients[i].ingredient.convert.toMass; break;
-                    case "l": toIngredientBase = this.ingredients[i].ingredient.convert.toVolume; break;
-                    case "m": toIngredientBase = this.ingredients[i].ingredient.convert.toLength; break;
-                }
+        let ingredient = merchant.getIngredient(id).ingredient;
+        let ingredientTotal = this.ingredientTotals[id];
+        let toIngredientBase = 0;
 
-                return ingredientTotal / toIngredientBase;
-                // return (this.ingredientTotals[id] === undefined) ? 0 : this.ingredientTotals[id] * controller.unitMultiplier(controller.toBase(this.ingredients[i].ingredient.unit), this.ingredients[i].ingredient.unit);
-            }
+        switch(controller.getBaseUnit(controller.getBaseUnit(ingredient.unit))){
+            case "g": toIngredientBase = ingredient.convert.toMass; break;
+            case "l": toIngredientBase = ingredient.convert.toVolume; break;
+            case "m": toIngredientBase = ingredient.convert.toLength; break;
         }
-
-        return 0;
+        return ingredientTotal / toIngredientBase;
     }
 
     addIngredient(ingredient, quantity, unit, baseUnitMultiplier){

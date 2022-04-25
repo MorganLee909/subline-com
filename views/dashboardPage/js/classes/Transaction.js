@@ -23,7 +23,7 @@ class Transaction{
     /*
     Gets the quantity for a given ingredient
     */
-    getIngredientQuantity(ingredient, isDisplay = false){
+    getIngredientQuantity(ingredient){
         let total = 0;
 
         for(let i = 0; i < this.recipes.length; i++){
