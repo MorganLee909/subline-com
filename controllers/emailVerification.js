@@ -75,22 +75,6 @@ module.exports = {
 
                 owner.status.splice(owner.status.indexOf("unverified"), 1);
 
-                axios({
-                    method: "post",
-                    url: "https://api.mailgun.net/v3/lists/clientsupport@mail.thesubline.com/members",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    auth: {
-                        username: "api",
-                        password: process.env.MG_SUBLINE_APIKEY
-                    },
-                    data: queryString.stringify({
-                        address: owner.email,
-                        name: owner.name
-                    })
-                });
-
                 return owner.save();
             })
             .then((owner)=>{
