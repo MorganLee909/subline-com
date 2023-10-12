@@ -2,8 +2,6 @@ const express = require("express");
 const session = require("cookie-session");
 const mongoose = require("mongoose");
 const compression = require("compression");
-const https = require("https");
-const fs = require("fs");
 const cssmerger = require("cssmerger");
 const esbuild = require("esbuild");
 const fileUpload = require("express-fileupload");
@@ -21,7 +19,7 @@ let mongooseOptions = {
 };
 
 let sessionOptions = {
-    secret: "Super Secret Subline Subliminally Saving Secrets So Sneaky Snakes Stay Sullen. Simply Superbly Sublime.",
+    secret: process.env.SESSION_SECRET,
     sameSite: "lax",
     saveUninitialized: true,
     resave: false,
@@ -40,30 +38,16 @@ let esbuildOptions = {
 };
 
 app.use(express.static(__dirname + "/views"));
-let httpsServer = {};
 if(process.env.NODE_ENV === "production"){
-    httpsServer = https.createServer({
-        key: fs.readFileSync("/etc/letsencrypt/live/thesubline.com/privkey.pem", "utf8"),
-        cert: fs.readFileSync("/etc/letsencrypt/live/thesubline.com/fullchain.pem", "utf8")
-    }, app);
-
-    app.use((req, res, next)=>{
-        if(req.secure === true){
-            next();
-        }else{
-            res.redirect(`https://${req.headers.host}${req.url}`);
-        }
-    });
-
     sessionOptions.secure = true;
     cssOptions.minimize = true;
     mongooseOptions.auth = {authSource: "admin"};
-    mongooseOptions.user = "website";
+    mongooseOptions.user = "subline";
     mongooseOptions.pass = process.env.SUBLINE_DB_PASS;
     esbuildOptions.minify = true;
 }
 
-mongoose.connect(`mongodb://127.0.0.1:27017/inventory-management`, mongooseOptions);
+mongoose.connect(`mongodb://127.0.0.1:27017/subline`, mongooseOptions);
 
 app.use(compression());
 app.use(express.urlencoded({extended: true}));
@@ -84,6 +68,7 @@ cssmerger([
 ], "./views/dashboardPage/bundle.css", cssOptions);
 
 if(process.env.NODE_ENV === "production"){
-    httpsServer.listen(process.env.HTTPS_PORT, ()=>{});
+    module.exports = app;
+}else{
+    app.listen(process.env.PORT, ()=>{});
 }
-app.listen(process.env.PORT, ()=>{});
