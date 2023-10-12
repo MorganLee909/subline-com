@@ -27,7 +27,7 @@ module.exports = {
                         subject: "The Subline Email Verification",
                         html: verifyEmail({
                             name: owner.name,
-                            link: `${process.env.SITE}/verify/${owner._id}/${owner.session.sessionId}`
+                            link: `https://subline.leemorgan.dev/verify/${owner._id}/${owner.session.sessionId}`
                         })
                     })
                 });
@@ -85,6 +85,7 @@ module.exports = {
                 return res.redirect("/dashboard");
             })
             .catch((err)=>{
+		console.error(err);
                 if(typeof(err) === "string"){
                     req.session.error = err;
                 }else{

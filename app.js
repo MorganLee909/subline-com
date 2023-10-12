@@ -37,7 +37,8 @@ let esbuildOptions = {
     outfile: `${__dirname}/views/dashboardPage/bundle.js`
 };
 
-app.use(express.static(__dirname + "/views"));
+app.set('views', `${__dirname}/views`);
+app.use(express.static(`${__dirname}/views`));
 if(process.env.NODE_ENV === "production"){
     sessionOptions.secure = true;
     cssOptions.minimize = true;
@@ -61,11 +62,11 @@ require("./routes")(app);
 
 esbuild.buildSync(esbuildOptions);
 cssmerger([
-    "./views/shared/css/general.css",
-    "./views/shared/css/loader.css",
-    "./views/shared/css/banner.css",
-    "./views/dashboardPage/css"
-], "./views/dashboardPage/bundle.css", cssOptions);
+    `${__dirname}/views/shared/css/general.css`,
+    `${__dirname}/views/shared/css/loader.css`,
+    `${__dirname}/views/shared/css/banner.css`,
+    `${__dirname}/views/dashboardPage/css`
+], `${__dirname}/views/dashboardPage/bundle.css`, cssOptions);
 
 if(process.env.NODE_ENV === "production"){
     module.exports = app;
