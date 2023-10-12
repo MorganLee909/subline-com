@@ -21,16 +21,16 @@ module.exports = {
 
                 axios({
                     method: "post",
-                    url: "https://api.mailgun.net/v3/mail.thesubline.net/messages",
+                    url: "https://api.mailgun.net/v3/mg.leemorgan.dev/messages",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
                     auth: {
                         username: "api",
-                        password: process.env.MG_SUBLINE_APIKEY
+                        password: process.env.SUBLINE_MAILGUN_API
                     },
                     data: queryString.stringify({
-                        from: "The Subline <clientsupport@thesubline.net>",
+                        from: "The Subline <subline@leemorgan.dev>",
                         to: owner.email,
                         subject: "Password Reset for The Subline",
                         html: passwordReset({

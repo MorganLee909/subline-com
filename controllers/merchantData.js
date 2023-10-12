@@ -257,10 +257,10 @@ module.exports = {
                 },
                 auth: {
                     username: "api",
-                    password: process.env.MG_SUBLINE_APIKEY
+                    password: process.env.SUBLINE_MAILGUN_API
                 },
                 data: queryString.stringify({
-                    from: "The Subline <clientsupport@thesubline.net>",
+                    from: "The Subline <subline@leemorgan.dev>",
                     to: res.locals.owner.email,
                     subject: "The Subline Email Verification",
                     html: verifyEmail({

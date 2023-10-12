@@ -10,7 +10,7 @@
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     <body>
-        <% include ./ejs/menu.ejs %>
+        <%- include("./ejs/menu.ejs") %>
 
         <div id="mobileMenuSelector" class="mobileMenuSelector" onclick="controller.openMenu()">&#8801;</div>
 
@@ -22,34 +22,34 @@
         </button>
 
         <div class="contentBlock">
-            <%include ./ejs/banner.ejs %>
+            <%- include("./ejs/banner.ejs") %>
             
-            <% include ./ejs/strands/home.ejs %>
-            <% include ./ejs/strands/ingredients.ejs %>
-            <% include ./ejs/strands/recipeBook.ejs %>
-            <% include ./ejs/strands/analytics.ejs %>
-            <% include ./ejs/strands/orders.ejs %>
-            <% include ./ejs/strands/transactions.ejs %>
-            <% include ./ejs/strands/account.ejs %>
+            <%- include("./ejs/strands/home.ejs") %>
+            <%- include("./ejs/strands/ingredients.ejs") %>
+            <%- include("./ejs/strands/recipeBook.ejs") %>
+            <%- include("./ejs/strands/analytics.ejs") %>
+            <%- include("./ejs/strands/orders.ejs") %>
+            <%- include("./ejs/strands/transactions.ejs") %>
+            <%- include("./ejs/strands/account.ejs") %>
         </div>
 
         <div id="sidebarDiv" class="sidebarHide">
-            <% include ./ejs/sidebars/newIngredient %>
-            <% include ./ejs/sidebars/ingredientDetails %>
-            <% include ./ejs/sidebars/editIngredient %>
-            <% include ./ejs/sidebars/recipeDetails %>
-            <% include ./ejs/sidebars/newRecipe %>
-            <% include ./ejs/sidebars/orderDetails %>
-            <% include ./ejs/sidebars/newOrder %>
-            <% include ./ejs/sidebars/transactionDetails %>
-            <% include ./ejs/sidebars/newTransaction %>
-            <% include ./ejs/sidebars/editRecipe %>
-            <% include ./ejs/sidebars/orderFilter %>
-            <% include ./ejs/sidebars/transactionFilter %>
+            <%- include("./ejs/sidebars/newIngredient") %>
+            <%- include("./ejs/sidebars/ingredientDetails") %>
+            <%- include("./ejs/sidebars/editIngredient") %>
+            <%- include("./ejs/sidebars/recipeDetails") %>
+            <%- include("./ejs/sidebars/newRecipe") %>
+            <%- include("./ejs/sidebars/orderDetails") %>
+            <%- include("./ejs/sidebars/newOrder") %>
+            <%- include("./ejs/sidebars/transactionDetails") %>
+            <%- include("./ejs/sidebars/newTransaction") %>
+            <%- include("./ejs/sidebars/editRecipe") %>
+            <%- include("./ejs/sidebars/orderFilter") %>
+            <%- include("./ejs/sidebars/transactionFilter") %>
         </div>
 
-        <% include ../shared/loader %>
-        <% include ./ejs/modal.ejs %>
+        <%- include("../shared/loader") %>
+        <%- include("./ejs/modal.ejs") %>
 
         <script>
             let data = {

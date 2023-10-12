@@ -9,7 +9,7 @@
         <link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
     </head>
     <body>
-        <% include ../shared/banner.ejs %>
+        <%- include("../shared/banner.ejs") %>
         
         <form action="/verify/resend" method="post">
             <h3>An email has been sent to <%=email%>. Use the link in the email to verify your account.</h3>

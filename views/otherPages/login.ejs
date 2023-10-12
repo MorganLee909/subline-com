@@ -15,7 +15,7 @@
             </a>
         </div>
 
-        <% include ../shared/banner.ejs %>
+        <%- include("../shared/banner.ejs") %>
 
         <form action="/login" method="post">
             <h1> Welcome Back </h1>
@@ -35,7 +35,7 @@
             <a href="/register">Need to register?</a>
         </form>
 
-        <% include ../shared/footer %>
+        <%- include("../shared/footer") %>
 
         <script>
             let locals = <%- JSON.stringify(locals) %>

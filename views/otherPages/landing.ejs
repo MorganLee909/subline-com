@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <% include ../shared/banner.ejs %>
+        <%- include("../shared/banner.ejs"); %>
 
         <div class="main-background">
             <div class="logo-text">
@@ -58,7 +58,7 @@
             </ul>
         </div>
 
-        <% include ../shared/loader %>
+        <%- include("../shared/loader"); %>
 
         <script>
             let locals = <%- JSON.stringify(locals) %>

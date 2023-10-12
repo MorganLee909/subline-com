@@ -13,16 +13,16 @@ module.exports = {
 
                 return axios({
                     method: "post",
-                    url: `https://api.mailgun.net/v3/mail.thesubline.net/messages`,
+                    url: `https://api.mailgun.net/v3/mg.leemorgan.dev/messages`,
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
                     auth: {
                         username: "api",
-                        password: process.env.MG_SUBLINE_APIKEY
+                        password: process.env.SUBLINE_MAILGUN_API
                     },
                     data: queryString.stringify({
-                        from: "The Subline <clientsupport@thesubline.net>",
+                        from: "The Subline <subline@leemorgan.dev>",
                         to: owner.email,
                         subject: "The Subline Email Verification",
                         html: verifyEmail({
@@ -36,6 +36,7 @@ module.exports = {
                 return res.render(`verifyPage/verify`, {id: saveOwner._id, email: saveOwner.email, banner: res.locals.merchant});
             })
             .catch((err)=>{
+                console.error(err);
                 req.session.error = "ERROR: UNABLE TO SEND VERIFICATION EMAIL";
                 return res.redirect("/");
             });

@@ -55,7 +55,6 @@ if(process.env.NODE_ENV === "production"){
         }
     });
 
-    sessionOptions.domain = process.env.COOKIE_DOMAIN;
     sessionOptions.secure = true;
     cssOptions.minimize = true;
     mongooseOptions.auth = {authSource: "admin"};
