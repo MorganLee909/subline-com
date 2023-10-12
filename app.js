@@ -31,10 +31,10 @@ let cssOptions = {
 };
 
 let esbuildOptions = {
-    entryPoints: ["./views/dashboardPage/js/dashboard.js"],
+    entryPoints: [`${__dirname}/views/dashboardPage/js/dashboard.js`],
     bundle: true,
     minify: false,
-    outfile: "./views/dashboardPage/bundle.js",
+    outfile: `${__dirname}/views/dashboardPage/bundle.js`
 };
 
 app.use(express.static(__dirname + "/views"));
